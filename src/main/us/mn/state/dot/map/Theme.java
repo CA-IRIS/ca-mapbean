@@ -219,11 +219,6 @@ public class Theme implements LayerChangedListener {
 		return layer.isStatic();
 	}
 
-	/** Sets the static flag for this theme */
-	public void setStatic(boolean b) {
-		layer.setStatic( b );
-	}
-
 	public void layerChanged(LayerChangedEvent e) {
 		notifyThemeChangedListeners(e.getReason());
 	}
