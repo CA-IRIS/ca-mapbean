@@ -50,7 +50,7 @@ import us.mn.state.dot.shape.event.SelectMouseMode;
  * the internal MapPane.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.25 $ $Date: 2003/05/19 21:23:41 $
+ * @version $Revision: 1.26 $ $Date: 2003/08/15 15:50:15 $
  * @see us.mn.state.dot.shape.MapPane
  */
 public final class MapBean extends JComponent implements MapChangedListener{
@@ -83,7 +83,6 @@ public final class MapBean extends JComponent implements MapChangedListener{
 		mapPane = new MapPane( themes );
 		mapPane.addMapChangedListener( this );
 		mapPane.setBackground( this.getBackground() );
-		//this.setDoubleBuffered( false );
 		this.setOpaque( true );
 		this.setToolTipText( " " );
 		addComponentListener( new ComponentAdapter() {
