@@ -132,7 +132,7 @@ public class MapPane implements ThemeChangedListener {
     }
 
 	/**
-	 * Set the size of the MapImage.
+	 * Set the size of the map.
 	 * @param d, the new dimension of the image.
 	 */
 	public void setSize( Dimension d ) {
@@ -172,10 +172,8 @@ public class MapPane implements ThemeChangedListener {
        }
     }
 
-	/**
-	 * Get the size of the MapImage.
-	 */
-	public Dimension getSize(){
+	/** Get the size of the map */
+	public Dimension getSize() {
 		if ( screenBuffer == null ) {
 			return null;
 		} else {
@@ -265,14 +263,12 @@ public class MapPane implements ThemeChangedListener {
 		backgroundColor = color;
 	}
 
-	/**
-	 * Updates staticBuffer
-	 */
+	/** Update the staticBuffer */
 	private void updateStaticBuffer() {
 		if ( staticBuffer == null ) return;
 		synchronized ( staticBuffer ) {
 			Graphics2D g = staticBuffer.createGraphics();
-            g.setBackground( backgroundColor );
+			g.setBackground(backgroundColor);
 			g.clearRect( 0, 0, staticBuffer.getWidth(),
 				staticBuffer.getHeight() );
 			g.transform( screenTransform );
@@ -285,9 +281,7 @@ public class MapPane implements ThemeChangedListener {
 		}
 	}
 
-	/**
-	 * Updates screenBuffer.
-	 */
+	/** Update the screenBuffer */
 	public void updateScreenBuffer() {
 		if ( screenBuffer == null ) return;
 		synchronized ( screenBuffer ) {
@@ -295,10 +289,10 @@ public class MapPane implements ThemeChangedListener {
 			if ( staticBufferDirty ) {
 				updateStaticBuffer();
 			}
-            if ( transparent ) {
-                g.setBackground( backgroundColor );
-                g.clearRect( 0, 0, width, height );
-            }
+			if(transparent) {
+				g.setBackground(backgroundColor);
+				g.clearRect(0, 0, width, height);
+			}
 			g.drawImage( staticBuffer, 0, 0, null );
 			g.transform( screenTransform );
 			bufferDirty = false;
@@ -336,24 +330,21 @@ public class MapPane implements ThemeChangedListener {
 	}
 
 	/**
-	 * Gets the theme with the name name from the Map.
-	 * @param name the string containing the Name of layer to return.
+	 * Get the theme with the specified name.
+	 * @param name the name of layer to return.
 	 * @return Theme or null if not found.
 	 */
-	public Theme getTheme( String name ) {
-		Theme result = null;
-		for ( ListIterator li = themes.listIterator(); li.hasNext(); ){
-			Theme temp = ( Theme ) li.next();
-			if ( name.equals( temp.getName() ) ) {
-				result = temp;
-				break;
-			}
+	public Theme getTheme(String name) {
+		Iterator it = themes.iterator();
+		while(it.hasNext()) {
+			Theme t = (Theme)li.next();
+			if(name.equals(t.getName())) return t;
 		}
-		return result;
+		return null;
 	}
 
 	/**
-	 * Notifies all registered MapChangedListeners that the map image has
+	 * Notify all registered MapChangedListeners that the map image has
 	 * changed.
 	 */
 	private void notifyMapChangedListeners(){
@@ -364,16 +355,12 @@ public class MapPane implements ThemeChangedListener {
 		}
 	}
 
-	/**
-	 * Get the AffineTransform of the map.
-	 */
+	/** Get the AffineTransform of the map */
 	public AffineTransform getTransform() {
 		return screenTransform;
 	}
 
-	/**
-	 * Get the extent of the MapImage.
-	 */
+	/** Get the extent of the map */
 	public Rectangle2D getExtent(){
 		return extent;
 	}
