@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000  Minnesota Department of Transportation
+ * Copyright (C) 2000-2004  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,11 +16,9 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package us.mn.state.dot.shape;
 
 import java.awt.Component;
-
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 
@@ -28,33 +26,27 @@ import javax.swing.JLabel;
  * A combobox for displaying the legend for a ClassBreaksRenderer.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.8 $ $Date: 2003/05/06 20:58:15 $
  */
-public final class LegendCombo extends JComboBox {
+public class LegendCombo extends JComboBox {
 
-	/**
-	 * Create a new LegendCombo.
-	 */
-	public LegendCombo( ClassBreaksRenderer r ) {
-		super();
-		setRenderer( new LegendCellRenderer() );
-		setMapRenderer( r );
-		this.setMaximumRowCount( 12 );
+	/** Create a new LegendCombo */
+	public LegendCombo(ClassBreaksRenderer r) {
+		setRenderer(new LegendCellRenderer());
+		setMapRenderer(r);
+		setMaximumRowCount(12);
 	}
 
-	/**
-	 * Set the renderer that this LegendCombo displays.
-	 */
-	public void setMapRenderer( ClassBreaksRenderer r ){
-		this.removeAllItems();
-		addItem( new LegendItem(){
-			public Component getLegend(){
-				return new JLabel( "Legend:" );
+	/** Set the renderer that this LegendCombo displays */
+	public void setMapRenderer(ClassBreaksRenderer r) {
+		removeAllItems();
+		addItem(new LegendItem() {
+			public Component getLegend() {
+				return new JLabel("Legend:");
 			}
 		});
 		Symbol[] symbols = r.getSymbols();
-		for ( int i = 0; i < symbols.length; i++ ){
-			addItem( symbols[ i ] );
+		for(int i = 0; i < symbols.length; i++) {
+			addItem(symbols[i]);
 		}
 	}
 } 
