@@ -23,8 +23,8 @@ import java.io.EOFException;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.LinkedList;
 
 /**
  * ShapeFile is an ESRI shape file reader.  It reads the file and creates an
@@ -66,8 +66,9 @@ public class ShapeFile {
 	private double maxY;
 
 	/** List of shapes in the ShapeFile */
-	private final List shapes = new ArrayList();
+	protected final List shapes = new LinkedList();
 
+	/** Create a ShapeFile object from the specified URL */
 	public ShapeFile( URL url ) throws IOException {
 		ShapeDataInputStream in = new ShapeDataInputStream( url.openStream() );
 		String location = url.toExternalForm();
@@ -77,7 +78,7 @@ public class ShapeFile {
 		readData( in, dbaseStream );
 	}
 
-	/** Constructor */
+	/** Create a ShapeFile object from the specified file name */
 	public ShapeFile( String name ) throws IOException {
 		ShapeDataInputStream in = new ShapeDataInputStream(
 			new FileInputStream( name + ".shp" ) );
@@ -86,7 +87,8 @@ public class ShapeFile {
 		readData(in, dbaseStream);
 	}
 
-	public void readData(ShapeDataInputStream shapeIn,
+	/** Read the contents of the shape file */
+	protected void readData(ShapeDataInputStream shapeIn,
 		DbaseInputStream dbaseStream) throws IOException
 	{
 		shapeIn.skipBytes(28); //start of header unused
@@ -118,6 +120,7 @@ public class ShapeFile {
 		return new Rectangle2D.Double(minX, minY, width, height);
 	}
 
+	/** Get the list of all shapes from the file */
 	public List getShapeList() {
 		return shapes;
 	}
