@@ -101,10 +101,10 @@ public class ShapeLayer extends AbstractLayer {
 			(file.getYmax() - file.getYmin()));
 		switch( file.getShapeType() ) {
 		case ShapeTypes.POINT:
-			painter.setSymbol(new PointSymbol());
+			painter.setSymbol(new CircleMarker());
 			break;
 		case ShapeTypes.POLYLINE:
-			painter.setSymbol(new LineSymbol());
+			painter.setSymbol(new SolidLine());
 			break;
 		case ShapeTypes.POLYGON:
 			painter.setSymbol(new FillSymbol());

@@ -161,22 +161,21 @@ public final class MapPane extends JPanel {
 	}
 
 	private void repaintLayers(ListIterator it){
-		 if (this.isShowing()){
+		 /*if (this.isShowing()){
 			Graphics2D g = (Graphics2D) this.getGraphics();
+			g.setClip(getVisibleRect());
 			if (g != null){
 				g.transform( at );
 				while (it.hasPrevious ()) {
 					((Layer) it.previous()).paint(g);
 				}
 			}
-		}
+		}*/
+		repaint();
 	}
 
 	public void refresh(){
-		if (this.isShowing()){
-			Graphics g = this.getGraphics();
-			paint(g);
-		}
+		repaint();
 	}
 
 	/** Paint the shapes */

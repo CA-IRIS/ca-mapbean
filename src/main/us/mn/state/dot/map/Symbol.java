@@ -12,27 +12,18 @@ import java.awt.*;
 import java.awt.geom.*;
 
 public abstract class Symbol {
-    protected int symbolType;
 	private Color color = Color.black;
-    private Color outlineColor = Color.black;
-    private int size;
-    private boolean outline = false;
+	private Color outlineColor = Color.black;
+	private int size;
+	private boolean outline = false;
 
-    public static final int POINT_SYMBOL = 0;
-    public static final int LINE_SYMBOL = 1;
-    public static final int FILL_SYMBOL = 2;
+	public abstract void draw(Graphics2D g, GeneralPath path);
 
-    public abstract void draw(Graphics2D g, GeneralPath path);
+	public void setColor (Color color){
+		this.color = color;
+	}
 
-    public abstract void setStyle(int s);
-
-    public abstract int getStyle();
-
-    public void setColor (Color color){
-    	this.color = color;
-    }
-
-    public Color getColor(){
+	public Color getColor(){
 		return color;
 	}
 
@@ -58,9 +49,5 @@ public abstract class Symbol {
 
 	public Color getOutLineColor(){
 		return outlineColor;
-	}
-
-	public int getSymbolType(){
-		return symbolType;
 	}
 }
