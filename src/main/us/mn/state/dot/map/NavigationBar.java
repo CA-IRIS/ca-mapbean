@@ -39,7 +39,7 @@ import us.mn.state.dot.shape.event.ZoomMouseMode;
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
  */
-class NavigationBar extends JToolBar {
+public class NavigationBar extends JToolBar {
 
 	protected final MapBean map;
 
