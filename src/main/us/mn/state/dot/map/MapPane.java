@@ -165,12 +165,9 @@ public final class MapPane extends JPanel {
 			Graphics2D g = (Graphics2D) this.getGraphics();
 			if (g != null){
 				g.transform( at );
-				int i = 0;
 				while (it.hasPrevious ()) {
-					i++;
 					((Layer) it.previous()).paint(g);
 				}
-				System.out.println("Repainted " + i + " layers");
 			}
 		}
 	}
