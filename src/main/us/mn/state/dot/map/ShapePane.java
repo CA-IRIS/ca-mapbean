@@ -11,7 +11,6 @@ import java.util.*;
   * ShapePane
   *
   * @author Douglas Lau
-  * @version 0.5 - 25 Jan 1999
   */
 public final class ShapePane extends Canvas {
 

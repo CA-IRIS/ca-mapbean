@@ -9,7 +9,6 @@ import java.util.*;
   * array of all the shapes and their coordinates.
   *
   * @author Douglas Lau
-  * @version 0.5 - 16 Mar 1999
   */
 public final class ShapeFile {
 

@@ -7,7 +7,6 @@ import java.awt.geom.*;
   * ShapeTypes is a class for reading shapes from ESRI shape files.
   *
   * @author Douglas Lau
-  * @version 0.6 - 16 Mar 1999
   */
 public final class ShapeTypes {
 

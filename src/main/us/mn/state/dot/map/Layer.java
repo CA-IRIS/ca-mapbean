@@ -11,7 +11,6 @@ import java.io.*;
   * Layer is a class for drawing ESRI shape files.
   *
   * @author Douglas Lau
-  * @version 0.4 - 25 Jan 1999
   */
 public final class Layer {
 

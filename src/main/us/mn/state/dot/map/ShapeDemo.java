@@ -10,7 +10,6 @@ import java.io.*;
 /**
   * ShapeDemo is a program to demonstrate the Shape package.
   *
-  * @version 0.4 - 25 Jan 1999
   * @author Douglas Lau
   */
 public final class ShapeDemo extends JFrame {

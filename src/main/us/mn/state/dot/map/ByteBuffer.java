@@ -9,7 +9,6 @@ import java.io.*;
   * endian (or vice versa).
   *
   * @author Douglas Lau
-  * @version 0.4 - 28 Jan 1999
   */
 public final class ByteBuffer {
 

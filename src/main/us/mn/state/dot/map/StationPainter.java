@@ -9,7 +9,6 @@ import java.awt.geom.*;
   * StationPainter
   *
   * @author Douglas Lau
-  * @version 0.2 - 25 Jan 1999
   */
 public final class StationPainter implements ShapePainter {
 

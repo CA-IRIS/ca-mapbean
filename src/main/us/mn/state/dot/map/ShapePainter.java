@@ -9,7 +9,6 @@ import java.awt.geom.*;
   * ShapePainter is an interface for painting shapes in a Layer.
   *
   * @author Douglas Lau
-  * @version 0.2 - 25 Jan 1999
   */
 public interface ShapePainter {
 

@@ -8,7 +8,6 @@ import java.util.*;
   * dBase III PLUS table file reader
   *
   * @author Douglas Lau
-  * @version 0.2 - 29 Jan 1990
   */
 public final class Debase {
 

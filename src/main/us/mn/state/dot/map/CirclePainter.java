@@ -9,7 +9,6 @@ import java.awt.geom.*;
   * CirclePainter
   *
   * @author Douglas Lau
-  * @version 0.1 - 25 Jan 1999
   */
 public final class CirclePainter implements ShapePainter {
 
