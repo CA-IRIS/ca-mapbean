@@ -134,6 +134,10 @@ public class ShapeLayer implements Layer {
 		return name;
 	}
 
+	public boolean writeToFile(){
+		return true;
+	}
+
 	public String getTip(Point2D p){
 		String result = null;
 		Rectangle2D searchZone = new Rectangle2D.Double((p.getX() - 250),
