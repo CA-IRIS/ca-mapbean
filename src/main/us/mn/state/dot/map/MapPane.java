@@ -216,10 +216,10 @@ public class MapPane implements ThemeChangedListener {
 	 * @param theme Theme to be added to the Map
 	 * @param index int specifying the index at which the theme should be added
 	 */
-	public void addTheme( Theme theme, int index ) {
-		themes.add( index, theme );
-		theme.setMap( this );
-		theme.addThemeChangedListener( this );
+	public void addTheme(Theme theme, int index) {
+		themes.add(index, theme);
+		theme.setMap(this);
+		theme.addThemeChangedListener(this);
 	}
 
 	/**
