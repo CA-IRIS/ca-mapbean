@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000-2004  Minnesota Department of Transportation
+ * Copyright (C) 2000-2005  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -180,20 +180,46 @@ public class ShapeFile {
 	/** Polygon shape type */
 	static public final int POLYGON = 5;
 
+	/** Multipoint shape type */
+	static public final int MULTIPOINT = 8;
+
 	/** Point Z shape type */
 	static public final int POINT_Z = 11;
+
+	/** Polyline Z shape type */
+	static public final int POLYLINE_Z = 13;
+
+	/** Polygon Z shape type */
+	static public final int POLYGON_Z = 15;
+
+	/** Multipoint Z shape type */
+	static public final int MULTIPOINT_Z = 18;
+
+	/** Point M shape type */
+	static public final int POINT_M = 21;
 
 	/** Polyline M shape type */
 	static public final int POLYLINE_M = 23;
 
+	/** Polygon M shape type */
+	static public final int POLYGON_M = 25;
+
+	/** Multipoint M shape type */
+	static public final int MULTIPOINT_M = 28;
+
+	/** Current record counter */
+	protected int record = 0;
+
 	/** Read a geometric shape from a shape input stream */
-	protected Shape nextShape(ShapeDataInputStream in)
-		throws IOException
-	{
-		int skipped = in.skipBytes(8); // skip the record header
+	protected Shape nextShape(ShapeDataInputStream in) throws IOException {
+		int r = in.readInt();
+		if(r != ++record) throw new ParseException("Record (" + r +
+			") is not in sequence: " + record);
+		int r_words = in.readInt();
 		int shape_type = in.readLittleInt();
 		if(shape_type != shapeType) throw new ParseException(
-			"Shape type does not match header");
+			"Shape type (" + shape_type +
+			") does not match header (" + shapeType + ")");
 		word += 6;
 		GeneralPath path = new GeneralPath(GeneralPath.WIND_EVEN_ODD);
 		path.append(readPath(in), false);
