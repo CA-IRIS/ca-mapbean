@@ -33,11 +33,11 @@ import javax.swing.JToolBar;
 public class MapToolBar extends NavigationBar {
 
 	/** Create a new MapToolBar */
-	public MapToolBar(MapBean m, String themeName) {
+	public MapToolBar(MapBean m, Theme theme) {
 		super(m);
-		LegendMenu legend = new LegendMenu(map.getTheme(
-			themeName).getCurrentLayerRenderer());
-		add(getPaintCombo(themeName, legend), 0);
+		LayerRenderer r = theme.getCurrentLayerRenderer();
+		LegendMenu legend = new LegendMenu(r);
+		add(getPaintCombo(theme.layer.getName(), legend), 0);
 		JMenuBar menuBar = new JMenuBar();
 		menuBar.add(legend);
 		menuBar.add(new JToolBar.Separator());

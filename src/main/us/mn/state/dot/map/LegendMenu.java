@@ -32,9 +32,9 @@ public class LegendMenu extends JMenu {
   	/** Create a new LegendMenu */
  	public LegendMenu(LayerRenderer r) {
 		super("Legend:");
-		setMapRenderer(r);
 		setBorder(BorderFactory.createEtchedBorder());
 		setBorderPainted(true);
+		setMapRenderer(r);
 	}
 
 	/** Set the LayerRenderer that this menu displays */
