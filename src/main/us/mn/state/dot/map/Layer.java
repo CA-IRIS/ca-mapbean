@@ -47,7 +47,7 @@ public interface Layer {
 	/** Register a LayerChangedListener with the layer */
 	public void addLayerChangedListener(LayerChangedListener listener);
 
-	/** Remove a layerChangedListener from the layer */
+	/** Remove a LayerChangedListener from the layer */
 	public void removeLayerChangedListener(LayerChangedListener listener);
 
 	/** Notify all LayerChangedListeners that the layer has changed */
