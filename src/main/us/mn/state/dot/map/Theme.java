@@ -158,9 +158,11 @@ public class Theme implements LayerChangedListener {
 
 	/** Get the appropriate tool tip text for the specified point */
 	public String getTip(Point2D point) {
-		MapObject o = layer.search(point, renderer);
-		if(o == null) return null;
-		else return renderer.getTip(o);
+		if(layer instanceof DynamicLayer) {
+			MapObject o = layer.search(point, renderer);
+			if(o != null) return renderer.getTip(o);
+		}
+		return null;
 	}
 
 	/** Get the visibility flag */
