@@ -32,10 +32,12 @@ import us.mn.state.dot.map.MapObject;
  */
 public abstract class PointSymbol extends AbstractSymbol {
 
+	/** Create a new point symbol */
 	public PointSymbol(int size, Color c, String label, boolean outlined) {
 		super(size, c, label, outlined);
 	}
 
+	/** Get a shape transformed to the given coordinates */
 	abstract protected Shape getShape( double x, double y );
 
 	/** Draw symbol on map */
