@@ -38,7 +38,7 @@ import us.mn.state.dot.shape.Symbol;
 public abstract class LineSymbol implements Symbol {
 
 	/** Color to paint line */
-	protected Color color = Color.black;
+	protected Color color = Color.BLACK;
 
 	/** The width of the line */
 	protected int size = 0;
@@ -52,7 +52,7 @@ public abstract class LineSymbol implements Symbol {
 	private Stroke stroke;
 
 	public LineSymbol() {
-		this( Color.black );
+		this(Color.BLACK);
 	}
 
 	public LineSymbol(Color c) {
@@ -178,7 +178,7 @@ public abstract class LineSymbol implements Symbol {
 		}
 
 		public void paintIcon( Component c, Graphics g, int x, int y ) {
-			g.setColor( Color.black );
+			g.setColor(Color.BLACK);
 			g.drawRect( x, y, w - 1, h - 1 );
 			g.setColor( color );
 			g.fillRect( x + 1, y + 1, w - 2, h - 2 );
