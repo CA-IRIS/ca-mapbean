@@ -36,6 +36,7 @@ import us.mn.state.dot.shape.symbol.FillSymbol;
  */
 public class ClassBreaksRenderer extends ShapeRenderer {
 
+	/** A field value and symbol together make up a class break */
 	class ClassBreak {
 		public final double value;
 		public final FillSymbol symbol;
@@ -45,7 +46,10 @@ public class ClassBreaksRenderer extends ShapeRenderer {
 		}
 	}
 
+	/** Field used to define the breaks */
 	protected final String field;
+
+	/** List of class breaks for the renderer */
 	protected final LinkedList classBreaks = new LinkedList();
 
 	/** Create a new class breaks renderer */
@@ -71,14 +75,6 @@ public class ClassBreaksRenderer extends ShapeRenderer {
 		return (Component [])legend.toArray(new Component[0]);
 	}
 
-	/** Draw the object */
-	public void render(Graphics2D g, MapObject object) {
-		Symbol symbol = getSymbol(object);
-		if(symbol != null) {
-			symbol.draw(g, object.getShape());
-		}
-	}
-
 	/** Determine which class the value falls into */
 	protected Symbol getSymbol(MapObject object) {
 		ShapeObject shapeObject = (ShapeObject)object;
@@ -93,21 +89,23 @@ public class ClassBreaksRenderer extends ShapeRenderer {
 		return null;
 	}
 
+	/** Draw the object */
+	public void render(Graphics2D g, MapObject object) {
+		Symbol symbol = getSymbol(object);
+		if(symbol != null) symbol.draw(g, object.getShape());
+	}
+
 	/** Get the shape that would be used to render this object */
 	public Shape getShape(MapObject object) {
 		Symbol symbol = getSymbol(object);
-		if(symbol != null) {
-			return symbol.getShape(object);
-		}
-		return null;
+		if(symbol == null) return null;
+		else return symbol.getShape(object);
 	}
 
 	/** Get the bounds of the specified map object */
 	public Rectangle2D getBounds(MapObject object) {
 		Symbol symbol = getSymbol(object);
-		if(symbol != null) {
-			return symbol.getBounds(object);
-		}
-		return null;
+		if(symbol == null) return null;
+		else return symbol.getBounds(object);
 	}
 }
