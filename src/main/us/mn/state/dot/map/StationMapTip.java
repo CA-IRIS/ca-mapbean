@@ -27,9 +27,9 @@ package us.mn.state.dot.shape;
 
 import us.mn.state.dot.shape.*;
 
-public final class StationMapTip extends MapTip {
+public final class StationMapTip implements MapTip {
 
-	public String getTip( ShapeLayer layer, int i ){
+	public String getTip( Layer layer, int i ){
 		String result = null;
 		result = new String( "Station "	+
 			layer.getField( "STATION2" ).getStringValue( i ) + ": " +

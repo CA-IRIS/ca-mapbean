@@ -53,7 +53,7 @@ public final class MaintenanceRenderer extends ClassBreaksRenderer {
 		setSymbol( 16, new FillSymbol( new Color( 183, 0, 255 ), "17" ) );
 		setSymbol( 17, new FillSymbol( new Color( 0, 96, 0 ), "18" ) );
 		setTip( new MapTip(){
-			public String getTip( ShapeLayer layer, int i ){
+			public String getTip( Layer layer, int i ){
 				String result = null;
 				result = new String( "Maintenance District - "
 					+ layer.getField( "MAINT" ).getStringValue( i ) );

@@ -111,7 +111,6 @@ public class Theme implements LayerChangedListener {
 	 */
 	public void paint( Graphics2D g ){
 		if ( visible ) {
-			System.out.println(" painting layer - " + layer.getName() );
 			layer.paint( g, renderer );
 		}
 	}
@@ -139,7 +138,14 @@ public class Theme implements LayerChangedListener {
 	 * Called by the map to get appropriate tool tip text
 	 */
 	public String getTip( Point2D point ) {
-		return "";
+		String result = null;
+		Rectangle2D searchArea = new Rectangle2D.Double( point.getX(),
+			point.getY(), 1, 1 );
+		int index = layer.search( searchArea );
+		if ( mapTip != null && index != -1 ) {
+			result = mapTip.getTip( layer, index );
+		}
+		return result;
 	}
 	
 	private MapTip mapTip;

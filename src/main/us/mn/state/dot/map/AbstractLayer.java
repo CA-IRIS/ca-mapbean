@@ -112,11 +112,9 @@ public abstract class AbstractLayer implements Layer {
 	public Field getField( String name ) {
 		return null;
 	}
-	public java.util.List hit( Point2D p ) {
-		return new ArrayList();
-	}
 	
 	public Theme getTheme() {
 		return new Theme( this );
 	}
+
 }

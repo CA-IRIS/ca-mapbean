@@ -59,10 +59,10 @@ public class MouseDelegator extends MouseAdapter implements
 
 	private Point scrollTo = new Point();
 	
-	private Map map;
+	private us.mn.state.dot.shape.Map map;
 	
     /** Creates new MouseDelegator */
-    public MouseDelegator( Map map ) {
+    public MouseDelegator( us.mn.state.dot.shape.Map map ) {
 		this.map = map;
     }
 	

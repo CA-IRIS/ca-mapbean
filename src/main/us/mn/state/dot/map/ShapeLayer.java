@@ -147,22 +147,43 @@ public class ShapeLayer extends AbstractLayer {
 				drawSymbol = renderer.render( i );
 			}
 			drawSymbol.draw( g, paths[ i ] );
-			//painter.paint( g, paths[ i ], i );
 		}
 	}
 	
 	public void paintSelections( Graphics2D g, LayerRenderer renderer,
 			ArrayList selections ) {
 	}
-
-	public boolean mouseClick( int clickCount, Point2D p, Graphics2D g ){
-		boolean result;
-		java.util.List found = hit( p );
-		result = ! found.isEmpty();
+	
+	public final int search( Rectangle2D searchArea ) {
+		int result = -1;
+		for ( int i = ( paths.length - 1 ); i >= 0; i-- ) {
+			GeneralPath target = paths[ i ];
+			if ( searchPath( target, searchArea ) ||
+					target.contains( searchArea ) ) {
+				result = i;
+				break;
+			} 
+		}
+		return result;
+	}
+	
+	private boolean searchPath( GeneralPath target, Rectangle2D searchArea ) {
+		boolean result = false;
+		double[] coords = new double[ 2 ];
+		/*PathIterator pi = target.getPathIterator( null );
+		while( ! pi.isDone() ) {
+			pi.currentSegment( coords );
+			if ( searchArea.contains( coords[ 0 ], coords[ 1 ] ) ) {
+				result = true;
+				break;
+			}
+			pi.next();
+		}*/
+		result = false;
 		return result;
 	}
 
-	public final java.util.List hit( Point2D p ){
+	public final java.util.List getPaths( Point2D p ){
 		java.util.List result = new ArrayList();
 		switch( shapeType ) {
 		/*case ShapeTypes.POINT:

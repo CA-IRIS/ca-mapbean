@@ -110,7 +110,7 @@ public final class IncidentLayer extends AbstractLayer implements
 			return false;
 		}
 		boolean result;
-		java.util.List found = hit( p );
+		java.util.List found = getPaths( p );
 		if ( found.isEmpty() ) {
 			result = false;
 		} else {
@@ -147,7 +147,7 @@ public final class IncidentLayer extends AbstractLayer implements
 		return result;
 	}
 
-	public java.util.List hit( Point2D p ){
+	public java.util.List getPaths( Point2D p ){
 		ArrayList result = new ArrayList();
 		if ( incidents != null ) {
 			for ( int i = ( incidents.length - 1 ); i >= 0; i-- ) {
@@ -162,9 +162,27 @@ public final class IncidentLayer extends AbstractLayer implements
 		}
 		return result;
 	}
+	
+	public final int search( Rectangle2D searchArea ) {
+		int result = -1;
+		if ( incidents != null ) {
+			for ( int i = ( incidents.length - 1 ); i >= 0; i-- ) {
+				double x = incidents[ i ].getX();
+				double y = incidents[ i ].getY();
+				Rectangle2D r = new Rectangle2D.Double( ( x - 500 ),
+					( y - 500 ), 1000, 1000 );
+				if ( r.contains( searchArea ) || r.intersects( searchArea ) ||
+						searchArea.contains( r ) ) {
+					result = i;
+					break;
+				}
+			}
+		}
+		return result;
+	}
 
 	public String getTip( Point2D p ){
-		java.util.List v = hit( p );
+		java.util.List v = getPaths( p );
 		String result = null;
 		ListIterator li = v.listIterator();
 		if ( li.hasNext() ){

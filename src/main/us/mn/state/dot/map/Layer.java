@@ -35,6 +35,21 @@ public interface Layer {
 	public void setStatic( boolean b );
 	public Field [] getFields();
 	public Field getField( String name );
-	public java.util.List hit( Point2D p );
+	/*
+	 * Gets all of the paths present at the Point2D p in this layer.
+	 * @param p The Point2D at which to search.
+	 * @returns a java.util.List containing all of the paths found.
+	 */
+	public java.util.List getPaths( Point2D p );
+	
+	/*
+	 * Returns an int representing the index of the first path found that
+	 * is contained by, intersects, or contains the Rectangle2D searchArea.
+	 * @param searchArea Rectangle2D representing the area to search.
+	 * @returns an int representing the index of the first found path, returns
+	 * -1 if nothing found.
+	 */
+	public int search( Rectangle2D searchArea );
+	
 	public Theme getTheme();
 }

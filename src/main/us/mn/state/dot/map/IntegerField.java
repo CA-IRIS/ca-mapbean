@@ -57,6 +57,9 @@ public final class IntegerField extends NumericField {
 	}
 
 	public String getStringValue( int record ){
+		if ( data.length - 1 < record ) {
+			System.out.println( "record = " + record );
+		}
 		return new Integer( data[ record ] ).toString();
 	}
 
