@@ -28,7 +28,7 @@ import us.mn.state.dot.shape.shapefile.ShapeObject;
  * A renderer that renders objects base on a numeric field and a set of class breaks.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.22 $ $Date: 2001/08/15 16:08:51 $ 
+ * @version $Revision: 1.23 $ $Date: 2002/01/28 17:59:36 $ 
  */
 public class ClassBreaksRenderer extends ShapeRenderer {
 
@@ -83,7 +83,7 @@ public class ClassBreaksRenderer extends ShapeRenderer {
 		Symbol symbol = getSymbol( object );
 		if ( symbol != null ) {
 			symbol.draw( g, object.getShape() );
-		}
+		} 
 	}
 	
 	/**

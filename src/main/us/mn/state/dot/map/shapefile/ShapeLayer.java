@@ -32,7 +32,7 @@ import us.mn.state.dot.shape.*;
   *
   * @author Douglas Lau
   * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
-  * @version $Revision: 1.4 $ $Date: 2001/08/17 22:14:38 $
+  * @version $Revision: 1.5 $ $Date: 2002/01/28 17:59:36 $
   */
 public class ShapeLayer extends AbstractLayer {
 
@@ -95,6 +95,10 @@ public class ShapeLayer extends AbstractLayer {
 		for ( int i = ( selections.length - 1 ); i >= 0; i-- ) {
 			renderer.render( g, shapes[ i ] );
 		}
+	}
+
+	public MapObject[] getMapObjects() {
+		return shapes;
 	}
 	
 	public MapObject search( Rectangle2D searchArea, LayerRenderer renderer ) {

@@ -35,7 +35,7 @@ import javax.swing.JLabel;
  * Symol for painting MapObjects as images.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.2 $ $Date: 2001/08/16 22:59:44 $
+ * @version $Revision: 1.3 $ $Date: 2002/01/28 17:59:36 $
  */
 public class ImageSymbol implements Symbol {
 
@@ -113,7 +113,7 @@ public class ImageSymbol implements Symbol {
 		int width = ( int ) size.getWidth();
 		int height = ( int ) size.getHeight();
 		g.drawImage( icon.getImage(), ( ( int ) xCoord - width / 2 ),
-							( ( int ) yCoord - height / 2 ), width, height,
+			( ( int ) yCoord - height / 2 ), width, height,
 			icon.getImageObserver() );
 	}
 	

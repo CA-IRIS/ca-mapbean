@@ -31,7 +31,7 @@ import java.util.*;
  * subsystem is not available.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.46 $ $Date: 2001/06/21 22:42:41 $
+ * @version $Revision: 1.47 $ $Date: 2002/01/28 17:59:36 $
  */
 public final class MapPane implements ThemeChangedListener {
 	
@@ -158,13 +158,13 @@ public final class MapPane implements ThemeChangedListener {
                 BufferedImage.TYPE_4BYTE_ABGR );
         } else {
             if ( graphicsConfiguration != null ) {
-                return graphicsConfiguration.createCompatibleImage( width, height );
+                return graphicsConfiguration.createCompatibleImage(
+					width, height );
             } else {
                 return new BufferedImage( width, height,
                     BufferedImage.TYPE_INT_RGB );
             }
        }
-        
     }
     
 	/**
@@ -270,9 +270,6 @@ public final class MapPane implements ThemeChangedListener {
             g.setBackground( backgroundColor );
 			g.clearRect( 0, 0, staticBuffer.getWidth(),
 				staticBuffer.getHeight() );
-			//g.setColor( backgroundColor );
-			//g.fillRect( 0, 0, staticBuffer.getWidth(),
-			//	staticBuffer.getHeight() );
 			g.transform( screenTransform );
 			staticBufferDirty = false;
 			ListIterator li = staticThemes.listIterator();

@@ -32,7 +32,7 @@ import us.mn.state.dot.shape.shapefile.ShapeObject;
  * This layer is used for displaying highway markers on the map.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.9 $ $Date: 2001/08/09 21:03:34 $
+ * @version $Revision: 1.10 $ $Date: 2002/01/28 17:59:36 $
  */
 public final class HighwayMarkerLayer extends ShapeLayer {
 	
@@ -43,7 +43,7 @@ public final class HighwayMarkerLayer extends ShapeLayer {
 	private static final String LAYER_NAME = "markers";
 	
 	/** Field that contains the name of the highway. */
-	private static final String LOOKUP_FIELD = "highway";
+	private static final String LOOKUP_FIELD = "HIGHWAY";
 	
 	/** Location of the image files.*/
 	private static final String IMAGE_LOCATION = "/images/HighWayMarkers/";
@@ -65,6 +65,9 @@ public final class HighwayMarkerLayer extends ShapeLayer {
 			double yCoord = shape.getShape().getBounds().getY();
 			ImageIcon icon = getIcon( ( String ) shape.getValue( 
 				LOOKUP_FIELD ) );
+			if ( icon == null ) {
+				continue;
+			}
 			g.setRenderingHint( RenderingHints.KEY_ANTIALIASING,
 				RenderingHints.VALUE_ANTIALIAS_OFF );
 			g.drawImage( icon.getImage(), ( ( int ) xCoord - 1000 ),
@@ -93,6 +96,9 @@ public final class HighwayMarkerLayer extends ShapeLayer {
 		if ( url != null ) {
 			icon = new ImageIcon( url );
 			map.put( key, icon );
+		}
+		if ( icon == null ) {
+			System.err.println( "Can't find image " + resource );
 		}
 		return icon;
 	}
