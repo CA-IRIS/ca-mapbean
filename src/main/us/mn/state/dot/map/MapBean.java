@@ -167,7 +167,7 @@ public class MapBean extends JComponent implements MapChangedListener{
 
 	/** Register the theme with mouse listener */
 	protected void registerWithMouseListener(Theme theme) {
-		if(!theme.isStatic()) {
+		if(theme.layer instanceof DynamicLayer) {
 			MapMouseListener l = theme.getMapMouseListener();
 			if(l != null && activeMouseMode != null &&
 				l.listensToMouseMode(activeMouseMode.getID()))
@@ -209,7 +209,7 @@ public class MapBean extends JComponent implements MapChangedListener{
 
 	/** Unregister the theme with the mouse listener */
 	protected void unregisterWithMouseListener(Theme theme) {
-		if(!theme.isStatic()) {
+		if(theme.layer instanceof DynamicLayer) {
 			MapMouseListener l = theme.getMapMouseListener();
 			if(l != null && activeMouseMode != null &&
 				l.listensToMouseMode(activeMouseMode.getID()))

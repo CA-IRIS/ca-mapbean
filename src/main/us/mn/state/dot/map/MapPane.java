@@ -77,11 +77,11 @@ public class MapPane implements ThemeChangedListener {
 
 	private boolean transparent = false;
 
-    private GraphicsConfiguration graphicsConfiguration = null;
+	private GraphicsConfiguration graphicsConfiguration = null;
 
-	/** Creates new MapPane without any themes. */
+	/** Create a new MapPane without any themes */
 	public MapPane() {
-		this( new ArrayList() );
+		this(new ArrayList());
 	}
 
 	/**
@@ -123,15 +123,13 @@ public class MapPane implements ThemeChangedListener {
 		return result;
 	}
 
-	/**
-	 * Set whether or not the background should be transparent.
-	 */
-	public void setTransparent( boolean transparent ) {
-        if ( this.transparent != transparent ) {
-            this.transparent = transparent;
-            setSize( new Dimension( width, height ) );
-        }
-    }
+	/** Set whether or not the background should be transparent */
+	public void setTransparent(boolean t) {
+		if(t != transparent) {
+			transparent = t;
+			setSize(new Dimension(width, height));
+		}
+	}
 
 	/**
 	 * Set the size of the map.
@@ -189,10 +187,10 @@ public class MapPane implements ThemeChangedListener {
 	 * @param theme Theme to be added to the Map
 	 */
 	public void addTheme(Theme theme) {
-		if(theme.isStatic()) {
-			staticThemes.add(theme);
-		} else {
+		if(theme.layer instanceof DynamicLayer) {
 			themes.add(theme);
+		} else {
+			staticThemes.add(theme);
 		}
 		theme.setMap(this);
 		theme.addThemeChangedListener(this);
@@ -204,10 +202,10 @@ public class MapPane implements ThemeChangedListener {
 	 * @param theme Theme to remove.
 	 */
 	public void removeTheme(Theme theme) {
-		if(theme.isStatic()) {
-			staticThemes.remove(theme);
-		} else {
+		if(theme.layer instanceof DynamicLayer) {
 			themes.remove(theme);
+		} else {
+			staticThemes.remove(theme);
 		}
 		theme.removeThemeChangedListener(this);
 		theme.setMap(null);
@@ -318,7 +316,7 @@ public class MapPane implements ThemeChangedListener {
 			case ThemeChangedEvent.DATA:
 			case ThemeChangedEvent.SHADE:
 				Theme theme = (Theme)event.getSource();
-				if(theme.isStatic()) {
+				if(!(theme.layer instanceof DynamicLayer)) {
 					staticBufferDirty = true;
 				}
 				bufferDirty = true;
@@ -394,8 +392,9 @@ public class MapPane implements ThemeChangedListener {
 	 * @param width, the new width for the map.
 	 * @param height, the new height for the map.
 	 */
-	protected void setExtentFrame( double x, double y, double width,
-            double height ) {
+	protected void setExtentFrame(double x, double y, double width,
+		double height)
+	{
 		extent.setFrame( x, y, width, height );
 		rescale();
 	}

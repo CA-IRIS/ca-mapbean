@@ -20,8 +20,9 @@ package us.mn.state.dot.shape;
 
 import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
-import java.util.ArrayList;
-import java.util.ListIterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Iterator;
 import us.mn.state.dot.shape.symbol.CircleMarker;
 import us.mn.state.dot.shape.event.LayerChangedEvent;
 import us.mn.state.dot.shape.event.LayerChangedListener;
@@ -39,9 +40,7 @@ public abstract class AbstractLayer implements Layer {
 
 	private String name;
 
-	private java.util.List layerChangedListeners = new ArrayList();
-
-	protected boolean dynamic = false;
+	private final List layerChangedListeners = new LinkedList();
 
 	/** Paint the selected Map objects */
 	public void paintSelections(Graphics2D g, LayerRenderer renderer,
@@ -86,29 +85,10 @@ public abstract class AbstractLayer implements Layer {
 
 	/** Notify listeners that the layer has changed */
 	public void notifyLayerChangedListeners(LayerChangedEvent event) {
-		ListIterator it = layerChangedListeners.listIterator();
-		while (it.hasNext()) {
-			((LayerChangedListener) it.next()).layerChanged(event);
+		Iterator it = layerChangedListeners.iterator();
+		while(it.hasNext()) {
+			((LayerChangedListener)it.next()).layerChanged(event);
 		}
-	}
-
-	/** 
-	 * If set to false layer is static and the data will not change.
-	 * Static layers are painted behind non-static (dynamic) layers on a
-	 * map. If it is desired for a static layer to be higher in the map it
-	 * setStatic() must be set to true.
-	 * @param b true - layer is static and data will not be update; layer is
-	 * painted behind any non-static layers.
-	 * false - layer is dynamic and layer will change if the layer's data is
-	 * changed; will be painted in front of any static layers
-	 */
-	public void setStatic(boolean b) {
-		dynamic = !b;
-	}
-
-	/** Is the layer static? */
-	public boolean isStatic() {
-		return !dynamic;
 	}
 
 	public Theme getTheme() {

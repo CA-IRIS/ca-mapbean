@@ -21,6 +21,7 @@ package us.mn.state.dot.shape;
 import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.util.List;
 import us.mn.state.dot.shape.event.LayerChangedEvent;
 import us.mn.state.dot.shape.event.LayerChangedListener;
 
@@ -51,23 +52,17 @@ public interface Layer {
 	public void addLayerChangedListener(LayerChangedListener listener);
 
 	/** Remove a layerChangedListener from the layer */
-	public void removeLayerChangedListener( LayerChangedListener listener );
+	public void removeLayerChangedListener(LayerChangedListener listener);
 
 	/** Notify all LayerChangedListeners that the layer has changed */
 	public void notifyLayerChangedListeners(LayerChangedEvent event);
-
-	/** Is the layer static? */
-	public boolean isStatic();
-
-	/** Set the layer as a static layer */
-	public void setStatic(boolean b);
 
 	/**
 	 * Get all of the paths present at the Point2D p in this layer.
 	 * @param p The Point2D at which to search.
 	 * @return a java.util.List containing all of the paths found.
 	 */
-	public java.util.List getPaths(Point2D p, LayerRenderer renderer);
+	public List getPaths(Point2D p, LayerRenderer renderer);
 
 	/**
 	 * Return an int representing the index of the first path found that

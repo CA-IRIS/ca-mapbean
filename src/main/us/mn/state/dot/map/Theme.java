@@ -46,7 +46,7 @@ public class Theme implements LayerChangedListener {
 	protected LayerRenderer selectionRenderer;
 
 	/** List of available renderers for theme */
-	protected java.util.List layerRenderers = new ArrayList();
+	protected List layerRenderers = new ArrayList();
 
 	/** Currently selected shapes */
 	private MapObject[] selections = new MapObject[ 0 ];
@@ -58,6 +58,8 @@ public class Theme implements LayerChangedListener {
 
 	/** ThemeChangedListeners that listen to this theme */
 	private List listeners = new ArrayList();
+
+	protected boolean dynamic = false;
 
 	/**
 	 * Create a new theme based on the layer parameter. It will have
@@ -110,7 +112,7 @@ public class Theme implements LayerChangedListener {
 
 	/** Get a List containing all of the renderers that have been
 	 * added to the theme */
-	public java.util.List getLayerRenderers() {
+	public List getLayerRenderers() {
 		return layerRenderers;
 	}
 
@@ -165,7 +167,7 @@ public class Theme implements LayerChangedListener {
 		if ( mapTip == null ) {
 			return result;
 		}
-		java.util.List found = layer.getPaths( point, renderer );
+		List found = layer.getPaths(point, renderer);
 		if ( ! found.isEmpty() ) {
 			result = mapTip.getTip( ( MapObject ) found.get( 0 ) );
 		}
@@ -212,11 +214,6 @@ public class Theme implements LayerChangedListener {
 				(ThemeChangedListener)it.next();
 			l.themeChanged(e);
 		}
-	}
-
-	/** Checks the static flag for this theme */
-	public boolean isStatic() {
-		return layer.isStatic();
 	}
 
 	public void layerChanged(LayerChangedEvent e) {
