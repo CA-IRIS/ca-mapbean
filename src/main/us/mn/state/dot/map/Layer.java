@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000  Minnesota Department of Transportation
+ * Copyright (C) 2000-2004  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,7 +16,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package us.mn.state.dot.shape;
 
 import java.awt.Graphics2D;
@@ -26,85 +25,63 @@ import us.mn.state.dot.shape.event.LayerChangedEvent;
 import us.mn.state.dot.shape.event.LayerChangedListener;
 
 /**
- * This interface should be used to add data to a MapBean object. 
+ * This interface should be used to add data to a MapBean object.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
  */
 public interface Layer {
-	
-	/**
-	 * Get the extent of this layer.
-	 */
-    public Rectangle2D getExtent();
-	
-	/**
-	 * Paint this layer.
-	 */
-	public void paint( Graphics2D g, LayerRenderer r );
-	
-	/**
-	 * Paint selected objects on this layer.
-	 */
-	public void paintSelections( Graphics2D g, LayerRenderer renderer,
-		MapObject[] selections );
-	
-	/**
-	 * Get the name of this layer.
-	 */
+
+	/** Get the name of this layer */
 	public String getName();
-	
-	/**
-	 * Register a LayerChangedListener with this layer.
-	 */
-	public void addLayerChangedListener( LayerChangedListener listener );
-	
-	/**
-	 * Remove a layerChangedListener from this layer.
-	 */
+
+	/** Get the theme for the layer */
+	public Theme getTheme();
+
+	/** Get the extent of the layer */
+	public Rectangle2D getExtent();
+
+	/** Paint the layer */
+	public void paint(Graphics2D g, LayerRenderer r);
+
+	/** Paint selected objects on the layer */
+	public void paintSelections(Graphics2D g, LayerRenderer renderer,
+		MapObject[] selections);
+
+	/** Register a LayerChangedListener with the layer */
+	public void addLayerChangedListener(LayerChangedListener listener);
+
+	/** Remove a layerChangedListener from the layer */
 	public void removeLayerChangedListener( LayerChangedListener listener );
-	
-	/**
-	 * Notify all LayerChangedListeners that this layer has changed.
-	 */
-	public void notifyLayerChangedListeners( LayerChangedEvent event );
-	
-	/**
-	 * Is this a static layer?
-	 */
+
+	/** Notify all LayerChangedListeners that the layer has changed */
+	public void notifyLayerChangedListeners(LayerChangedEvent event);
+
+	/** Is the layer static? */
 	public boolean isStatic();
-	
+
+	/** Set the layer as a static layer */
+	public void setStatic(boolean b);
+
 	/**
-	 * Set this layer as a static layer. 
-	 */
-	public void setStatic( boolean b );
-	
-	/**
-	 * Gets all of the paths present at the Point2D p in this layer.
+	 * Get all of the paths present at the Point2D p in this layer.
 	 * @param p The Point2D at which to search.
 	 * @return a java.util.List containing all of the paths found.
 	 */
-	public java.util.List getPaths( Point2D p, LayerRenderer renderer );
-	
+	public java.util.List getPaths(Point2D p, LayerRenderer renderer);
+
 	/**
-	 * Returns an int representing the index of the first path found that
+	 * Return an int representing the index of the first path found that
 	 * is contained by, intersects, or contains the Rectangle2D searchArea.
 	 * @param searchArea Rectangle2D representing the area to search.
-	 * @return an int representing the index of the first found path, returns
-	 * -1 if nothing found.
+	 * @return the index of the first found path, or -1 if nothing found.
 	 */
-	public MapObject search( Rectangle2D searchArea, LayerRenderer renderer );
-	
+	public MapObject search(Rectangle2D searchArea, LayerRenderer renderer);
+
 	/**
-	 * Returns an int representing the index of the first path found that
+	 * Return an int representing the index of the first path found that
 	 * is contained by, intersects, or contains the Point2D searchArea.
 	 * @param p Point2D representing the point to search.
-	 * @return an int representing the index of the first found path, returns
-	 * -1 if nothing found.
+	 * @return the index of the first found path, or -1 if nothing found.
 	 */
-	public MapObject search( Point2D p, LayerRenderer renderer );
-	
-	/**
-	 * Get the theme for this layer.
-	 */
-	public Theme getTheme();
+	public MapObject search(Point2D p, LayerRenderer renderer);
 }
