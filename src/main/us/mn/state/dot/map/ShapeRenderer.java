@@ -11,13 +11,13 @@ package us.mn.state.dot.shape;
 import java.awt.*;
 import java.awt.geom.*;
 
-public abstract class ShapeRenderer {
+public abstract class ShapeRenderer implements Renderer {
     MapTip mapTip = null;
     Symbol symbol = null;
 
-    public abstract void paint( Graphics2D g, GeneralPath path, int index);
-	public abstract void setField(NumericField f);
-	public abstract NumericField getField();
+    public abstract void paint( Graphics2D g, GeneralPath path, int index );
+	public abstract void setField( Field f );
+	public abstract Field getField();
 	
     public void setTip(MapTip m) {
         mapTip = m;

@@ -21,6 +21,7 @@ public final class IncidentLayer extends AbstractLayer implements
 
 	private Incident [] incidents = null;
 	private ListSelectionModel selectionModel = null;
+	private boolean directional = true;
 
 	/* the number of map units per mile */
 	private static final int MAP_UNITS_PER_MILE = 3218;
@@ -74,7 +75,11 @@ public final class IncidentLayer extends AbstractLayer implements
 		if ( isVisible() ) {
 			if ( incidents != null ) {
 				for ( int i = ( incidents.length - 1 ); i >= 0; i-- ){
-					incidents[ i ].paint( g );
+					if ( directional ) {
+						incidents[ i ].paintDirectionalIcon( g );
+					} else {
+						incidents[ i ].paintIncidentIcon( g );
+					}
 				}
 			}
 		}
@@ -146,5 +151,9 @@ public final class IncidentLayer extends AbstractLayer implements
 			result = ( ( Incident ) li.next() ).toString();
 		}
 		return result;
+	}
+
+	public void setDirectional( boolean b ) {
+		directional = b;
 	}
 }

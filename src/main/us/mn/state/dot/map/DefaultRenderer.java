@@ -13,7 +13,7 @@ import java.awt.*;
 
 public final class DefaultRenderer extends ShapeRenderer {
 
-    private Symbol symbol;
+	private Symbol symbol;
 	private NumericField field = null;
 	private String name = null;
 
@@ -37,11 +37,11 @@ public final class DefaultRenderer extends ShapeRenderer {
 		symbol.draw( g, path );
 	}
 
-	public void setField( NumericField f ){
-		field = f;
+	public void setField( Field f ){
+		field = ( NumericField ) f;
 	}
 
-	public NumericField getField(){
+	public Field getField(){
 		return field;
 	}
 }

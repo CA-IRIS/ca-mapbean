@@ -61,7 +61,7 @@ public final class MapPane extends JPanel implements LayerListener {
 	 * @param map us.mn.state.dot.shape.Map that contains the newly created
 	 * MapPane.
 	 */
-	public MapPane(Map map) {
+	public MapPane( Map map ) {
 		setDoubleBuffered( false );
 		staticBuffer = new BufferedImage( 1405, 1728,
 			BufferedImage.TYPE_INT_RGB );
@@ -498,7 +498,7 @@ public final class MapPane extends JPanel implements LayerListener {
 		Graphics2D g2D = ( Graphics2D ) staticBuffer.getGraphics();
 		int w = staticBuffer.getWidth( null );
 		int h = staticBuffer.getHeight( null );
-		g2D.setColor( Color.lightGray );
+		g2D.setColor( new Color( 204, 204, 204 ));
 		g2D.fillRect( 0, 0, w, h );
 		g2D.transform( screenTransform );
 		for ( int i = ( staticLayers.size() - 1 ); i >= 0; i-- ) {

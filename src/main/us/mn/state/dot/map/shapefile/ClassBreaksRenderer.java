@@ -78,11 +78,11 @@ public class ClassBreaksRenderer extends ShapeRenderer {
 		}
 	}
 
-	public final void setField( NumericField f ){
-		field = f;
+	public final void setField( Field f ){
+		field = ( NumericField ) f;
 	}
 
-	public final NumericField getField(){
+	public final Field getField(){
 		return field;
 	}
 }

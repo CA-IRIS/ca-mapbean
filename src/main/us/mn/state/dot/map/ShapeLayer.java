@@ -139,7 +139,11 @@ public class ShapeLayer extends AbstractLayer {
 		java.util.List result = new ArrayList();
 		switch( shapeType ) {
 		case ShapeTypes.POINT:
-			double size = painter.getSymbol().getSize();
+			Symbol symbol = painter.getSymbol();
+			if ( symbol == null ) {
+				return result;
+			}
+			double size = symbol.getSize();
 			Rectangle2D r = new Rectangle2D.Double( p.getX() - ( size / 2 ),
 				p.getY() - ( size / 2 ), size, size );
 			for ( int i = ( paths.length - 1 ); i >= 0; i-- ) {
@@ -191,7 +195,11 @@ public class ShapeLayer extends AbstractLayer {
 		String result = null;
 		switch( shapeType ) {
 		case ShapeTypes.POINT:
-			double size = painter.getSymbol().getSize();
+			Symbol symbol = painter.getSymbol();
+			if ( symbol == null ) {
+				return null;
+			}
+			double size = symbol.getSize();
 			Rectangle2D r = new Rectangle2D.Double( ( p.getX() - ( size / 2 ) ),
 				( p.getY() - ( size / 2 ) ), size, size );
 			for ( int i = ( paths.length - 1 ); i >= 0; i-- ) {
