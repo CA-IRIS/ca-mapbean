@@ -102,7 +102,6 @@ public class NavigationBar extends JToolBar {
 		return btnHome;
 	}
 
-
 	private void sizeButton(AbstractButton b){
 		b.setMargin(new Insets(1, 1, 1, 1));
 		b.setPreferredSize(new Dimension(70, 25));
