@@ -196,7 +196,6 @@ public final class Map extends JViewport {
 		String result = null;
 		for ( ListIterator it = layers.listIterator(); it.hasNext(); ) {
 			Layer l = ( Layer ) it.next();
-			//System.out.println(" Searching layer - " + l.getName());
 			result = l.getTip( p );
 			if ( result != null ) {
 				break;
@@ -271,14 +270,6 @@ public final class Map extends JViewport {
 					case SELECT:
 					break;
 					case ZOOM:
-					/*Double width = new Double( map.getSize().getWidth() / 1.5 );
-					Double height = new Double( map.getSize().getHeight() /
-					1.5 );
-					map.setMinimumSize( new Dimension( width.intValue(),
-					height.intValue() ) );
-					map.setPreferredSize( new Dimension( width.intValue(),
-					height.intValue() ) );
-					map.setSize( width.intValue(), height.intValue() );*/
 					Point2D center = new Point2D.Double( ( e.getX() +
 						getViewPosition().getX() ), ( e.getY() +
 						getViewPosition().getY() ) );
@@ -373,7 +364,5 @@ public final class Map extends JViewport {
 				box = false;
 			}
 		}
-
-
 	}
 }

@@ -118,32 +118,56 @@ public final class MapPane extends JPanel implements LayerListener {
 	 * @param center a Point2D in world coordinates
 	 */
 	public void scrollToMapPoint(Point2D center) {
-		Point2D a = convertPoint( center );
-		Point p = new Point( ( int ) a.getX() - 25, ( int ) a.getY() - 25 );
-		if ( p.getY() < 0 ){
-			System.out.println( "outside extent 1" );
-			System.out.println("x = " + p.getX() + " y = " + p.getY() );
-			p = shiftExtent( p, new Point( 0, -1 ) );
-		}
-		if ( p.getX() < 0 ) {
-			System.out.println( "outside extent 2" );
-			System.out.println("x = " + p.getX() + " y = " + p.getY() );
-			p = shiftExtent( p, new Point( -1, 0 ) );
-		}
-		if ( p.getY() > getHeight() ) {
-			System.out.println( "outside extent 3" );
-			System.out.println("x = " + p.getX() + " y = " + p.getY() );
-			p = shiftExtent( p, new Point( 0, 1 ) );
-		}
-		if ( p.getX() > getWidth() ) {
-			System.out.println( "outside extent 4" );
-			System.out.println("x = " + p.getX() + " y = " + p.getY() );
-			p = shiftExtent( p, new Point( 1, 0 ) );
-		}
-		System.out.println(" new x = " + p.getX() + " new y = " + p.getY() );
+		Point2D p = null;
+		p = screenTransform.transform( center, p );
 		Rectangle2D rec = new Rectangle2D.Double( p.getX(), p.getY(),
-			50, 50 );
-		viewport.scrollRectToVisible( rec.getBounds() );
+			1, 1 );
+		Rectangle r = rec.getBounds();
+		if ( viewport.getViewRect().contains( r ) ) {
+			return;
+		} else if ( ! this.getBounds().contains( r ) ) {
+			double newX = extent.getX();
+			double newY = extent.getY();
+			if ( center.getX() < extent.getX() ) {
+				newX = center.getX();
+			}
+			if ( center.getX() > extent.getMaxX() ) {
+				newX += center.getX() - extent.getMaxX();
+			}
+			if ( center.getY() < extent.getMinY() ) {
+				newY = center.getY();
+			}
+			if ( center.getY() > extent.getMaxY() ) {
+				newY += center.getY() - extent.getMaxY();
+			}
+			extent.setFrame( newX, newY, extent.getWidth(), extent.getHeight() );
+			resized();
+			Point loc = viewport.getViewPosition();
+			p = screenTransform.transform( center, p );
+			rec = new Rectangle2D.Double( p.getX(), p.getY(),
+				1, 1 );
+			r = rec.getBounds();
+		}
+		if ( viewport.getViewRect().contains( r ) ) {
+			return;
+		} else {
+			int xPos = ( int ) ( r.getX() - ( viewport.getWidth() / 2 ) );
+			if ( xPos < 0 ) {
+				xPos = 0;
+			} else if ( ( xPos + viewport.getWidth() ) > getWidth() ) {
+				xPos = getWidth() - viewport.getWidth();
+			}
+			int yPos = ( int ) ( r.getY() - ( viewport.getHeight() / 2 ) );
+			if ( yPos < 0 ) {
+				yPos = 0;
+			} else if ( ( yPos + viewport.getHeight() ) > getHeight() ) {
+				yPos = getHeight() - viewport.getHeight();
+			}
+
+			viewport.setViewPosition( new Point( xPos, yPos ) );
+		   //	bufferDirty = true;
+		   //	repaint();
+		}
 	}
 
 	/**
