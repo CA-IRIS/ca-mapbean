@@ -2,7 +2,7 @@
 
 <!-- ======================================================================= -->
 <!-- MapBean build file 	                                             -->
-<!-- $Revision: 1.7 $ $Date: 2001/03/20 17:40:28 $                                                       -->
+<!-- $Revision: 1.8 $ $Date: 2001/03/28 00:18:29 $                                                       -->
 <!-- ======================================================================= -->
 
 <project name="MapBean" default="jar" basedir=".">
@@ -39,6 +39,7 @@
             <fileset dir="${shape.dir}" >
 		<include name="gpoly.shp"/>
 		<include name="gpoly.dbf"/>
+		<include name="markers.*"/>
 	    </fileset>
         </copy>
     </target>
