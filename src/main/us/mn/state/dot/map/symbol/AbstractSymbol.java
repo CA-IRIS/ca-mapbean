@@ -104,16 +104,6 @@ public abstract class AbstractSymbol implements Symbol {
 		label = l;
 	}
 
-	public Component getLegend() {
-		JLabel label = new JLabel();
-		if((getLabel() != null) && (!getLabel().equals(""))) {
-			label.setText(getLabel());
-			ColorIcon icon = new ColorIcon(this);
-			label.setIcon(icon);
-		}
-		return label;
-	}
-
 	public Rectangle2D getBounds(MapObject object) {
 		if(isOutlined()) {
 			return outlineSymbol.getBounds(object);
@@ -132,39 +122,46 @@ public abstract class AbstractSymbol implements Symbol {
 		return path;
 	}
 
-	class ColorIcon implements Icon {
-
-		private int width;
-		private int height;
-		private final Symbol symbol;
-
-		public ColorIcon(Symbol symbol) {
-			this(symbol, 25, 15);
+	/** Get the legend component for the symbol */
+	public Component getLegend() {
+		String l = getLabel();
+		JLabel label = new JLabel();
+		if(l != null && (!l.equals(""))) {
+			label.setText(l);
+			label.setIcon(new LegendIcon());
 		}
+		return label;
+	}
 
-		public ColorIcon(Symbol symbol, int width, int height) {
-			this.symbol = symbol;
-			this.width = width;
-			this.height = height;
-		}
+	/** Inner class for icon displayed on the legend */
+	protected class LegendIcon implements Icon {
 
+		/** Width of icon */
+		static public final int WIDTH = 25;
+
+		/** Height of icon */
+		static public final int HEIGHT = 15;
+
+		/** Paint the icon onto the given component */
 		public void paintIcon(Component c, Graphics g, int x, int y) {
-			if(symbol.isOutlined()) {
-				g.setColor(symbol.getOutlineColor());
-				g.drawRect(x, y, width - 1, height - 1);
+			if(isFilled()) {
+				g.setColor(getColor());
+				g.fillRect(x + 1, y + 1, WIDTH - 2, HEIGHT - 2);
 			}
-			if(symbol.isFilled()) {
-				g.setColor(symbol.getColor());
-				g.fillRect(x + 1, y + 1, width - 2, height - 2);
+			if(isOutlined()) {
+				g.setColor(getOutlineColor());
+				g.drawRect(x, y, WIDTH - 1, HEIGHT - 1);
 			}
 		}
 
+		/** Get the icon width */
 		public int getIconWidth() {
-			return width;
+			return WIDTH;
 		}
 
-		public int getIconHeight(){
-			return height;
+		/** Get the icon height */
+		public int getIconHeight() {
+			return HEIGHT;
 		}
 	}
 }

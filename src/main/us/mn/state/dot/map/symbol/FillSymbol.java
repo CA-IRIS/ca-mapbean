@@ -62,47 +62,4 @@ public class FillSymbol extends AbstractSymbol {
 			outlineSymbol.draw(g, shape);
 		}
 	}
-
-	/** Get the legend component for the fill symbol */
-	public Component getLegend() {
-		String l = getLabel();
-		JLabel label = new JLabel();
-		if(l != null && (!l.equals(""))) {
-			label.setText(l);
-			label.setIcon(new Icon());
-		}
-		return label;
-	}
-
-	/** Inner class for icon displayed on the legend */
-	protected class Icon implements javax.swing.Icon {
-
-		/** Width of icon */
-		static public final int WIDTH = 25;
-
-		/** Height of icon */
-		static public final int HEIGHT = 15;
-
-		/** Paint the icon onto the given component */
-		public void paintIcon(Component c, Graphics g, int x, int y) {
-			if(isFilled()) {
-				g.setColor(getColor());
-				g.fillRect(x + 1, y + 1, WIDTH - 2, HEIGHT - 2);
-			}
-			if(isOutlined()) {
-				g.setColor(getOutlineColor());
-				g.drawRect(x, y, WIDTH - 1, HEIGHT - 1);
-			}
-		}
-
-		/** Get the icon width */
-		public int getIconWidth() {
-			return WIDTH;
-		}
-
-		/** Get the icon height */
-		public int getIconHeight() {
-			return HEIGHT;
-		}
-	}
 }
