@@ -27,10 +27,13 @@ import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.swing.DefaultListSelectionModel;
 import javax.swing.ListSelectionModel;
 
+import us.mn.state.dot.dds.client.DdsListener;
 import us.mn.state.dot.dds.client.Incident;
 import us.mn.state.dot.dds.client.IncidentDescription;
 import us.mn.state.dot.dds.client.IncidentListener;
@@ -41,12 +44,12 @@ import us.mn.state.dot.shape.event.SelectMouseMode;
  * Displays incidents as icons on map.
  *
  * @author erik.engstrom@dot.state.mn.us
- * @version $Revision: 1.42 $ $Date: 2003/08/27 13:41:22 $
+ * @version $Revision: 1.43 $ $Date: 2003/09/25 14:34:46 $
  */
 public class IncidentLayer extends AbstractLayer implements
-		IncidentListener {
+		IncidentListener, DdsListener {
 
-	protected IncidentWrapper [] incidents = null;
+	protected List incidents = new ArrayList();
 
 	protected ListSelectionModel selectionModel =
 		new DefaultListSelectionModel();
@@ -74,25 +77,26 @@ public class IncidentLayer extends AbstractLayer implements
      * repaint when there is at least one active incident or the first time
      * there are no incidents (to clear the layer).
      */
-	public synchronized void update( Incident[] incidents ){
-		this.incidents = new IncidentWrapper[ incidents.length ];
-		if ( incidents.length > 0 ){
+	public synchronized void update( Incident[] newIncidents ){
+		incidents.clear();
+		if ( newIncidents.length > 0 ){
             dirty = true;
-			double maxX = incidents[ 0 ].getX();
-			double maxY = incidents[ 0 ].getY();
+			double maxX = newIncidents[ 0 ].getX();
+			double maxY = newIncidents[ 0 ].getY();
 			double minX = maxX;
 			double minY = maxY;
-			for ( int i = 0; i < incidents.length; i++ ) {
-				this.incidents[ i ] = new IncidentWrapper( incidents[ i ] );
-				if ( incidents[ i ].getX() < minX ) {
-					minX = incidents[ i ].getX();
-				} else if ( incidents[ i ].getX() > maxX ) {
-					maxX = incidents[ i ].getX();
+			for ( int i = 0; i < newIncidents.length; i++ ) {
+				Incident incident = newIncidents[i];
+				incidents.add( new IncidentWrapper( incident ) );
+				if ( incident.getX() < minX ) {
+					minX = incident.getX();
+				} else if ( incident.getX() > maxX ) {
+					maxX = incident.getX();
 				}
-				if ( incidents[ i ].getY() < minY ) {
-					minY = incidents[ i ].getY();
-				} else if ( incidents[ i ].getY() > maxY ) {
-					maxY = incidents[ i ].getY();
+				if ( incident.getY() < minY ) {
+					minY = incident.getY();
+				} else if ( incident.getY() > maxY ) {
+					maxY = incident.getY();
 				}
 			}
 			extent = new Rectangle2D.Double( minX, minY, ( maxX - minX ),
@@ -134,45 +138,43 @@ public class IncidentLayer extends AbstractLayer implements
 
 
 	public void paint( Graphics2D g, LayerRenderer renderer ){
-		if ( incidents != null ) {
-			for ( int i = ( incidents.length - 1 ); i >= 0; i-- ){
-				renderer.render( g, incidents[ i ] );
-			}
+		for ( Iterator it = incidents.iterator(); it.hasNext();){
+			IncidentWrapper incident = (IncidentWrapper) it.next();
+			renderer.render( g, incident );
 		}
 	}
 
 	public java.util.List getPaths( Point2D p, LayerRenderer renderer ){
 		ArrayList result = new ArrayList();
-		if ( incidents != null ) {
-			for ( int i = ( incidents.length - 1 ); i >= 0; i-- ) {
-				double x = incidents[ i ].getX();
-				double y = incidents[ i ].getY();
-				Rectangle2D r = new Rectangle2D.Double( ( x - 500 ),
-					( y - 500 ), 1000, 1000 );
-				if ( r.contains( p ) ) {
-					result.add( incidents[ i ] );
-				}
+		for ( Iterator it = incidents.iterator(); it.hasNext();) {
+			IncidentWrapper incident = ( IncidentWrapper ) it.next();
+			double x = incident.getX();
+			double y = incident.getY();
+			Rectangle2D r = new Rectangle2D.Double( ( x - 500 ),
+				( y - 500 ), 1000, 1000 );
+			if ( r.contains( p ) ) {
+				result.add( incident );
 			}
 		}
 		return result;
 	}
 
 	public IncidentWrapper[] getIncidents() {
-			return incidents;
+		IncidentWrapper[] wrappers = new IncidentWrapper[0];
+		return (IncidentWrapper[]) incidents.toArray(wrappers);
 	}
 
 	private MapObject getIncident( Point2D p ) {
 		MapObject result = null;
-		if ( incidents != null ) {
-			for ( int i = ( incidents.length - 1 ); i >= 0; i-- ) {
-				double x = incidents[ i ].getX();
-				double y = incidents[ i ].getY();
-				Rectangle2D r = new Rectangle2D.Double( ( x - 500 ),
-					( y - 500 ), 1000, 1000 );
-				if ( r.contains( p ) ) {
-					result = incidents[ i ];
-					break;
-				}
+		for ( Iterator it = incidents.iterator(); it.hasNext();) {
+			IncidentWrapper incident = (IncidentWrapper) it.next();
+			double x = incident.getX();
+			double y = incident.getY();
+			Rectangle2D r = new Rectangle2D.Double( ( x - 500 ),
+				( y - 500 ), 1000, 1000 );
+			if ( r.contains( p ) ) {
+				result = incident;
+				break;
 			}
 		}
 		return result;
@@ -181,17 +183,16 @@ public class IncidentLayer extends AbstractLayer implements
 	public final MapObject search( Rectangle2D searchArea,
 			LayerRenderer renderer ) {
 		MapObject result = null;
-		if ( incidents != null ) {
-			for ( int i = ( incidents.length - 1 ); i >= 0; i-- ) {
-				double x = incidents[ i ].getX();
-				double y = incidents[ i ].getY();
-				Rectangle2D r = new Rectangle2D.Double( ( x - 500 ),
-					( y - 500 ), 1000, 1000 );
-				if ( r.contains( searchArea ) || r.intersects( searchArea ) ||
-						searchArea.contains( r ) ) {
-					result = incidents[ i ];
-					break;
-				}
+		for ( Iterator it = incidents.iterator(); it.hasNext();){
+			IncidentWrapper incident = (IncidentWrapper)it.next();
+			double x = incident.getX();
+			double y = incident.getY();
+			Rectangle2D r = new Rectangle2D.Double( ( x - 500 ),
+				( y - 500 ), 1000, 1000 );
+			if ( r.contains( searchArea ) || r.intersects( searchArea ) ||
+					searchArea.contains( r ) ) {
+				result = incident;
+				break;
 			}
 		}
 		return result;
@@ -199,16 +200,15 @@ public class IncidentLayer extends AbstractLayer implements
 
 	public MapObject search( Point2D p, LayerRenderer renderer ) {
 		MapObject result = null;
-		if ( incidents != null ) {
-			for ( int i = ( incidents.length - 1 ); i >= 0; i-- ) {
-				double x = incidents[ i ].getX();
-				double y = incidents[ i ].getY();
-				Rectangle2D r = new Rectangle2D.Double( ( x - 500 ),
-					( y - 500 ), 1000, 1000 );
-				if ( r.contains( p ) ) {
-					result = incidents[ i ];
-					break;
-				}
+		for ( Iterator it = incidents.iterator(); it.hasNext();) {
+			IncidentWrapper incident = (IncidentWrapper)it.next();
+			double x = incident.getX();
+			double y = incident.getY();
+			Rectangle2D r = new Rectangle2D.Double( ( x - 500 ),
+				( y - 500 ), 1000, 1000 );
+			if ( r.contains( p ) ) {
+				result = incident;
+				break;
 			}
 		}
 		return result;
@@ -355,4 +355,40 @@ public class IncidentLayer extends AbstractLayer implements
 			}
 		}
 	}
+	/* (non-Javadoc)
+	 * @see us.mn.state.dot.dds.client.DdsListener#update(java.util.List)
+	 */
+	public void update(List newIncidents) {
+		if ( newIncidents.size() > 0 ){
+			dirty = true;
+			Incident first = (Incident)newIncidents.get(0);
+			double maxX = first.getX();
+			double maxY = first.getY();
+			double minX = maxX;
+			double minY = maxY;
+			for ( Iterator it = newIncidents.iterator(); it.hasNext();){
+				Incident incident = (Incident)it.next();
+				incidents.add( new IncidentWrapper(incident) );
+				if ( incident.getX() < minX ) {
+					minX = incident.getX();
+				} else if ( incident.getX() > maxX ) {
+					maxX = incident.getX();
+				}
+				if ( incident.getY() < minY ) {
+					minY = incident.getY();
+				} else if ( incident.getY() > maxY ) {
+					maxY = incident.getY();
+				}
+			}
+			extent = new Rectangle2D.Double( minX, minY, ( maxX - minX ),
+				( maxY - minY ) );
+			notifyLayerChangedListeners( new LayerChangedEvent( this,
+				LayerChangedEvent.DATA ) );
+		} else if ( dirty ) { //clear layer
+			notifyLayerChangedListeners( new LayerChangedEvent( this,
+				LayerChangedEvent.DATA ) );
+			dirty = false;
+		}
+	}
+
 }

@@ -31,7 +31,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 
-import us.mn.state.dot.dds.client.DataListener;
+import us.mn.state.dot.dds.client.DdsListener;
 import us.mn.state.dot.dds.client.Station;
 import us.mn.state.dot.dds.client.StationClient;
 import us.mn.state.dot.dds.client.StationListener;
@@ -47,10 +47,10 @@ import us.mn.state.dot.shape.shapefile.ShapeRenderer;
  * file.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.35 $ $Date: 2003/08/15 15:52:45 $ 
+ * @version $Revision: 1.36 $ $Date: 2003/09/25 14:34:46 $ 
  */
 public final class StationLayer extends ShapeLayer implements
-		StationListener, DataListener {
+		StationListener, DdsListener {
 	/**
 	 * Constructs a StationLayer.
 	 * @throws IOException Will throw an IOException if the gpoly.dbf or
@@ -68,7 +68,7 @@ public final class StationLayer extends ShapeLayer implements
 	
 	public StationLayer( XmlClient xmlClient ) throws IOException {
 		this();
-		xmlClient.addDataListener( this );
+		xmlClient.addDdsListener( this );
 	}
 
 	/**
