@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000  Minnesota Department of Transportation
+ * Copyright (C) 2000-2004  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,7 +16,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package us.mn.state.dot.shape;
 
 import javax.swing.JPanel;
@@ -25,26 +24,21 @@ import javax.swing.JPanel;
  * A Legend for a given renderer.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.9 $ $Date: 2003/05/06 20:58:15 $ 
  */
-public final class MapLegend extends JPanel {
+public class MapLegend extends JPanel {
 
 	public final LegendCellRenderer cellMaker = new LegendCellRenderer();
 
-	/**
-	 * Create a new MapLegend.
-	 */
-	public MapLegend( ClassBreaksRenderer renderer ) {
-		setMapRenderer( renderer );
+	/** Create a new MapLegend */
+	public MapLegend(ClassBreaksRenderer renderer) {
+		setMapRenderer(renderer);
 	}
-	
-	/**
-	 * Set the renderer this legend uses.
-	 */
-	public void setMapRenderer( ClassBreaksRenderer renderer ){
-		this.removeAll();
-		for ( int i = 0; i < renderer.getBreakCount(); i++ ){
-			add( cellMaker.getRenderedCell( renderer.getSymbol( i ) ) );
+
+	/** Set the renderer this legend uses */
+	public void setMapRenderer(ClassBreaksRenderer renderer) {
+		removeAll();
+		for(int i = 0; i < renderer.getBreakCount(); i++) {
+			add(cellMaker.getRenderedCell(renderer.getSymbol(i)));
 		}
 		revalidate();
 		repaint();

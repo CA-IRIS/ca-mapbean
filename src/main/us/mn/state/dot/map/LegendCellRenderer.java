@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000  Minnesota Department of Transportation
+ * Copyright (C) 2000-2004  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,7 +16,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package us.mn.state.dot.shape;
 
 import java.awt.Component;
@@ -28,16 +27,17 @@ import javax.swing.ListCellRenderer;
  * ListCellRenderer for rendering LegendItems.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.7 $ $Date: 2003/05/06 20:58:15 $
  */
-public final class LegendCellRenderer implements ListCellRenderer {
+public class LegendCellRenderer implements ListCellRenderer {
 
-	public Component getListCellRendererComponent( JList list, Object value,
-			 int index, boolean isSelected, boolean cellHasFocus ) {
-		return ( ( LegendItem ) value ).getLegend();
+	public Component getListCellRendererComponent(JList list, Object value,
+		 int index, boolean isSelected, boolean cellHasFocus)
+	{
+		return ((LegendItem)value).getLegend();
 	}
 
-	public Component getRenderedCell( Object value ){
-		return getListCellRendererComponent( null, value, 0, false, false );
+	public Component getRenderedCell(Object value) {
+		return getListCellRendererComponent(null, value, 0, false,
+			false);
 	}
 }
