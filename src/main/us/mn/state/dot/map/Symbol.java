@@ -53,8 +53,6 @@ public interface Symbol {
 
 	public boolean isOutlined();
 
-	public Component getLegend();
-
 	public Shape getShape(MapObject object);
 
 	public Rectangle2D getBounds(MapObject object);

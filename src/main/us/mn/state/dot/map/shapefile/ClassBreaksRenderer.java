@@ -18,113 +18,99 @@
  */
 package us.mn.state.dot.shape;
 
+import java.awt.Component;
 import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.geom.Rectangle2D;
-
+import java.util.Iterator;
+import java.util.LinkedList;
 import us.mn.state.dot.shape.shapefile.ShapeObject;
 import us.mn.state.dot.shape.shapefile.ShapeRenderer;
+import us.mn.state.dot.shape.symbol.FillSymbol;
 
 /**
- * A renderer that renders objects base on a numeric field and a set of class breaks.
+ * A renderer that renders objects base on a numeric field and a set of
+ * class breaks.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
  */
 public class ClassBreaksRenderer extends ShapeRenderer {
 
-	private double [] classBreaks;
-	private Symbol [] symbols;
-	private String field;
+	class ClassBreak {
+		public final double value;
+		public final FillSymbol symbol;
+		public ClassBreak(double v, FillSymbol s) {
+			value = v;
+			symbol = s;
+		}
+	}
 
-	public ClassBreaksRenderer( String field, int breakCount ) {
+	protected final String field;
+	protected final LinkedList classBreaks = new LinkedList();
+
+	public ClassBreaksRenderer(String field) {
 		this.field = field;
-		classBreaks = new double[ breakCount ];
-		symbols = new Symbol[ breakCount + 1 ];
 	}
 
-	public ClassBreaksRenderer( String field, int breakCount,
-			String name ){
-		this( field, breakCount );
-		setName( name );
+	public ClassBreaksRenderer(String field, String name) {
+		this(field);
+		setName(name);
 	}
 
-	public void setBreak(int index, double value) {
-		classBreaks[ index ] = value;
+	/** Add a break to this renderer */
+	public void addBreak(double v, FillSymbol s) {
+		ClassBreak b = new ClassBreak(v, s);
+		classBreaks.add(b);
 	}
 
-	public double getBreak(int index) {
-		return classBreaks[ index ];
-	}
-
-	public void setBreaks(double[] values) {
-		classBreaks = values;
-	}
-
-	public int getBreakCount() {
-		return classBreaks.length;
-	}
-
-	public void setSymbol(int index, Symbol s) {
-		symbols[ index ] = s;
-	}
-
-	public Symbol getSymbol(int index) {
-		return symbols[ index ];
-	}
-
-	public Symbol[] getSymbols() {
-		return symbols;
+	/** Get components to display the legend */
+	public Component[] getLegend() {
+		LinkedList legend = new LinkedList();
+		Iterator it = classBreaks.iterator();
+		while(it.hasNext()) {
+			ClassBreak b = (ClassBreak)it.next();
+			legend.add(b.symbol.getLegend());
+		}
+		return (Component [])legend.toArray(new Component[0]);
 	}
 
 	/** Draw the object */
 	public void render(Graphics2D g, MapObject object) {
-		Symbol symbol = getSymbol( object );
-		if ( symbol != null ) {
-			symbol.draw( g, object.getShape() );
+		Symbol symbol = getSymbol(object);
+		if(symbol != null) {
+			symbol.draw(g, object.getShape());
 		}
 	}
 
 	/** Determine which class the value falls into */
-	private Symbol getSymbol( MapObject object ) {
-		ShapeObject shapeObject = ( ShapeObject ) object;
-		Number number = ( Number ) shapeObject.getValue( field );
-		if ( number == null ) {
-			return null;
-		}
+	protected Symbol getSymbol(MapObject object) {
+		ShapeObject shapeObject = (ShapeObject)object;
+		Number number = (Number)shapeObject.getValue(field);
+		if(number == null) return null;
 		double value = number.doubleValue();
-		for ( int i = 0; i < classBreaks.length; i++ ) {
-			if ( value <= classBreaks[ i ] ) {
-				return symbols[ i ];
-			}
-		}
-		if ( value >= classBreaks[ classBreaks.length - 1 ] ) {
-			return symbols[ classBreaks.length ];
+		Iterator it = classBreaks.iterator();
+		while(it.hasNext()) {
+			ClassBreak b = (ClassBreak)it.next();
+			if(value <= b.value) return b.symbol;
 		}
 		return null;
 	}
 
 	/** Get the shape that would be used to render this object */
-	public Shape getShape( MapObject object ) {
-		Symbol symbol = getSymbol( object );
-		if ( symbol != null ) {
-			return symbol.getShape( object );
+	public Shape getShape(MapObject object) {
+		Symbol symbol = getSymbol(object);
+		if(symbol != null) {
+			return symbol.getShape(object);
 		}
 		return null;
 	}
 
-	public Rectangle2D getBounds( MapObject object ) {
-		Symbol symbol = getSymbol( object );
-		if ( symbol != null ) {
-			return symbol.getBounds( object );
+	/** Get the bounds of the specified map object */
+	public Rectangle2D getBounds(MapObject object) {
+		Symbol symbol = getSymbol(object);
+		if(symbol != null) {
+			return symbol.getBounds(object);
 		}
 		return null;
-	}
-
-	public void setField(String field) {
-		this.field = field;
-	}
-
-	public String getField() {
-		return field;
 	}
 }

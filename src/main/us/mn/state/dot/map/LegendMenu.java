@@ -18,6 +18,7 @@
  */
 package us.mn.state.dot.shape;
 
+import java.awt.Component;
 import javax.swing.BorderFactory;
 import javax.swing.JMenu;
 
@@ -39,9 +40,10 @@ public class LegendMenu extends JMenu {
 	/** Set the LayerRenderer that this menu displays */
 	public void setMapRenderer(LayerRenderer r) {
 		removeAll();
-		Symbol[] symbols = r.getSymbols();
-		for(int i = 0; i < symbols.length; i++) {
-			add(symbols[i].getLegend());
+		Component[] legend = r.getLegend();
+		if(legend == null) return;
+		for(int i = 0; i < legend.length; i++) {
+			add(legend[i]);
 		}
 	}
 }

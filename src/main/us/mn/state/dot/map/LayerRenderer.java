@@ -18,6 +18,7 @@
  */
 package us.mn.state.dot.shape;
 
+import java.awt.Component;
 import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.geom.Rectangle2D;
@@ -38,6 +39,6 @@ public interface LayerRenderer {
 	/** Get the bounds of the rendered MapObject */
 	public Rectangle2D getBounds(MapObject object);
 
-	/** Get the symbols used by this renderer */
-	public Symbol[] getSymbols();
+	/** Get the legend for this renderer */
+	public Component[] getLegend();
 }
