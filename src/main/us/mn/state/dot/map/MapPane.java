@@ -31,7 +31,7 @@ import java.util.*;
  * subsystem is not available.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.42 $ $Date: 2001/04/25 19:46:35 $
+ * @version $Revision: 1.43 $ $Date: 2001/05/07 21:15:03 $
  */
 public final class MapPane implements ThemeChangedListener {
 	
@@ -115,6 +115,13 @@ public final class MapPane implements ThemeChangedListener {
 		result.addAll( themes );
 		return result;
 	}
+
+	/**
+	 * Set whether or not the background should be transparent.
+	 */
+	public void setTransparent( boolean transparent ) {
+		this.transparent = transparent;
+	}
 	
 	/**
 	 * Set the size of the MapImage.
@@ -138,7 +145,7 @@ public final class MapPane implements ThemeChangedListener {
 			width = 1;
 		}
 		screenBuffer = createImage( width, height );
-        staticBuffer = createImage( width, height );
+		staticBuffer = createImage( width, height );
 		rescale();
 	}
 	
@@ -275,7 +282,7 @@ public final class MapPane implements ThemeChangedListener {
 		if ( screenBuffer == null ) return;
 		synchronized ( screenBuffer ) {
 			Graphics2D g = screenBuffer.createGraphics();
-				if ( staticBufferDirty ) {
+			if ( staticBufferDirty ) {
 				updateStaticBuffer();
 			}
             if ( transparent ) {
