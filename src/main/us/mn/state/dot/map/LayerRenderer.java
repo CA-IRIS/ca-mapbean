@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000  Minnesota Department of Transportation
+ * Copyright (C) 2000-2004  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,7 +16,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package us.mn.state.dot.shape;
 
 import java.awt.Graphics2D;
@@ -27,29 +26,18 @@ import java.awt.geom.Rectangle2D;
  * A LayerRenderer determines how a Layers data is rendered on the map.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.5 $ $Date: 2001/08/15 16:08:51 $ 
  */
 public interface LayerRenderer {
-	
-	/** 
-	 * Renders the MapObject on the graphics.
-	 * @param object, the MapObject to render.
-	 */
-    public void render( Graphics2D g, MapObject object );
-	
-	/**
-	 * Gets the shape that would be used to render this object.
-	 */
-	public Shape getShape( MapObject object );
-	
-	/**
-	 * Get the bounds of the rendered MapObject.
-	 */
-	public Rectangle2D getBounds( MapObject object );
-	
-	/**
-	 * Get they symbols used by this renderer.
-	 */
+
+	/** Render a MapObject on the graphics */
+	public void render(Graphics2D g, MapObject object);
+
+	/** Get the shape that would be used to render this object */
+	public Shape getShape(MapObject object);
+
+	/** Get the bounds of the rendered MapObject */
+	public Rectangle2D getBounds(MapObject object);
+
+	/** Get the symbols used by this renderer */
 	public Symbol[] getSymbols();
-	
 }
