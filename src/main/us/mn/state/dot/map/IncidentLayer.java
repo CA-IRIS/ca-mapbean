@@ -17,13 +17,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-//Title:        IncidentLayer
-//Version:      1.0
-//Copyright:    Copyright (c) 1999
-//Author:       Erik Engstrom
-//Company:      MnDOT
-//Description:  Displays incidents as icons on map.
-
 package us.mn.state.dot.shape;
 
 import java.awt.*;
@@ -35,7 +28,12 @@ import us.mn.state.dot.shape.event.*;
 import us.mn.state.dot.tms.*;
 import us.mn.state.dot.tms.toast.TMSProxy;
 
-
+/**
+ * Displays incidents as icons on map.
+ *
+ * @author erik.engstrom@dot.state.mn.us
+ * @version 
+ */
 public class IncidentLayer extends AbstractLayer implements
 		IncidentListener {
 
@@ -88,8 +86,8 @@ public class IncidentLayer extends AbstractLayer implements
 					maxY = incidents[ i ].getY();
 				}
 			}
-			extent = new Rectangle2D.Double( minX, minY, ( maxX - minX )
-				, ( maxY - minY ) );
+			extent = new Rectangle2D.Double( minX, minY, ( maxX - minX ),
+				( maxY - minY ) );
 			SwingUtilities.invokeLater( new NotifyThread( this,
 				LayerChangedEvent.DATA ) );
 		}

@@ -26,7 +26,7 @@ import java.awt.*;
  * The AbstractLayer implements much of the functionality of the Layer
  * interface.
  *
- * @author Erik Engstrom
+ * @author erik.engstrom@dot.state.mn.us
  * @since 1.0
  */
 public abstract class AbstractLayer implements Layer {
@@ -83,7 +83,7 @@ public abstract class AbstractLayer implements Layer {
 	public void notifyLayerChangedListeners( LayerChangedEvent event ) {
 		ListIterator it = layerChangedListeners.listIterator();
 		while ( it.hasNext() ){
-			(( LayerChangedListener ) it.next() ).layerChanged( event );
+			( ( LayerChangedListener ) it.next() ).layerChanged( event );
 		}
 	}
 
