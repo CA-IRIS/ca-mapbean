@@ -26,7 +26,7 @@ import javax.swing.*;
 /**
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.2 $ $Date: 2001/04/19 16:49:31 $ 
+ * @version $Revision: 1.3 $ $Date: 2001/06/07 22:57:05 $ 
  */
 public abstract class AbstractSymbol implements LegendItem, Symbol {
 
@@ -121,8 +121,11 @@ public abstract class AbstractSymbol implements LegendItem, Symbol {
 	}
 
 	class ColorIcon implements Icon {
+		
+		/** Fill color of icon. */
 		private Color color;
-		private int w, h;
+		private int width;
+		private int height;
 
 		public ColorIcon(){
 			this( Color.gray, 25, 15 );
@@ -132,17 +135,17 @@ public abstract class AbstractSymbol implements LegendItem, Symbol {
 			this( color, 25, 15 );
 		}
 
-		public ColorIcon( Color color, int w, int h ){
+		public ColorIcon( Color color, int width, int height ){
 			this.color = color;
-			this.w = w;
-			this.h = h;
+			this.width = width;
+			this.height = height;
 		}
 
 		public void paintIcon( Component c, Graphics g, int x, int y ) {
 			g.setColor( Color.black );
-			g.drawRect( x, y, w - 1, h - 1 );
+			g.drawRect( x, y, width - 1, height - 1 );
 			g.setColor( color );
-			g.fillRect( x + 1, y + 1, w - 2, h - 2 );
+			g.fillRect( x + 1, y + 1, width - 2, height - 2 );
 		}
 		
 		public Color getColor() {
@@ -154,11 +157,11 @@ public abstract class AbstractSymbol implements LegendItem, Symbol {
 		}
 
 		public int getIconWidth() {
-			return w;
+			return width;
 		}
 
 		public int getIconHeight(){
-			return h;
+			return height;
 		}
 	}
 }

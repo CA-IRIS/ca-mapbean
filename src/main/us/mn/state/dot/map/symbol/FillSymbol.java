@@ -21,12 +21,13 @@ package us.mn.state.dot.shape;
 
 import java.awt.*;
 import java.awt.geom.*;
+import javax.swing.*;
 
 /**
  * A FillSymbol is used to paint a polygon on a Map only SOLID_FILL is implemented.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.10 $ $Date: 2001/04/20 17:17:54 $ 
+ * @version $Revision: 1.11 $ $Date: 2001/06/07 22:57:05 $ 
  */
 public final class FillSymbol extends AbstractSymbol {
 
@@ -67,6 +68,54 @@ public final class FillSymbol extends AbstractSymbol {
 		}
 		if ( isOutLined() ){
 			outlineSymbol.draw( g, path );
+		}
+	}
+	
+	public Component getLegend(){
+		JLabel label = new JLabel();
+		if ( ( getLabel() != null ) && ( ! getLabel().equals( "" ) ) ) {
+			label.setText( getLabel() );
+			FillSymbolIcon icon = new FillSymbolIcon( this );
+			label.setIcon( icon );
+		}
+		return label;
+	}
+
+	class FillSymbolIcon implements Icon {
+		
+		private final FillSymbol symbol;
+		private int width;
+		private int height;
+
+		public FillSymbolIcon( FillSymbol symbol ){
+			this( symbol, 25, 15 );
+		}
+
+		public FillSymbolIcon( FillSymbol symbol, int width, int height ){
+			this.symbol = symbol;
+			this.width = width;
+			this.height = height;
+		}
+
+		public void paintIcon( Component c, Graphics g, int x, int y ) {
+			Graphics2D g2 = ( Graphics2D ) g;
+			if ( symbol.isOutLined() ) {
+				//g2.setStroke( 
+				g2.setColor( symbol.getOutLineSymbol().getColor() );
+				g2.drawRect( x, y, width - 1, height - 1 );
+			}
+			if ( symbol.isFilled() ) {
+				g.setColor( symbol.getColor() );
+				g.fillRect( x + 1, y + 1, width - 2, height - 2 );
+			}
+		}
+		
+		public int getIconWidth() {
+			return width;
+		}
+
+		public int getIconHeight(){
+			return height;
 		}
 	}
 }
