@@ -39,7 +39,6 @@ public abstract class AbstractSymbol implements Symbol {
 
 	protected boolean filled = true;
 	protected Color color = Color.BLACK;
-	protected Color outlineColor = Color.BLACK;
 	protected boolean outlined = false;
 	protected LineSymbol outlineSymbol = new SolidLine();
 	protected final String label;
