@@ -62,7 +62,7 @@ public abstract class PointSymbol extends AbstractSymbol {
 		}
 	}
 
-	public int getSize(){
+	public int getSize() {
 		return size;
 	}
 

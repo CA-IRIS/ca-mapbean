@@ -73,12 +73,14 @@ public class FillSymbol extends AbstractSymbol {
 		}
 	}
 
-	public Component getLegend(){
+	/** Get the legend component for this symbol */
+	public Component getLegend() {
+		String l = getLabel();
 		JLabel label = new JLabel();
-		if ( ( getLabel() != null ) && ( ! getLabel().equals( "" ) ) ) {
-			label.setText( getLabel() );
-			FillSymbolIcon icon = new FillSymbolIcon( this );
-			label.setIcon( icon );
+		if(l != null && (!l.equals(""))) {
+			label.setText(l);
+			FillSymbolIcon icon = new FillSymbolIcon(this);
+			label.setIcon(icon);
 		}
 		return label;
 	}

@@ -29,19 +29,18 @@ import java.awt.geom.Ellipse2D;
  */
 public class CircleMarker extends PointSymbol {
 
-	private final Ellipse2D shape = new Ellipse2D.Double();
+	/** Shape to draw for circle markers */
+	protected final Ellipse2D shape = new Ellipse2D.Double();
 
-	private int radius;
+	/** Radius of the circle */
+	protected int radius;
 
 	/** Create a new CircleMarker */
 	public CircleMarker() {
 		this(Color.BLACK);
 	}
 
-	/**
-	 * Constructs a CircleMarker with the color set to c.
-	 * @param c The color of the Circle Marker.
-	 */
+	/** Create a CircleMarker of the given color */
 	public CircleMarker(Color c) {
 		super(c);
 	}
@@ -66,14 +65,15 @@ public class CircleMarker extends PointSymbol {
 		super(c, label, outlined);
 	}
 
+	/** Set the size (diameter) of the circle marker */
 	public void setSize(int size) {
 		super.setSize(size);
-		radius = this.size / 2;
+		radius = size / 2;
 	}
 
+	/** Get the shape translated to the given location */
 	protected Shape getShape(double x, double y) {
-		shape.setFrame( ( x - radius ), ( y - radius ),
-			size, size );
+		shape.setFrame((x - radius), (y - radius), size, size);
 		return shape;
 	}
 }
