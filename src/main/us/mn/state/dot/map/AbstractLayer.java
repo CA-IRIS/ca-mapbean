@@ -80,7 +80,5 @@ abstract public class AbstractLayer implements Layer {
 	}
 
 	/** Get the theme to use for this layer */
-	public Theme getTheme() {
-		return new Theme(this, new DefaultRenderer(new CircleMarker()));
-	}
+	abstract public Theme getTheme();
 }
