@@ -32,11 +32,10 @@ public class ShapePrinter {
 	public ShapePrinter() {
 		try{
 			ShapeLayer cameraLayer = new ShapeLayer("C:\\gpoly\\tvp", "cameras");
-			FileWriter fw = new FileWriter("C:\\CameraShape.txt");
-			boolean result = cameraLayer.writeToFile(fw);
-			fw.flush();
-			fw.close();
-			System.out.println(result);
+			OutputStream out = new FileOutputStream("C:\\CameraShape.txt");
+			cameraLayer.printData( out );
+			out.flush();
+			out.close();
 		} catch (IOException ex){
 			ex.printStackTrace();
 		}

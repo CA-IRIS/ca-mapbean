@@ -60,7 +60,22 @@ public class ShapeLayer extends AbstractLayer {
 		}
 		return null;
 	}
-
+	
+	public ShapeLayer( URL fileLocation, String layerName ) throws IOException {
+		setName( layerName );
+		String url = fileLocation.toExternalForm();
+		if ( url.endsWith( ".shp" ) ) {
+			url = url.substring( 0, url.length() - 4 ) + ".dbf";
+		} else { 
+			throw new IOException( "fileLocation must be a '.shp' file" );
+		}
+		ShapeFile shapeFile = new ShapeFile( fileLocation.openStream() );
+		URL dbUrl = new URL( url );
+		DbaseReader dbFile = new DbaseReader( dbUrl.openStream() );
+		fields = dbFile.getFields();
+		createShapeLayer( shapeFile );
+	}
+	
 	public ShapeLayer( String fileName, String layerName, String jarFileName )
 			 throws IOException {
 		setName( layerName );
@@ -76,14 +91,14 @@ public class ShapeLayer extends AbstractLayer {
 	
 	public ShapeLayer( String fileName, String layerName ) throws IOException {
 		setName( layerName );
-		//URL url = ShapeLayer.class.getResource( "/" + fileName + ".dbf" );
-		URL url = new URL("file:\\" + fileName + ".dbf");
+		URL url = ShapeLayer.class.getResource( "/" + fileName + ".dbf" );
+		//URL url = new URL("file:\\" + fileName + ".dbf");
 		if ( url == null ) {
 			System.out.println( "File " + fileName + ".dbf was not found" );
 		}
 		DbaseReader dbFile = new DbaseReader( url );
-		//url = ShapeLayer.class.getResource( "/" + fileName + ".shp" );
-		url = new URL("file:\\" + fileName + ".shp");
+		url = ShapeLayer.class.getResource( "/" + fileName + ".shp" );
+		//url = new URL("file:\\" + fileName + ".shp");
 		if ( url == null ) {
 			System.out.println( "File " + fileName + ".shp was not found" );
 		}
@@ -121,9 +136,9 @@ public class ShapeLayer extends AbstractLayer {
 	}
 
 	/** Create a new Layer from a ShapeFile */
-	public ShapeLayer( String fileName ) throws IOException {
+	/*public ShapeLayer( String fileName ) throws IOException {
 		 this( fileName, fileName );
-	}
+	}*/
 
 	/** Paint this Layer */
 	public void paint( Graphics2D g, LayerRenderer renderer ) {

@@ -147,11 +147,15 @@ public final class StationLayer extends ShapeLayer implements StationListener {
 		}
 		
 		public boolean mousePressed( final java.awt.event.MouseEvent event ) {
-			boolean result = false;
-			if ( SwingUtilities.isRightMouseButton( event ) ) {
-				int index = getIndex( event );
-				if ( index != -1 ) {
-					result = true;
+			int index = getIndex( event );
+			if ( index == -1 ) {
+				return false;
+			} else {
+				int[] selections = { index };
+				setSelections( selections );
+				notifyThemeChangedListeners( new ThemeChangedEvent( this,
+					ThemeChangedEvent.SELECTION ) );
+				if ( SwingUtilities.isRightMouseButton( event ) ) {
 					idMenuItem.setText( "Station " + layer.getField( "STATION2"
 						).getStringValue( index ) + ": " + layer.getField( "NAME"
 						).getStringValue( index ) );
@@ -163,8 +167,8 @@ public final class StationLayer extends ShapeLayer implements StationListener {
 					menu.show( event.getComponent(), event.getX(),
 						event.getY() );
 				}
+				return true;
 			}
-			return result;
 		}
 		
 		public boolean mouseDragged( final java.awt.event.MouseEvent event ) {
@@ -199,16 +203,7 @@ public final class StationLayer extends ShapeLayer implements StationListener {
 		}
 		
 		public boolean mouseClicked( final java.awt.event.MouseEvent event ) {
-			int index = getIndex( event );
-			if ( index == -1 ) {
-				return false;
-			} else {
-				int[] selections = { index };
-				setSelections( selections );
-				notifyThemeChangedListeners( new ThemeChangedEvent( this,
-					ThemeChangedEvent.SELECTION ) );
-				return true;
-			}
+			return false;
 		}
 	}
 }

@@ -57,6 +57,9 @@
         <copy todir="${build.classes}/images">
             <fileset dir="${src.images.dir}" />
         </copy>
+        <copy todir="${build.classes}/gpoly">
+            <fileset dir="../gpoly" />
+        </copy>
     </target>
 
     <!-- =================================================================== -->
