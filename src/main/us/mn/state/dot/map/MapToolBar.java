@@ -20,7 +20,7 @@ package us.mn.state.dot.shape;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ListIterator;
+import java.util.Iterator;
 import javax.swing.JComboBox;
 import javax.swing.JMenuBar;
 import javax.swing.JToolBar;
@@ -53,10 +53,10 @@ public class MapToolBar extends NavigationBar {
 	{
 		final JComboBox paintCombo = new JComboBox();
 		paintCombo.setLightWeightPopupEnabled(false);
-		ListIterator li = map.getTheme(
-			theme).getLayerRenderers().listIterator();
-		while(li.hasNext()) {
-			paintCombo.addItem(li.next());
+		Iterator it = map.getTheme(
+			theme).getLayerRenderers().iterator();
+		while(it.hasNext()) {
+			paintCombo.addItem(it.next());
 		}
 		paintCombo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
