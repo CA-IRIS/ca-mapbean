@@ -209,18 +209,17 @@ public class MapBean extends JComponent implements MapChangedListener {
 
 	/** Get the tooltip text for the given mouse event */
 	public String getToolTipText(MouseEvent e) {
-		String result = null;
 		Point2D p = transformPoint(e.getPoint());
 		ListIterator it = mapPane.getThemes().listIterator(
 			mapPane.getThemes().size());
 		while(it.hasPrevious()) {
 			Theme t = (Theme)it.previous();
 			if(t.isVisible()) {
-				result = t.getTip(p);
-				if(result != null) break;
+				String tip = t.getTip(p);
+				if(tip != null) return tip;
 			}
 		}
-		return result;
+		return null;
 	}
 
 	public JToolTip createToolTip() {
