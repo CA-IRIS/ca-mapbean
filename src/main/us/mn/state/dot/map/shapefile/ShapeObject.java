@@ -29,13 +29,13 @@ import us.mn.state.dot.shape.MapObject;
  */
 public class ShapeObject implements MapObject {
 
-	/** Map containing this ShapeObjects data */
+	/** Geometric shape data */
+	protected final Shape shape;
+
+	/** Fields attached to the shape */
 	protected final Map fieldMap;
 
-	/** Shape that contains the geo data for this object */
-	protected Shape shape;
-
-	/** Create a new ShapeObject */
+	/** Create a new shape object */
 	public ShapeObject(Shape shape, Map fields) {
 		this.shape = shape;
 		this.fieldMap = fields;
