@@ -9,8 +9,9 @@ import java.awt.image.*;
 
 /**
  * A sublcass of JPanel used to display geographical information.  It must be
- * contained by a <CODE>us.mn.state.dot.shape.Map</CODE> in order to implement panning and
- * zooming.  Use the </CODE>MapPane(us.mn.state.dot.Map)</CODE> constructor to do this.
+ * contained by a <CODE>us.mn.state.dot.shape.Map</CODE> in order to implement
+ * panning and zooming.  Use the </CODE>MapPane(us.mn.state.dot.Map)</CODE>
+ * constructor to do this.
  * @author Erik Engstrom
  * @version 1.0
  */
@@ -140,7 +141,8 @@ public final class MapPane extends JPanel implements LayerListener {
 			if ( center.getY() > extent.getMaxY() ) {
 				newY += center.getY() - extent.getMaxY();
 			}
-			extent.setFrame( newX, newY, extent.getWidth(), extent.getHeight() );
+			extent.setFrame( newX, newY, extent.getWidth(),
+				extent.getHeight() );
 			resized();
 			Point loc = viewport.getViewPosition();
 			p = screenTransform.transform( center, p );
@@ -501,6 +503,8 @@ public final class MapPane extends JPanel implements LayerListener {
 		g2D.setColor( new Color( 204, 204, 204 ));
 		g2D.fillRect( 0, 0, w, h );
 		g2D.transform( screenTransform );
+		g2D.setRenderingHint( RenderingHints.KEY_ANTIALIASING, 
+			RenderingHints.VALUE_ANTIALIAS_ON );
 		for ( int i = ( staticLayers.size() - 1 ); i >= 0; i-- ) {
 			Layer layer = ( Layer ) staticLayers.get( i );
 			if ( layer.isVisible() ){
