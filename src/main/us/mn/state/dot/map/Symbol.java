@@ -56,4 +56,6 @@ public interface Symbol {
 	public Shape getShape(MapObject object);
 
 	public Rectangle2D getBounds(MapObject object);
+
+	public Component getLegend();
 }
