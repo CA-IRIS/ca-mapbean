@@ -21,6 +21,6 @@ public interface Layer {
     public void setVisible(boolean b);
     public String getName();
     public void addLayerListener(LayerListener l);
-    public void updateLayer(Layer l);
-    public void repaintLayer(Layer l);
+	public void updateLayer();
+	public void repaintLayer();
 }

@@ -31,6 +31,6 @@ public final class StationLayer extends ShapeLayer implements StationListener {
 				s.setValue(i, status[station[i] - 1]);
 			}
 		}
-		updateLayer(this);
+		updateLayer();
 	}
 }

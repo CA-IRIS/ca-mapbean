@@ -32,7 +32,7 @@ public abstract class AbstractLayer implements Layer {
 	/** Shows or hides this layer depending on the value of parameter b */
 	public void setVisible(boolean b) {
 		visible = b;
-		repaintLayer(this);
+		repaintLayer();
 	}
 
 	private String name;
@@ -53,17 +53,17 @@ public abstract class AbstractLayer implements Layer {
 		}
 	}
 
-	public void updateLayer(Layer l) {
+	public void updateLayer() {
 		ListIterator it = layerListeners.listIterator();
 		while (it.hasNext()){
-			((LayerListener)it.next()).updateLayer(l);
+			((LayerListener)it.next()).updateLayer(this);
 		}
 	}
 
-	public void repaintLayer(Layer l) {
+   public void repaintLayer() {
 		ListIterator it = layerListeners.listIterator();
 		while (it.hasNext()){
-			((LayerListener)it.next()).repaintLayer(l);
+			((LayerListener)it.next()).refresh();
 		}
 	}
 }

@@ -93,7 +93,7 @@ public final class Map extends JViewport implements LayerListener {
 	}
 
 	public void refresh(){
-		map.repaint();
+		map.refresh();
 	}
 
 	public void refreshLayer(int index){
@@ -169,10 +169,6 @@ public final class Map extends JViewport implements LayerListener {
 
 	public void updateLayer(Layer l) {
 		map.refreshLayer(l);
-	}
-
-	public void repaintLayer(Layer l) {
-		map.refresh();
 	}
 
 	public void setExtent(Rectangle2D r){

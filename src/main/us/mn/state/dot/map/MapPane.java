@@ -152,10 +152,12 @@ public final class MapPane extends JPanel {
 
 	public void refreshLayer(int index){
 		ListIterator it = layers.listIterator(index + 1);
+		repaintLayers(it);
 	}
 
 	public void refreshLayer(Layer l){
 		ListIterator it = layers.listIterator(layers.lastIndexOf(l) + 1);
+		repaintLayers(it);
 	}
 
 	private void repaintLayers(ListIterator it){
@@ -163,9 +165,12 @@ public final class MapPane extends JPanel {
 			Graphics2D g = (Graphics2D) this.getGraphics();
 			if (g != null){
 				g.transform( at );
+				int i = 0;
 				while (it.hasPrevious ()) {
+					i++;
 					((Layer) it.previous()).paint(g);
 				}
+				System.out.println("Repainted " + i + " layers");
 			}
 		}
 	}

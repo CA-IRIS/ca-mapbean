@@ -9,8 +9,6 @@
 package us.mn.state.dot.shape;
 
 public interface LayerListener {
-
-    public void updateLayer(Layer l);
-    public void repaintLayer(Layer l);
-
-} 
+	public void updateLayer(Layer l);
+	public void refresh();
+}

@@ -31,6 +31,7 @@ public class ShapeLayer extends AbstractLayer {
 	/** Set the Renderer for the layer */
 	public void setRenderer( ShapeRenderer p ) {
 		painter = p;
+		updateLayer();
 	}
 
 	/** Get the Renderer for the layer */
@@ -72,11 +73,13 @@ public class ShapeLayer extends AbstractLayer {
 	public ShapeLayer(String fileName, String layerName) throws IOException {
 		setName(layerName);
 		URL url = ShapeLayer.class.getResource("/" + fileName + ".dbf");
+		//URL url = new URL("file:\\" + fileName + ".dbf");
 		if (url == null) {
 			System.out.println("File " + fileName + ".dbf was not found");
 		}
 		dbFile = new DbaseReader( url );
 		url = ShapeLayer.class.getResource("/" + fileName + ".shp" );
+		//url = new URL("file:\\" + fileName + ".shp");
 		if (url == null) {
 			System.out.println("File " + fileName + ".shp was not found");
 		}

@@ -65,7 +65,7 @@ public final class IncidentLayer extends AbstractLayer implements
 			}
 			extent = new Rectangle2D.Double(minX, minY, (maxX - minX)
 				, (maxY - minY));
-			updateLayer(this);
+			updateLayer();
 		}
 	}
 
