@@ -34,7 +34,6 @@ import us.mn.state.dot.map.Outline;
 import us.mn.state.dot.map.Symbol;
 import us.mn.state.dot.map.Theme;
 import us.mn.state.dot.map.symbol.PenSymbol;
-import us.mn.state.dot.map.symbol.PointSymbol;
 
 /**
  * ShapeLayer is a class for drawing ESRI shape files.
@@ -76,7 +75,7 @@ public class ShapeLayer extends AbstractLayer {
 	protected Symbol getSymbol() {
 		switch(shapeType) {
 			case ShapeFactory.POINT:
-				return new PointSymbol("Point",
+				return new PenSymbol("Point",
 					Outline.createSolid(Color.BLACK, 20),
 					Color.WHITE);
 			case ShapeFactory.POLYLINE:
