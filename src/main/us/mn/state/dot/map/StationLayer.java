@@ -47,7 +47,7 @@ import us.mn.state.dot.shape.shapefile.ShapeRenderer;
  * file.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.36 $ $Date: 2003/09/25 14:34:46 $ 
+ * @version $Revision: 1.37 $ $Date: 2004/04/27 13:41:00 $
  */
 public final class StationLayer extends ShapeLayer implements
 		StationListener, DdsListener {
@@ -65,7 +65,7 @@ public final class StationLayer extends ShapeLayer implements
 		this();
 		stationClient.addStationListener( this );
 	}
-	
+
 	public StationLayer( XmlClient xmlClient ) throws IOException {
 		this();
 		xmlClient.addDdsListener( this );
@@ -75,13 +75,14 @@ public final class StationLayer extends ShapeLayer implements
 	 * updates the data of this layer
 	 * @param volume an array containing the new volume values
 	 * @param occupancy an array containing the new occupancy values
+	 * @param occupancy an array containing the new speed values
 	 * @param status an array containing the new status values
 	 */
 	public final synchronized void update( int[] volume, int[] occupancy,
-			int[] status ) {
+			int[] speed, int[] status ) {
 		for ( int i = shapes.length - 1; i >= 0; i-- ) {
 			ShapeObject shape = shapes[ i ];
-			int station = ( ( Integer ) 
+			int station = ( ( Integer )
 				shape.getValue( "STATION2" ) ).intValue() - 1;
 			if ( station > 0 ) {
 				if ( station < volume.length ) {
@@ -89,30 +90,32 @@ public final class StationLayer extends ShapeLayer implements
 						new Integer( volume[ station ] ) );
 					shape.addField( "OCCUPANCY",
 						new Integer( occupancy[ station ] ) );
+					shape.addField( "SPEED",
+						new Integer( speed[ station ] ) );
 					shape.addField( "STATUS",
 						new Integer( status[ station ] ) );
 				}
-			}	
+			}
 		}
 		SwingUtilities.invokeLater( new NotifyThread( this,
 			LayerChangedEvent.DATA ) );
 	}
-	
+
 	private final class NotifyThread implements Runnable {
 		private final StationLayer layer;
 		private final int reason;
-		
+
 		public NotifyThread( StationLayer layer, int reason ) {
 			this.layer = layer;
 			this.reason = reason;
 		}
-		
+
 		public void run() {
 			layer.notifyLayerChangedListeners( new LayerChangedEvent(
 				layer, reason ) );
 		}
 	}
-	
+
 	public final Theme getTheme() {
 		StationMapTip mapTip = new StationMapTip();
 		ShapeRenderer renderer = new OccupancyRenderer(
@@ -121,7 +124,7 @@ public final class StationLayer extends ShapeLayer implements
 		result.setTip( mapTip );
 		return result;
 	}
-	
+
 	/**
 	 * Paint selected objects on this layer.
 	 */
@@ -131,17 +134,18 @@ public final class StationLayer extends ShapeLayer implements
 			renderer.render( g, selections[ i ] );
 		}
 	}
-	
-	private final class StationTheme extends Theme implements 
+
+	private final class StationTheme extends Theme implements
 			MapMouseListener {
-		
+
 		private final JMenu rightClickMenu = new JMenu();
 		private final JMenu statusMenu = new JMenu( "Status" );
 		private final JMenuItem idMenuItem = new JMenuItem( "ID" );
 		private final JMenuItem volumeMenuItem = new JMenuItem( "Volume" );
 		private final JMenuItem occMenuItem = new JMenuItem( "occ" );
+		private final JMenuItem speedMenuItem = new JMenuItem( "Speed" );
 		private final ShapeLayer layer;
-		
+
 		public StationTheme( ShapeLayer layer, LayerRenderer renderer ){
 			super( layer, renderer );
 			this.layer = layer;
@@ -155,21 +159,22 @@ public final class StationLayer extends ShapeLayer implements
 			statusMenu.add( idMenuItem );
 			statusMenu.add( volumeMenuItem );
 			statusMenu.add( occMenuItem );
+			statusMenu.add( speedMenuItem );
 		}
-		
+
 		public MapMouseListener getMapMouseListener() {
 			return this;
 		}
-		
+
 		public boolean mouseMoved( final java.awt.event.MouseEvent p1 ) {
 			return false;
 		}
-		
+
 		public java.lang.String[] getMouseModeServiceList() {
 			String[] result = { "Select" };
 			return result;
 		}
-		
+
 		public boolean listensToMouseMode( String modeName ) {
 			boolean result = false;
 			if ( modeName.equals( SelectMouseMode.MODE_ID ) ) {
@@ -177,10 +182,10 @@ public final class StationLayer extends ShapeLayer implements
 			}
 			return result;
 		}
-		
+
 		public void mouseExited( final java.awt.event.MouseEvent event ) {
 		}
-		
+
 		public boolean mousePressed( final java.awt.event.MouseEvent event ) {
 			MapObject searchResult = getMapObject( event );
 			if ( searchResult == null ) {
@@ -192,12 +197,14 @@ public final class StationLayer extends ShapeLayer implements
 					ThemeChangedEvent.SELECTION ) );
 				if ( SwingUtilities.isRightMouseButton( event ) ) {
 					ShapeObject shapeObject = ( ShapeObject ) searchResult;
-					idMenuItem.setText( "Station " + shapeObject.getValue( 
+					idMenuItem.setText( "Station " + shapeObject.getValue(
 						"STATION2" ) + ": " + shapeObject.getValue( "NAME" ) );
-					volumeMenuItem.setText( " Volume = " + 
+					volumeMenuItem.setText( " Volume = " +
 						shapeObject.getValue( "VOLUME" ) );
-					occMenuItem.setText( " Occupancy = " + 
+					occMenuItem.setText( " Occupancy = " +
 						shapeObject.getValue( "OCCUPANCY" ) );
+					speedMenuItem.setText( " Speed = " +
+						shapeObject.getValue( "SPEED" ) );
 					JPopupMenu menu = rightClickMenu.getPopupMenu();
 					menu.show( event.getComponent(), event.getX(),
 						event.getY() );
@@ -205,21 +212,21 @@ public final class StationLayer extends ShapeLayer implements
 				return true;
 			}
 		}
-		
+
 		public boolean mouseDragged( final java.awt.event.MouseEvent event ) {
 			return false;
 		}
-		
+
 		public void mouseMoved() {
 		}
-		
+
 		public void mouseEntered( final java.awt.event.MouseEvent event ) {
 		}
-		
+
 		public boolean mouseReleased( final java.awt.event.MouseEvent event ) {
 			return false;
 		}
-		
+
 		private MapObject getMapObject( final java.awt.event.MouseEvent event ) {
 			MapBean map = ( MapBean ) event.getSource();
 			AffineTransform at = null;
@@ -234,19 +241,19 @@ public final class StationLayer extends ShapeLayer implements
 			point = at.transform( event.getPoint(), point );
 			return layer.search( point, renderer );
 		}
-		
+
 		public boolean mouseClicked( final java.awt.event.MouseEvent event ) {
 			return false;
 		}
 	}
-	
+
 	/**
 	 * @see us.mn.state.dot.dds.client.DataListener#update(List)
 	 */
 	public void update( List stations ) {
 		for ( int i = shapes.length - 1; i >= 0; i-- ) {
 			ShapeObject shape = shapes[ i ];
-			int station = ( ( Integer ) 
+			int station = ( ( Integer )
 				shape.getValue( "STATION2" ) ).intValue() - 1;
 			if ( station > stations.size() - 1 ) {
 				continue;
@@ -257,13 +264,15 @@ public final class StationLayer extends ShapeLayer implements
 					new Integer( (int) stat.getVolume() ) );
 				shape.addField( "OCCUPANCY",
 					new Integer( (int) stat.getOccupancy() ) );
+				shape.addField( "SPEED",
+					new Integer( (int) stat.getSpeed() ) );
 				String temp = stat.getStatus();
 				Integer status = new Integer( 0 );
 				if ( !temp.equals( "ok") ) {
 					status = new Integer( 1 );
 				}
 				shape.addField( "STATUS", status );
-			}	
+			}
 		}
 		SwingUtilities.invokeLater( new NotifyThread( this,
 			LayerChangedEvent.DATA ) );
