@@ -17,24 +17,27 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-//Title:        Renderer
-//Version:      1.0
+//Title:        SignClient
+//Version:      
 //Copyright:    Copyright (c) 1999
 //Author:       Erik Engstrom
 //Company:      MnDOT
-//Description:  Interface all layer renderers must implement.
-
+//Description:  Your description
 package us.mn.state.dot.shape;
 
+import us.mn.state.dot.shape.*;
 import java.awt.*;
-import java.awt.geom.*;
 
-public interface Renderer {
+public class OccupancyRenderer extends ClassBreaksRenderer {
 
-    //public void paint( Graphics2D g, GeneralPath path, int index );
-	public Symbol render( int index );
-    public void setField( Field f );
-    public Field getField();
-	public Symbol[] getSymbols();
-	
-}
+	public OccupancyRenderer( NumericField field, MapTip tip ) {
+		super( field, 4, "Occupancy" );
+		setSymbol( 0, ( new FillSymbol( Color.gray, "No Data" ) ) );
+		setSymbol( 1, ( new FillSymbol( Color.green, "0-13%" ) ) );
+		setSymbol( 2, ( new FillSymbol( Color.orange, "14-22%" ) ) );
+		setSymbol( 3, ( new FillSymbol( Color.red, "23-99%" ) ) );
+		setSymbol( 4, ( new FillSymbol( Color.gray ) ) );
+		setBreaks( new double[]{ 0, 13, 22, 99 } );
+		this.setTip( tip );
+	}
+} 
