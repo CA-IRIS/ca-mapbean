@@ -25,14 +25,14 @@ import java.util.*;
 import javax.swing.*;
 import us.mn.state.dot.dds.client.*;
 import us.mn.state.dot.shape.event.*;
-import us.mn.state.dot.tms.*;
-import us.mn.state.dot.tms.toast.TMSProxy;
+//import us.mn.state.dot.tms.*;
+//import us.mn.state.dot.tms.toast.TMSProxy;
 
 /**
  * Displays incidents as icons on map.
  *
  * @author erik.engstrom@dot.state.mn.us
- * @version $Revision: 1.30 $ $Date: 2001/02/26 23:29:43 $
+ * @version $Revision: 1.31 $ $Date: 2001/03/22 00:16:13 $
  */
 public class IncidentLayer extends AbstractLayer implements
 		IncidentListener {
@@ -47,17 +47,21 @@ public class IncidentLayer extends AbstractLayer implements
 	
 	private static final int[] RING_DEFAULTS = { 5, 10, 15 };
 	
-	private final TMSProxy proxy;
+//	private final TMSProxy proxy;
 
 	public IncidentLayer(){
-		this( null );
+//		this( null );
+		setStatic( false );
+//		proxy = tms;
+		setName( "incidents" );
+
 	}
 
-	public IncidentLayer( TMSProxy tms ) {
+/*	public IncidentLayer( TMSProxy tms ) {
 		setStatic( false );
 		proxy = tms;
 		setName( "incidents" );
-	}
+	}*/
 
 	public void setSelectionModel( ListSelectionModel selectionModel ){
 		if ( selectionModel == null ) {
@@ -116,9 +120,9 @@ public class IncidentLayer extends AbstractLayer implements
 			int[] selection ) {
 		selectionModel.clearSelection();
 		int[] diameters = new int[ 3 ];
-		if ( proxy == null ){
+		//if ( proxy == null ){
 			diameters = getDefaultDiameters();
-		} else {
+		/*} else {
 			DMSList dmsList = ( DMSList ) proxy.getDMSList().getList();
 			for ( int i = 0; i < 3; i++ ){
 				try {
@@ -128,14 +132,14 @@ public class IncidentLayer extends AbstractLayer implements
 					diameters = getDefaultDiameters();
 				}
 			}
-		}
+		//}
 		g.setColor( Color.red );
 		g.setXORMode( Color.white );
 		for ( int i = 0; i < selection.length; i++ ) {
 			selectionModel.addSelectionInterval( selection[ i ],
 				selection[ i ] );
 			drawEllipses( g, incidents[ selection[ i ] ], diameters );	
-		}
+		}*/
 	}
 	
 	private int[] getDefaultDiameters(){

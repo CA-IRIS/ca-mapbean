@@ -366,7 +366,7 @@ public final class MapBean extends JComponent implements MapChangedListener,
 		}
 	}
 	
-	public Image getImage() {
+	public BufferedImage getImage() {
 		return mapPane.getImage();
 	}
 }
