@@ -127,7 +127,6 @@ public final class Map extends JViewport implements LayerListener {
 	}
 
 	public String getToolTipText( MouseEvent e ) {
-		String strings = null;
 		AffineTransform t = map.getTransform();
 		AffineTransform world = null;
 		try {
@@ -142,14 +141,15 @@ public final class Map extends JViewport implements LayerListener {
 			yCoord + viewPosition.getY() );
 		Point2D p = world.transform( p1, new Point( 0, 0 ) );
 		ArrayList layers = map.getLayers();
+		String result = null;
 		for ( ListIterator it = layers.listIterator(); it.hasNext(); ) {
 			Layer l = ( Layer ) it.next();
-			strings = l.getTip( p );
-			if ( strings != null ) {
+			result = l.getTip( p );
+			if ( result != null ) {
 				break;
 			}
 		}
-		return strings;
+		return result;
 	}
 
 	public JToolTip createToolTip(){

@@ -8,8 +8,8 @@
 
 package us.mn.state.dot.shape;
 
-public abstract class MapTip{
+public abstract class MapTip {
 
-    abstract public String getTip(ShapeLayer layer, int index);
+    abstract public String getTip( ShapeLayer layer, int index );
 
 } 
