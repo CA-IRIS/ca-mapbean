@@ -226,6 +226,7 @@ public final class Map extends JPanel implements ThemeChangedListener {
 	}
 		
 	public String getToolTipText( MouseEvent e ) {
+		String result = null;
 		AffineTransform world = null;
 		try {
 			world = screenTransform.createInverse();
@@ -234,7 +235,6 @@ public final class Map extends JPanel implements ThemeChangedListener {
 		}
 		Point p1 = new Point();
 		Point2D p = world.transform( e.getPoint(), p1 );
-		String result = null;
 		for ( ListIterator it = themes.listIterator(); it.hasNext(); ) {
 			Theme l = ( Theme ) it.next();
 			result = l.getTip( p );

@@ -139,8 +139,21 @@ public class Theme implements LayerChangedListener {
 	 */
 	public String getTip( Point2D point ) {
 		String result = null;
-		Rectangle2D searchArea = new Rectangle2D.Double( point.getX(),
-			point.getY(), 1, 1 );
+		Rectangle2D searchArea = null;
+		if ( renderer != null ) {
+			Symbol symbol = renderer.getSymbols()[ 0 ];
+			if ( symbol != null ) {
+				double size = symbol.getSize();
+				searchArea = new Rectangle2D.Double( ( point.getX() -
+					( size / 2 ) ),	( point.getY() - ( size / 2 ) ), size, size );
+			} else {
+				searchArea = new Rectangle2D.Double( point.getX(),
+					point.getY(), 1, 1 );
+			}
+		} else {
+			searchArea = new Rectangle2D.Double( point.getX(),
+				point.getY(), 1, 1 );
+		}
 		int index = layer.search( searchArea );
 		if ( mapTip != null && index != -1 ) {
 			result = mapTip.getTip( layer, index );
@@ -227,6 +240,8 @@ public class Theme implements LayerChangedListener {
 	}
 	
 	public void layerChanged( LayerChangedEvent e ) {
+		notifyThemeChangedListeners( new ThemeChangedEvent( this,
+			e.getReason() ) );
 	}
 	
 	public Field [] getFields(){

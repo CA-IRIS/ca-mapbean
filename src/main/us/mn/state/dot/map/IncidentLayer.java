@@ -181,17 +181,21 @@ public final class IncidentLayer extends AbstractLayer implements
 		return result;
 	}
 
-	public String getTip( Point2D p ){
-		java.util.List v = getPaths( p );
-		String result = null;
-		ListIterator li = v.listIterator();
-		if ( li.hasNext() ){
-			result = ( ( Incident ) li.next() ).toString();
-		}
-		return result;
-	}
-
 	public void setDirectional( boolean b ) {
 		directional = b;
+	}
+	
+	public Theme getTheme() {
+		Theme result = new Theme( this );
+		result.setTip( new MapTip() {
+			public String getTip( Layer layer, int i ) {
+				String result = null;
+				if ( i >= 0 && i < incidents.length ) {
+					result = incidents[ i ].toString();
+				}
+				return result;
+			}
+		});
+		return result;
 	}
 }

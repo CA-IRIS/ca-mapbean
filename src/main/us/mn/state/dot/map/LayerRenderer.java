@@ -30,11 +30,9 @@ import java.awt.*;
 import java.awt.geom.*;
 
 public interface LayerRenderer {
-
     //public void paint( Graphics2D g, GeneralPath path, int index );
 	public Symbol render( int index );
     public void setField( Field f );
     public Field getField();
 	public Symbol[] getSymbols();
-	
 }

@@ -38,12 +38,12 @@ public final class StationLayer extends ShapeLayer implements StationListener {
 		super( "gpoly/gpoly", "gpoly" );
 		this.setStatic( false );
 	}
-	
+
 	public StationLayer( StationClient stationClient ) throws IOException{
 		this();
 		stationClient.addStationListener( this );
 	}
-	
+
 	/**
 	 * updates the data of this layer
 	 * @param volume an array containing the new volume values
@@ -58,7 +58,7 @@ public final class StationLayer extends ShapeLayer implements StationListener {
 		) ).getData();
 		for ( int i = ( station.length - 1 ); i >= 0; i-- ){
 			if ( station[ i ] > 0 ) {
-				if ( station[ i ] - 1 < volume.length ) {//i - 1 < volume.length ) {
+				if ( station[ i ] - 1 < volume.length ) {
 					v.setValue( i, volume[ station[ i ] - 1 ] );
 					o.setValue( i, occupancy[ station[ i ] - 1 ] );
 					s.setValue( i, status[ station[ i ] - 1 ] );
@@ -67,11 +67,13 @@ public final class StationLayer extends ShapeLayer implements StationListener {
 		}
 		updateLayer();
 	}
-	
+
 	public Theme getTheme() {
 		ShapeRenderer renderer =  new OccupancyRenderer(
-			( NumericField ) getField( "occupancy" ),
-			new StationMapTip() );
-		return new Theme( this, renderer );
+		( NumericField ) getField( "occupancy" ),
+		new StationMapTip() );
+		Theme result = new Theme( this, renderer );
+		result.setTip( new StationMapTip() );
+		return result;
 	}
 }

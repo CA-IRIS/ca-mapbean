@@ -24,6 +24,7 @@ import java.util.*;
 import java.awt.geom.*;
 
 public interface Layer {
+	
     public Rectangle2D getExtent();
 	public void paint( Graphics2D g, LayerRenderer r );
 	public void paintSelections( Graphics2D g, LayerRenderer renderer,
@@ -35,6 +36,7 @@ public interface Layer {
 	public void setStatic( boolean b );
 	public Field [] getFields();
 	public Field getField( String name );
+	
 	/*
 	 * Gets all of the paths present at the Point2D p in this layer.
 	 * @param p The Point2D at which to search.

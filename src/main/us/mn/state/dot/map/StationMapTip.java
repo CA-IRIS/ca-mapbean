@@ -31,6 +31,7 @@ public final class StationMapTip implements MapTip {
 
 	public String getTip( Layer layer, int i ){
 		String result = null;
+		System.out.println(" StationMapTip.getTip called index = " + i );
 		result = new String( "Station "	+
 			layer.getField( "STATION2" ).getStringValue( i ) + ": " +
 			layer.getField( "NAME" ).getStringValue( i ) + "\n Volume = " +

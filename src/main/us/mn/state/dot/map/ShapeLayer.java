@@ -45,20 +45,6 @@ public class ShapeLayer extends AbstractLayer {
 		symbol = s;
 	}
 
-	/** Renderer for this layer */
-	//private ShapeRenderer painter = null;
-
-	/** Set the Renderer for the layer */
-	/*public final void setRenderer( ShapeRenderer p ) {
-		painter = p;
-		updateLayer();
-	}*/
-
-	/** Get the Renderer for the layer */
-	/*public final ShapeRenderer getRenderer(){
-		return painter;
-	}*/
-
 	/** Array to hold all shape information */
 	protected GeneralPath [] paths;
 
@@ -154,35 +140,31 @@ public class ShapeLayer extends AbstractLayer {
 			ArrayList selections ) {
 	}
 	
-	public final int search( Rectangle2D searchArea ) {
+	public int search( Rectangle2D searchArea ) {
 		int result = -1;
-		for ( int i = ( paths.length - 1 ); i >= 0; i-- ) {
-			GeneralPath target = paths[ i ];
-			if ( searchPath( target, searchArea ) ||
-					target.contains( searchArea ) ) {
-				result = i;
-				break;
-			} 
+		if ( searchArea.getWidth() == 0 || searchArea.getHeight() == 0 ) {
+			for ( int i = ( paths.length - 1 ); i >= 0; i-- ) {
+				GeneralPath target = paths[ i ];
+				Point2D point = new Point2D.Double( searchArea.getX(), searchArea.getY() );
+				if ( target.contains( point ) ) {
+					result = i;
+					break;
+				}
+			}
+		} else {
+			for ( int i = ( paths.length - 1 ); i >= 0; i-- ) {
+				GeneralPath target = paths[ i ];
+				if ( target.intersects( searchArea ) ||
+						target.contains( searchArea )  ||
+						searchArea.contains( target.getBounds2D() ) ) {
+					result = i;
+					break;
+				} 
+			}
 		}
 		return result;
 	}
 	
-	private boolean searchPath( GeneralPath target, Rectangle2D searchArea ) {
-		boolean result = false;
-		double[] coords = new double[ 2 ];
-		/*PathIterator pi = target.getPathIterator( null );
-		while( ! pi.isDone() ) {
-			pi.currentSegment( coords );
-			if ( searchArea.contains( coords[ 0 ], coords[ 1 ] ) ) {
-				result = true;
-				break;
-			}
-			pi.next();
-		}*/
-		result = false;
-		return result;
-	}
-
 	public final java.util.List getPaths( Point2D p ){
 		java.util.List result = new ArrayList();
 		switch( shapeType ) {
@@ -237,37 +219,5 @@ public class ShapeLayer extends AbstractLayer {
 			return false;
 		}
 		return true;
-	}
-
-	public final String getTip( Point2D p ){
-		String result = null;
-		switch( shapeType ) {
-		/*case ShapeTypes.POINT:
-			Symbol symbol = painter.getSymbol();
-			if ( symbol == null ) {
-				return null;
-			}
-			double size = symbol.getSize();
-			Rectangle2D r = new Rectangle2D.Double( ( p.getX() - ( size / 2 ) ),
-				( p.getY() - ( size / 2 ) ), size, size );
-			for ( int i = ( paths.length - 1 ); i >= 0; i-- ) {
-				Rectangle r2 = paths[ i ].getBounds();
-				r2.setSize( 1, 1 );
-				if ( r.contains( r2 ) ) {
-					result = painter.getTip( this, i );
-					break;
-				}
-			}
-			break;*/
-		case ShapeTypes.POLYLINE: case ShapeTypes.POLYGON:
-			/*for ( int i = ( paths.length - 1 ); i >= 0; i-- ) {
-				if ( paths[ i ].contains( p ) ) {
-					result = painter.getTip( this, i );
-					break;
-				}
-			}*/
-			break;
-		}
-		return result;
 	}
 }

@@ -31,7 +31,7 @@ import java.awt.*;
 
 public final class DefaultRenderer extends ShapeRenderer {
 
-	private Symbol symbol;
+	//private Symbol symbol;
 	private NumericField field = null;
 	private String name = null;
 
@@ -43,13 +43,13 @@ public final class DefaultRenderer extends ShapeRenderer {
 		setSymbol( s );
 	}
 
-	public final void setSymbol( Symbol s ){
+	/*public final void setSymbol( Symbol s ){
 		symbol = s;
 	}
 
 	public final Symbol getSymbol(){
 		return symbol;
-	}
+	}*/
 
 	public Symbol render( int index ){
 		return symbol;
