@@ -32,7 +32,7 @@ import us.mn.state.dot.shape.*;
   *
   * @author Douglas Lau
   * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
-  * @version $Revision: 1.2 $ $Date: 2001/08/09 21:03:34 $
+  * @version $Revision: 1.3 $ $Date: 2001/08/15 21:24:44 $
   */
 public class ShapeLayer extends AbstractLayer {
 
@@ -97,67 +97,55 @@ public class ShapeLayer extends AbstractLayer {
 		}
 	}
 	
-	public MapObject search( Rectangle2D searchArea, LayerRenderer renderer ) { //FIXME to use renderer.
+	public MapObject search( Rectangle2D searchArea, LayerRenderer renderer ) {
 		MapObject result = null;
-		if ( searchArea.getWidth() == 0 || searchArea.getHeight() == 0 ) {
-			for ( int i = ( shapes.length - 1 ); i >= 0; i-- ) {
-				Shape target = shapes[ i ].getShape();
-				Point2D point = new Point2D.Double( searchArea.getX(),
-					searchArea.getY() );
-				if ( target.contains( point ) ) {
-					result = shapes[ i ];
-					break;
-				}
+		for ( int i = ( shapes.length - 1 ); i >= 0; i-- ) {
+			MapObject object = shapes[ i ];
+			Shape target = null;
+			if ( renderer == null ) {
+				target = object.getShape();
+			} else {
+				target = renderer.getShape( object );
 			}
-		} else {
-			for ( int i = ( shapes.length - 1 ); i >= 0; i-- ) {
-				Shape target = shapes[ i ].getShape();
-				if ( target.intersects( searchArea ) ||
-						target.contains( searchArea )  ||
-						searchArea.contains( target.getBounds2D() ) ) {
-					result = shapes[ i ];
-					break;
-				} 
-			}
+			if ( target.intersects( searchArea ) ||
+					target.contains( searchArea )  ||
+					searchArea.contains( target.getBounds2D() ) ) {
+				result = object;
+				break;
+			} 
 		}
 		return result;
 	}
 	
-	public MapObject search( Point2D p, LayerRenderer renderer ) { //FIXME to use renderer.
+	public MapObject search( Point2D p, LayerRenderer renderer ) { 
 		MapObject result = null;
-		switch( shapeType ) {
-		case ShapeFactory.POINT:
-			break;
-		case ShapeFactory.POLYLINE: case ShapeFactory.POLYGON:
-			for ( int i = ( shapes.length - 1 ); i >= 0; i-- ) {
-				if ( shapes[ i ].getShape().contains( p ) ) {
-					result = shapes[ i ];
-					break;
-				}
+		Rectangle2D r = new Rectangle2D.Double();
+		for ( int i = ( shapes.length - 1 ); i >= 0; i-- ) {
+			MapObject object = shapes[ i ];
+			r.setFrame( renderer.getBounds( object ) );
+			if ( r.contains( p ) ) {
+				result = object;
+				break;
 			}
-			break;
 		}
 		return result;
 	}
 
 	
-	public final java.util.List getPaths( Point2D p, LayerRenderer renderer ){ //FIXME to use renderer
+	public final java.util.List getPaths( Point2D p, LayerRenderer renderer ){
 		java.util.List result = new ArrayList();
-		switch( shapeType ) {
-		case ShapeFactory.POINT:
-			break;
-		case ShapeFactory.POLYLINE: case ShapeFactory.POLYGON:
-			for ( int i = ( shapes.length - 1 ); i >= 0; i-- ) {
-				if ( shapes[ i ].getShape().contains( p ) ) {
-					result.add( shapes[ i ] );
-					break;
-				}
+		Rectangle2D r = new Rectangle2D.Double();
+		for ( int i = ( shapes.length - 1 ); i >= 0; i-- ) {
+			MapObject object = shapes[ i ];
+			r.setFrame( renderer.getBounds( object ) );
+			if ( r.contains( p ) ) {
+				result.add( object );
+				break;
 			}
-			break;
 		}
 		return result;
 	}
-	
+		
 	/**
 	 * Get the ShapeObject at the given index.
 	 */

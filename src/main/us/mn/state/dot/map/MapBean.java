@@ -33,7 +33,7 @@ import us.mn.state.dot.shape.event.*;
  * the internal MapPane.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.22 $ $Date: 2001/06/21 22:42:41 $
+ * @version $Revision: 1.23 $ $Date: 2001/08/15 21:24:44 $
  * @see us.mn.state.dot.shape.MapPane
  */
 public final class MapBean extends JComponent implements MapChangedListener{
@@ -248,9 +248,9 @@ public final class MapBean extends JComponent implements MapChangedListener{
 		}
 		Point p1 = new Point();
 		Point2D p = world.transform( e.getPoint(), p1 );
-		for ( ListIterator it = mapPane.getThemes().listIterator();
-				it.hasNext(); ) {
-			Theme l = ( Theme ) it.next();
+		for ( ListIterator it = mapPane.getThemes().listIterator( 
+				mapPane.getThemes().size() ); it.hasPrevious(); ) {
+			Theme l = ( Theme ) it.previous();
 			if ( l.isVisible() ) {
 				result = l.getTip( p );
 				if ( result != null ) {

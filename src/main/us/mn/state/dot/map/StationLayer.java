@@ -33,7 +33,7 @@ import us.mn.state.dot.shape.shapefile.ShapeRenderer;
  * A StationLayer displays detector station data represented as a gpoly.shp file.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.29 $ $Date: 2001/08/09 21:03:34 $ 
+ * @version $Revision: 1.30 $ $Date: 2001/08/15 21:24:44 $ 
  */
 public final class StationLayer extends ShapeLayer implements StationListener {
 	/**
@@ -59,20 +59,6 @@ public final class StationLayer extends ShapeLayer implements StationListener {
 	 */
 	public final synchronized void update( int[] volume, int[] occupancy,
 			int[] status ) {
-		//IntegerField v = ( IntegerField ) super.getField( "VOLUME" );
-		//IntegerField o = ( IntegerField ) super.getField( "OCCUPANCY" );
-		//IntegerField s = ( IntegerField ) super.getField( "STATUS" );
-		//int [] station = ( ( IntegerField ) super.getField( "STATION2"
-		//	) ).getData();
-		/*for ( int i = ( station.length - 1 ); i >= 0; i-- ){
-			if ( station[ i ] > 0 ) {
-				if ( station[ i ] - 1 < volume.length ) {
-					v.setValue( i, volume[ station[ i ] - 1 ] );
-					o.setValue( i, occupancy[ station[ i ] - 1 ] );
-					s.setValue( i, status[ station[ i ] - 1 ] );
-				}
-			}
-		}*/
 		for ( int i = shapes.length - 1; i >= 0; i-- ) {
 			ShapeObject shape = shapes[ i ];
 			int station = ( ( Integer ) 
@@ -109,7 +95,6 @@ public final class StationLayer extends ShapeLayer implements StationListener {
 	
 	public final Theme getTheme() {
 		StationMapTip mapTip = new StationMapTip();
-		//NumericField field = ( NumericField ) getField( "OCCUPANCY" );
 		ShapeRenderer renderer = new OccupancyRenderer(
 			"OCCUPANCY", mapTip );
 		Theme result = new StationTheme( this, renderer );
@@ -120,7 +105,11 @@ public final class StationLayer extends ShapeLayer implements StationListener {
 	/**
 	 * Paint selected objects on this layer.
 	 */
-	public void paintSelections(Graphics2D g, LayerRenderer renderer, Object[] selections) {
+	public void paintSelections( Graphics2D g, LayerRenderer renderer,
+			MapObject[] selections) {
+		for ( int i = 0; i < selections.length; i++ ) {
+			renderer.render( g, selections[ i ] );
+		}
 	}
 	
 	private final class StationTheme extends Theme implements MapMouseListener {
@@ -222,8 +211,7 @@ public final class StationLayer extends ShapeLayer implements StationListener {
 			g.setTransform( map.getTransform() );
 			Point2D point = null;
 			point = at.transform( event.getPoint(), point );
-			return layer.search( new Rectangle2D.Double( point.getX(),
-				point.getY(), 0, 0 ), null );
+			return layer.search( point, renderer );
 		}
 		
 		public boolean mouseClicked( final java.awt.event.MouseEvent event ) {

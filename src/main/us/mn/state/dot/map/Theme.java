@@ -27,7 +27,7 @@ import us.mn.state.dot.shape.event.MapMouseListener;
 /**
  * Base class for all themes.
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.16 $ $Date: 2001/08/09 21:03:34 $ 
+ * @version $Revision: 1.17 $ $Date: 2001/08/15 21:24:44 $ 
  */
 public class Theme implements LayerChangedListener {
 	
@@ -179,25 +179,12 @@ public class Theme implements LayerChangedListener {
 	 */
 	public String getTip( Point2D point ) {
 		String result = null;
-		Rectangle2D searchArea = null;
-		if ( renderer != null ) {
-			Symbol symbol = renderer.getSymbols()[ 0 ];
-			if ( symbol != null ) {
-				double size = symbol.getSize();
-				searchArea = new Rectangle2D.Double( ( point.getX() -
-					( size / 2 ) ),	( point.getY() - ( size / 2 ) ), size,
-					size );
-			} else {
-				searchArea = new Rectangle2D.Double( point.getX(),
-					point.getY(), 1, 1 );
-			}
-		} else {
-			searchArea = new Rectangle2D.Double( point.getX(),
-				point.getY(), 1, 1 );
+		if ( mapTip == null ) {
+			return result;
 		}
-		MapObject object = layer.search( searchArea, renderer );
-		if ( mapTip != null && object != null ) {
-			result = mapTip.getTip( object );
+		java.util.List found = layer.getPaths( point, renderer );
+		if ( ! found.isEmpty() ) {
+			result = mapTip.getTip( ( MapObject ) found.get( 0 ) );
 		}
 		return result;
 	}
