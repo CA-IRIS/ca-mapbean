@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000  Minnesota Department of Transportation
+ * Copyright (C) 2000-2004  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,44 +29,42 @@ import java.util.List;
 import java.util.Map;
 
 /**
-  * dBase III PLUS table file reader
-  *
-  * @author Douglas Lau
-  */
+ * dBase III PLUS table file reader
+ *
+ * @author Douglas Lau
+ */
+public class DbaseInputStream {
 
-public final class DbaseInputStream {
+	/**
+	 *	dBase header (32 bytes without field descriptors)
+	 *
+	 *	Pos	Field		Value	Type		Size
+	 *
+	 *	0	dBase Version	3	byte		1
+	 *	1	Year (-1900)	YY	byte		1
+	 *	2	Update Month	MM	byte		1
+	 *	3	Update Day	DD	byte		1
+	 *	4	Table records		int (little)	4
+	 *	8	Header size		short (little)	2
+	 *	10	Record size		short (little)	2
+	 *	12	Reserved				20
+	 */
 
-/**
-  *	dBase header (32 bytes without field descriptors)
-  *
-  *	Position	Field			Value		Type				Size
-  *
-  *     0       dBase Version	3			byte				1
-  *		1		Year (-1900)	YY			byte				1
-  *		2		Update Month	MM			byte				1
-  *		3		Update Day		DD			byte				1
-  *		4		Table records				int (little)		4
-  *		8		Header size					short (little)		2
-  *		10		Record size					short (little)		2
-  *		12		Reserved										20
-  */
-
-	/** Number of records in file. */
+	/** Number of records in file */
 	private final int records;
 
-	/** Number of fields per record. */
+	/** Number of fields per record */
 	private final short fieldCount;
 
-	/** List of field names. */
+	/** List of field names */
 	private final List fields = new ArrayList();
 
-	/** Index of the last record read from file. */
+	/** Index of the last record read from file */
 	private int lastRecord = 0;
 
 	private ShapeDataInputStream in;
 
-	/**
-	 * Create a new DbaseInputStream from the supplied file name. */
+	/** Create a new DbaseInputStream from the supplied file name */
 	public DbaseInputStream( String name ) throws IOException {
 		this( new FileInputStream( name ) );
 	}
@@ -75,9 +73,7 @@ public final class DbaseInputStream {
 		this( url.openStream() );
 	}
 
-	/**
-	 * Create a DbaseInputStream from the supplied InputStream.
-	 */
+	/** Create a DbaseInputStream from the supplied InputStream */
 	public DbaseInputStream( InputStream inputStream ) throws IOException {
 		in = new ShapeDataInputStream( inputStream );
 		in.skipBytes( 4 );
@@ -92,17 +88,13 @@ public final class DbaseInputStream {
 		in.skipBytes( 1 );
 	}
 
-	/**
-	 * Are there more records to read?
-	 */
+	/** Are there more records to read? */
 	public boolean hasNext() {
 		return lastRecord < records;
 	}
 
-	/**
-	 * Read the nextRecord in the database file.
-	 */
-	public Map nextRecord( ) throws IOException {
+	/** Read the nextRecord in the database file */
+	public Map nextRecord() throws IOException {
 		HashMap map = new HashMap();
 		in.skipBytes( 1 );
 		Iterator it = fields.iterator();
@@ -123,29 +115,24 @@ public final class DbaseInputStream {
 		return map;
 	}
 
-	/**
-	 * Close the DbaseInputStream.
-	 */
+	/** Close the DbaseInputStream */
 	public void close() throws IOException {
 		in.close();
 	}
 
-
-
-
 	/**
-	* Class used for reading fields from database files.
-	*
-	*     dBase field descriptor 32 bytes
-	*
-    *     Position        Field       Value           Type              Size
-    *        0             name                       byte               11
-	*       11             type      C,N,L,D,M,F      byte                1
-    *       12             adress                     byte                4
-    *       16             length                     byte                1
-    *       17             decimal                    byte                1
-    *       18             Reserved                                      14
-	*/
+	 * Class used for reading fields from database files.
+	 *
+	 *     dBase field descriptor 32 bytes
+	 *
+	 *	Pos	Field	Value		Type	Size
+	 *	0	name			byte	11
+	 *	11	type	C,N,L,D,M,F	byte	1
+	 *	12	address			byte	4
+	 *	16	length			byte	1
+	 *	17	decimal			byte	1
+	 *	18	Reserved			14
+	 */
 	private class ShapeField {
 
 		private String name = "";
@@ -155,7 +142,6 @@ public final class DbaseInputStream {
 		private char type;
 
 		private int decimal;
-
 
 		public ShapeField( ShapeDataInputStream in ) throws IOException {
 			name = in.readString( 11 ).trim();
@@ -202,7 +188,6 @@ public final class DbaseInputStream {
 			}
 			return result;
 		}
-
 
 		public String getName() {
 			return name;
