@@ -27,7 +27,7 @@ import java.awt.geom.*;
  * This interface should be used to add data to a MapBean object. 
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 0.19 $ $Date: 2001/07/09 21:10:19 $ 
+ * @version $Revision: 0.20 $ $Date: 2001/07/09 21:12:37 $ 
  */
 public interface Layer {
 	
@@ -65,7 +65,7 @@ public interface Layer {
 	/**
 	 * Notify all LayerChangedListeners that this layer has changed.
 	 */
-	protected void notifyLayerChangedListeners( LayerChangedEvent event );
+	public void notifyLayerChangedListeners( LayerChangedEvent event );
 	
 	/**
 	 * Is this a static layer?
