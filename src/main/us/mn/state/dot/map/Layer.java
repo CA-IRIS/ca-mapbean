@@ -54,13 +54,6 @@ public interface Layer {
 	public void notifyLayerChangedListeners(LayerChangedEvent event);
 
 	/**
-	 * Get all of the paths present at the Point2D p in this layer.
-	 * @param p The Point2D at which to search.
-	 * @return a java.util.List containing all of the paths found.
-	 */
-	public List getPaths(Point2D p, LayerRenderer renderer);
-
-	/**
 	 * Return an int representing the index of the first path found that
 	 * is contained by, intersects, or contains the Rectangle2D searchArea.
 	 * @param searchArea Rectangle2D representing the area to search.

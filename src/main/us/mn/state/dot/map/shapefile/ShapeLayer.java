@@ -69,7 +69,7 @@ public class ShapeLayer extends AbstractLayer {
 		this.extent = shapeFile.getExtent();
 		List shapeList = shapeFile.getShapeList();
 		shapeType = shapeFile.getShapeType();
-		shapes = (ShapeObject[]) shapeList.toArray(
+		shapes = (ShapeObject[])shapeList.toArray(
 			new ShapeObject[shapeList.size()]);
 	}
 
@@ -102,7 +102,8 @@ public class ShapeLayer extends AbstractLayer {
 		return shapes;
 	}
 
-	public MapObject search( Rectangle2D searchArea, LayerRenderer renderer ) {
+	public MapObject search(Rectangle2D searchArea, LayerRenderer renderer)
+	{
 		MapObject result = null;
 		for ( int i = ( shapes.length - 1 ); i >= 0; i-- ) {
 			MapObject object = shapes[ i ];
@@ -122,26 +123,13 @@ public class ShapeLayer extends AbstractLayer {
 		return result;
 	}
 
-	public MapObject search( Point2D p, LayerRenderer renderer ) {
+	public MapObject search(Point2D p, LayerRenderer renderer) {
 		MapObject result = null;
 		for ( int i = ( shapes.length - 1 ); i >= 0; i-- ) {
 			MapObject object = shapes[ i ];
 			Shape target = renderer.getShape( object );
 			if ( target.contains( p ) ) {
 				result = object;
-				break;
-			}
-		}
-		return result;
-	}
-
-	public List getPaths(Point2D p, LayerRenderer renderer) {
-		List result = new ArrayList();
-		for ( int i = ( shapes.length - 1 ); i >= 0; i-- ) {
-			MapObject object = shapes[ i ];
-			Shape target = renderer.getShape( object );
-			if ( target.contains( p ) ) {
-				result.add( object );
 				break;
 			}
 		}
