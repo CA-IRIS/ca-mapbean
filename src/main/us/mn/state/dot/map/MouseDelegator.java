@@ -39,11 +39,6 @@ public class MouseDelegator extends MouseAdapter {
 	 * The MapBean.
 	 */
 	private MapBean map;
-	
-	/**
-	 * The registered MapMouseModes.
-	 */
-	//private ArrayList mouseModes = new ArrayList();
 		
 	/**
 	 * The active MapMouseMode.

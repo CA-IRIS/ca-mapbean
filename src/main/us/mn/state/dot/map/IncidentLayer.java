@@ -268,6 +268,9 @@ public final class IncidentLayer extends AbstractLayer implements
 		}
 		
 		public boolean mouseClicked( final java.awt.event.MouseEvent event ) {
+			if ( ! this.isVisible() ) {
+				return false;
+			}
 			MapBean map = ( MapBean ) event.getSource();
 			AffineTransform at = null;
 			try {

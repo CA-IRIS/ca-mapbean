@@ -69,9 +69,6 @@ public final class MapBean extends JComponent implements ThemeChangedListener {
 	/** Transformation to draw shapes in the ShapePane */
 	private final AffineTransform at = new AffineTransform();
 
-	/** Mouse helper class */
-	//private final MouseDelegator mouse = new MouseDelegator( this );
-
 	private MapMouseMode activeMouseMode = null;
 	
 	/**
@@ -159,7 +156,8 @@ public final class MapBean extends JComponent implements ThemeChangedListener {
 		} else {
 			themes.add( theme );
 			MapMouseListener listener = theme.getMapMouseListener();
-			if ( listener != null && activeMouseMode != null && listener.listensToMouseMode( activeMouseMode.getID() ) ){
+			if ( listener != null && activeMouseMode != null && 
+					listener.listensToMouseMode( activeMouseMode.getID() ) ){
 				activeMouseMode.addMapMouseListener( listener );
 			}
 		}
@@ -239,9 +237,11 @@ public final class MapBean extends JComponent implements ThemeChangedListener {
 		Point2D p = world.transform( e.getPoint(), p1 );
 		for ( ListIterator it = themes.listIterator(); it.hasNext(); ) {
 			Theme l = ( Theme ) it.next();
-			result = l.getTip( p );
-			if ( result != null ) {
-				break;
+			if ( l.isVisible() ) {
+				result = l.getTip( p );
+				if ( result != null ) {
+					break;
+				}
 			}
 		}
 		return result;
@@ -278,17 +278,6 @@ public final class MapBean extends JComponent implements ThemeChangedListener {
 		}
 		return result;
 	}
-
-	/**
-	 * Converts a Point2D from world coordinates to screen coordinates.
-	 * @param point The point in world coordinates to be converted.
-	 * @return A new points whose coordinates are in screen coordinates.
-	 */
-	/*public Point2D convertPoint( Point2D point) {
-		Point2D result = null;
-		result = screenTransform.transform( point, result );
-		return result;
-	}*/
 
 	private transient Image panBuffer = null;
 	
