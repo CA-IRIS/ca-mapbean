@@ -141,8 +141,12 @@ public final class Map extends JViewport {
 	 * @param name string containing name of layer to be retrieved
 	 * @return reurns the layer with the corresponding name; returns null if not found
 	 */
-	public Layer getLayer(String name) {
+	public Layer getLayer( String name ) {
 		return map.getLayer( name );
+	}
+	
+	public java.util.List getLayers() {
+		return map.getLayers();
 	}
 
 	/**
@@ -161,13 +165,29 @@ public final class Map extends JViewport {
 	 * Add a new layer to the ShapePane
 	 * @param layer layer to be added to the map
 	 */
-	public void addLayer(Layer layer) {
+	public void addLayer( Layer layer ) {
 		map.addLayer( layer );
 	}
-
-	/*public void refresh() {
-		map.refresh();
-	} */
+	
+	/**
+	 * Add a new layer to the ShapePane at the specified index
+	 * @param layer layer to be added to the map
+	 * @param index index layer is to be added to
+	 */
+	public void addLayer( Layer layer, int index ) {
+		map.addLayer( layer, index );
+	}
+	
+	/**
+	 * Add a List of layers to the ShapePane
+	 * @param layers List of layers to be added to the map
+	 */
+	public void addLayers( java.util.List layers ) {
+		ListIterator li = layers.listIterator();
+		while ( li.hasNext() ) {
+			map.addLayer( ( Layer ) li.next() );
+		}
+	}
 
 	/** Draw an XOR box (rubberbanding box) */
 	void drawBox(Rectangle r) {
@@ -190,10 +210,6 @@ public final class Map extends JViewport {
 	 */
 	public void scrollToMapPoint(Point2D center) {
 		map.scrollToMapPoint( center );
-		/*Point2D p = map.convertPoint( center );
-		Rectangle2D rec = new Rectangle2D.Double( p.getX() - 25, p.getY() - 25,
-			50, 50 );
-		map.scrollRectToVisible( rec.getBounds() );*/
 	}
 
 	public String getToolTipText(MouseEvent e) {
@@ -250,7 +266,7 @@ public final class Map extends JViewport {
 
 		private JViewport viewport;
 
-		public MouseHelper(JViewport viewport) {
+		public MouseHelper( JViewport viewport ) {
 			this.viewport = viewport;
 		}
 
@@ -286,6 +302,32 @@ public final class Map extends JViewport {
 			if ( SwingUtilities.isRightMouseButton( e ) ){
 				switch ( mouseAction ){
 					case SELECT:
+						Graphics2D g = ( Graphics2D ) map.getGraphics();
+					AffineTransform t = map.getTransform();
+					AffineTransform world;
+					try {
+						world = t.createInverse();
+					} catch ( NoninvertibleTransformException ex ) {
+						ex.printStackTrace();
+						return;
+					}
+					double pointX = e.getPoint().getX();
+					double pointY = e.getPoint().getY();
+					Point2D viewPosition = viewport.getViewPosition();
+					Point2D p1 = new Point2D.Double( pointX +
+					viewPosition.getX(), pointY + viewPosition.getY() );
+					Point2D p = world.transform( p1, new Point( 0, 0 ) );
+					java.util.List layers = map.getLayers();
+					g.setTransform( t );
+					boolean found = false;
+					for ( ListIterator it = layers.listIterator();
+							it.hasNext();){
+						Layer l = ( Layer ) it.next();
+						found = l.mouseClick( e.getClickCount(), p, g );
+						if ( found ) {
+							break;
+						}
+					}
 					break;
 					case ZOOM:
 					Point2D center = new Point2D.Double( ( e.getX() +
@@ -318,7 +360,7 @@ public final class Map extends JViewport {
 					g.setTransform( t );
 					boolean found = false;
 					for ( ListIterator it = layers.listIterator();
-					it.hasNext();){
+							it.hasNext();){
 						Layer l = ( Layer ) it.next();
 						found = l.mouseClick( e.getClickCount(), p, g );
 						if ( found ) {
@@ -344,22 +386,10 @@ public final class Map extends JViewport {
 					if ( box ){
 						drawBox( rect );
 					}
-					rect.x = x1;
-					if ( x2 < x1 ) {
-						rect.x = x2;
-					}
-					rect.width = x2 - x1;
-					if ( rect.width < 0 ) {
-						rect.width = -rect.width;
-					}
-					rect.y = y1;
-					if ( y2 < y1 ) {
-						rect.y = y2;
-					}
-					rect.height = y2 - y1;
-					if ( rect.height < 0 ) {
-						rect.height = -rect.height;
-					}
+					rect.x = Math.min( x1, x2 );
+					rect.width = Math.abs( x2 - x1 );
+					rect.y = Math.min( y1, y2 );
+					rect.height = Math.abs( y2 - y1 );
 					drawBox( rect );
 					box = true;
 					break;

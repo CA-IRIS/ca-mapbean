@@ -35,8 +35,7 @@ public class ClassBreaksRenderer extends ShapeRenderer {
 	private double [] classBreaks;
 	private Symbol [] symbols;
 	private NumericField field;
-	private String name = null;
-
+	
 	public ClassBreaksRenderer( NumericField field, int breakCount ) {
 		this.field = field;
 		classBreaks = new double[ breakCount ];
@@ -46,18 +45,7 @@ public class ClassBreaksRenderer extends ShapeRenderer {
 	public ClassBreaksRenderer( NumericField field, int breakCount,
 			String name ){
 		this( field, breakCount );
-		this.name = name;
-	}
-
-	/** overrides Object.toString() */
-	public final String toString(){
-		String result = null;
-		if ( name == null ) {
-			result = super.toString();
-		} else {
-			result = name;
-		}
-		return result;
+		setName( name );
 	}
 
 	public final void setBreak( int index, double value ){

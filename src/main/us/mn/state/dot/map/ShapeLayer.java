@@ -146,14 +146,14 @@ public class ShapeLayer extends AbstractLayer {
 		}
 	}
 
-	public final boolean mouseClick( int clickCount, Point2D p, Graphics2D g ){
+	public boolean mouseClick( int clickCount, Point2D p, Graphics2D g ){
 		boolean result;
 		java.util.List found = hit( p );
 		result = ! found.isEmpty();
 		return result;
 	}
 
-	private final java.util.List hit( Point2D p ){
+	protected final java.util.List hit( Point2D p ){
 		java.util.List result = new ArrayList();
 		switch( shapeType ) {
 		case ShapeTypes.POINT:

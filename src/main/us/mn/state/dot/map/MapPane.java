@@ -185,8 +185,6 @@ public final class MapPane extends JPanel implements LayerListener {
 			}
 
 			viewport.setViewPosition( new Point( xPos, yPos ) );
-		   //	bufferDirty = true;
-		   //	repaint();
 		}
 	}
 
@@ -218,21 +216,12 @@ public final class MapPane extends JPanel implements LayerListener {
 		inverse.transform( lowerRight, lowerRight );
 		double shiftX = lowerRight.getX() - upperLeft.getX();
 		double shiftY = lowerRight.getY() - upperLeft.getY();
-		double newX = extent.getX() + ( how.getX() * shiftX );
-		if ( newX < extentHome.getX() ) {
-			newX = extentHome.getX();
-		}
-		if ( newX > extentHome.getMaxX() - extent.getWidth() ) {
-			newX = extentHome.getMaxX() - extent.getWidth();
-		}
-		double newY = extent.getY() + ( how.getY() * shiftY );
-		if ( newY < extentHome.getMinY() ) {
-			newY = extentHome.getMinY();
-		}
-		double yMax = extentHome.getMaxY() - extent.getHeight();
-		if ( newY > yMax ) {
-			newY = yMax;
-		}
+		double newX = Math.max( ( extent.getX() + ( how.getX() * shiftX ) ),
+			extentHome.getX() );
+		newX = Math.min( newX, ( extentHome.getMaxX() - extent.getWidth() ) );
+		double newY = Math.max( ( extent.getY() + ( how.getY() * shiftY ) ),
+			extentHome.getMinY() );
+		newY = Math.min( newY, ( extentHome.getMaxY() - extent.getHeight() ) );
 		extent.setFrame( newX, newY, extent.getWidth(), extent.getHeight() );
 		resized();
 		screenTransform.transform( point, point );
@@ -303,23 +292,15 @@ public final class MapPane extends JPanel implements LayerListener {
 			}
 			double newX = extent.getX() - ( ( newWidth - oldWidth ) / 2 );
 			double newY = extent.getY() - ( ( newHeight - oldHeight ) / 2 );
-			if ( newX < extentHome.getX() ) {
-				newX = extentHome.getX();
-			}
-			if ( newY < extentHome.getY() ) {
-				newY = extentHome.getY();
-			}
+			newX = Math.max( newX, extentHome.getX() );
+			newY = Math.max( newY, extentHome.getY() );
 			extent.setFrame( newX, newY, newWidth, newHeight );
 		} else if ( ( getWidth() > viewport.getWidth() ) ||
 				( getHeight() > viewport.getHeight() ) ) {
 			int newWidth = ( int ) ( getWidth() / factor );
 			int newHeight = ( int ) ( getHeight() / factor );
-			if ( newWidth < viewport.getWidth() ) {
-				newWidth = viewport.getWidth();
-			}
-			if ( newHeight < viewport.getHeight() ) {
-				newHeight = viewport.getHeight();
-			}
+			newWidth = Math.max( newWidth, viewport.getWidth() );
+			newHeight = Math.max( newHeight, viewport.getHeight() );
 			Dimension newSize = new Dimension( newWidth, newHeight );
 			setSize( newSize );
 			setPreferredSize( newSize );
@@ -332,20 +313,12 @@ public final class MapPane extends JPanel implements LayerListener {
 		double yShift = viewport.getHeight() / 2;
 		int xCoor = ( int ) ( center.getX() - xShift );
 		int yCoor = ( int ) ( center.getY() - yShift );
-		if ( xCoor < 0 ) {
-			xCoor = 0;
-		}
-		if ( yCoor < 0 ) {
-			yCoor = 0;
-		}
+		xCoor = Math.max( xCoor, 0 );
+		yCoor = Math.max( yCoor, 0 );
 		int xMax = this.getWidth() - viewport.getWidth();
 		int yMax = this.getHeight() - viewport.getHeight();
-		if ( xCoor > xMax ) {
-			xCoor = xMax;
-		}
-		if ( yCoor > yMax ) {
-			yCoor = yMax;
-		}
+		xCoor = Math.min( xCoor, xMax );
+		yCoor = Math.min( yCoor, yMax );
 		viewport.setViewPosition( new Point( xCoor, yCoor ) );
 		revalidate();
 	}
@@ -356,7 +329,7 @@ public final class MapPane extends JPanel implements LayerListener {
 	 * @param mapSpace seleted region to zoom to
 	 * @param viewerSpace current viewport size.
 	 */
-	public void zoom(Rectangle2D mapSpace,Rectangle2D viewerSpace) {
+	public void zoom( Rectangle2D mapSpace, Rectangle2D viewerSpace ) {
 		double w = mapSpace.getWidth();
 		double h = mapSpace.getHeight();
 		//Calculate the new size of the panel
@@ -365,8 +338,8 @@ public final class MapPane extends JPanel implements LayerListener {
 		double ratioMap = oldWidth / oldHeight;
 		double viewWidth = viewerSpace.getWidth();
 		double viewHeight = viewerSpace.getHeight();
-		double maxWidth = 1776;//viewWidth * 3;
-		double maxHeight = 2268;//viewHeight * 3;
+		double maxWidth = 1776;
+		double maxHeight = 2268;
 		double width = 0;
 		double height = 0;
 		if ( ( int ) w >= ( int ) h ) {
@@ -433,13 +406,7 @@ public final class MapPane extends JPanel implements LayerListener {
 			h = 600;
 			w = 600;
 		}
-		if ( h == 0 ) {
-			return;
-		}
-		if ( w == 0 ) {
-			return;
-		}
-		if ( extent == null ) {
+		if ( h == 0 || w == 0 || extent == null ) {
 			return;
 		}
 		double scaleX = ( double ) w / extent.getWidth();
@@ -473,6 +440,16 @@ public final class MapPane extends JPanel implements LayerListener {
 		}
 		layer.addLayerListener( this );
 		setExtent( layer.getExtent() );
+	}
+	
+	/**
+	 * Add a new layer to the MapPane
+	 * @param layer layer to be added to the MapPane
+	 * @param index 
+	 */
+	public void addLayer( Layer layer, int index ) {
+		layers.add( index, layer );
+		layer.addLayerListener( this );
 	}
 
 	/**
@@ -518,7 +495,7 @@ public final class MapPane extends JPanel implements LayerListener {
 		Graphics2D g2D = ( Graphics2D ) staticBuffer.getGraphics();
 		int w = staticBuffer.getWidth( null );
 		int h = staticBuffer.getHeight( null );
-		g2D.setColor( new Color( 204, 204, 204 ));
+		g2D.setColor( new Color( 204, 204, 204 ) );
 		g2D.fillRect( 0, 0, w, h );
 		g2D.transform( screenTransform );
 		g2D.setRenderingHint( RenderingHints.KEY_ANTIALIASING, 
@@ -585,27 +562,4 @@ public final class MapPane extends JPanel implements LayerListener {
 			}
 		}
 	}
-
-	/**
-	 * Paint the shapes
-	 * @param g Graphics object to paint on
-	 */
-	/*public void paint( Graphics g ) {
-		if ( screenBuffer == null ) {
-			screenBuffer = createBuffer();
-			updateScreenBuffer();
-		} else if ( bufferDirty ) {
-			updateScreenBuffer();
-		}
-		g.drawImage( screenBuffer, 0, 0, this );
-		Graphics2D g2D = ( Graphics2D ) g;
-		g2D.transform( screenTransform );
-		for ( int i = ( layers.size() - 1 ); i >= 0; i-- ) {
-			Layer layer = ( Layer ) layers.get( i );
-			if ( layer.isVisible() ){
-				layer.paintSelections( g2D );
-			}
-		}
-
-	} */
 }

@@ -31,7 +31,7 @@ import java.awt.event.*;
 import javax.swing.*;
 import java.net.*;
 
-public final class NavigationBar extends JToolBar {
+public class NavigationBar extends JToolBar {
 
 	private final Cursor selectCursor;
 	private final Cursor zoomCursor;
@@ -51,6 +51,7 @@ public final class NavigationBar extends JToolBar {
 			new Point( 0, 0 ), "Pan" );
 		putClientProperty( "JToolBar.isRollover", Boolean.TRUE );
 		ButtonGroup bgToolbar = new ButtonGroup();
+		addSeparator();
 		add( getSelectButton( bgToolbar ), null );
 		add( getZoomButton( bgToolbar ), null );
 		add( getPanButton( bgToolbar ), null );

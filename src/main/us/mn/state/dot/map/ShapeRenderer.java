@@ -32,6 +32,7 @@ import java.awt.geom.*;
 public abstract class ShapeRenderer implements Renderer {
     MapTip mapTip = null;
     Symbol symbol = null;
+	private String name = "";
 
     public abstract void paint( Graphics2D g, GeneralPath path, int index );
 	public abstract void setField( Field f );
@@ -56,4 +57,24 @@ public abstract class ShapeRenderer implements Renderer {
         }
     	return result;
     }
+	
+	public Symbol[] getSymbols() {
+		Symbol[] result = { symbol };
+		return result;
+	}
+	
+	public void setName( String s ) {
+		name = s;
+	}
+	
+	/** overrides Object.toString() */
+	public final String toString(){
+		String result = null;
+		if ( name == null ) {
+			result = super.toString();
+		} else {
+			result = name;
+		}
+		return result;
+	}
 }

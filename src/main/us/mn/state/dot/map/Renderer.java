@@ -34,5 +34,6 @@ public interface Renderer {
     public void paint( Graphics2D g, GeneralPath path, int index);
     public void setField(Field f);
     public Field getField();
-
+	public Symbol[] getSymbols();
+	
 }
