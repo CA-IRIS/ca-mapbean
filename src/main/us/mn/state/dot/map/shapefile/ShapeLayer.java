@@ -23,8 +23,6 @@ import java.awt.Shape;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -163,27 +161,5 @@ public class ShapeLayer extends AbstractLayer {
 	/** Get the ShapeObject at the given index */
 	public ShapeObject getShapeObject(int index) {
 		return shapes[index];
-	}
-
-	public void printData( OutputStream out ){   //only works for point shapes
-		PrintWriter writer = new PrintWriter( out );
-		writer.write( "XCoord\tYCoord\t" );
-		String[] fields = shapes[0].getFields();
-		for ( int i = 0; i < fields.length; i++ ) {
-			writer.write( fields[ i ] + "\t" );
-		}
-		writer.write( "\r\n" );
-		for ( int i = 0; i < shapes.length; i++ ){
-			ShapeObject shapeObject = shapes[ i ];
-			Shape shape = shapeObject.getShape();
-			writer.write( shape.getBounds2D().getX() + "\t" +
-				shape.getBounds2D().getY() + "\t" );
-			for ( int j = 0; j < fields.length; j++ ) {
-				writer.write( shapeObject.getValue( fields[ j ] ).toString() +
-					"\t" );
-			}
-			writer.write( "\r\n" );
-		}
-		writer.flush();
 	}
 }

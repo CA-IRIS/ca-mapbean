@@ -55,9 +55,4 @@ public class ShapeObject implements MapObject {
 	public Object getValue(String key) {
 		return fieldMap.get(key);
 	}
-
-	/** Get the fields of this Shape Object */
-	public String[] getFields() {
-		return (String[])fieldMap.keySet().toArray(new String[] {});
-	}
 }
