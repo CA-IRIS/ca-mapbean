@@ -47,7 +47,7 @@ import us.mn.state.dot.shape.shapefile.ShapeRenderer;
  * file.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.34 $ $Date: 2003/08/14 20:22:41 $ 
+ * @version $Revision: 1.35 $ $Date: 2003/08/15 15:52:45 $ 
  */
 public final class StationLayer extends ShapeLayer implements
 		StationListener, DataListener {
@@ -248,14 +248,21 @@ public final class StationLayer extends ShapeLayer implements
 			ShapeObject shape = shapes[ i ];
 			int station = ( ( Integer ) 
 				shape.getValue( "STATION2" ) ).intValue() - 1;
+			if ( station > stations.size() - 1 ) {
+				continue;
+			}
 			if ( station > 0 ) {
 				Station stat = ( Station ) stations.get( station );
 				shape.addField( "VOLUME",
 					new Integer( (int) stat.getVolume() ) );
 				shape.addField( "OCCUPANCY",
 					new Integer( (int) stat.getOccupancy() ) );
-				shape.addField( "STATUS",
-					new Integer( stat.getStatus() ) );
+				String temp = stat.getStatus();
+				Integer status = new Integer( 0 );
+				if ( !temp.equals( "ok") ) {
+					status = new Integer( 1 );
+				}
+				shape.addField( "STATUS", status );
 			}	
 		}
 		SwingUtilities.invokeLater( new NotifyThread( this,
