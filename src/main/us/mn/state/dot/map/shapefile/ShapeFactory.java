@@ -31,7 +31,7 @@ import java.io.IOException;
   *
   * @author Douglas Lau
   * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
-  * @version $Revision: 1.2 $ $Date: 2003/05/06 20:58:15 $ 
+  * @version $Revision: 1.3 $ $Date: 2003/08/15 15:53:11 $ 
   */
 public final class ShapeFactory {
 	
@@ -47,7 +47,6 @@ public final class ShapeFactory {
 	public static final int POINTZ = 11;
 
 	/** Create a Shape and return a PathIterator for it */
-	//static public PathIterator readShape( ShapeDataInputStream in ) 
 	static public Shape readShape( ShapeDataInputStream in ) 
 			throws IOException {
 		int skipped = in.skipBytes( 8 );
@@ -57,28 +56,18 @@ public final class ShapeFactory {
 			case NULL:
 				path.append( new Null(), false );
 				return path;
-				//return new Null();
-				//return readNull();
 			case POINT:
 				path.append( new Point( in ), false );
 				return path;
-				//return new Point( in );
-				//return readPoint( in );
 			case POLYLINE:
 				path.append( new PolyLine( in ), false );
 				return path;
-				//return new PolyLine( in );
-				//return readPolyLine( in );
 			case POLYGON:
 				path.append( new Polygon( in ), false );
 				return path;
-				//return new Polygon( in );
-				//return readPolygon( in );
 			case POINTZ:
 				path.append( new PointZ( in ), false );
 				return path;
-				//return new PointZ( in );
-				//return readPointZ( in );
 			default:
 				System.err.println( " Invalid shape type: " + type );
 				System.err.println( " " + skipped + " bytes were skipped." );
@@ -98,18 +87,6 @@ public final class ShapeFactory {
         return result;
     }
 
-    /*private Shape readPoly( ShapeDataInputStream in ) {
-        
-        xpoints = new double[ numPoints ];
-        ypoints = new double[ numPoints ];
-        parts = new int[ numParts ];
-       
-        for( int i = 0; i < numPoints; i++ ) {
-            xpoints[ i ] = in.readLittleDouble();
-            ypoints[ i ] = in.readLittleDouble();
-
-        }
-    }*/
 
     public static final class PolyHeader {
 		
@@ -167,13 +144,10 @@ public final class ShapeFactory {
 
     private static Shape readPolygon( ShapeDataInputStream in ) 
 			throws IOException {
-System.out.println( "ShapeFactory.readPolygon" );
         PolyHeader header = new PolyHeader( in );	
         int parts[] = header.getParts();
 		int numPoints = header.getPointCount();
-System.out.println( "\t There are " + numPoints + " points " );
 		int numParts = header.getPartCount() - 1;
-System.out.println( "\t There are " + numParts + " parts " );
 		GeneralPath result = new GeneralPath( GeneralPath.WIND_EVEN_ODD,
 			numPoints );
 		int part = 0;
@@ -203,8 +177,6 @@ System.out.println( "\t There are " + numParts + " parts " );
         result.moveTo( ( float ) in.readLittleDouble(), ( float ) 
 			in.readLittleDouble() );
         in.skipBytes( 16 );
-        //Z = in.readLittleDouble();
-		//measure = in.readLittleDouble();
         return result;
     }
 
