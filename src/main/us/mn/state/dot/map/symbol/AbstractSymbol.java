@@ -37,30 +37,26 @@ import us.mn.state.dot.map.Symbol;
  */
 public abstract class AbstractSymbol implements Symbol {
 
-	protected boolean filled = true;
+	protected final int size;
 	protected Color color = Color.BLACK;
+	protected boolean filled = true;
 	protected boolean outlined = false;
 	protected LineSymbol outlineSymbol = new SolidLine();
 	protected final String label;
 
 	public abstract void draw(Graphics2D g, Shape shape);
 
-	public AbstractSymbol() {
-		this(Color.BLACK);
-	}
-
-	public AbstractSymbol(Color c) {
-		this(c, "", false);
-	}
-
-	public AbstractSymbol(Color c, String label) {
-		this(c, label, false);
-	}
-
-	public AbstractSymbol(Color color, String label, boolean outlined) {
+	public AbstractSymbol(int size, Color color, String label,
+		boolean outlined)
+	{
+		this.size = size;
 		this.color = color;
 		this.outlined = outlined;
 		this.label = label;
+	}
+
+	public int getSize() {
+		return size;
 	}
 
 	public void setColor(Color color) {

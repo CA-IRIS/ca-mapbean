@@ -32,38 +32,8 @@ import us.mn.state.dot.map.MapObject;
  */
 public abstract class PointSymbol extends AbstractSymbol {
 
-	protected int size;
-
-	public PointSymbol() {
-		super(Color.BLACK);
-	}
-
-	public PointSymbol( Color c ) {
-		super( c );
-		this.setSize( 500 );
-	}
-
-	public PointSymbol( Color c, String label ){
-		super( c, label );
-		this.setSize( 500 );
-	}
-
-	public PointSymbol( Color c, String label, boolean outlined ){
-		super( c, label, outlined );
-		this.setSize( 500 );
-	}
-
-	public void setSize ( int size ){
-		if ( size < 0 ) {
-			throw new IllegalArgumentException( "Size can't be less than 0: " +
-				size );
-		} else {
-			this.size = size;
-		}
-	}
-
-	public int getSize() {
-		return size;
+	public PointSymbol(int size, Color c, String label, boolean outlined) {
+		super(size, c, label, outlined);
 	}
 
 	abstract protected Shape getShape( double x, double y );
@@ -71,12 +41,13 @@ public abstract class PointSymbol extends AbstractSymbol {
 	/** Draw symbol on map */
 	public void draw(Graphics2D g, Shape shape) {
 		Rectangle2D pt = shape.getBounds();
+		Shape s = getShape(pt.getX(), pt.getY());
 		if(isFilled()) {
 			g.setColor(color);
-			g.fill(getShape(pt.getX(), pt.getY()));
+			g.fill(s);
 		}
 		if(isOutlined()) {
-			outlineSymbol.draw(g, getShape(pt.getX(), pt.getY()));
+			outlineSymbol.draw(g, s);
 		}
 	}
 

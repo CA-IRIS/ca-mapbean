@@ -75,7 +75,7 @@ public class ShapeLayer extends AbstractLayer {
 	protected Symbol getSymbol() {
 		switch(shapeType) {
 			case ShapeFactory.POINT:
-				return new CircleMarker();
+				return new CircleMarker(500);
 			case ShapeFactory.POLYLINE:
 				return new SolidLine();
 			case ShapeFactory.POLYGON:

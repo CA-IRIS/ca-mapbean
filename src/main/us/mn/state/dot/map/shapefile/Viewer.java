@@ -39,7 +39,7 @@ import us.mn.state.dot.map.NavigationBar;
  */
 public class Viewer extends JFrame {
 
-	private final MapBean map = new MapBean();
+	private final MapBean map = new MapBean(true);
 
 	/** Create a new Viewer */
 	public Viewer() {

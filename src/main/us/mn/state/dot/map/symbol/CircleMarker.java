@@ -33,16 +33,16 @@ public class CircleMarker extends PointSymbol {
 	protected final Ellipse2D shape = new Ellipse2D.Double();
 
 	/** Radius of the circle */
-	protected int radius;
+	protected final int radius;
 
 	/** Create a new CircleMarker */
-	public CircleMarker() {
-		this(Color.BLACK);
+	public CircleMarker(int size) {
+		this(size, Color.BLACK);
 	}
 
 	/** Create a CircleMarker of the given color */
-	public CircleMarker(Color c) {
-		super(c);
+	public CircleMarker(int size, Color c) {
+		this(size, c, "");
 	}
 
 	/**
@@ -51,8 +51,8 @@ public class CircleMarker extends PointSymbol {
 	 * @param c, color to use.
 	 * @param label, the label to use in this symbols legend.
 	 */
-	public CircleMarker(Color c, String label) {
-		super(c, label);
+	public CircleMarker(int size, Color c, String label) {
+		this(size, c, label, false);
 	}
 
 	/**
@@ -61,13 +61,8 @@ public class CircleMarker extends PointSymbol {
 	 * @param lable, the label to use in this symbols legend.
 	 * @param outlined, the symbol is outlined if true.
 	 */
-	public CircleMarker(Color c, String label, boolean outlined) {
-		super(c, label, outlined);
-	}
-
-	/** Set the size (diameter) of the circle marker */
-	public void setSize(int size) {
-		super.setSize(size);
+	public CircleMarker(int size, Color c, String label, boolean outlined) {
+		super(size, c, label, outlined);
 		radius = size / 2;
 	}
 
