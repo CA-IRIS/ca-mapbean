@@ -47,5 +47,7 @@ public abstract class Field {
 
     public int getType(){
     	return type;
-    }
+	}
+
+	public abstract int getLength();
 }

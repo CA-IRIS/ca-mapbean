@@ -19,7 +19,11 @@ public class DoubleField extends Field {
     public DoubleField(String name, int size, int offset, int length ){
     	super(Field.DOUBLE_FIELD,name, offset, length);
      	data = new double[size];
-    }
+	}
+
+	public int getLength(){
+		return data.length;
+	}
 
     /** Get the field's value from a given record */
     public double getValue( int record ) {

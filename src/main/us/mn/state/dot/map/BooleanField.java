@@ -26,6 +26,10 @@ public class BooleanField extends Field {
 		return data[record];
 	}
 
+	public int getLength(){
+		return data.length;
+	}
+
 	public void setValue( int record, boolean value ){
 		data[record] = value;
 	}

@@ -19,7 +19,11 @@ public class IntegerField extends Field {
     public IntegerField(String name, int size, int offset, int length){
     	super(Field.INTEGER_FIELD, name, offset, length);
      	data = new int[size];
-    }
+	}
+	
+	public int getLength(){
+		return data.length;
+	}
 
     /** Get the field's value from a given record */
     public int getValue( int record ) {

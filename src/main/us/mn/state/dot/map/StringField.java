@@ -18,7 +18,11 @@ public class StringField extends Field {
     public StringField(String name, int size, int offset, int length ){
     	super(Field.STRING_FIELD, name, offset, length);
     	data = new String[size];
-    }
+	}
+
+	public int getLength(){
+		return data.length;
+	}
 
     /** Get the field's value from a given record */
     public String getValue( int record ) {

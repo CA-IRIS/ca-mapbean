@@ -134,7 +134,28 @@ public class ShapeLayer implements Layer {
 		return name;
 	}
 
-	public boolean writeToFile(){
+	public boolean writeToFile(FileWriter f){   //only works for point shapes
+		Field fields [] = this.getFields();
+		try {
+			f.write("XCoord\tYCoord\t");
+			for (int i = 0; i < fields.length; i++) {
+				f.write(fields[i].getName() + "\t");
+			}
+			f.write("\r\n");
+			for (int i = 0; i < fields[1].getLength(); i++){
+				System.out.println(i);
+				f.write(paths[i].getCurrentPoint().getX() + "\t" +
+					paths[i].getCurrentPoint().getY() + "\t");
+				for (int j = 0; j < fields.length; j++) {
+					f.write(fields[j].getStringValue(i) + "\t");
+				}
+				f.write("\r\n");
+			}
+			f.flush();
+		} catch (IOException ex) {
+			ex.printStackTrace();
+			return false;
+		}
 		return true;
 	}
 
