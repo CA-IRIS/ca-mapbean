@@ -27,7 +27,6 @@ import java.awt.geom.GeneralPath;
 import java.awt.geom.Rectangle2D;
 import javax.swing.Icon;
 import javax.swing.JLabel;
-import us.mn.state.dot.shape.LegendItem;
 import us.mn.state.dot.shape.MapObject;
 import us.mn.state.dot.shape.Symbol;
 
@@ -36,7 +35,7 @@ import us.mn.state.dot.shape.Symbol;
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
  */
-public abstract class AbstractSymbol implements LegendItem, Symbol {
+public abstract class AbstractSymbol implements Symbol {
 
 	protected boolean filled = true;
 	protected Color color = Color.BLACK;
@@ -96,14 +95,6 @@ public abstract class AbstractSymbol implements LegendItem, Symbol {
 	public boolean isOutlined() {
 		return outlined;
 	}
-
-/*	protected void setOutlineSymbol(LineSymbol symbol) {
-		outlineSymbol = symbol;
-	}
-
-	protected LineSymbol getOutlineSymbol() {
-		return outlineSymbol;
-	}*/
 
 	public String getLabel() {
 		return label;
