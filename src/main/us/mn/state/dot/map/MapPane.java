@@ -47,10 +47,10 @@ public class MapPane implements ThemeChangedListener {
 	private transient BufferedImage staticBuffer;
 
 	/** List of dynamic themes */
-	private final List themes = new ArrayList();
+	protected final List themes = new ArrayList();
 
 	/** List of static themes */
-	private final List staticThemes = new ArrayList();
+	protected final List staticThemes = new ArrayList();
 
 	/** Transformation to draw shapes on the map */
 	private final AffineTransform screenTransform = new AffineTransform();
@@ -86,9 +86,9 @@ public class MapPane implements ThemeChangedListener {
 
 	/**
 	 * Constructs a Map using the themes contained in the themes parameter.
-	 * @param themes a list of themes to be used in the map
+	 * @param themes a list of layers or themes to be used in the map
 	 */
-	public MapPane( java.util.List themes ) {
+	public MapPane(List themes) {
 		Iterator it = themes.iterator();
 		while(it.hasNext()) {
 			Object ob = it.next();
