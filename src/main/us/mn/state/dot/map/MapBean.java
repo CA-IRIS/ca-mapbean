@@ -52,7 +52,7 @@ import us.mn.state.dot.shape.event.SelectMouseMode;
  */
 public class MapBean extends JComponent implements MapChangedListener{
 
-	/** buffer used to pan the map. */
+	/** Buffer used to pan the map */
 	private transient Image panBuffer = null;
 
 	/** home location */
@@ -64,11 +64,9 @@ public class MapBean extends JComponent implements MapChangedListener{
 	/** MapPane that will create the map */
 	private final MapPane mapPane;
 
-	/**
-	 * Constructor
-	 */
+	/** Create a new map */
 	public MapBean() {
-		this( new ArrayList() );
+		this(new ArrayList());
 	}
 
 	/**
@@ -77,67 +75,49 @@ public class MapBean extends JComponent implements MapChangedListener{
 	 * @param themes a list of themes to be used in the map
 	 */
 	public MapBean(List themes) {
-		mapPane = new MapPane( themes );
-		mapPane.addMapChangedListener( this );
-		mapPane.setBackground( this.getBackground() );
-		this.setOpaque( true );
-		this.setToolTipText( " " );
-		addComponentListener( new ComponentAdapter() {
-			public void componentResized( ComponentEvent e ) {
+		mapPane = new MapPane(themes);
+		mapPane.addMapChangedListener(this);
+		mapPane.setBackground(getBackground());
+		setOpaque(true);
+		setToolTipText(" ");
+		addComponentListener(new ComponentAdapter() {
+			public void componentResized(ComponentEvent e) {
 				rescale();
 			}
 		});
-		setMouseMode( new SelectMouseMode() );
+		setMouseMode(new SelectMouseMode());
 	}
 
-   /**
-    * Set the background color of the MapBean.
-    * @param c, the color to use for the background.
-    */
-	public void setBackground( Color c ) {
-		super.setBackground( c );
-		mapPane.setBackground( c );
+	/** Set the background color of the Map */
+	public void setBackground(Color c) {
+		super.setBackground(c);
+		mapPane.setBackground(c);
 	}
 
-	/**
-	 * Sets the action occuring on mouse events
-	 * @param m an integer describing mouse action either Map.NONE, Map.SELECT,
-	 * Map.PAN, or Map.ZOOM
-	 */
-	public void setMouseMode( MapMouseMode mode ) {
-		if ( activeMouseMode != null ) {
-			removeMouseListener( activeMouseMode );
-			removeMouseMotionListener( activeMouseMode );
+	/** Set the action occuring on mouse events */
+	public void setMouseMode(MapMouseMode mode) {
+		if(activeMouseMode != null) {
+			removeMouseListener(activeMouseMode);
+			removeMouseMotionListener(activeMouseMode);
 			activeMouseMode.removeAllMapMouseListeners();
 		}
 		activeMouseMode = mode;
-		setCursor( activeMouseMode.getCursor() );
-		addMouseListener( mode );
-		addMouseMotionListener( mode );
-		String modeId = activeMouseMode.getID();
-		List themes = mapPane.getThemes();
-		Iterator it = themes.iterator();
-		while ( it.hasNext() ) {
-			Theme theme = ( Theme ) it.next();
-			MapMouseListener listener = theme.getMapMouseListener();
-			if ( listener != null && listener.listensToMouseMode( modeId ) ) {
-				activeMouseMode.addMapMouseListener( listener );
-			}
+		setCursor(activeMouseMode.getCursor());
+		addMouseListener(mode);
+		addMouseMotionListener(mode);
+		Iterator it = mapPane.getThemes().iterator();
+		while(it.hasNext()) {
+			Theme t = (Theme)it.next();
+			registerWithMouseListener(t);
 		}
 	}
 
-	/**
-	 * Gets the action occuring on mouse events
-	 * @return an int describing the current mouse action
-	 */
+	/** Gets the action occuring on mouse events */
 	public MapMouseMode getMouseMode() {
 		return activeMouseMode;
 	}
 
-	/**
-	 * Add a new Theme to the Map.
-	 * @param theme Theme to be added to the Map
-	 */
+	/** Add a new theme to the map */
 	public void addTheme(Theme theme) {
 		mapPane.addTheme(theme);
 		extentHome = theme.getExtent();
@@ -168,19 +148,17 @@ public class MapBean extends JComponent implements MapChangedListener{
 	/** Register the theme with mouse listener */
 	protected void registerWithMouseListener(Theme theme) {
 		if(theme.layer instanceof DynamicLayer) {
+			MapMouseMode m = activeMouseMode;
 			MapMouseListener l = theme.getMapMouseListener();
-			if(l != null && activeMouseMode != null &&
-				l.listensToMouseMode(activeMouseMode.getID()))
+			if(m != null && l != null &&
+				l.listensToMouseMode(m.getID()))
 			{
-				activeMouseMode.addMapMouseListener(l);
+				m.addMapMouseListener(l);
 			}
 		}
 	}
 
-	/**
-	 * Remove a Theme from the Map.
-	 * @param name Name of theme to be removed.
- 	 */
+	/** Remove a theme from the map */
 	public void removeTheme(String name) {
 		Theme theme = mapPane.getTheme(name);
 		if(theme != null) {
@@ -188,10 +166,7 @@ public class MapBean extends JComponent implements MapChangedListener{
 		}
 	}
 
-	/**
-	 * Remove a Theme from the Map.
-	 * @param theme Theme to be removed.
- 	 */
+	/** Remove a theme from the map */
 	public void removeTheme(Theme theme) {
 		mapPane.removeTheme(theme);
 		unregisterWithMouseListener(theme);
@@ -397,18 +372,17 @@ public class MapBean extends JComponent implements MapChangedListener{
 		return mapPane.getTransform();
 	}
 
-	public void paintComponent( Graphics g ) {
+	public void paintComponent(Graphics g) {
 		Image image = mapPane.getImage();
-		if ( image == null ) {
-			return;
-		}
-		Graphics2D g2d = ( Graphics2D ) g;
-		g2d.drawImage( image, 0, 0, this );
-		g2d.transform( mapPane.getTransform() );
+		if(image == null) return;
+		Graphics2D g2d = (Graphics2D)g;
+		g2d.drawImage(image, 0, 0, this);
+		g2d.transform(mapPane.getTransform());
 		List themes = mapPane.getThemes();
-		ListIterator li = themes.listIterator( themes.size() );
-		while ( li.hasPrevious() ) {
-			( ( Theme ) li.previous() ).paintSelections( g2d );
+		ListIterator li = themes.listIterator(themes.size());
+		while(li.hasPrevious()) {
+			Theme t = (Theme)li.previous();
+			t.paintSelections(g2d);
 		}
 	}
 
