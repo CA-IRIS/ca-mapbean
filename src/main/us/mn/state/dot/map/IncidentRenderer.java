@@ -19,6 +19,7 @@
 
 package us.mn.state.dot.shape;
 
+import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.geom.Rectangle2D;
@@ -32,7 +33,7 @@ import us.mn.state.dot.dds.client.IncidentDescription;
 /**
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.1 $ $Date: 2001/08/16 22:43:59 $
+ * @version $Revision: 1.2 $ $Date: 2002/01/28 22:45:58 $
  */
 public class IncidentRenderer implements LayerRenderer {
 	

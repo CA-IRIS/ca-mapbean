@@ -24,8 +24,10 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Shape;
-import java.awt.geom.NoninvertibleTransformException;
+import java.awt.MediaTracker;
 import java.awt.RenderingHints;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import javax.swing.ImageIcon;
@@ -35,7 +37,7 @@ import javax.swing.JLabel;
  * Symol for painting MapObjects as images.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.3 $ $Date: 2002/01/28 17:59:36 $
+ * @version $Revision: 1.4 $ $Date: 2002/01/28 22:45:51 $
  */
 public class ImageSymbol implements Symbol {
 
@@ -44,6 +46,8 @@ public class ImageSymbol implements Symbol {
 	private ImageIcon icon;
 	
 	private Dimension size;
+	
+	protected boolean drawFullSize = true;
 	
 	/** Creates new ImageSymbol */
     public ImageSymbol( ImageIcon icon ) {
@@ -59,6 +63,7 @@ public class ImageSymbol implements Symbol {
 		this.icon = icon;
 		this.label = label;
 		this.size = size;
+		drawFullSize = true;
 	}
 	
 	public void setIcon( ImageIcon icon ) {
@@ -106,12 +111,35 @@ public class ImageSymbol implements Symbol {
 		return label;
 	}
 	
+	/**
+	 * Draw the ImageSymbol.  If size == null then the image is drawn at full
+	 * size.
+	 */
 	public void draw( Graphics2D g, Shape shape ) {
 		Rectangle2D rect = shape.getBounds2D();
 		double xCoord = rect.getX();
 		double yCoord = rect.getY();
-		int width = ( int ) size.getWidth();
-		int height = ( int ) size.getHeight();
+		int width = 0;
+		int height = 0;
+		if ( !drawFullSize ) {
+			width = ( int ) size.getWidth();
+			height = ( int ) size.getHeight();
+		} else { //draw image to full size.
+			width = icon.getIconWidth();
+			height = icon.getIconHeight();
+			try {
+				AffineTransform transform = g.getTransform();
+				Point2D pointStart = new Point2D.Double( 0, 0 );
+				Point2D pointEnd = new Point2D.Double( width, height );
+				pointStart = transform.inverseTransform( pointStart, pointStart );
+				pointEnd = transform.inverseTransform( pointEnd, pointEnd );
+				width = ( int ) ( pointEnd.getX() - pointStart.getX() );
+				height = ( int ) ( pointEnd.getY() - pointStart.getY() );
+			} catch ( java.awt.geom.NoninvertibleTransformException nte ) {
+				nte.printStackTrace();
+				return;
+			}
+		}
 		g.drawImage( icon.getImage(), ( ( int ) xCoord - width / 2 ),
 			( ( int ) yCoord - height / 2 ), width, height,
 			icon.getImageObserver() );
