@@ -24,6 +24,7 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.RenderingHints;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseEvent;
@@ -63,20 +64,11 @@ public class MapBean extends JComponent implements MapChangedListener {
 	protected MapMouseMode mouseMode = null;
 
 	/** MapPane that will create the map */
-	private final MapPane mapPane;
+	protected final MapPane mapPane;
 
 	/** Create a new map */
-	public MapBean() {
-		this(new ArrayList());
-	}
-
-	/**
-	 * Constructs a Map containing a MapPane using the themes contained in the
-	 * themes parameter.
-	 * @param themes a list of themes to be used in the map
-	 */
-	public MapBean(List themes) {
-		mapPane = new MapPane(themes);
+	public MapBean(boolean a) {
+		mapPane = new MapPane(a);
 		mapPane.addMapChangedListener(this);
 		mapPane.setBackground(getBackground());
 		setOpaque(true);
@@ -129,9 +121,18 @@ public class MapBean extends JComponent implements MapChangedListener {
 	 * @param themes List of themes to be added to the map
 	 */
 	public void addThemes(List themes) {
-		ListIterator li = themes.listIterator();
-		while(li.hasNext()) {
-			addTheme((Theme)li.next());
+		Iterator it = themes.iterator();
+		while(it.hasNext()) {
+			Object o = it.next();
+			if(o instanceof Layer) {
+				Layer l = (Layer)o;
+				addTheme(l.getTheme());
+			} else if(o instanceof Theme) {
+				addTheme((Theme)o);
+			} else {
+				throw new IllegalArgumentException(
+					"Must be Layer or Theme");
+			}
 		}
 	}
 
@@ -354,6 +355,10 @@ public class MapBean extends JComponent implements MapChangedListener {
 		Graphics2D g2d = (Graphics2D)g;
 		g2d.drawImage(image, 0, 0, this);
 		g2d.transform(mapPane.getTransform());
+		if(mapPane.antialiased) {
+			g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+				RenderingHints.VALUE_ANTIALIAS_ON);
+		}
 		List themes = mapPane.getThemes();
 		ListIterator li = themes.listIterator(themes.size());
 		while(li.hasPrevious()) {

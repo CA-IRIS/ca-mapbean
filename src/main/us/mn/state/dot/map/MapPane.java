@@ -22,6 +22,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
+import java.awt.RenderingHints;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
@@ -75,32 +76,12 @@ public class MapPane implements ThemeChangedListener {
 
 	private List listeners = new ArrayList();
 
-	private boolean transparent = false;
+	/** Draw map antialiased */
+	public final boolean antialiased;
 
 	/** Create a new MapPane without any themes */
-	public MapPane() {
-		this(new ArrayList());
-	}
-
-	/**
-	 * Constructs a Map using the themes contained in the themes parameter.
-	 * @param themes a list of layers or themes to be used in the map
-	 */
-	public MapPane(List themes) {
-		Iterator it = themes.iterator();
-		while(it.hasNext()) {
-			Object ob = it.next();
-			Theme theme;
-			if(ob instanceof Layer) {
-				theme = ((Layer)ob).getTheme();
-			} else if(ob instanceof Theme) {
-				theme = (Theme)ob;
-			} else {
-				throw new IllegalArgumentException(
-					"Must be Layer or Theme");
-			}
-			addTheme(theme);
-		}
+	public MapPane(boolean a) {
+		antialiased = a;
 	}
 
 	/**
@@ -119,14 +100,6 @@ public class MapPane implements ThemeChangedListener {
 		ArrayList result = new ArrayList( staticThemes );
 		result.addAll( themes );
 		return result;
-	}
-
-	/** Set whether or not the background should be transparent */
-	public void setTransparent(boolean t) {
-		if(t != transparent) {
-			transparent = t;
-			setSize(new Dimension(width, height));
-		}
 	}
 
 	/**
@@ -157,13 +130,8 @@ public class MapPane implements ThemeChangedListener {
 
 	/** Create a buffered image of the specified size */
 	protected BufferedImage createImage(int width, int height) {
-		if(transparent) {
-			return new BufferedImage(width, height,
-				BufferedImage.TYPE_4BYTE_ABGR);
-		} else {
-			return new BufferedImage(width, height,
-				BufferedImage.TYPE_INT_RGB);
-		}
+		return new BufferedImage(width, height,
+			BufferedImage.TYPE_INT_RGB);
 	}
 
 	/** Get the size of the map */
@@ -239,43 +207,41 @@ public class MapPane implements ThemeChangedListener {
 
 	/** Update the staticBuffer */
 	private void updateStaticBuffer() {
-		if ( staticBuffer == null ) return;
-		synchronized ( staticBuffer ) {
-			Graphics2D g = staticBuffer.createGraphics();
-			g.setBackground(backgroundColor);
-			g.clearRect( 0, 0, staticBuffer.getWidth(),
-				staticBuffer.getHeight() );
-			g.transform( screenTransform );
-			staticBufferDirty = false;
-			Iterator it = staticThemes.iterator();
-			while(it.hasNext()) {
-				((Theme)it.next()).paint(g);
-			}
-			g.dispose();
+		if(staticBuffer == null) return;
+		Graphics2D g = staticBuffer.createGraphics();
+		g.setBackground(backgroundColor);
+		g.clearRect(0, 0, staticBuffer.getWidth(),
+			staticBuffer.getHeight());
+		g.transform(screenTransform);
+		if(antialiased) {
+			g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+			RenderingHints.VALUE_ANTIALIAS_ON);
 		}
+		Iterator it = staticThemes.iterator();
+		while(it.hasNext()) {
+			((Theme)it.next()).paint(g);
+		}
+		g.dispose();
+		staticBufferDirty = false;
 	}
 
 	/** Update the screenBuffer */
-	public void updateScreenBuffer() {
-		if ( screenBuffer == null ) return;
-		synchronized ( screenBuffer ) {
-			Graphics2D g = screenBuffer.createGraphics();
-			if ( staticBufferDirty ) {
-				updateStaticBuffer();
-			}
-			if(transparent) {
-				g.setBackground(backgroundColor);
-				g.clearRect(0, 0, width, height);
-			}
-			g.drawImage( staticBuffer, 0, 0, null );
-			g.transform( screenTransform );
-			bufferDirty = false;
-			Iterator it = themes.iterator();
-			while(it.hasNext()) {
-				((Theme)it.next()).paint(g);
-			}
-			g.dispose();
+	public synchronized void updateScreenBuffer() {
+		if(screenBuffer == null) return;
+		Graphics2D g = screenBuffer.createGraphics();
+		if(staticBufferDirty) updateStaticBuffer();
+		g.drawImage(staticBuffer, 0, 0, null);
+		g.transform(screenTransform);
+		if(antialiased) {
+			g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+				RenderingHints.VALUE_ANTIALIAS_ON);
 		}
+		Iterator it = themes.iterator();
+		while(it.hasNext()) {
+			((Theme)it.next()).paint(g);
+		}
+		g.dispose();
+		bufferDirty = false;
 	}
 
 	public BufferedImage getImage() {
