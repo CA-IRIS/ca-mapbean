@@ -2,7 +2,7 @@ package us.mn.state.dot.shape;
 
 import java.io.*;
 import java.util.*;
-
+import java.net.*;
 
 /**
   * ShapeFile is an ESRI shape file reader.  It reads the file and creates an
@@ -11,7 +11,6 @@ import java.util.*;
   * @author Douglas Lau
   */
 public final class ShapeFile {
-
 
 /**
   *	ShapeFile header (100 bytes)
@@ -38,16 +37,22 @@ public final class ShapeFile {
   */
 	private final ByteBuffer header;
 
-
 	/** List of shapes in the ShapeFile */
 	private final ArrayList shapes = new ArrayList();
 	public ArrayList getShapeList() { return shapes; }
 
-
 	/** Constructor */
 	public ShapeFile( String name ) throws IOException {
+		this( new FileInputStream( name ));
+	}
+
+	public ShapeFile( URL url ) throws IOException {
+		this( url.openStream() );
+	}
+
+	/** Constructor */
+	public ShapeFile(InputStream i) throws IOException {
 		ShapeTypes types = new ShapeTypes();
-		FileInputStream i = new FileInputStream( name );
 		header = new ByteBuffer( i, 100 );
 		header.reverseBytes4( 28 );
 		header.reverseBytes4( 32 );
@@ -65,7 +70,16 @@ public final class ShapeFile {
 		try {
 			while( true ) {
 				rhead = new ByteBuffer( i, 8 );
-				size = 2 * rhead.getInt( 4 );
+				int test = rhead.getInt(4);
+				if (test < 0) {
+					System.out.println("rhead was less than 0: " + rhead);
+				}
+				//System.out.println("test = " + test);
+				size = 2 * test;//rhead.getInt( 4 );
+				if (size < 0 ) {
+					i.close();
+					return;
+				}
 				record = new ByteBuffer( i, size );
 				shapes.add( types.createShape( record ) );
 			}
@@ -73,7 +87,6 @@ public final class ShapeFile {
 		catch( EOFException e ) {}
 		i.close();
 	}
-
 
 	/** Get the file code */
 	public int getFileCode() {

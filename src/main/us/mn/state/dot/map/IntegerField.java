@@ -35,7 +35,11 @@ public class IntegerField extends NumericField {
 	}
 
 	void setValue(int index, String value){
-		data[index] = Integer.parseInt(value);
+		//try {
+			data[index] = Integer.parseInt(value);
+		//} catch (java.lang.NumberFormatException ex){
+		//	System.out.println("Layer + " + this.getName() + " on " + value);
+		//}
 	}
 
 	public String getStringValue(int record){

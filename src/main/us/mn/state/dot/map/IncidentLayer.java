@@ -103,7 +103,6 @@ public final class IncidentLayer extends AbstractLayer implements
 				try{
 					diameter = dmsList.getRingRadius(i) * MAP_UNITS_PER_MILE;
 				} catch (java.rmi.RemoteException ex){
-					System.out.println("ring radius failed");
 					return false;
 				}
 				g.draw(new Ellipse2D.Double((xCoord - (diameter / 2)),

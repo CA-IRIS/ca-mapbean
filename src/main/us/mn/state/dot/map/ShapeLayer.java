@@ -11,6 +11,9 @@ import java.awt.*;
 import java.awt.geom.*;
 import java.util.*;
 import java.io.*;
+import java.util.jar.*;
+import java.net.*;
+
 import us.mn.state.dot.shape.DbaseReader.*;
 
 public class ShapeLayer extends AbstractLayer {
@@ -36,7 +39,7 @@ public class ShapeLayer extends AbstractLayer {
 	}
 
 	/** Array to hold all shape information */
-	protected final GeneralPath [] paths;
+	protected GeneralPath [] paths;
 
 	public Field [] getFields(){
 		return dbFile.getFields();
@@ -56,8 +59,29 @@ public class ShapeLayer extends AbstractLayer {
 
 	public ShapeLayer(String fileName, String layerName) throws IOException {
 		setName(layerName);
+		URL url = ShapeLayer.class.getResource(fileName + ".dbf");
+		if (url == null) {
+			System.out.println("File " + fileName + ".dbf was not found");
+		}
+		dbFile = new DbaseReader( url );
+		url = ShapeLayer.class.getResource(fileName + ".shp" );
+        if (url == null) {
+			System.out.println("File " + fileName + ".shp was not found");
+		} else {
+			System.out.println("Reading " + fileName + ".shp ............");
+		}
+		ShapeFile file = new ShapeFile( url );
+		createShapeLayer(file);
+	}
+
+   /*	public ShapeLayer(String fileName, String layerName) throws IOException {
+		setName(layerName);
 		dbFile = new DbaseReader( fileName + ".dbf" );
 		ShapeFile file = new ShapeFile( fileName + ".shp" );
+		createShapeLayer(file);
+	}*/
+
+	public void createShapeLayer(ShapeFile file){
 		ArrayList list = file.getShapeList();
 		paths = new GeneralPath [ list.size() ];
 		for ( int i = 0; i < list.size(); i++ ) {

@@ -2,6 +2,7 @@ package us.mn.state.dot.shape;
 
 import java.io.*;
 import java.util.*;
+import java.net.*;
 import us.mn.state.dot.shape.*;
 
 /**
@@ -9,6 +10,7 @@ import us.mn.state.dot.shape.*;
   *
   * @author Douglas Lau
   */
+
 public final class DbaseReader {
 
 /**
@@ -25,30 +27,37 @@ public final class DbaseReader {
   *		10		Record size					short (little)		2
   *		12		Reserved											  20
   */
-    public final int records;
-    public final short headSize;
-    public final short recSize;
-    public final short fields;
-    public final Field [] field;
-    public final ByteBuffer [] record;
+	public final int records;
+	public final short headSize;
+	public final short recSize;
+	public final short fields;
+	public final Field [] field;
+	public final ByteBuffer [] record;
 
-    /** Constructor */
-    public DbaseReader( String name ) throws IOException {
-    	FileInputStream i = new FileInputStream( name );
-    	ByteBuffer header = new ByteBuffer( i, 32 );
-    	header.reverseBytes4( 4 );
-    	records = header.getInt( 4 );
-    	header.reverseBytes2( 8 );
-    	headSize = header.getShort( 8 );
-    	header.reverseBytes2( 10 );
-    	recSize = header.getShort( 10 );
-    	fields = (short)( ( ( headSize - 1 ) / 32 ) - 1 );
-    	field = new Field [ fields ];
-    	int o = 1;
-    	for( int f = 0; f < fields; f++ ) {
-      	    field[ f ] = FieldFactory.createField( i, o, records );
-    	    o += field[ f ].length;
-        }
+	/** Constructor */
+	public DbaseReader( String name ) throws IOException {
+		this(new FileInputStream( name ));
+	}
+
+	public DbaseReader( URL url ) throws IOException {
+		this( url.openStream() );
+	}
+
+	public DbaseReader( InputStream i ) throws IOException {
+		ByteBuffer header = new ByteBuffer( i, 32 );
+		header.reverseBytes4( 4 );
+		records = header.getInt( 4 );
+		header.reverseBytes2( 8 );
+		headSize = header.getShort( 8 );
+		header.reverseBytes2( 10 );
+		recSize = header.getShort( 10 );
+		fields = (short)( ( ( headSize - 1 ) / 32 ) - 1 );
+		field = new Field [ fields ];
+		int o = 1;
+		for( int f = 0; f < fields; f++ ) {
+			field[ f ] = FieldFactory.createField( i, o, records );
+			o += field[ f ].length;
+		}
 		i.skip( 1 );
 		record = new ByteBuffer[ records ];
 		for( int r = 0; r < records; r++ ) {

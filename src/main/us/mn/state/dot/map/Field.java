@@ -29,7 +29,8 @@ public abstract class Field {
     	this.type = type;
      	this.name = name;
      	this.offset = offset;
-     	this.length = length;
+		this.length = length;
+	   //	System.out.println ("Field " + name + " is type - " + type);
     }
 
     public void loadData(int index, ByteBuffer record){
