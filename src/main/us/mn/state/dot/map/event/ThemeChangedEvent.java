@@ -47,7 +47,7 @@ public class ThemeChangedEvent extends EventObject {
 	static public final int SELECTION = 1 << 5;
 
 	/** Reason code for theme change */
-	private int reason;
+	public final int reason;
 
 	/** Create a new ThemeChangedEvent */
 	public ThemeChangedEvent(Object source, int why) {
