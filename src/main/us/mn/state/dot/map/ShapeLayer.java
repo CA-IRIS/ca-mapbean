@@ -57,9 +57,9 @@ public class ShapeLayer extends AbstractLayer {
 		return result;
 	}
 
-	public ShapeLayer(String fileName, String layerName) throws IOException {
+	public ShapeLayer(String fileName, String layerName, String jarFileName)
+			 throws IOException {
 		setName(layerName);
-		String jarFileName = "/SignClient.jar";
 		JarFile file = new JarFile(ShapeLayer.class.getResource(
 				jarFileName).getFile());
 		dbFile = new DbaseReader(file.getInputStream(file.getEntry(
@@ -69,29 +69,20 @@ public class ShapeLayer extends AbstractLayer {
 		createShapeLayer(shapeFile);
 	}
 
-	/*public ShapeLayer(String fileName, String layerName) throws IOException {
+	public ShapeLayer(String fileName, String layerName) throws IOException {
 		setName(layerName);
-		URL url = ShapeLayer.class.getResource(fileName + ".dbf");
+		URL url = ShapeLayer.class.getResource("/" + fileName + ".dbf");
 		if (url == null) {
 			System.out.println("File " + fileName + ".dbf was not found");
 		}
 		dbFile = new DbaseReader( url );
-		url = ShapeLayer.class.getResource(fileName + ".shp" );
+		url = ShapeLayer.class.getResource("/" + fileName + ".shp" );
 		if (url == null) {
 			System.out.println("File " + fileName + ".shp was not found");
-		} else {
-			System.out.println("Reading " + fileName + ".shp ............");
 		}
 		ShapeFile file = new ShapeFile( url );
 		createShapeLayer(file);
-	}*/
-
-   /*	public ShapeLayer(String fileName, String layerName) throws IOException {
-		setName(layerName);
-		dbFile = new DbaseReader( fileName + ".dbf" );
-		ShapeFile file = new ShapeFile( fileName + ".shp" );
-		createShapeLayer(file);
-	}*/
+	}
 
 	public void createShapeLayer(ShapeFile file){
 		ArrayList list = file.getShapeList();
