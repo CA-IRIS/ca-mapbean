@@ -53,14 +53,14 @@ public class NavigationBar extends JToolBar {
 	}
 
 	private ImageIcon getImage( String path ){
-		URL url = NavigationBar.class.getResource( path );
+		URL url = this.getClass().getResource( path );
 		ImageIcon img = new ImageIcon( url );
 		return img;
 	}
 
 	private JToggleButton getSelectButton( ButtonGroup bgToolbar ){
 		JToggleButton btnSelect
-			= new JToggleButton( "Select", getImage( "images/arrow.gif" ));
+			= new JToggleButton( "Select", getImage( "/images/arrow.gif" ) );
 		btnSelect.setSelected( true );
 		btnSelect.setToolTipText( "Select Map Item" );
 		sizeButton( btnSelect );
@@ -75,7 +75,7 @@ public class NavigationBar extends JToolBar {
 
 	private JToggleButton getZoomButton( ButtonGroup bgToolbar ){
 		JToggleButton btnZoom = new JToggleButton( "Zoom",
-			getImage( "images/zoom.gif" ));
+			getImage( "/images/zoom.gif" ));
 		btnZoom.setToolTipText( "Zoom Map" );
 		sizeButton( btnZoom );
 		btnZoom.addActionListener( new ActionListener(){
@@ -89,7 +89,7 @@ public class NavigationBar extends JToolBar {
 
 	private JToggleButton getPanButton( ButtonGroup bgToolbar ){
 		JToggleButton btnPan = new JToggleButton( "Pan",
-			getImage( "images/pan.gif" ));
+			getImage( "/images/pan.gif" ));
 		btnPan.setToolTipText( "Pan Map" );
 		sizeButton( btnPan );
 		btnPan.addActionListener( new ActionListener(){
@@ -102,7 +102,7 @@ public class NavigationBar extends JToolBar {
 	}
 
 	private JButton getHomeButton(){
-		JButton btnHome = new JButton( "Home", getImage( "images/globe.gif" ));
+		JButton btnHome = new JButton( "Home", getImage( "/images/globe.gif" ));
 		sizeButton( btnHome );
 		btnHome.setToolTipText( "Zoom Out to Full Extent" );
 		btnHome.addActionListener( new ActionListener(){

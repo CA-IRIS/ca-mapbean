@@ -32,7 +32,6 @@ import java.awt.event.*;
 import java.awt.geom.*;
 import java.awt.image.*;
 import java.util.*;
-import us.mn.state.dot.dds.client.*;
 import us.mn.state.dot.shape.event.*;
 
 /**

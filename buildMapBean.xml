@@ -13,6 +13,7 @@
     <property name="MapBean.home" value="." /> 
     <property name="bin.dir" value="bin" /> 
     <property name="src.bin.dir" value="src/bin" /> 
+    <property name="src.images.dir" value="src/images" />
     <property name="src.dir" value="src/main" /> 
     <property name="lib.dir" value="lib" /> 
     <property name="docs.dir" value="docs" /> 
@@ -20,10 +21,10 @@
     <property name="build.classes" value="${build.dir}/classes" /> 
     <property name="build.javadocs" value="${build.dir}/javadocs" /> 
     <property name="MapBean.dist.dir" value="../dist/MapBean" /> 
-    <property name="classpath" value="" /> 
+    <property name="classpath" value="k:\SignClient\toast.jar;..\dds\client\lib\ddsClient.jar" /> 
     <property name="packages" value="us.mn.state.dot.shape.*" /> 
     <property name="manifest" value="src/etc/manifest" /> 
-    <property name="build.compiler" value="classic" /> 
+    <property name="build.compiler" value="modern" /> 
 
   </target>
 
@@ -53,6 +54,9 @@
       <include name="**/manifest.mf" />
       <include name="**/*.properties" />
     </copydir>
+
+    <copydir src="${src.images.dir}" dest="${build.classes}/images">
+    </copydir>
   </target>
 
   <!-- =================================================================== -->
@@ -62,7 +66,6 @@
     <mkdir dir="${lib.dir}"/>
     <jar jarfile="${lib.dir}/${name}.jar"
          basedir="${build.classes}"
-         includes="us/**"
          manifest="${manifest}"
     />
   </target>

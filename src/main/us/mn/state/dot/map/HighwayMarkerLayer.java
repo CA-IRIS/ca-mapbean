@@ -19,7 +19,7 @@ import java.util.*;
  * @author  engs1eri
  * @version 
  */
-public class HighwayMarkerLayer extends ShapeLayer {
+public final class HighwayMarkerLayer extends ShapeLayer {
 	
 	private final Field highways;
 	
@@ -48,14 +48,14 @@ public class HighwayMarkerLayer extends ShapeLayer {
 	}
 
 	/** Cache of ImageIcons */
-	static private final HashMap map = new HashMap();
+	private final HashMap map = new HashMap();
 
 	/** Get a requested ImageIcon resource */
-	static private ImageIcon getImageIcon( String key ) {
+	private final ImageIcon getImageIcon( String key ) {
 		ImageIcon icon = ( ImageIcon ) map.get( key );
 		if ( icon != null ) return icon;
-		String resource = "HighWayMarkers/" + key + ".png";
-		URL url = ClassLoader.getSystemResource( resource );
+		String resource = "/images/HighWayMarkers/" + key + ".png";
+		URL url = this.getClass().getResource( resource );
 		if ( url != null ) {
 			icon = new ImageIcon( url );
 			map.put( key, icon );
@@ -64,13 +64,13 @@ public class HighwayMarkerLayer extends ShapeLayer {
 	}
 
 	/** Get an icon from a string name */
-	private static ImageIcon getIcon( String key ) {
+	private final ImageIcon getIcon( String key ) {
 		return getImageIcon( key );
 	}
 
 
 	/** Get an image from a string name */
-	private static Image getImage( String key ) {
+	private final Image getImage( String key ) {
 		ImageIcon icon = getImageIcon( key );
 		if( icon == null ) return null;
 		return icon.getImage();
