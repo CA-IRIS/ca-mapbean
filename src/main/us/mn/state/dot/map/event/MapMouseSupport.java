@@ -45,7 +45,7 @@ public class MapMouseSupport implements java.io.Serializable {
      */
     protected boolean consumeEvents = true;
 
-    transient private List listeners = null;
+    transient private List listeners = new java.util.Vector();
 	
     /**
      * The priority MapMouseListener will be guaranteed to receive
@@ -102,9 +102,6 @@ public class MapMouseSupport implements java.io.Serializable {
      */
     public synchronized void addMapMouseListener(
 				MapMouseListener listener ) {
-		if ( listeners == null ) {
-	    	listeners = new java.util.Vector();
-		}
 		listeners.add( listener );
     }
 
@@ -114,9 +111,6 @@ public class MapMouseSupport implements java.io.Serializable {
      */
     public synchronized void removeMapMouseListener(
 				MapMouseListener listener ) {
-		if ( listeners == null ) {
-			return;
-		}
 		listeners.remove( listener );
     }
 
@@ -124,9 +118,6 @@ public class MapMouseSupport implements java.io.Serializable {
      * Remove all MapMouseListeners from the listener list.
      */
 	public synchronized void removeAllMapMouseListeners() {
-		if ( listeners == null ) {
-			return;
-		}
 		listeners.clear();
 	}
 
@@ -135,9 +126,6 @@ public class MapMouseSupport implements java.io.Serializable {
      */
     protected List getTargets () {
 		synchronized (this) {
-			if (listeners == null) {
-				return null;
-			}
 			List result = new ArrayList();
 			Collections.copy( result, listeners );
 			return result;
@@ -151,7 +139,6 @@ public class MapMouseSupport implements java.io.Serializable {
     public boolean fireMapMousePressed (java.awt.event.MouseEvent evt) {
 		List targets = getTargets();
 		if (targets == null) return false;
-
 		for (int i = 0; i < targets.size(); i++) {
 			MapMouseListener target = 
 			(MapMouseListener)targets.get(i);
@@ -178,7 +165,6 @@ public class MapMouseSupport implements java.io.Serializable {
 				priorityListener = null;
 			return true;
 		}
-
 		List targets = getTargets();
 		if (targets == null) return false;
 
