@@ -17,7 +17,7 @@ public final class ShapeDemo extends JFrame {
 
 	// Private data
 	private JMenuBar menuBar;
-	private ShapePane pane;
+	private Map pane;
 
 
 	/** Constructor */
@@ -27,11 +27,12 @@ public final class ShapeDemo extends JFrame {
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		setBounds( inset, inset, screenSize.width - inset * 2,
 			screenSize.height - inset * 2 );
-		final StationPainter painter = new StationPainter();
+		//final StationPainter painter = new StationPainter();
 		try {
-			Layer layer = new Layer( "gpoly.shp" );
-			layer.setPainter( painter );
-			pane = new ShapePane( layer );
+			Layer layer = new Layer( "C:\\gpoly\\tvp" );
+			//layer.setPainter( painter );
+			pane = new Map( );
+     pane.addLayer(layer);
 /*			layer = new Layer( "water.shp" );
 			layer.setColor( Color.blue );
 			pane.addLayer( layer );
@@ -56,7 +57,7 @@ public final class ShapeDemo extends JFrame {
 			pane = null;
 		}
 
-		Thread t = new Thread() {
+		/*Thread t = new Thread() {
 			public void run() {
 				try { sleep( 30000 ); }
 				catch( InterruptedException e ) {}
@@ -71,7 +72,7 @@ public final class ShapeDemo extends JFrame {
 				}
 			}
 		};
-		t.start();
+		t.start();*/
 
 		buildMenus();
 		addWindowListener( new WindowAdapter() {
@@ -86,7 +87,7 @@ public final class ShapeDemo extends JFrame {
 		menuBar.setOpaque( true );
 		JMenu file = buildFileMenu();
 		menuBar.add( file );
-		setJMenuBar( menuBar );	
+		setJMenuBar( menuBar );
 	}
 
 

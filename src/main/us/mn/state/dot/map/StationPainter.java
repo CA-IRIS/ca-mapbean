@@ -3,6 +3,7 @@ package us.mn.state.dot.shape;
 
 import java.awt.*;
 import java.awt.geom.*;
+import us.mn.state.dot.shape.DbaseReader.*;
 
 
 /**

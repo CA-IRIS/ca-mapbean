@@ -2,7 +2,7 @@ package us.mn.state.dot.shape;
 
 import java.io.*;
 import java.util.*;
-
+import us.mn.state.dot.shape.*;
 
 /**
   * dBase III PLUS table file reader
@@ -36,7 +36,7 @@ public final class Debase {
 
 	/** Constructor */
 	public Debase( String name ) throws IOException {
-		FileInputStream i = new FileInputStream( name );
+		FileInputStream i = new FileInputStream( name + ".dbf" );
 		ByteBuffer header = new ByteBuffer( i, 32 );
 		header.reverseBytes4( 4 );
 		records = header.getInt( 4 );
@@ -95,13 +95,13 @@ System.out.println( "Records: " + file.records );
 System.out.println( "Header size: " + file.headSize );
 System.out.println( "Record size: " + file.recSize );
 System.out.println( "Fields: " + file.fields );
-for( int i = 0; i < file.fields; i++ ) 
+for( int i = 0; i < file.fields; i++ )
 System.out.println( "   Field " + ( i + 1 ) + ": " + file.field[ i ].name +
 	"   type: " + file.field[ i ].type +
 	"   offset: " + file.field[ i ].offset +
 	"   length: " + file.field[ i ].length +
 	"   decimal: " + file.field[ i ].decimal );
-for( int r = 0; r < 10; r++ ) {
+for( int r = 0; r < file.records; r++ ) {
 	System.out.print( "Record " + r + ": " );
 	for( int f = 0; f < file.fields; f++ )
 		System.out.print( file.field[ f ].getValue( file.record[ r ] ) + "  " );
@@ -113,4 +113,3 @@ for( int r = 0; r < 10; r++ ) {
 		}
 	}
 }
->>>>>>> 0.1
