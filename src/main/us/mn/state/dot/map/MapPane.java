@@ -108,9 +108,9 @@ public final class MapPane extends JPanel {
 		if (!layers.isEmpty()) {
 			int w = getWidth();
 			int h = getHeight();
-			if (! this.isShowing()) {
-				h = 1000;
-				w = 1000;
+			if (! this.isDisplayable()) {
+				h = 600;
+				w = 600;
 			}
 
 			if ( h == 0 ) {
@@ -151,27 +151,20 @@ public final class MapPane extends JPanel {
 	}
 
 	public void refreshLayer(int index){
-		if (this.isShowing()){
-			Graphics2D g = (Graphics2D) this.getGraphics();
-			if (g == null) {
-				return;
-			}
-			g.transform( at );
-			ListIterator it = layers.listIterator(index + 1);
-			while (it.hasPrevious()){
-				((Layer) it.previous()).paint(g);
-			}
-		}
+		ListIterator it = layers.listIterator(index + 1);
 	}
 
 	public void refreshLayer(Layer l){
-		if (this.isShowing()){
+		ListIterator it = layers.listIterator(layers.lastIndexOf(l) + 1);
+	}
+
+	private void repaintLayers(ListIterator it){
+		 if (this.isShowing()){
 			Graphics2D g = (Graphics2D) this.getGraphics();
 			if (g != null){
 				g.transform( at );
-				ListIterator it = layers.listIterator(layers.lastIndexOf((Object) l));
-				if (it.hasNext ()) {
-					((Layer) it.next()).paint(g);
+				while (it.hasPrevious ()) {
+					((Layer) it.previous()).paint(g);
 				}
 			}
 		}
@@ -189,10 +182,9 @@ public final class MapPane extends JPanel {
 		Graphics2D g2D = (Graphics2D)g;
 		int w = getWidth();
 		int h = getHeight();
-		//g2D.clearRect( 0, 0, w, h );
-		if(w == 0 & h == 0){
-			w = 1000;
-			h = 1000;
+		if(! this.isDisplayable()){
+			w = 600;
+			h = 600;
 		}
 		g2D.setColor(Color.lightGray);
 		g2D.fillRect(0, 0, w, h);
