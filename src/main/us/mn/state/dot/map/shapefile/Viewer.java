@@ -28,8 +28,9 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import us.mn.state.dot.map.shapefile.ShapeFileFilter;
-import us.mn.state.dot.map.shapefile.ShapeLayer;
+import us.mn.state.dot.map.Layer;
+import us.mn.state.dot.map.MapBean;
+import us.mn.state.dot.map.NavigationBar;
 
 /**
  * Shapefile Viewer
@@ -102,6 +103,7 @@ public class Viewer extends JFrame {
 		try {
 			Layer layer = new ShapeLayer( file.toURL(), getName( file ) );
 			map.addTheme( layer.getTheme() );
+			map.setHomeExtent(layer.getExtent());
 		} catch ( IOException ioe ) {
 			ioe.printStackTrace();
 		}
@@ -115,7 +117,7 @@ public class Viewer extends JFrame {
 
 	public static void main( String[] args ) {
 		Viewer viewer = new Viewer();
-		viewer.setSize( 100, 100 );
-		viewer.setVisible( true );
+		viewer.setSize(500, 500);
+		viewer.setVisible(true);
 	}
 }
