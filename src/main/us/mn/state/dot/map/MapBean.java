@@ -221,16 +221,21 @@ public class MapBean extends JComponent implements MapChangedListener{
 		setHomeExtent(extentHome);
 	}
 
-	public String getToolTipText( MouseEvent e ) {
-		String result = null;
-		AffineTransform world = null;
-		try {
-			world = mapPane.getTransform().createInverse();
-		} catch ( NoninvertibleTransformException ex ) {
-			ex.printStackTrace();
+	/** Transform a point from screen to world coordinates */
+	public Point2D transformPoint(Point p) {
+		AffineTransform t = null;
+		try { t = mapPane.getTransform().createInverse(); }
+		catch(NoninvertibleTransformException e) {
+			e.printStackTrace();
+			return null;
 		}
-		Point p1 = new Point();
-		Point2D p = world.transform( e.getPoint(), p1 );
+		return t.transform(p, null);
+	}
+
+	/** Get the tooltip text for the given mouse event */
+	public String getToolTipText(MouseEvent e) {
+		String result = null;
+		Point2D p = transformPoint(e.getPoint());
 		ListIterator it = mapPane.getThemes().listIterator(
 			mapPane.getThemes().size());
 		while(it.hasPrevious()) {
