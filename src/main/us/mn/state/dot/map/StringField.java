@@ -25,7 +25,10 @@ public class StringField extends Field {
 	}
 
     /** Get the field's value from a given record */
-    public String getValue( int record ) {
+	public String getValue( int record ) {
+		if ( record >= data.length ) {
+			return "fuck " + record + " " + this.getName();
+		}
 		return data[record];
 	}
 
