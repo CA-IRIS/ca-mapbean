@@ -66,4 +66,7 @@ public abstract class AbstractLayer implements Layer {
 			(( LayerListener ) it.next() ).refresh();
 		}
 	}
+
+	public void paintSelections( Graphics2D g ) {
+	}
 }

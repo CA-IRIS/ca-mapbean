@@ -69,6 +69,11 @@ public final class Map extends JViewport implements LayerListener {
 		return mouseAction;
 	}
 
+	public void selectionChanged() {
+		map.selectionChanged();
+		repaint();
+	}
+
 	public Layer getLayer( String name ){
 		return map.getLayer( name );
 	}
@@ -89,13 +94,13 @@ public final class Map extends JViewport implements LayerListener {
 		map.refresh();
 	}
 
-	public void refreshLayer( int index ){
+	/*public void refreshLayer( int index ){
 		map.refreshLayer( index );
 	}
 
 	public void refreshLayer( Layer l ){
 		map.refreshLayer( l );
-	}
+	} */
 
 	/** Draw an XOR box (rubberbanding box) */
 	void drawBox( Rectangle r ) {
@@ -110,12 +115,11 @@ public final class Map extends JViewport implements LayerListener {
 	/** Pan to point on map */
 	void panTo( Point p ){
 		Point scrollTo = p;
-
 		if ( ( scrollTo.getX() + this.getWidth() ) > map.getWidth() ) {
 			scrollTo.x = map.getWidth() - this.getWidth();
 		}
-		if ( ( scrollTo.getY() + this.getHeight()) > map.getHeight() ) {
-			scrollTo.y = map.getHeight()- this.getHeight();
+		if ( ( scrollTo.getY() + this.getHeight() ) > map.getHeight() ) {
+			scrollTo.y = map.getHeight() - this.getHeight();
 		}
 		if ( scrollTo.getX() < 0 ) {
 			scrollTo.x = 0;
@@ -126,9 +130,21 @@ public final class Map extends JViewport implements LayerListener {
 		this.setViewPosition( scrollTo );
 	}
 
-	public void zoomToRect( Rectangle2D r ) {
-		map.mapZoom( r, this.getViewRect() );
+   /*	public void scrollVisible( Rectangle2D r ) {
+		Rectangle2D rec = map.convertRectangle( r, this.getViewRect() );
+		this.scrollRectToVisible( rec.getBounds() );
+	} */
+
+	public void scrollToMapPoint( Point2D center ) {
+		Point2D p = map.convertPoint( center );
+		Rectangle2D rec = new Rectangle2D.Double( p.getX() - 25, p.getY() - 25,
+			50, 50 );
+		map.scrollRectToVisible( rec.getBounds() );
 	}
+
+	/*public void zoomToRect( Rectangle2D r ) {
+		map.mapZoom( r, this.getViewRect() );
+	}*/
 
 	public String getToolTipText( MouseEvent e ) {
 		AffineTransform t = map.getTransform();
@@ -164,7 +180,8 @@ public final class Map extends JViewport implements LayerListener {
 	private final MouseHelper mouse = new MouseHelper( ( JViewport ) this );
 
 	public void updateLayer( Layer l ) {
-		map.refreshLayer( l );
+		//map.refreshLayer( l );
+		map.refresh();
 	}
 
 	public void setExtent( Rectangle2D r ){

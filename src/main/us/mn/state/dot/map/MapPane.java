@@ -20,15 +20,18 @@ public final class MapPane extends JPanel {
 	private Image screenBuffer;
 	private Image staticBuffer;
 
-	/** Main Layer (drawn on top, bounds set) */
-	private Layer mainLayer;
+	/** Drawn on top */
+	//private Image selectionBuffer;
 
-	/** Array to hold background layer information */
+	/** List of dynamic layers */
 	private final ArrayList layers = new ArrayList();
 
 	public ArrayList getLayers(){
 		return layers;
 	}
+
+	/** List of static layers */
+	private final ArrayList staticLayers = new ArrayList();
 
 	/** Transformation to draw shapes in the ShapePane */
 	private final AffineTransform at = new AffineTransform();
@@ -48,28 +51,23 @@ public final class MapPane extends JPanel {
 	private double shiftX;
 	private double shiftY;
 
-	double getShiftX() {
+	/*double getShiftX() {
 		return shiftX;
 	}
 
 	double getShiftY() {
 		return shiftY;
-	}
+	}*/
 
 	/** Returns width of main layer */
-	public double getMapWidth() {
+	/*public double getMapWidth() {
 		return extent.getWidth() * scale;
-	}
+	} */
 
 	/** Retruns height of main layer */
-	public double getMapHeight() {
+	/*public double getMapHeight() {
 		return extent.getHeight() * scale;
-	}
-
-	/** Returns layer at index l */
-	public Layer getLayer( int l ) {
-		return ( Layer ) layers.get( l );
-	}
+	} */
 
 	public Layer getLayer( String name ) {
 		Layer result = null;
@@ -83,24 +81,20 @@ public final class MapPane extends JPanel {
 		return result;
 	}
 
-	public void mapZoom( Rectangle2D mapSpace, Rectangle2D viewerSpace ) {
-		//change from mapcoordinates to panel coordinates
-		/*System.out.println(" MapX = " + mapSpace.getMinX() + " MapY = " + mapSpace.getY() +
-			" MapWidth = " + mapSpace.getWidth() + " mapHeight = " + mapSpace.getHeight());
-		System.out.println("ExtentX = " + extent.getX() + " ExtentY = " + extent.getY() +
-			" ExtentWidth = " + extent.getWidth() + " Extent Height = " + extent.getHeight());
-		AffineTransform inverse = null;
-		try {
-			inverse = at.createInverse();
-		} catch ( java.awt.geom.NoninvertibleTransformException ex ) {
-			ex.printStackTrace();
-		}*/
+	public Point2D convertPoint( Point2D point ) {
+		Point2D result = null;
+		result = at.transform( point, result );
+		return result;
+	}
+
+	/*public Rectangle2D convertRectangle( Rectangle2D rec,
+			Rectangle2D viewerSpace ) {
 		Point2D oldPoints[] = new Point2D.Double[ 2 ];
 		Point2D newPoints[] = new Point2D.Double[ 2 ];
-		oldPoints[ 0 ] = new Point2D.Double( mapSpace.getMinX(),
-			mapSpace.getMinY() );
-		oldPoints[ 1 ] = new Point2D.Double( mapSpace.getMaxX(),
-			mapSpace.getMaxY() );
+		oldPoints[ 0 ] = new Point2D.Double( rec.getMinX(),
+			rec.getMinY() );
+		oldPoints[ 1 ] = new Point2D.Double( rec.getMaxX(),
+			rec.getMaxY() );
 		at.transform( oldPoints, 0, newPoints, 0, 2 );
 		double xCoor = 0;
 		double width = 0;
@@ -120,68 +114,35 @@ public final class MapPane extends JPanel {
 			yCoor = newPoints[ 1 ].getY();
 			height = newPoints[ 0 ].getY() - yCoor;
 		}
-		/*System.out.println(" PX = " + xCoor + " PY = " + yCoor + " PWidth = " +
-			width + " pHeight = " + height );
-		System.out.println("Panel Width = " + this.getWidth() + " Panel Height = " + this.getHeight() );
-		*/
-		double newWidth = ( width / this.getWidth() ) * viewerSpace.getWidth();
-		double newHeight = ( height / this.getHeight() ) *
-			viewerSpace.getHeight();
-		double newXcoor = ( ( xCoor / this.getWidth() ) *
-			viewerSpace.getWidth() ) + viewerSpace.getMinX();
-		double newYcoor = ( ( yCoor / this.getHeight() ) *
-			viewerSpace.getHeight() ) + viewerSpace.getMinY();
-		Rectangle2D rec = new Rectangle2D.Double( newXcoor, newYcoor, newWidth,
-			newHeight );
-		/*System.out.println( "X = " + newXcoor + " Y = " + newYcoor + " width = " + newWidth + " height = " + newHeight );
-		System.out.println( "View X = " + viewerSpace.getMinX() + " View Y = " + viewerSpace.getMinY() +
-			" View Width = " + viewerSpace.getWidth() + " View Height = " + viewerSpace.getHeight() );
-		 */
-		zoom( rec, viewerSpace );
-	}
-
-	/*private Rectangle2D transformRec( Rectangle2D rec ) {
-		AffineTransform inverse = null;
-		try {
-			inverse = at.createInverse();
-		} catch ( java.awt.geom.NoninvertibleTransformException ex ) {
-			ex.printStackTrace();
-		}
-		Point2D oldPoints[] = new Point2D.Double[ 2 ];
-		Point2D newPoints[] = new Point2D.Double[ 2 ];
-		oldPoints[ 0 ] = new Point2D.Double( rec.getMinX(), rec.getMinY() );
-		oldPoints[ 1 ] = new Point2D.Double( rec.getMaxX(), rec.getMaxY() );
-		inverse.transform( oldPoints, 0, newPoints, 0, 2 );
-		double xCoor = newPoints[ 0 ].getX();
-		double yCoor = newPoints[ 0 ].getY();
-		double height = newPoints[ 1 ].getY() - yCoor;
-		double width = newPoints[ 1 ].getX() - xCoor;
-		Rectangle2D result = new Rectangle2D.Double( xCoor,	yCoor, width,
+		double newXcoor = xCoor - viewerSpace.getMinX();
+		double newYcoor = yCoor - viewerSpace.getMinY();
+		Rectangle2D rec2 = new Rectangle2D.Double( xCoor, yCoor, width,
 			height );
-		return result;
+		return rec2;
 	}
 
-	private void zoom( double w, double h, Rectangle2D viewerSpace ) {
+	public void mapZoom( Rectangle2D mapSpace, Rectangle2D viewerSpace ) {
+		Rectangle2D rec = convertRectangle ( mapSpace, viewerSpace );
+		zoom( rec, viewerSpace );
+	}*/
 
-	} */
-
-	/** Increases size of this mapPane so that the mapSpace will fit in the
+	/** Increases size of this mapPane so that the mapSpace will fill the
 		viewerSpace */
 	public void zoom( Rectangle2D mapSpace, Rectangle2D viewerSpace ) {
 		double w = mapSpace.getWidth();
 		double h = mapSpace.getHeight();
 		//Calculate the new size of the panel
-		double oldWidth = getMapWidth();
-		double oldHeight = getMapHeight();
+		double oldWidth = extent.getWidth() * scale;
+		double oldHeight = extent.getHeight() * scale;
 		double ratioMap = oldWidth / oldHeight;
 		double viewWidth = viewerSpace.getWidth();
 		double viewHeight = viewerSpace.getHeight();
 		double width = 0;
 		double height = 0;
-		if ( w >= h ) {
+		if ( ( int ) w >= ( int ) h ) {
 			width = oldWidth * ( viewWidth / w );
 			height = width / ratioMap;
-		} else if ( h > w ) {
+		} else {
 			height = oldHeight * ( viewHeight / h );
 			width = height * ratioMap;
 		}
@@ -212,7 +173,6 @@ public final class MapPane extends JPanel {
 				newBoxHeight ) / 2 ) ) );
 			viewport.panTo( pan );
 		}
-		//zoom( w, h, viewerSpace );
 	}
 
 	/** Set the bounding box for display */
@@ -271,6 +231,7 @@ public final class MapPane extends JPanel {
 				+ shiftX, ( extent.getMaxY() * scale ) + shiftY );
 			at.scale( scale, -scale );
 			screenBuffer = null;
+			//selectionBuffer = null;
 		}
 	}
 
@@ -285,27 +246,27 @@ public final class MapPane extends JPanel {
 		paint( g );
 	}
 
-	public void refreshLayer( int index ){
+	/*public void refreshLayer( int index ){
 		ListIterator it = layers.listIterator( index++ );
 		repaintLayers( it );
-	}
+	}*/
 
-	public void refreshLayer( Layer l ){
+	/*public void refreshLayer( Layer l ){
 		ListIterator it = layers.listIterator( layers.lastIndexOf( l ) + 1 );
 		repaintLayers( it );
-	}
+	}*/
 
-	private void repaintLayers(ListIterator it){
+	/*private void repaintLayers( ListIterator it ){
 		bufferDirty = true;
 		repaint();
-	}
+	}*/
 
 	public void refresh(){
 		bufferDirty = true;
 		repaint();
 	}
 
-	private void createScreenBuffer(){
+	private BufferedImage createBuffer(){
 		int h = 0;
 		int w = 0;
 		if ( this.isDisplayable() ) {
@@ -315,18 +276,13 @@ public final class MapPane extends JPanel {
 			h = 600;
 			w = 600;
 		}
-		screenBuffer = new BufferedImage( h, w, BufferedImage.TYPE_INT_RGB );
-		bufferDirty = true;
+		return new BufferedImage( h, w, BufferedImage.TYPE_INT_RGB );
 	}
 
 	public void updateScreenBuffer(){
 		Graphics2D g2D = ( Graphics2D ) screenBuffer.getGraphics();
 		int w = screenBuffer.getWidth( null );
 		int h = screenBuffer.getHeight( null );
-		/*if( ! this.isDisplayable() ){
-			w = 600;
-			h = 600;
-		} */
 		g2D.setColor( Color.lightGray );
 		g2D.fillRect( 0, 0, w, h );
 		g2D.transform( at );
@@ -339,29 +295,53 @@ public final class MapPane extends JPanel {
 		g2D.setColor( Color.black );
 		g2D.drawRect( 0, 0, w, h );
 		bufferDirty = false;
+		selectionChanged = true;
 	}
+
+   /*	public void updateSelectionBuffer() {
+		Graphics2D g = ( Graphics2D ) selectionBuffer.getGraphics();
+		g.drawImage( screenBuffer, 0, 0, this );
+		g.transform( at );
+		for ( int i = ( layers.size() - 1 ); i >= 0; i-- ) {
+			Layer layer = ( Layer ) layers.get( i );
+			if ( layer.isVisible() ){
+				layer.paintSelections( g );
+			}
+		}
+		selectionChanged = false;
+	}*/
 
 	private boolean bufferDirty = true;
+	private boolean selectionChanged = false;
 
-	public void setBufferDirty( boolean b ) {
-		bufferDirty = b;
-	}
-
-	public boolean isBufferDirty() {
-		return bufferDirty;
+	public void selectionChanged() {
+		selectionChanged = true;
+		repaint();
 	}
 
 	/** Paint the shapes */
 	public void paint ( Graphics g ) {
-
 		if ( screenBuffer == null ) {
-			createScreenBuffer();
+			screenBuffer = createBuffer();
 			updateScreenBuffer();
 		} else if ( bufferDirty ) {
 			updateScreenBuffer();
 		}
+		/*if ( selectionBuffer == null ) {
+			selectionBuffer = createBuffer();
+			updateSelectionBuffer();
+		} else if ( selectionChanged ) {
+			updateSelectionBuffer();
+		}*/
 		g.drawImage( screenBuffer, 0, 0, this );
-		//g.drawImage( screenBuffer, 0, 0, this.getWidth(), this.getHeight(),
-		//	this );
+		//g.drawImage( selectionBuffer, 0, 0, this );
+		Graphics2D g2D = ( Graphics2D ) g;
+		g2D.transform( at );
+		for ( int i = ( layers.size() - 1 ); i >= 0; i-- ) {
+			Layer layer = ( Layer ) layers.get( i );
+			if ( layer.isVisible() ){
+				layer.paintSelections( g2D );
+			}
+		}
 	}
 }
