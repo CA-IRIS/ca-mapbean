@@ -176,10 +176,7 @@ public class MapPane implements ThemeChangedListener {
 		}
 	}
 
-	/**
-	 * Add a new Theme to the Map.
-	 * @param theme Theme to be added to the Map
-	 */
+	/** Add a new theme to the map */
 	public void addTheme(Theme theme) {
 		if(theme.layer instanceof DynamicLayer) {
 			themes.add(theme);
@@ -190,7 +187,7 @@ public class MapPane implements ThemeChangedListener {
 		theme.addThemeChangedListener(this);
 	}
 
-	/** Remove a Theme from the map */
+	/** Remove a theme from the map */
 	public void removeTheme(Theme theme) {
 		if(theme.layer instanceof DynamicLayer) {
 			themes.remove(theme);
