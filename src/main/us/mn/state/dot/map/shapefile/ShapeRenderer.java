@@ -51,4 +51,10 @@ abstract public class ShapeRenderer implements LayerRenderer {
 		if(mapTip != null) return mapTip.getTip(object);
 		return null;
 	}
+
+	/** Get a string representation of the renderer */
+	public String toString() {
+		if(name == null) return super.toString();
+		else return name;
+	}
 }
