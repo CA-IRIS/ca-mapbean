@@ -21,10 +21,9 @@ package us.mn.state.dot.shape.shapefile;
 import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import us.mn.state.dot.shape.AbstractLayer;
 import us.mn.state.dot.shape.DefaultRenderer;
@@ -44,8 +43,8 @@ import us.mn.state.dot.shape.symbol.SolidLine;
   */
 public class ShapeLayer extends AbstractLayer {
 
-	/** The records of the shapefile */
-	protected ShapeObject[] shapes;
+	/** List of shapes from the shapefile */
+	protected final List shapes;
 
 	/** The type of the shape file */
 	protected final int shapeType;
@@ -68,48 +67,45 @@ public class ShapeLayer extends AbstractLayer {
 			"fileLocation must be a '.shp' file");
 		ShapeFile shapeFile = new ShapeFile( fileLocation );
 		this.extent = shapeFile.getExtent();
-		List shapeList = shapeFile.getShapeList();
+		shapes = shapeFile.getShapeList();
 		shapeType = shapeFile.getShapeType();
-		shapes = (ShapeObject[])shapeList.toArray(
-			new ShapeObject[shapeList.size()]);
+	}
+
+	/** Get the symbol to draw the shape layer */
+	protected Symbol getSymbol() {
+		switch(shapeType) {
+			case ShapeFactory.POINT:
+				return new CircleMarker();
+			case ShapeFactory.POLYLINE:
+				return new SolidLine();
+			case ShapeFactory.POLYGON:
+				return new FillSymbol();
+		}
+		return null;
 	}
 
 	/** Get the theme to use for this layer */
 	public Theme getTheme() {
-		Symbol symbol = null;
-		switch(shapeType) {
-			case ShapeFactory.POINT:
-				symbol = new CircleMarker();
-				break;
-			case ShapeFactory.POLYLINE:
-				symbol = new SolidLine();
-				break;
-			case ShapeFactory.POLYGON:
-				symbol = new FillSymbol();
-				break;
-			default:
-			    symbol = null;
-		}
-		return new Theme(this, new DefaultRenderer(symbol));
+		return new Theme(this, new DefaultRenderer(getSymbol()));
 	}
 
 	/** Paint the layer */
 	public void paint(Graphics2D g, LayerRenderer renderer) {
-		for(int i = (shapes.length - 1); i >= 0; i--) {
-			renderer.render(g, shapes[i]);
+		Iterator it = shapes.iterator();
+		while(it.hasNext()) {
+			ShapeObject shape = (ShapeObject)it.next();
+			renderer.render(g, shape);
 		}
 	}
 
+	/** Search for a shape which contains the specified point */
 	public MapObject search(Point2D p, LayerRenderer renderer) {
-		MapObject result = null;
-		for ( int i = ( shapes.length - 1 ); i >= 0; i-- ) {
-			MapObject object = shapes[ i ];
-			Shape target = renderer.getShape( object );
-			if ( target.contains( p ) ) {
-				result = object;
-				break;
-			}
+		Iterator it = shapes.iterator();
+		while(it.hasNext()) {
+			MapObject object = (MapObject)it.next();
+			Shape target = renderer.getShape(object);
+			if(target.contains(p)) return object;
 		}
-		return result;
+		return null;
 	}
 }
