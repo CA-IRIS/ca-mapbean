@@ -36,11 +36,12 @@ import us.mn.state.dot.tms.*;
 import us.mn.state.dot.tms.toast.TMSProxy;
 
 
-public final class IncidentLayer extends AbstractLayer implements
+public class IncidentLayer extends AbstractLayer implements
 		IncidentListener {
 
-	private Incident [] incidents = null;
-	private ListSelectionModel selectionModel = new DefaultListSelectionModel();
+	protected Incident [] incidents = null;
+	protected ListSelectionModel selectionModel =
+		new DefaultListSelectionModel();
 	private boolean directional = true;
 
 	/* the number of map units per mile */

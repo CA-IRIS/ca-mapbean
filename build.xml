@@ -15,11 +15,11 @@
     <property name="build.classes" value="${build.dir}/classes" /> 
     <property name="build.javadocs" value="${build.dir}/javadocs" /> 
     <property name="MapBean.dist.dir" value="dist/MapBean" /> 
-    <property name="jar.location" value="k:\IrisClient\lib"/>
-	<path id="classpath">
-		<fileset dir = "${jar.location}"
-				 includes="*.jar"
-				 excludes="MapBean.jar"/>
+    <property name="jar.location" value="..\jars\"/>
+    <path id="classpath">
+	<fileset dir = "${jar.location}"
+		 includes="*.jar"
+		 excludes="MapBean.jar"/>
 	</path>
     <property name="packages" value="us.mn.state.dot.shape.*" /> 
     <property name="manifest" value="src/etc/manifest" /> 

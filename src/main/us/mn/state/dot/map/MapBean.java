@@ -17,21 +17,14 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-//Title:        Map
-//Version:      1.0
-//Copyright:    Copyright (c) 1999
-//Author:       Erik Engstrom
-//Company:      MnDOT
-//Description:  Your description
-
 package us.mn.state.dot.shape;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.*;
 import java.awt.image.*;
 import java.util.*;
+import javax.swing.*;
 import us.mn.state.dot.shape.event.*;
 
 /**
@@ -42,40 +35,20 @@ import us.mn.state.dot.shape.event.*;
  * @version 1.0
  * @see us.mn.state.dot.shap.MapPane
  */
-public final class MapBean extends JComponent implements ThemeChangedListener {
-	
-	/** buffer for map */
-	private transient BufferedImage screenBuffer;
-
-	/** buffer for static themes in map */
-	private transient BufferedImage staticBuffer;
+public final class MapBean extends JComponent implements MapChangedListener,
+		ThemeChangedListener {
 	
 	/** buffer used to pan the map. */
 	private transient Image panBuffer = null;
 
-	/** List of dynamic themes */
-	private final ArrayList themes = new ArrayList();
-
-	/** List of static themes */
-	private final ArrayList staticThemes = new ArrayList();
-
-	/** Transformation to draw shapes on the map */
-	private final AffineTransform screenTransform = new AffineTransform();
-
-	/** Bounding box */
-	private Rectangle2D extent = new Rectangle2D.Double();
-	
 	/** home location */
 	public Rectangle2D extentHome = new Rectangle2D.Double();
 
-	/** does the buffer need to be updated? */
-	private boolean bufferDirty = true;
-	
-	/** does the static buffer need to be updated? */
-	private boolean staticBufferDirty = false;
-
 	/** current mouse mode */
 	private MapMouseMode activeMouseMode = null;
+	
+	/** MapPane that will create the map */
+	private final MapPane mapPane;
 		
 	/**
 	 * Constructor
@@ -90,26 +63,23 @@ public final class MapBean extends JComponent implements ThemeChangedListener {
 	 * @param themes a list of themes to be used in the map
 	 */
 	public MapBean( java.util.List themes ) {
+		mapPane = new MapPane( themes );
+		mapPane.addMapChangedListener( this );
+		mapPane.setBackground( this.getBackground() );
 		this.setDoubleBuffered( true );
 		this.setToolTipText( " " );
 		addComponentListener( new ComponentAdapter() {
 			public void componentResized( ComponentEvent e ) {
+				mapPane.setSize( e.getComponent().getSize() );
 				rescale();
 			}
 		});
 		setMouseMode( new SelectMouseMode() );
-		for ( ListIterator li = themes.listIterator(); li.hasNext(); ){
-			Object ob = li.next();
-			Theme theme;
-			if ( ob instanceof Layer ) {
-				theme = ( ( Layer ) ob ).getTheme();
-			} else if ( ob instanceof Theme ) {
-				theme = ( Theme ) ob;
-			} else {
-				throw new IllegalArgumentException( "Must be Layer or Theme" );
-			}
-			addTheme( theme );
-		}
+	}
+	
+	public void setBackground( Color c ) {
+		super.setBackground( c );
+		mapPane.setBackground( c );
 	}
 	
 	/**
@@ -128,6 +98,7 @@ public final class MapBean extends JComponent implements ThemeChangedListener {
 		addMouseListener( mode );
 		addMouseMotionListener( mode );
 		String modeId = activeMouseMode.getID();
+		java.util.List themes = mapPane.getThemes();
 		Iterator it = themes.iterator();
 		while ( it.hasNext() ) {
 			Theme theme = ( Theme ) it.next();
@@ -146,27 +117,14 @@ public final class MapBean extends JComponent implements ThemeChangedListener {
 		return activeMouseMode;
 	}
 	
-	public AffineTransform getTransform() {
-		return screenTransform;
-	}
-	
 	/**
 	 * Add a new Theme to the Map.
 	 * @param theme Theme to be added to the Map
 	 */
 	public void addTheme( Theme theme ) {
-		if ( theme.isStatic() ) {
-			staticThemes.add( theme );
-		} else {
-			themes.add( theme );
-			MapMouseListener listener = theme.getMapMouseListener();
-			if ( listener != null && activeMouseMode != null && 
-					listener.listensToMouseMode( activeMouseMode.getID() ) ){
-				activeMouseMode.addMapMouseListener( listener );
-			}
-		}
+		mapPane.addTheme( theme );
 		theme.addThemeChangedListener( this );
-		setExtent( theme.getExtent() );
+		registerWithMouseListener( theme );
 	}
 	
 	/**
@@ -175,8 +133,19 @@ public final class MapBean extends JComponent implements ThemeChangedListener {
 	 * @param index int specifying the index at which the theme should be added
 	 */
 	public void addTheme( Theme theme, int index ) {
-		themes.add( index, theme );
+		mapPane.addTheme( theme, index );
 		theme.addThemeChangedListener( this );
+		registerWithMouseListener( theme );
+	}
+	
+	private void registerWithMouseListener( Theme theme ){
+		if ( ! theme.isStatic() ) {
+			MapMouseListener listener = theme.getMapMouseListener();
+			if ( listener != null && activeMouseMode != null && 
+					listener.listensToMouseMode( activeMouseMode.getID() ) ){
+				activeMouseMode.addMapMouseListener( listener );
+			}
+		}
 	}
 	
 	/**
@@ -191,10 +160,17 @@ public final class MapBean extends JComponent implements ThemeChangedListener {
 	}
 	
 	public void addLayers( java.util.List layers ) {
-		ListIterator li = layers.listIterator();
-		while ( li.hasNext() ) {
-			Layer layer = ( Layer ) li.next();
-			addTheme( layer.getTheme() );
+		for ( ListIterator li = layers.listIterator(); li.hasNext(); ){
+			Object ob = li.next();
+			Theme theme;
+			if ( ob instanceof Layer ) {
+				theme = ( ( Layer ) ob ).getTheme();
+			} else if ( ob instanceof Theme ) {
+				theme = ( Theme ) ob;
+			} else {
+				throw new IllegalArgumentException( "Must be Layer or Theme" );
+			}
+			addTheme( theme );
 		}
 	}
 	
@@ -204,11 +180,7 @@ public final class MapBean extends JComponent implements ThemeChangedListener {
 	 * @return Theme or null if not found.
 	 */
 	public Theme getTheme( String name ) {
-		Theme result = findTheme( name, themes );
-		if ( result == null ) {
-			result = findTheme( name, staticThemes );
-		}
-		return result;
+		return mapPane.getTheme( name );
 	}
 	
 	/**
@@ -216,9 +188,7 @@ public final class MapBean extends JComponent implements ThemeChangedListener {
 	 * @return List of current themes contained by this Map
 	 */
 	public java.util.List getThemes() {
-		java.util.List result = new ArrayList( themes );
-		result.addAll( staticThemes );
-		return result;
+		return mapPane.getThemes();
 	}
 
 	/**
@@ -232,13 +202,14 @@ public final class MapBean extends JComponent implements ThemeChangedListener {
 		String result = null;
 		AffineTransform world = null;
 		try {
-			world = screenTransform.createInverse();
+			world = mapPane.getTransform().createInverse();
 		} catch ( NoninvertibleTransformException ex ) {
 			ex.printStackTrace();
 		}
 		Point p1 = new Point();
 		Point2D p = world.transform( e.getPoint(), p1 );
-		for ( ListIterator it = themes.listIterator(); it.hasNext(); ) {
+		for ( ListIterator it = mapPane.getThemes().listIterator();
+				it.hasNext(); ) {
 			Theme l = ( Theme ) it.next();
 			if ( l.isVisible() ) {
 				result = l.getTip( p );
@@ -264,28 +235,10 @@ public final class MapBean extends JComponent implements ThemeChangedListener {
 	}
 	
 	public void setExtent( double x, double y, double width, double height ) {
-		setExtentFrame( x, y, width, height );
+		mapPane.setExtentFrame( x, y, width, height );
 		extentHome.setFrame( x, y, width, height );
 	}
 	
-	private void setExtentFrame( double x, double y, double width,
-			double height ) {
-		extent.setFrame( x, y, width, height );
-		rescale();
-	}
-
-	private Theme findTheme( String name, java.util.List layerList ) {
-		Theme result = null;
-		for ( ListIterator li = layerList.listIterator(); li.hasNext(); ){
-			Theme temp = ( Theme ) li.next();
-			if ( name.equals( temp.getName() ) ) {
-				result = temp;
-				break;
-			}
-		}
-		return result;
-	}
-
 	/**
 	 * pan the map.
 	 * @param distanceX, number of pixels to move in the X coordinate.
@@ -299,26 +252,29 @@ public final class MapBean extends JComponent implements ThemeChangedListener {
 		Graphics pb = panBuffer.getGraphics();
 		pb.setColor( this.getBackground() );
 		pb.fillRect( 0, 0, getBounds().width, getBounds().height );
-		pb.drawImage( screenBuffer, distanceX, distanceY, this );
+		pb.drawImage( mapPane.getImage(), distanceX, distanceY, this );
 		Graphics g = this.getGraphics();
 		g.drawImage( panBuffer, 0, 0, this );
 	}
 	
 	public void finishPan( Point2D start, Point2D end ) {
+		AffineTransform transform = mapPane.getTransform();
 		try {
-			screenTransform.inverseTransform( start, start );
-			screenTransform.inverseTransform( end, end );
+			transform.inverseTransform( start, start );
+			transform.inverseTransform( end, end );
 		} catch ( NoninvertibleTransformException ex ) {
 			ex.printStackTrace();
 		}
 		double newX = start.getX() - end.getX();
 		double newY = start.getY() - end.getY();
-		setExtentFrame( extent.getX() + newX, extent.getY() + newY, 
+		Rectangle2D extent = mapPane.getExtent();
+		mapPane.setExtentFrame( extent.getX() + newX, extent.getY() + newY, 
 			extent.getWidth(), extent.getHeight() );
 	}
 	
 	public void zoomOut( Point center ) { // FIXME CHANGE SO THAT IT CENTERS THE VIEW AT THE POINT OF CLICK
-		setExtentFrame( extent.getX() - extent.getWidth() / 2, 
+		Rectangle2D extent = mapPane.getExtent();
+		mapPane.setExtentFrame( extent.getX() - extent.getWidth() / 2, 
 			extent.getY() - extent.getHeight() / 2, extent.getWidth() * 2,
 			extent.getHeight() * 2 );
 	}
@@ -334,9 +290,10 @@ public final class MapBean extends JComponent implements ThemeChangedListener {
 			mapSpace.getMinY() );
 		Point2D lowerRight = new Point2D.Double( mapSpace.getMaxX(),
 			mapSpace.getMaxY() );
+		AffineTransform transform = mapPane.getTransform();
 		try {
-			screenTransform.inverseTransform( upperLeft, upperLeft );
-			screenTransform.inverseTransform( lowerRight, lowerRight );
+			transform.inverseTransform( upperLeft, upperLeft );
+			transform.inverseTransform( lowerRight, lowerRight );
 		} catch ( NoninvertibleTransformException e ) {
 			e.printStackTrace();
 		}
@@ -344,41 +301,24 @@ public final class MapBean extends JComponent implements ThemeChangedListener {
 		double y = Math.min( upperLeft.getY(), lowerRight.getY() );
 		double width = Math.abs( upperLeft.getX() - lowerRight.getX() );
 		double height = Math.abs( upperLeft.getY() - lowerRight.getY() );
-		setExtentFrame( x, y, width, height );
+		mapPane.setExtentFrame( x, y, width, height );
 	}
 
 	/**
 	 * Called when the MapBean is resized or the extent is changed.
 	 */
 	private synchronized void rescale() {
-		int w = getWidth();
-		int h = getHeight();
-		if ( ! this.isDisplayable() ) {
-			h = 600;
-			w = 600;
-		}
-		if ( h == 0 || w == 0 || extent == null ) {
-			return;
-		}
-		double scale = 0;
-		double shiftX = 0;
-		double shiftY = 0; 
-		double scaleX = w / extent.getWidth();
-		double scaleY = h / extent.getHeight();
-		if ( scaleX > scaleY ) {
-			scale = scaleY;
-			shiftX = ( w - ( extent.getWidth() * scale ) ) / 2;
-		} else {
-			scale = scaleX;
-			shiftY = ( h - ( extent.getHeight() * scale ) ) / 2;
-		}	
-		screenTransform.setToTranslation(  - ( extent.getMinX() * scale )
-			+ shiftX, ( extent.getMaxY() * scale ) + shiftY );
-		screenTransform.scale( scale, -scale );
-		screenBuffer = null;
-		staticBuffer = null;
+		mapPane.setSize( this.getSize() );
 		panBuffer = null;
 		repaint();
+	}
+	
+	/**
+	 * Get the transform that the map uses to convert from map coordinates
+	 * to screen coordinates.
+	 */
+	public AffineTransform getTransform(){
+		return mapPane.getTransform();
 	}
 
 	/**
@@ -389,108 +329,25 @@ public final class MapBean extends JComponent implements ThemeChangedListener {
 		paint( g );
 	}
 
-	/**
-	 * Refreshes map data
-	 */
-	public void refresh( Theme l ) {
-		bufferDirty = true;
-		if ( l.isStatic() ) {
-			staticBuffer = null;
-		}
-		repaint();
-	}
-
-	/** 
-	 * Creates a buffer for this map.
-	 *
-	 */
-	private BufferedImage createBuffer() {
-		int h = 0;
-		int w = 0;
-		if ( this.isDisplayable() ) {
-			h = this.getHeight();
-			w = this.getWidth();
-		} else {
-			h = 600;
-			w = 600;
-		}
-		return new BufferedImage( w, h,	BufferedImage.TYPE_INT_RGB );
-	}
-
-	/**
-	 * Updates staticBuffer
-	 */
-	private void updateStaticBuffer() {
-		Graphics2D g2D = staticBuffer.createGraphics();
-		g2D.setColor( this.getBackground() );
-		g2D.fillRect( 0, 0, staticBuffer.getWidth( null ),
-			staticBuffer.getHeight( null ) );
-		g2D.transform( screenTransform );
-		g2D.setRenderingHint( RenderingHints.KEY_ANTIALIASING, 
-			RenderingHints.VALUE_ANTIALIAS_ON );
-		ListIterator li = staticThemes.listIterator( staticThemes.size() );
-		while ( li.hasPrevious() ) {
-			( ( Theme ) li.previous() ).paint( g2D );
-		}
-		staticBufferDirty = false;
-	}
-		
-	public void setBufferDirty( boolean b ) {
-		bufferDirty = b;
-	}
-	
-	/**
-	 * Updates screenBuffer.
-	 */
-	public void updateScreenBuffer() {
-		if ( staticBuffer == null ) {
-			staticBuffer = createBuffer();
-			updateStaticBuffer();
-		} else if ( staticBufferDirty ) {
-			updateStaticBuffer();
-		}
-		Graphics2D g2D = screenBuffer.createGraphics();
-		g2D.drawImage( staticBuffer, 0, 0, this );
-		g2D.transform( screenTransform );
-		ListIterator li = themes.listIterator( themes.size() );
-		while ( li.hasPrevious() ) {
-			( ( Theme ) li.previous() ).paint( g2D );
-		}
-		bufferDirty = false;
-	}
-
 	public void paintComponent( Graphics g ) {
-		if ( screenBuffer == null ) {
-			screenBuffer = createBuffer();
-			updateScreenBuffer();
-		} else if ( bufferDirty || staticBufferDirty ) {
-			updateScreenBuffer();
-		}
-		g.drawImage( screenBuffer, 0, 0, this );
-		Graphics2D g2D = ( Graphics2D ) g;
-		g2D.transform( screenTransform );
+		BufferedImage image = mapPane.getImage();
+		Graphics2D g2d = ( Graphics2D) g;
+		g2d.drawImage( image, 0, 0, this );
+		g2d.transform( mapPane.getTransform() );
+		java.util.List themes = mapPane.getThemes();
 		ListIterator li = themes.listIterator( themes.size() );
 		while ( li.hasPrevious() ) {
-			( ( Theme ) li.previous() ).paintSelections( g2D );
+			( ( Theme ) li.previous() ).paintSelections( g2d );
 		}
 	}
 	
-	public void themeChanged( ThemeChangedEvent event ) {
-		switch ( event.getReason() ) {
-		case ThemeChangedEvent.DATA: case ThemeChangedEvent.SHADE:
-			Theme theme = ( Theme ) event.getSource();
-			if ( theme.isStatic() ) {
-				staticBufferDirty = true;
-				bufferDirty = true;
-			} else {
-				bufferDirty = true;
-			}
-			break;
-		case ThemeChangedEvent.SELECTION:
-			break;
-		default:
-			break;
-		}
+	public void mapChanged() {
 		repaint();
+	}
+	
+	public void themeChanged( final ThemeChangedEvent event ) {
+		if ( event.getReason() == ThemeChangedEvent.SELECTION ) {
+			repaint();
+		}
 	}
 }

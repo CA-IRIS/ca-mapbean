@@ -28,8 +28,8 @@ package us.mn.state.dot.shape;
 
 import java.awt.*;
 import java.awt.event.*;
-import javax.swing.*;
 import java.net.*;
+import javax.swing.*;
 import us.mn.state.dot.shape.event.*;
 
 public class NavigationBar extends JToolBar {

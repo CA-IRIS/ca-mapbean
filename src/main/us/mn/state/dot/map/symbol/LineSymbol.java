@@ -32,25 +32,39 @@ import javax.swing.*;
 
 public abstract class LineSymbol implements Symbol {
 
+	/** Color to paint line */
 	protected Color color = Color.black;
+	
+	/** The width of the line */
 	protected int size = 10;
+	
+	/** Label to use for legends. */
 	private String label = "";
-	protected Stroke stroke;
+	
+	/** The line stroke used to paint the line. */
+	private Stroke stroke;
 
 	public LineSymbol() {
 		this( Color.black );
 	}
 
 	public LineSymbol( Color c ){
-		this.color = color;
+		color = c;
 		stroke = createStroke();
 		this.setOutLineSymbol( this );
 	}
 	
+	/**
+	 * Set the color to paint the line
+	 * @param color, new color to use for painting.
+	 */
 	public final void setColor ( Color color ){
 		this.color = color;
 	}
 
+	/**
+	 * Get the color of this line.
+	 */
 	public Color getColor(){
 		return color;
 	}
