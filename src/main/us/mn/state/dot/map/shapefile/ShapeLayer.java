@@ -46,10 +46,10 @@ public class ShapeLayer extends AbstractLayer {
 
 	/** The records of the shapefile */
 	protected ShapeObject[] shapes;
-	
+
 	/** The type of the shape file */
 	private int shapeType;
-	
+
 	/** Create a new ShapeLayer from the specified filename */
 	public ShapeLayer(String fileName, String layerName)
 		throws IOException
@@ -57,7 +57,7 @@ public class ShapeLayer extends AbstractLayer {
 		this(ShapeLayer.class.getResource("/" + fileName + ".shp"),
 			layerName);
 	}
-	
+
 	public ShapeLayer( URL fileLocation, String layerName ) throws IOException {
 		setName( layerName );
 		String url = fileLocation.toExternalForm();
@@ -68,10 +68,10 @@ public class ShapeLayer extends AbstractLayer {
 		this.extent = shapeFile.getExtent();
 		List shapeList = shapeFile.getShapeList();
 		shapeType = shapeFile.getShapeType();
-		shapes = ( ShapeObject[] ) shapeList.toArray( 
+		shapes = ( ShapeObject[] ) shapeList.toArray(
 			new ShapeObject[ shapeList.size() ] );
 	}
-	
+
 	public Theme getTheme() {
 		Symbol symbol = null;
 		switch( shapeType ) {
@@ -96,22 +96,11 @@ public class ShapeLayer extends AbstractLayer {
 			renderer.render(g, shapes[i]);
 		}
 	}
-	
-	public void paintSelections(Graphics2D g, LayerRenderer renderer,
-		MapObject[] selections)
-	{
-		if ( selections == null ) {
-			return;
-		}
-		for ( int i = ( selections.length - 1 ); i >= 0; i-- ) {
-			renderer.render( g, shapes[ i ] );
-		}
-	}
 
 	public MapObject[] getMapObjects() {
 		return shapes;
 	}
-	
+
 	public MapObject search( Rectangle2D searchArea, LayerRenderer renderer ) {
 		MapObject result = null;
 		for ( int i = ( shapes.length - 1 ); i >= 0; i-- ) {
@@ -127,12 +116,12 @@ public class ShapeLayer extends AbstractLayer {
 					searchArea.contains( target.getBounds2D() ) ) {
 				result = object;
 				break;
-			} 
+			}
 		}
 		return result;
 	}
-	
-	public MapObject search( Point2D p, LayerRenderer renderer ) { 
+
+	public MapObject search( Point2D p, LayerRenderer renderer ) {
 		MapObject result = null;
 		for ( int i = ( shapes.length - 1 ); i >= 0; i-- ) {
 			MapObject object = shapes[ i ];
@@ -144,7 +133,7 @@ public class ShapeLayer extends AbstractLayer {
 		}
 		return result;
 	}
-	
+
 	public List getPaths(Point2D p, LayerRenderer renderer) {
 		List result = new ArrayList();
 		for ( int i = ( shapes.length - 1 ); i >= 0; i-- ) {
@@ -157,7 +146,7 @@ public class ShapeLayer extends AbstractLayer {
 		}
 		return result;
 	}
-		
+
 	/** Get the ShapeObject at the given index */
 	public ShapeObject getShapeObject(int index) {
 		return shapes[index];
