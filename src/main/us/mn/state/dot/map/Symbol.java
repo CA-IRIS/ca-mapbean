@@ -10,8 +10,9 @@ package us.mn.state.dot.shape;
 
 import java.awt.*;
 import java.awt.geom.*;
+import javax.swing.*;
 
-public abstract class Symbol {
+public abstract class Symbol implements LegendItem {
 	private Color color = Color.black;
 	private Color outlineColor = Color.black;
 	private int size;
@@ -77,4 +78,56 @@ public abstract class Symbol {
 	public void setLabel(String l){
 		label = l;
 	}
+
+	public Component getLegend(){
+		JLabel label = new JLabel();
+		if ((getLabel() != null) && (! getLabel().equals(""))) {
+			label.setText(getLabel());
+			ColorIcon icon = new ColorIcon(getColor());
+			label.setIcon(icon);
+		}
+		return label;
+	}
+
+	class ColorIcon implements Icon {
+		private Color color;
+		private int w, h;
+
+		public ColorIcon(){
+			this(Color.gray, 25, 15);
+		}
+
+		public ColorIcon(Color color){
+			this(color, 25, 15);
+		}
+
+		public ColorIcon(Color color, int w, int h){
+			this.color = color;
+			this.w = w;
+			this.h = h;
+		}
+
+		public void paintIcon(Component c, Graphics g, int x, int y) {
+			g.setColor(Color.black);
+			g.drawRect(x, y, w - 1, h - 1);
+			g.setColor(color);
+			g.fillRect(x + 1, y + 1, w - 2, h - 2);
+		}
+		public Color getColor() {
+			return color;
+		}
+
+		public void setColor(Color color){
+			this.color = color;
+		}
+
+		public int getIconWidth() {
+			return w;
+		}
+
+		public int getIconHeight(){
+			return h;
+		}
+	}
+
 }

@@ -14,21 +14,22 @@ public class LegendCellRenderer implements ListCellRenderer {
 
 	public Component getListCellRendererComponent(JList list, Object value,
 			 int index, boolean isSelected, boolean cellHasFocus) {
-		JLabel label = new JLabel();
-		Symbol symbol = (Symbol) value;
-		if ((symbol.getLabel() != null) && (! symbol.getLabel().equals(""))) {
+		//JLabel label = new JLabel();
+		//Symbol symbol = (Symbol) value;
+		/* if ((symbol.getLabel() != null) && (! symbol.getLabel().equals(""))) {
 			label.setText(symbol.getLabel());
 			ColorIcon icon = new ColorIcon(symbol.getColor());
 			label.setIcon(icon);
-		}
-		return label;
+		}  */
+		//return label;
+		return ((LegendItem) value).getLegend();
 	}
 
 	public Component getRenderedCell(Object value){
 		return getListCellRendererComponent(null, value, 0, false, false);
 	}
 
-	class ColorIcon implements Icon {
+	/*class ColorIcon implements Icon {
 		private Color color;
 		private int w, h;
 
@@ -67,8 +68,5 @@ public class LegendCellRenderer implements ListCellRenderer {
 		public int getIconHeight(){
 			return h;
 		}
-	}
-
-
-
+	} */
 } 
