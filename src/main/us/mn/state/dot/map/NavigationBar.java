@@ -73,7 +73,7 @@ public class NavigationBar extends JToolBar {
 		sizeButton( btnSelect );
 		btnSelect.addActionListener( new ActionListener(){
 			public void actionPerformed( ActionEvent e ) {
-				map.setMouseAction( us.mn.state.dot.shape.Map.SELECT );
+				map.setMouseAction( us.mn.state.dot.shape.MouseDelegator.SELECT );
 				map.setCursor( selectCursor );
 			}
 		});
@@ -88,7 +88,7 @@ public class NavigationBar extends JToolBar {
 		sizeButton( btnZoom );
 		btnZoom.addActionListener( new ActionListener(){
 			public void actionPerformed( ActionEvent e ) {
-				map.setMouseAction( us.mn.state.dot.shape.Map.ZOOM );
+				map.setMouseAction( us.mn.state.dot.shape.MouseDelegator.ZOOM );
 				map.setCursor( zoomCursor );
 			}
 		});
@@ -103,7 +103,7 @@ public class NavigationBar extends JToolBar {
 		sizeButton( btnPan );
 		btnPan.addActionListener( new ActionListener(){
 			public void actionPerformed( ActionEvent e ) {
-				map.setMouseAction( us.mn.state.dot.shape.Map.PAN );
+				map.setMouseAction( us.mn.state.dot.shape.MouseDelegator.PAN );
 				map.setCursor( panCursor );
 			}
 		});

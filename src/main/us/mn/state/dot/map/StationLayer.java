@@ -38,14 +38,19 @@ public final class StationLayer extends ShapeLayer implements StationListener {
 		super( "gpoly/gpoly", "gpoly" );
 		this.setStatic( false );
 	}
-
+	
+	public StationLayer( StationClient stationClient ) throws IOException{
+		this();
+		stationClient.addStationListener( this );
+	}
+	
 	/**
 	 * updates the data of this layer
 	 * @param volume an array containing the new volume values
 	 * @param occupancy an array containing the new occupancy values
 	 * @param status an array containing the new status values
 	 */
-	public void update(int[] volume,int[] occupancy,int[] status) {
+	public void update( int[] volume, int[] occupancy, int[] status ) {
 		IntegerField v = ( IntegerField ) super.getField( "VOLUME" );
 		IntegerField o = ( IntegerField ) super.getField( "OCCUPANCY" );
 		IntegerField s = ( IntegerField ) super.getField( "STATUS" );
@@ -61,5 +66,12 @@ public final class StationLayer extends ShapeLayer implements StationListener {
 			}
 		}
 		updateLayer();
+	}
+	
+	public Theme getTheme() {
+		ShapeRenderer renderer =  new OccupancyRenderer(
+			( NumericField ) getField( "occupancy" ),
+			new StationMapTip() );
+		return new Theme( this, renderer );
 	}
 }

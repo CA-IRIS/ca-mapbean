@@ -125,14 +125,17 @@ public abstract class AbstractLayer implements Layer {
 	public void setStatic( boolean b ) {
 		dynamic = ! b;
 	}
-
-	/*public void paint( Graphics2D g, Renderer r ) {
-	}
-	
-	public void paintSelections( Graphics2D g, Renderer renderer,
-		ArrayList selections ) {
-	}*/
 	public Field[] getFields() {
 		return null;
+	}
+	public Field getField( String name ) {
+		return null;
+	}
+	public java.util.List hit( Point2D p ) {
+		return new ArrayList();
+	}
+	
+	public Theme getTheme() {
+		return new Theme( this );
 	}
 }

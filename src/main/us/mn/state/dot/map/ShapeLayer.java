@@ -140,7 +140,7 @@ public class ShapeLayer extends AbstractLayer {
 	}
 
 	/** Paint this Layer */
-	public void paint( Graphics2D g, Renderer renderer ) {
+	public void paint( Graphics2D g, LayerRenderer renderer ) {
 		for ( int i = ( paths.length - 1 ) ; i >= 0; i-- ){
 			Symbol drawSymbol = symbol;
 			if ( renderer != null ) {
@@ -151,7 +151,7 @@ public class ShapeLayer extends AbstractLayer {
 		}
 	}
 	
-	public void paintSelections( Graphics2D g, Renderer renderer,
+	public void paintSelections( Graphics2D g, LayerRenderer renderer,
 			ArrayList selections ) {
 	}
 
@@ -162,7 +162,7 @@ public class ShapeLayer extends AbstractLayer {
 		return result;
 	}
 
-	protected final java.util.List hit( Point2D p ){
+	public final java.util.List hit( Point2D p ){
 		java.util.List result = new ArrayList();
 		switch( shapeType ) {
 		/*case ShapeTypes.POINT:

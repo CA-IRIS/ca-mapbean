@@ -89,7 +89,16 @@ public final class Map extends JPanel implements ThemeChangedListener {
 		addMouseMotionListener( mouse );
 		this.setToolTipText( "" );
 		for ( ListIterator li = themes.listIterator(); li.hasNext(); ){
-			addTheme( ( Theme ) li.next() );
+			Object ob = li.next();
+			Theme theme;
+			if ( ob instanceof Layer ) {
+				theme = ( ( Layer ) ob ).getTheme();
+			} else if ( ob instanceof Theme ) {
+				theme = ( Theme ) ob;
+			} else {
+				throw new IllegalArgumentException( "Must be Layer or Theme" );
+			}
+			addTheme( theme );
 		}
 		setMouseAction( MouseDelegator.SELECT );
 		//tDoubleBuffered( false );
@@ -164,6 +173,14 @@ public final class Map extends JPanel implements ThemeChangedListener {
 		ListIterator li = themes.listIterator();
 		while ( li.hasNext() ) {
 			addTheme( ( Theme ) li.next() );
+		}
+	}
+	
+	public void addLayers( java.util.List layers ) {
+		ListIterator li = layers.listIterator();
+		while ( li.hasNext() ) {
+			Layer layer = ( Layer ) li.next();
+			addTheme( layer.getTheme() );
 		}
 	}
 	
@@ -409,9 +426,7 @@ public final class Map extends JPanel implements ThemeChangedListener {
 			RenderingHints.VALUE_ANTIALIAS_ON );
 		for ( int i = ( staticThemes.size() - 1 ); i >= 0; i-- ) {
 			Theme theme = ( Theme ) staticThemes.get( i );
-			if ( theme.isVisible() ){
-				theme.paint( g2D );
-			}
+			theme.paint( g2D );
 		}
 	}
 	
@@ -433,9 +448,9 @@ public final class Map extends JPanel implements ThemeChangedListener {
 		g2D.drawImage( staticBuffer, 0, 0, this );
 		g2D.transform( screenTransform );
 		for ( int i = ( themes.size() - 1 ); i >= 0; i-- ) {
-			Theme layer = ( Theme ) themes.get( i );
-			if ( layer.isVisible() ){
-				layer.paint( g2D );
+			Theme theme = ( Theme ) themes.get( i );
+			if ( theme.isVisible() ){
+				theme.paint( g2D );
 			}
 		}
 		g2D.setColor( Color.black );
@@ -454,9 +469,9 @@ public final class Map extends JPanel implements ThemeChangedListener {
 		Graphics2D g2D = ( Graphics2D ) g;
 		g2D.transform( screenTransform );
 		for ( int i = ( themes.size() - 1 ); i >= 0; i-- ) {
-			Theme layer = ( Theme ) themes.get( i );
-			if ( layer.isVisible() ){
-				layer.paintSelections( g2D );
+			Theme theme = ( Theme ) themes.get( i );
+			if ( theme.isVisible() ){
+				theme.paintSelections( g2D );
 			}
 		}
 	}

@@ -38,8 +38,8 @@ public class Theme implements LayerChangedListener {
 	/** The Layer that this theme controls.*/
 	protected Layer layer;
 	
-	/** The Renderer used to paint this theme's layer */
-	protected Renderer renderer;
+	/** The LayerRenderer used to paint this theme's layer */
+	protected LayerRenderer renderer;
 	
 	/** The name of this theme.*/
 	private String name;
@@ -63,25 +63,25 @@ public class Theme implements LayerChangedListener {
 	}
 		
 	/**
-	 * Constructs a new theme based on the layer parameter.  The Renderer
+	 * Constructs a new theme based on the layer parameter.  The LayerRenderer
 	 * referenced in the renderer parameter will be used to paint the theme.
 	 *
 	 * @param layer Layer this theme is base upon.
-	 * @param renderer Renderer used to paint the layer.
+	 * @param renderer LayerRenderer used to paint the layer.
 	 */
-	public Theme( Layer layer, Renderer renderer ) {
+	public Theme( Layer layer, LayerRenderer renderer ) {
 		this( layer, renderer, true );
 	}
 	
 		/**
-	 * Constructs a new theme based on the layer parameter.  The Renderer
+	 * Constructs a new theme based on the layer parameter.  The LayerRenderer
 	 * referenced in the renderer parameter will be used to paint the theme.
 	 *
 	 * @param layer Layer this theme is base upon.
-	 * @param renderer Renderer used to paint the layer.
+	 * @param renderer LayerRenderer used to paint the layer.
 	 * @param visible Sets the visible flag of this theme.
 	 */
-	public Theme( Layer layer, Renderer renderer, boolean visible ) {
+	public Theme( Layer layer, LayerRenderer renderer, boolean visible ) {
 		this.layer = layer;
 		this.layer.addLayerChangedListener( this );
 		this.renderer = renderer;
@@ -89,11 +89,11 @@ public class Theme implements LayerChangedListener {
 		this.visible = visible;
 	}
 	
-	public void setRenderer( Renderer renderer ) {
+	public void setLayerRenderer( LayerRenderer renderer ) {
 		this.renderer = renderer;
 	}
 	
-	public Renderer getRenderer() {
+	public LayerRenderer getRenderer() {
 		return renderer;
 	}
 	
@@ -110,7 +110,9 @@ public class Theme implements LayerChangedListener {
 	 * @param g Graphics2D object to paint on.
 	 */
 	public void paint( Graphics2D g ){
-		layer.paint( g, renderer );
+		if ( visible ) {
+			layer.paint( g, renderer );
+		}
 	}
 	
 	/**
@@ -137,6 +139,12 @@ public class Theme implements LayerChangedListener {
 	 */
 	public String getTip( Point2D point ) {
 		return "";
+	}
+	
+	private MapTip mapTip;
+	
+	public void setTip( MapTip tip ) {
+		mapTip = tip;
 	}
 	
 	/**
@@ -216,5 +224,13 @@ public class Theme implements LayerChangedListener {
 	
 	public Field [] getFields(){
 		return layer.getFields();
+	}
+	
+	public Field getField( String name ) {
+		return layer.getField( name );
+	}
+	
+	public Layer getLayer() {
+		return layer;
 	}
 }

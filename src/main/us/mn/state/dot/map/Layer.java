@@ -25,17 +25,16 @@ import java.awt.geom.*;
 
 public interface Layer {
     public Rectangle2D getExtent();
-	public void paint( Graphics2D g, Renderer r );
-	public void paintSelections( Graphics2D g, Renderer renderer,
+	public void paint( Graphics2D g, LayerRenderer r );
+	public void paintSelections( Graphics2D g, LayerRenderer renderer,
 		ArrayList selections );
-	//public boolean mouseClick( int clickCount, Point2D point, Graphics2D g );
-	//public String getTip( Point2D point );
-	//public boolean isVisible();
-	//public void setVisible( boolean b );
 	public String getName();
 	public void addLayerChangedListener( LayerChangedListener listener );
 	public void updateLayer();
 	public boolean isStatic();
 	public void setStatic( boolean b );
 	public Field [] getFields();
+	public Field getField( String name );
+	public java.util.List hit( Point2D p );
+	public Theme getTheme();
 }

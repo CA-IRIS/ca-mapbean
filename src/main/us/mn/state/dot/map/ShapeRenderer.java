@@ -29,7 +29,7 @@ package us.mn.state.dot.shape;
 import java.awt.*;
 import java.awt.geom.*;
 
-public abstract class ShapeRenderer implements Renderer {
+public abstract class ShapeRenderer implements LayerRenderer {
     MapTip mapTip = null;
     Symbol symbol = null;
 	private String name = "";

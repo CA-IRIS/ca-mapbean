@@ -89,11 +89,11 @@ public final class IncidentLayer extends AbstractLayer implements
 		}
 	}
 
-	public void paintSelections( Graphics2D g, Renderer renderer,
+	public void paintSelections( Graphics2D g, LayerRenderer renderer,
 			ArrayList selection ) {
 	}
 	
-	public void paint( Graphics2D g, Renderer renderer ){
+	public void paint( Graphics2D g, LayerRenderer renderer ){
 		if ( incidents != null ) {
 			for ( int i = ( incidents.length - 1 ); i >= 0; i-- ){
 				if ( directional ) {
@@ -110,7 +110,7 @@ public final class IncidentLayer extends AbstractLayer implements
 			return false;
 		}
 		boolean result;
-		Vector found = hit( p );
+		java.util.List found = hit( p );
 		if ( found.isEmpty() ) {
 			result = false;
 		} else {
@@ -147,8 +147,8 @@ public final class IncidentLayer extends AbstractLayer implements
 		return result;
 	}
 
-	private Vector hit( Point2D p ){
-		Vector result = new Vector();
+	public java.util.List hit( Point2D p ){
+		ArrayList result = new ArrayList();
 		if ( incidents != null ) {
 			for ( int i = ( incidents.length - 1 ); i >= 0; i-- ) {
 				double x = incidents[ i ].getX();
@@ -164,7 +164,7 @@ public final class IncidentLayer extends AbstractLayer implements
 	}
 
 	public String getTip( Point2D p ){
-		Vector v = hit( p );
+		java.util.List v = hit( p );
 		String result = null;
 		ListIterator li = v.listIterator();
 		if ( li.hasNext() ){
