@@ -213,4 +213,8 @@ public class Theme implements LayerChangedListener {
 	
 	public void layerChanged( LayerChangedEvent e ) {
 	}
+	
+	public Field [] getFields(){
+		return layer.getFields();
+	}
 }

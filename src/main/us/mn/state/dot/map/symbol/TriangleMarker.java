@@ -38,19 +38,19 @@ public class TriangleMarker extends PointSymbol {
 	 * Constructs a TriangleMarker with the color set to c.
 	 * @param c The color of the TriangleMarker.
 	 */
-	public TriangleMarker(Color c) {
+	public TriangleMarker( Color c ) {
 		super( c );
 	}
 
-	protected Shape getShape(double x,double y) {
+	protected Shape getShape( double x, double y ) {
 		float length = getSize() / 2;
 		GeneralPath p = new GeneralPath( GeneralPath.WIND_NON_ZERO, 4 );
-		final float a = ( float ) (length * Math.tan( 60 ));
-		final float c = ( float ) Math.sqrt(( a * a ) + ( length * length ));
-		p.moveTo(( x - length ), ( y - a ));
-		p.lineTo( x, ( y + c ));
-		p.lineTo(( x + length ), ( y - a ));
-		p.lineTo(( x - length ), ( y - a ));
+		final float a = ( float ) ( length * Math.tan( 60 ) );
+		final float c = ( float ) Math.sqrt( ( a * a ) + ( length * length ));
+		p.moveTo( ( float )( x - length ), ( float )( y - a ));
+		p.lineTo( ( float ) x, ( float ) ( y + c ));
+		p.lineTo( ( float ) ( x + length ),  ( float ) ( y - a ));
+		p.lineTo( ( float ) ( x - length ),  ( float ) ( y - a ));
 		return p;
 	}
 } 

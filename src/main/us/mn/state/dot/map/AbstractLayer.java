@@ -132,4 +132,7 @@ public abstract class AbstractLayer implements Layer {
 	public void paintSelections( Graphics2D g, Renderer renderer,
 		ArrayList selections ) {
 	}*/
+	public Field[] getFields() {
+		return null;
+	}
 }

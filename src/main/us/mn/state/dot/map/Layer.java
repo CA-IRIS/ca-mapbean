@@ -37,4 +37,5 @@ public interface Layer {
 	public void updateLayer();
 	public boolean isStatic();
 	public void setStatic( boolean b );
+	public Field [] getFields();
 }

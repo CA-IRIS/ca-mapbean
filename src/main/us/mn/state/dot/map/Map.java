@@ -30,6 +30,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.*;
+import java.awt.image.*;
 import java.util.*;
 import us.mn.state.dot.dds.client.*;
 
@@ -41,40 +42,35 @@ import us.mn.state.dot.dds.client.*;
  * @version 1.0
  * @see us.mn.state.dot.shap.MapPane
  */
-public final class Map extends JViewport {
-	/**
-	 * Mouse behavior constant, no action.
-	 */
-	public static final int NONE = 0;
+public final class Map extends JPanel implements ThemeChangedListener {
+	
+	/** buffer for map */
+	private BufferedImage screenBuffer;
 
-	/**
-	 * Mouse action constant, select map object.
-	 */
-	public static final int SELECT = 1;
+	/** buffer for static themes in map */
+	private BufferedImage staticBuffer;
 
-	/**
-	 * Mouse action constant, zoom to selected map region.
-	 */
-	public static final int ZOOM = 2;
+	/** List of dynamic themes */
+	private final ArrayList themes = new ArrayList();
 
-	/**
-	 * Mouse action constant, pan map.
-	 */
-	public static final int PAN = 3;
+	/** List of static themes */
+	private final ArrayList staticThemes = new ArrayList();
 
-	/**
-	 * Map panel
-	 */
-	private MapPane map = new MapPane( this );
+	/** Transformation to draw shapes in the ShapePane */
+	private final AffineTransform screenTransform = new AffineTransform();
+
+	/** Bounding box */
+	private Rectangle2D extent = new Rectangle2D.Double();
+	
+	public Rectangle2D extentHome = new Rectangle2D.Double();
+
+	private boolean bufferDirty = true;
 
 	/** Transformation to draw shapes in the ShapePane */
 	private final AffineTransform at = new AffineTransform();
 
-	/** holds current mouse behavior */
-	private int mouseAction = SELECT;
-
 	/** Mouse helper class */
-	private final MouseHelper mouse = new MouseHelper( ( JViewport ) this );
+	private final MouseDelegator mouse = new MouseDelegator( this );
 
 	/**
 	 * Constructor
@@ -88,110 +84,122 @@ public final class Map extends JViewport {
 	 * themes parameter.
 	 * @param themes a list of themes to be used in the map
 	 */
-	public Map(java.util.List themes) {
+	public Map( java.util.List themes ) {
 		addMouseListener( mouse );
 		addMouseMotionListener( mouse );
-		this.setView( map );
 		this.setToolTipText( "" );
 		for ( ListIterator li = themes.listIterator(); li.hasNext(); ){
 			addTheme( ( Theme ) li.next() );
 		}
-		setMouseAction( SELECT );
+		setMouseAction( MouseDelegator.SELECT );
+		//tDoubleBuffered( false );
+		staticBuffer = new BufferedImage( 1405, 1728,
+			BufferedImage.TYPE_INT_RGB );
+		addComponentListener( new ComponentAdapter() {
+			public void componentResized( ComponentEvent e ) {
+				resized();
+			}
+		});
 	}
-
+	
 	/**
 	 * Sets the action occuring on mouse events
 	 * @param m an integer describing mouse action either Map.NONE, Map.SELECT,
 	 * Map.PAN, or Map.ZOOM
 	 */
-	public void setMouseAction(int m) {
-		switch ( m ) {
-			case NONE: case ZOOM: case PAN:
-			mouseAction = m;
-			this.setToolTipText( null );
-			break;
-			case SELECT:
-			mouseAction = m;
-			this.setToolTipText( "" );
-			break;
-			default:
-			return;
-		}
+	public void setMouseAction( int m ) {
+		mouse.setMouseAction( m );
 	}
 
 	/**
 	 * Gets the action occuring on mouse events
-	 * @return an integer describint the current mouse action
+	 * @return an int describing the current mouse action
 	 */
 	public int getMouseAction() {
-		return mouseAction;
+		return mouse.getMouseAction();
 	}
 
 	/**
-	 * notifies the Map that the selected map objects have changed and the map
+	 * notifies the Map that the selection data has changed and the map
 	 * should be updated
 	 */
 	public void selectionChanged() {
-		map.selectionChanged();
 		repaint();
 	}
-
-	/**
-	 * gets the theme with of the name
-	 * @param name string containing name of theme to be retrieved
-	 * @return reurns the theme with the corresponding name; returns null if not
-	 * found
-	 */
-	public Theme getTheme( String name ) {
-		return map.getTheme( name );
+	
+	
+	AffineTransform getTransform() {
+		return screenTransform;
 	}
 	
+	/**
+	 * Add a new Theme to the Map.
+	 * @param theme Theme to be added to the Map
+	 */
+	public void addTheme( Theme theme ) {
+		if ( theme.isStatic() ) {
+			staticThemes.add( theme );
+		} else {
+			themes.add( theme );
+		}
+		theme.addThemeChangedListener( this );
+		setExtent( theme.getExtent() );
+	}
+	
+	/**
+	 * Add a new theme to the Map at the specified index.
+	 * @param theme Theme to be added to the Map
+	 * @param index int specifying the index at which the theme should be added
+	 */
+	public void addTheme( Theme theme, int index ) {
+		themes.add( index, theme );
+		theme.addThemeChangedListener( this );
+	}
+	
+	/**
+	 * Add a List of themes to the Map
+	 * @param themes List of themes to be added to the map
+	 */
+	public void addThemes( java.util.List themes ) {
+		ListIterator li = themes.listIterator();
+		while ( li.hasNext() ) {
+			addTheme( ( Theme ) li.next() );
+		}
+	}
+	
+	/**
+	 * Gets the theme with the name name from the Map.
+	 * @param name the string containing the Name of layer to return.
+	 * @return Theme or null if not found.
+	 */
+	public Theme getTheme( String name ) {
+		Theme result = findTheme( name, themes );
+		if ( result == null ) {
+			result = findTheme( name, staticThemes );
+		}
+		return result;
+	}
+	
+	/**
+	 * Returns a List of the themes contained by this Map.
+	 * @return List of current themes contained by this Map
+	 */
 	public java.util.List getThemes() {
-		return map.getThemes();
+		java.util.List result = new ArrayList( themes );
+		result.addAll( staticThemes );
+		return result;
 	}
 
 	/**
 	 * Sets extent to given coordinates
 	 */
 	public void home() {
-		this.setViewSize( this.getSize() );
-		map.setPreferredSize( this.getSize() );
-		map.setExtent( map.extentHome );
-		map.resized();
-		map.setLocation( new Point( 0, 0 ) );
-		revalidate();
-	}
-
-	/**
-	 * Add a new theme to the ShapePane
-	 * @param theme theme to be added to the map
-	 */
-	public void addTheme( Theme theme ) {
-		map.addTheme( theme );
-	}
-	
-	/**
-	 * Add a new theme to the ShapePane at the specified index
-	 * @param theme theme to be added to the map
-	 * @param index index theme is to be added to
-	 */
-	public void addTheme( Theme theme, int index ) {
-		map.addTheme( theme, index );
-	}
-	
-	/**
-	 * Add a List of themes to the ShapePane
-	 * @param themes List of themes to be added to the map
-	 */
-	public void addThemes( java.util.List themes ) {
-		ListIterator li = themes.listIterator();
-		while ( li.hasNext() ) {
-			map.addTheme( ( Theme ) li.next() );
-		}
+		setExtent( extentHome );
+		resized();
 	}
 
 	/** Draw an XOR box (rubberbanding box) */
-	void drawBox(Rectangle r) {
+	void drawBox( Rectangle r ) {
 		Graphics g = getGraphics();
 		if ( g == null ) {
 			return;
@@ -199,35 +207,16 @@ public final class Map extends JViewport {
 		g.setXORMode( Color.white );
 		g.drawRect( r.x, r.y, r.width, r.height );
 	}
-
-	/** Pan to point on map */
-	void panTo(Point p) {
-	   map.panTo( p );
-	}
-
-	/**
-	 * move the viewport so that the point is visible
-	 * @param center a Point2D in world coordinates
-	 */
-	public void scrollToMapPoint(Point2D center) {
-		map.scrollToMapPoint( center );
-	}
-
-	public String getToolTipText(MouseEvent e) {
-		AffineTransform t = map.getTransform();
+		
+	public String getToolTipText( MouseEvent e ) {
 		AffineTransform world = null;
 		try {
-			world = t.createInverse();
+			world = screenTransform.createInverse();
 		} catch ( NoninvertibleTransformException ex ) {
 			ex.printStackTrace();
 		}
-		double xCoord = e.getPoint().getX();
-		double yCoord = e.getPoint().getY();
-		Point2D viewPosition = this.getViewPosition();
-		Point2D p1 = new Point2D.Double( xCoord + viewPosition.getX(),
-		yCoord + viewPosition.getY() );
-		Point2D p = world.transform( p1, new Point( 0, 0 ) );
-		java.util.List themes = map.getThemes();
+		Point p1 = new Point();
+		Point2D p = world.transform( e.getPoint(), p1 );
 		String result = null;
 		for ( ListIterator it = themes.listIterator(); it.hasNext(); ) {
 			Theme l = ( Theme ) it.next();
@@ -242,171 +231,237 @@ public final class Map extends JViewport {
 	public JToolTip createToolTip() {
 		return new JMultiLineToolTip();
 	}
-
-	public void setExtent(Rectangle2D r) {
-		map.setExtent( r );
+	
+	/**
+	 * Set the bounding box for display
+	 * @param r The rectangle which describes the new bounding box for the
+	 *	display.
+	 */
+	public void setExtent( Rectangle2D r ) {
+		setExtent( r.getMinX(), r.getMinY(), r.getWidth(), r.getHeight() );		
+	}
+	
+	public void setExtent( double x, double y, double width, double height ) {
+		extent.setFrame( x, y, width, height );
+		extentHome.setFrame( x, y, width, height );
+		resized();
+		repaint();
 	}
 
-	/** Inner class to take care of mouse events */
-	private final class MouseHelper extends MouseAdapter implements
-			MouseMotionListener {
-		boolean box = false;
-
-		int x1;
-
-		int y1;
-
-		int x2;
-
-		int y2;
-
-		Rectangle rect = new Rectangle();
-
-		private Point last = new Point();
-
-		private Point scrollTo = new Point();
-
-		private JViewport viewport;
-
-		public MouseHelper( JViewport viewport ) {
-			this.viewport = viewport;
-		}
-
-		public void mousePressed( MouseEvent e ) {
-			last = e.getPoint();
-			x1 = e.getX();
-			y1 = e.getY();
-			x2 = x1;
-			y2 = y1;
-			box = false;
-		}
-
-		public void mouseReleased( MouseEvent e ) {
-			if ( SwingUtilities.isLeftMouseButton( e ) ){
-				switch ( mouseAction ){
-					//Mouse Select
-					case SELECT:
-					break;
-					//Mouse Zoom
-					case ZOOM:
-					if ( box ) {
-						drawBox( rect );
-						box = false;
-						map.zoom( rect, viewport.getViewRect() );
-					}
-					break;
-					//Mouse Pan
-					case PAN:
-						map.finishPan( new Point2D.Double( x1, y1 ), 
-							new Point2D.Double( x2, y2 ) );
-					break;
-				}
+	private Theme findTheme( String name, java.util.List layerList ) {
+		Theme result = null;
+		for ( ListIterator li = layerList.listIterator(); li.hasNext(); ){
+			Theme temp = ( Theme ) li.next();
+			if ( name.equals( temp.getName() ) ) {
+				result = temp;
+				break;
 			}
 		}
+		return result;
+	}
 
-		public void mouseClicked(MouseEvent e) {
-			if ( SwingUtilities.isRightMouseButton( e ) ){
-				switch ( mouseAction ){
-					case SELECT:
-						Graphics2D g = ( Graphics2D ) map.getGraphics();
-					AffineTransform t = map.getTransform();
-					AffineTransform world;
-					try {
-						world = t.createInverse();
-					} catch ( NoninvertibleTransformException ex ) {
-						ex.printStackTrace();
-						return;
-					}
-					double pointX = e.getPoint().getX();
-					double pointY = e.getPoint().getY();
-					Point2D viewPosition = viewport.getViewPosition();
-					Point2D p1 = new Point2D.Double( pointX +
-					viewPosition.getX(), pointY + viewPosition.getY() );
-					Point2D p = world.transform( p1, new Point( 0, 0 ) );
-					java.util.List themes = map.getThemes();
-					g.setTransform( t );
-					boolean found = false;
-					for ( ListIterator it = themes.listIterator();
-							it.hasNext();){
-						Theme l = ( Theme ) it.next();
-						found = l.mouseClick( e.getClickCount(), p, g );
-						if ( found ) {
-							break;
-						}
-					}
-					break;
-					case ZOOM:
-					map.zoomOut( e.getPoint() );
-					break;
-					case PAN:
-					break;
-				}
-			} else if ( SwingUtilities.isLeftMouseButton( e ) ) {
-				switch ( mouseAction ){
-					case SELECT:
-					Graphics2D g = ( Graphics2D ) map.getGraphics();
-					AffineTransform t = map.getTransform();
-					AffineTransform world;
-					try {
-						world = t.createInverse();
-					} catch ( NoninvertibleTransformException ex ) {
-						ex.printStackTrace();
-						return;
-					}
-					double pointX = e.getPoint().getX();
-					double pointY = e.getPoint().getY();
-					Point2D viewPosition = viewport.getViewPosition();
-					Point2D p1 = new Point2D.Double( pointX +
-					viewPosition.getX(), pointY + viewPosition.getY() );
-					Point2D p = world.transform( p1, new Point( 0, 0 ) );
-					java.util.List themes = map.getThemes();
-					g.setTransform( t );
-					boolean found = false;
-					for ( ListIterator it = themes.listIterator();
-							it.hasNext();){
-						Theme l = ( Theme ) it.next();
-						found = l.mouseClick( e.getClickCount(), p, g );
-						if ( found ) {
-							break;
-						}
-					}
-					case ZOOM:
-					break;
-					case PAN:
-					break;
-				}
+	/**
+	 * Converts a Point2D from world coordinates to screen coordinates.
+	 * @param point The point in world coordinates to be converted.
+	 * @return A new points whose coordinates are in screen coordinates.
+	 */
+	/*public Point2D convertPoint( Point2D point) {
+		Point2D result = null;
+		result = screenTransform.transform( point, result );
+		return result;
+	}*/
+
+	private transient Image panBuffer = null;
+	
+	public void pan( int distanceX, int distanceY ) {
+		if ( panBuffer == null ) {
+			panBuffer = this.createImage( getBounds().width,
+				getBounds().height );
+		}
+		Graphics pb = panBuffer.getGraphics();
+		pb.setColor( this.getBackground() );
+		pb.fillRect( 0, 0, getBounds().width, getBounds().height );
+		pb.drawImage( screenBuffer, distanceX, distanceY, this );
+		Graphics g = this.getGraphics();
+		g.drawImage( panBuffer, 0, 0, this );
+	}
+	
+	public void zoomOut( Point center ) { //CHANGE SO THAT IT CENTERS THE VIEW AT THE POINT OF CLICK
+		extent.setFrame( extent.getX() - extent.getWidth() / 2, 
+			extent.getY() - extent.getHeight() / 2, extent.getWidth() * 2,
+			extent.getHeight() * 2 );
+		resized();
+	}
+	
+	public void finishPan( Point2D start, Point2D end ) {
+		try {
+			screenTransform.inverseTransform( start, start );
+			screenTransform.inverseTransform( end, end );
+		} catch ( NoninvertibleTransformException ex ) {
+			ex.printStackTrace();
+		}
+		double newX = start.getX() - end.getX();
+		double newY = start.getY() - end.getY();
+		extent.setFrame( extent.getX() + newX, extent.getY() + newY, 
+			extent.getWidth(), extent.getHeight() );
+		resized();	
+	}
+		
+	/**
+	 * Increase the size of this MapPane so that the mapSpace will fill the
+	 * viewerSpace
+	 * @param mapSpace seleted region to zoom to
+	 * @param viewerSpace current viewport size.
+	 */
+	public void zoom( Rectangle2D mapSpace ) {
+		Point2D upperLeft = new Point2D.Double( mapSpace.getMinX(),
+			mapSpace.getMinY() );
+		Point2D lowerRight = new Point2D.Double( mapSpace.getMaxX(),
+			mapSpace.getMaxY() );
+		try {
+			screenTransform.inverseTransform( upperLeft, upperLeft );
+			screenTransform.inverseTransform( lowerRight, lowerRight );
+		} catch ( NoninvertibleTransformException e ) {
+			e.printStackTrace();
+		}
+		double x = Math.min( upperLeft.getX(), lowerRight.getX() );
+		double y = Math.min( upperLeft.getY(), lowerRight.getY() );
+		double width = Math.abs( upperLeft.getX() - lowerRight.getX() );
+		double height = Math.abs( upperLeft.getY() - lowerRight.getY() );
+		extent.setFrame( x, y, width, height );
+		resized();
+	}
+
+	/**
+	 * Called when the ShapePane is resized
+	 */
+	private void resized() {
+		int w = getWidth();
+		int h = getHeight();
+		if ( ! this.isDisplayable() ) {
+			h = 600;
+			w = 600;
+		}
+		if ( h == 0 || w == 0 || extent == null ) {
+			return;
+		}
+		double scaleX = ( double ) w / extent.getWidth();
+		double scaleY = ( double ) h / extent.getHeight();
+		double scale = scaleX;
+		double shiftX = 0;
+		double shiftY = ( h - ( extent.getHeight() * scale ) ) / 2;
+		if ( scale > scaleY ) {
+			scale = scaleY;
+			shiftY = 0;
+			shiftX = ( w - ( extent.getWidth() * scale ) ) / 2;
+		}
+		screenTransform.setToTranslation(  - ( extent.getMinX() * scale )
+			+ shiftX, ( extent.getMaxY() * scale ) + shiftY );
+		screenTransform.scale( scale, -scale );
+		screenBuffer = null;
+		staticBuffer = null;
+		repaint();
+	}
+
+	/**
+	 * Overridden to prevent flashing
+	 * @param g Graphics object to paint on
+	 */
+	public void update( Graphics g ) {
+		paint( g );
+	}
+
+	/**
+	 * Refreshes map data
+	 */
+	public void refresh( Theme l ) {
+		bufferDirty = true;
+		if ( l.isStatic() ) {
+			staticBuffer = null;
+		}
+		repaint();
+	}
+
+	private BufferedImage createBuffer() {
+		int h = 0;
+		int w = 0;
+		if ( this.isDisplayable() ) {
+			h = this.getHeight();
+			w = this.getWidth();
+		} else {
+			h = 600;
+			w = 600;
+		}
+		return new BufferedImage( w, h, BufferedImage.TYPE_INT_RGB );
+	}
+
+	/**
+	 * Updates staticBuffer
+	 */
+	private void updateStaticBuffer() {
+		Graphics2D g2D = ( Graphics2D ) staticBuffer.getGraphics();
+		int w = staticBuffer.getWidth( null );
+		int h = staticBuffer.getHeight( null );
+		g2D.setColor( new Color( 204, 204, 204 ) );
+		g2D.fillRect( 0, 0, w, h );
+		g2D.transform( screenTransform );
+		g2D.setRenderingHint( RenderingHints.KEY_ANTIALIASING, 
+			RenderingHints.VALUE_ANTIALIAS_ON );
+		for ( int i = ( staticThemes.size() - 1 ); i >= 0; i-- ) {
+			Theme theme = ( Theme ) staticThemes.get( i );
+			if ( theme.isVisible() ){
+				theme.paint( g2D );
 			}
 		}
+	}
+	
+	public void setBufferDirty( boolean b ) {
+		bufferDirty = b;
+	}
 
-		public void mouseDragged(MouseEvent e) {
-			if ( SwingUtilities.isLeftMouseButton( e ) ){
-				x2 = e.getX();
-				y2 = e.getY();
-				switch ( mouseAction ){
-					case SELECT:
-					break;
-					case ZOOM:
-					if ( box ){
-						drawBox( rect );
-					}
-					rect.x = Math.min( x1, x2 );
-					rect.width = Math.abs( x2 - x1 );
-					rect.y = Math.min( y1, y2 );
-					rect.height = Math.abs( y2 - y1 );
-					drawBox( rect );
-					box = true;
-					break;
-					case PAN:
-					map.pan( x2 - last.x, y2 - last.y );
-					break;
-				}
+	/**
+	 * Updates screenBuffer.
+	 */
+	public void updateScreenBuffer() {
+		if ( staticBuffer == null ) {
+			staticBuffer = createBuffer();
+			updateStaticBuffer();
+		}
+		Graphics2D g2D = ( Graphics2D ) screenBuffer.getGraphics();
+		int w = screenBuffer.getWidth( null );
+		int h = screenBuffer.getHeight( null );
+		g2D.drawImage( staticBuffer, 0, 0, this );
+		g2D.transform( screenTransform );
+		for ( int i = ( themes.size() - 1 ); i >= 0; i-- ) {
+			Theme layer = ( Theme ) themes.get( i );
+			if ( layer.isVisible() ){
+				layer.paint( g2D );
 			}
 		}
+		g2D.setColor( Color.black );
+		g2D.drawRect( 0, 0, w, h );
+		bufferDirty = false;
+	}
 
-		public void mouseMoved(MouseEvent e) {
-			if ( box ) {
-				box = false;
+	public void paintComponent( Graphics g ) {
+		if ( screenBuffer == null ) {
+			screenBuffer = createBuffer();
+			updateScreenBuffer();
+		} else if ( bufferDirty ) {
+			updateScreenBuffer();
+		}
+		g.drawImage( screenBuffer, 0, 0, this );
+		Graphics2D g2D = ( Graphics2D ) g;
+		g2D.transform( screenTransform );
+		for ( int i = ( themes.size() - 1 ); i >= 0; i-- ) {
+			Theme layer = ( Theme ) themes.get( i );
+			if ( layer.isVisible() ){
+				layer.paintSelections( g2D );
 			}
 		}
+	}
+	
+	public void themeChanged( ThemeChangedEvent event ) {
+		repaint();
 	}
 }
