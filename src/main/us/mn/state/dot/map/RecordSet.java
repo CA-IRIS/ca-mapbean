@@ -26,6 +26,7 @@ import us.mn.state.dot.shape.*;
   * dBase III PLUS table file reader
   *
   * @author Douglas Lau
+  * @version $Revision: 1.3 $ $Date: 2001/04/19 16:49:31 $ 
   */
 public final class RecordSet {
 

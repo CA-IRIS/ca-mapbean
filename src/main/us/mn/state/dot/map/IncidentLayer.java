@@ -25,14 +25,12 @@ import java.util.*;
 import javax.swing.*;
 import us.mn.state.dot.dds.client.*;
 import us.mn.state.dot.shape.event.*;
-//import us.mn.state.dot.tms.*;
-//import us.mn.state.dot.tms.toast.TMSProxy;
 
 /**
  * Displays incidents as icons on map.
  *
  * @author erik.engstrom@dot.state.mn.us
- * @version $Revision: 1.31 $ $Date: 2001/03/22 00:16:13 $
+ * @version $Revision: 1.32 $ $Date: 2001/04/19 16:49:31 $
  */
 public class IncidentLayer extends AbstractLayer implements
 		IncidentListener {
@@ -46,22 +44,12 @@ public class IncidentLayer extends AbstractLayer implements
 	private static final int MAP_UNITS_PER_MILE = 3218;
 	
 	private static final int[] RING_DEFAULTS = { 5, 10, 15 };
-	
-//	private final TMSProxy proxy;
 
 	public IncidentLayer(){
-//		this( null );
 		setStatic( false );
-//		proxy = tms;
 		setName( "incidents" );
 
 	}
-
-/*	public IncidentLayer( TMSProxy tms ) {
-		setStatic( false );
-		proxy = tms;
-		setName( "incidents" );
-	}*/
 
 	public void setSelectionModel( ListSelectionModel selectionModel ){
 		if ( selectionModel == null ) {

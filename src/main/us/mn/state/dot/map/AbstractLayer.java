@@ -26,7 +26,8 @@ import java.awt.*;
  * The AbstractLayer implements much of the functionality of the Layer
  * interface.
  *
- * @author erik.engstrom@dot.state.mn.us
+ * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
+ * @version $Revision: 1.21 $ $Date: 2001/04/19 16:49:31 $ 
  * @since 1.0
  */
 public abstract class AbstractLayer implements Layer {

@@ -17,12 +17,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-/**
- * MouseDelegator.java
- *
- * Created on June 30, 2000, 1:51 PM
- */
-
 package us.mn.state.dot.shape;
 
 import java.awt.event.*;
@@ -30,8 +24,8 @@ import us.mn.state.dot.shape.event.*;
 
 /**
  *
- * @author  engs1eri
- * @version 
+ * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
+ * @version $Revision: 1.6 $ $Date: 2001/04/19 16:49:31 $ 
  */
 public class MouseDelegator extends MouseAdapter {
 

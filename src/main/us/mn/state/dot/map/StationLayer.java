@@ -29,8 +29,8 @@ import us.mn.state.dot.shape.event.*;
 /**
  * A StationLayer displays detector station data represented as a gpoly.shp file.
  *
- * @author Erik Engstrom
- * @since 1.0
+ * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
+ * @version $Revision: 1.25 $ $Date: 2001/04/19 16:49:31 $ 
  */
 public final class StationLayer extends ShapeLayer implements StationListener {
 	/**

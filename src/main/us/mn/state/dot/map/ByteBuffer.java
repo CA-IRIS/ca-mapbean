@@ -26,6 +26,8 @@ import java.io.*;
   * endian (or vice versa).
   *
   * @author Douglas Lau
+  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
+  * @version $Revision: 0.6 $ $Date: 2001/04/19 16:49:31 $ 
   */
 public final class ByteBuffer {
 

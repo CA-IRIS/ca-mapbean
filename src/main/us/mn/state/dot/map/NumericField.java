@@ -17,14 +17,13 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-//Title:        SignClient
-//Version:
-//Copyright:    Copyright (c) 1999
-//Author:       Erik Engstrom
-//Company:      MnDOT
-//Description:  Your description
 package us.mn.state.dot.shape;
 
+/**
+ *
+ * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
+ * @version $Revision: 1.3 $ $Date: 2001/04/19 16:49:31 $ 
+ */
 public abstract class NumericField extends Field {
 
 	public NumericField(int type, String name, int offset, int length){

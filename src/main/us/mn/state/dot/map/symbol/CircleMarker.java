@@ -17,17 +17,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-//Title:        SignClient
-//Version:
-//Copyright:    Copyright (c) 1999
-//Author:       Erik Engstrom
-//Company:      MnDOT
-//Description:  Your description
 package us.mn.state.dot.shape;
 
 import java.awt.*;
 import java.awt.geom.*;
 
+/**
+ *
+ * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
+ * @version $Revision: 1.7 $ $Date: 2001/04/19 16:49:31 $ 
+ */
 public final class CircleMarker extends PointSymbol {
 
 	private final Ellipse2D shape = new Ellipse2D.Double();

@@ -17,13 +17,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-//Title:        SignClient
-//Version:
-//Copyright:    Copyright (c) 1999
-//Author:       Erik Engstrom
-//Company:      MnDOT
-//Description:  Your description
-
 package us.mn.state.dot.shape;
 
 import java.awt.*;
@@ -32,6 +25,11 @@ import java.net.*;
 import javax.swing.*;
 import us.mn.state.dot.shape.event.*;
 
+/**
+ *
+ * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
+ * @version $Revision: 1.12 $ $Date: 2001/04/19 16:49:31 $ 
+ */
 public class NavigationBar extends JToolBar {
 
 	private final MapMouseMode zoomMode = new ZoomMouseMode();

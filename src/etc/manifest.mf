@@ -1,3 +1,1 @@
-Class-Path: jh.jar interface_help.jar toast.jar njcl.jar jnse.jar jndi.jar jgl3.1.0.jar NWDir.jar NWSess.jar jdbc6.5-1.2.jar jhall.jar
-Main-Class: us.mn.state.dot.tms.client.SignClient
-
+Main-Class: us.mn.state.dot.shape.Viewer

@@ -23,6 +23,11 @@ import java.awt.*;
 import java.awt.geom.*;
 import us.mn.state.dot.shape.DbaseReader.*;
 
+/**
+ *
+ * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
+ * @version $Revision: 1.15 $ $Date: 2001/04/19 16:49:31 $ 
+ */
 public class ClassBreaksRenderer extends ShapeRenderer {
 
 	private double [] classBreaks;

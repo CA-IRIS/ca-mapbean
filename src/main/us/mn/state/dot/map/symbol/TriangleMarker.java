@@ -16,15 +16,18 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+
 package us.mn.state.dot.shape;
 
 import java.awt.*;
 import java.awt.geom.*;
 
-/** A TriangleMarker is a triangular shape for representing data from point shape
+/**
+ * A TriangleMarker is a triangular shape for representing data from point shape
  * files.
  * @since 1.0
- * @author Erik Engstrom
+ * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
+ * @version $Revision: 1.6 $ $Date: 2001/04/19 16:49:31 $ 
  */
 public class TriangleMarker extends PointSymbol {
 	/** 

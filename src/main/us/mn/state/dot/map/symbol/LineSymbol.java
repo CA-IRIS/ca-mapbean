@@ -17,19 +17,18 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-//Title:        LineSymbol
-//Version:      1.0
-//Copyright:    Copyright (c) 1999
-//Author:       Erik Engstrom
-//Company:      MnDOT
-//Description:  Shape used for rendering line shapes on map.
-
 package us.mn.state.dot.shape;
 
 import java.awt.*;
 import java.awt.geom.*;
 import javax.swing.*;
 
+/**
+ * Abstract base class for shapes that render lines on a map.
+ *
+ * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
+ * @version $Revision: 1.11 $ $Date: 2001/04/19 16:49:31 $ 
+ */
 public abstract class LineSymbol implements Symbol {
 
 	/** Color to paint line */

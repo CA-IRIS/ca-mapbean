@@ -29,8 +29,9 @@ import java.util.*;
 /**
  * This class can be used to generate map graphics when access to the graphics
  * subsystem is not available.
- * @author  engs1eri
- * @version
+ *
+ * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
+ * @version $Revision: 1.38 $ $Date: 2001/04/19 16:49:31 $
  */
 public final class MapPane implements ThemeChangedListener {
 	
@@ -39,9 +40,6 @@ public final class MapPane implements ThemeChangedListener {
 	
 	/** buffer for static themes in map */
 	private transient BufferedImage staticBuffer;
-	
-	/** buffer for selections */
-	//private transient BufferedImage selectionBuffer;
 	
 	/** List of dynamic themes */
 	private final ArrayList themes = new ArrayList();
@@ -71,6 +69,8 @@ public final class MapPane implements ThemeChangedListener {
 	private int width = 0;
 	
 	private ArrayList listeners = new ArrayList();
+	
+	private boolean transparent = false;
 	
 	/** Creates new MapPane without any themes. */
 	public MapPane() {
@@ -207,8 +207,8 @@ public final class MapPane implements ThemeChangedListener {
 		screenTransform.setToTranslation( - ( extent.getMinX() * scale )
 			+ shiftX, ( extent.getMaxY() * scale ) + shiftY );
 		screenTransform.scale( scale, -scale );
-		this.bufferDirty = true;
-		this.staticBufferDirty = true;
+		bufferDirty = true;
+		staticBufferDirty = true;
 	}
 	
 	/**
@@ -225,6 +225,8 @@ public final class MapPane implements ThemeChangedListener {
 	private void updateStaticBuffer() {
 		if ( staticBuffer == null ) return;
 		Graphics2D g = staticBuffer.createGraphics();
+		g.clearRect( 0, 0, staticBuffer.getWidth(),
+			staticBuffer.getHeight() );
 		g.setColor( backgroundColor );
 		g.fillRect( 0, 0, staticBuffer.getWidth(),
 			staticBuffer.getHeight() );
@@ -254,7 +256,6 @@ public final class MapPane implements ThemeChangedListener {
 			( ( Theme ) li.next() ).paint( g );
 		}
 		g.dispose();
-		//notifyMapChangedListeners();
 	}
 	
 	public BufferedImage getImage() {
@@ -269,11 +270,9 @@ public final class MapPane implements ThemeChangedListener {
 			case ThemeChangedEvent.DATA: case ThemeChangedEvent.SHADE:
 				Theme theme = ( Theme ) event.getSource();
 				if ( theme.isStatic() ) {
-					updateStaticBuffer();
-					updateScreenBuffer();
-				} else {
-					updateScreenBuffer();
+                    staticBufferDirty = true;
 				}
+                bufferDirty = true;
 				break;
 			case ThemeChangedEvent.SELECTION:
 				break;
@@ -354,7 +353,7 @@ public final class MapPane implements ThemeChangedListener {
 	 * @param height, the new height for the map.
 	 */
 	protected void setExtentFrame( double x, double y, double width,
-	double height ) {
+            double height ) {
 		extent.setFrame( x, y, width, height );
 		rescale();
 	}

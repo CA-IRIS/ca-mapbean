@@ -16,11 +16,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-/*
- * Symbol.java
- *
- * Created on July 13, 2000, 11:26 AM
- */
 
 package us.mn.state.dot.shape;
 
@@ -28,8 +23,8 @@ import java.awt.*;
 
 /**
  *
- * @author  engs1eri
- * @version 
+ * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
+ * @version $Revision: 1.15 $ $Date: 2001/04/19 16:49:31 $ 
  */
 public interface Symbol {
 	

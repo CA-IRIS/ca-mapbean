@@ -17,25 +17,21 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-//Title:        SignClient
-//Version:      
-//Copyright:    Copyright (c) 1999
-//Author:       Erik Engstrom
-//Company:      MnDOT
-//Description:  Your description
-
 package us.mn.state.dot.shape;
 
-import javax.swing.*;
-import javax.swing.plaf.*;
-
 import java.awt.*;
-import java.awt.font.*;
 import java.awt.event.*;
+import java.awt.font.*;
+import javax.swing.*;
 import javax.swing.plaf.*;
 import javax.swing.plaf.basic.BasicToolTipUI;
 import javax.swing.text.*;
 
+/**
+ *
+ * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
+ * @version $Revision: 1.5 $ $Date: 2001/04/19 16:49:31 $ 
+ */
 final class MultiLineToolTipUI extends BasicToolTipUI {
     static MultiLineToolTipUI sharedInstance = new MultiLineToolTipUI();
     Font smallFont;

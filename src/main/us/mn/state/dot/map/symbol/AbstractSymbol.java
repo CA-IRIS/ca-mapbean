@@ -17,19 +17,17 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-//Title:        Symbol
-//Version:      1.0
-//Copyright:    Copyright (c) 1999
-//Author:       Erik Engstrom
-//Company:      MnDOT
-//Description:  Your description
-
 package us.mn.state.dot.shape;
 
 import java.awt.*;
 import java.awt.geom.*;
 import javax.swing.*;
 
+/**
+ *
+ * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
+ * @version $Revision: 1.2 $ $Date: 2001/04/19 16:49:31 $ 
+ */
 public abstract class AbstractSymbol implements LegendItem, Symbol {
 
 	protected Color color = Color.black;

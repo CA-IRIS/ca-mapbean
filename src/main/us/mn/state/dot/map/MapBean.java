@@ -31,18 +31,18 @@ import us.mn.state.dot.shape.event.*;
  * The Map class is a container for a MapPane which allows the pane to be
  * scrolled and zoomed.  It has several convenience methods giving access to
  * the internal MapPane.
- * @author Erik Engstrom
- * @version 1.0
+ *
+ * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
+ * @version $Revision: 1.16 $ $Date: 2001/04/19 16:49:31 $
  * @see us.mn.state.dot.shap.MapPane
  */
-public final class MapBean extends JComponent implements MapChangedListener,
-		ThemeChangedListener {
+public final class MapBean extends JComponent implements MapChangedListener{
 	
 	/** buffer used to pan the map. */
 	private transient Image panBuffer = null;
 
 	/** home location */
-	public Rectangle2D extentHome = new Rectangle2D.Double();
+	private Rectangle2D extentHome = new Rectangle2D.Double();
 
 	/** current mouse mode */
 	private MapMouseMode activeMouseMode = null;
@@ -71,13 +71,16 @@ public final class MapBean extends JComponent implements MapChangedListener,
 		this.setToolTipText( " " );
 		addComponentListener( new ComponentAdapter() {
 			public void componentResized( ComponentEvent e ) {
-				//mapPane.setSize( e.getComponent().getSize() );
 				rescale();
 			}
 		});
 		setMouseMode( new SelectMouseMode() );
 	}
 	
+   /**
+    * Set the background color of the MapBean.
+    * @param c, the color to use for the background.
+    */
 	public void setBackground( Color c ) {
 		super.setBackground( c );
 		mapPane.setBackground( c );
@@ -125,7 +128,6 @@ public final class MapBean extends JComponent implements MapChangedListener,
 	public void addTheme( Theme theme ) {
 		mapPane.addTheme( theme );
 		extentHome = theme.getExtent();
-		theme.addThemeChangedListener( this );
 		registerWithMouseListener( theme );
 	}
 
@@ -147,7 +149,7 @@ public final class MapBean extends JComponent implements MapChangedListener,
 	 */
 	public void addTheme( Theme theme, int index ) {
 		mapPane.addTheme( theme, index );
-		theme.addThemeChangedListener( this );
+		//theme.addThemeChangedListener( this );
 		registerWithMouseListener( theme );
 	}
 	
@@ -255,7 +257,7 @@ public final class MapBean extends JComponent implements MapChangedListener,
 	}
 	
 	/**
-	 * pan the map.
+	 * Pan the map.
 	 * @param distanceX, number of pixels to move in the X coordinate.
 	 * @param distanceY, number of pixels to move in the Y coordinate.
 	 */
@@ -358,12 +360,6 @@ public final class MapBean extends JComponent implements MapChangedListener,
 	
 	public void mapChanged() {
 		repaint();
-	}
-	
-	public void themeChanged( final ThemeChangedEvent event ) {
-		if ( event.getReason() == ThemeChangedEvent.SELECTION ) {
-			repaint();
-		}
 	}
 	
 	public BufferedImage getImage() {

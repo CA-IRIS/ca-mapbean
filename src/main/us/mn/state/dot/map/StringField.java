@@ -17,14 +17,13 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-
 package us.mn.state.dot.shape;
 
 /** 
  * Field for storing strings.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.5 $ $Date: 2001/03/12 23:38:52 $
+ * @version $Revision: 1.6 $ $Date: 2001/04/19 16:49:31 $
  */
 public class StringField extends Field {
 

@@ -17,12 +17,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-/*
- * Theme.java
- *
- * Created on June 16, 2000, 3:12 PM
- */
-
 package us.mn.state.dot.shape;
 
 import java.util.*;
@@ -32,8 +26,8 @@ import us.mn.state.dot.shape.event.MapMouseListener;
 
 /**
  * Base class for all themes.
- * @author  engs1eri
- * @version 
+ * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
+ * @version $Revision: 1.13 $ $Date: 2001/04/19 16:49:31 $ 
  */
 public class Theme implements LayerChangedListener {
 	/** The Layer that this theme controls.*/
