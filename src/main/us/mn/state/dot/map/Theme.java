@@ -164,7 +164,9 @@ public class Theme implements LayerChangedListener {
 	 * @param g Graphics2D object to paint to
 	 */
 	public void paintSelections( Graphics2D g ){
-		layer.paintSelections( g, selectionRenderer, selections );
+		if ( visible ) {
+			layer.paintSelections( g, selectionRenderer, selections );
+		}
 	}
 	
 	/**

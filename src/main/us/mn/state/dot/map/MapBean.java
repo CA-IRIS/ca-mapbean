@@ -62,15 +62,18 @@ public final class MapBean extends JComponent implements ThemeChangedListener {
 	/** Bounding box */
 	private Rectangle2D extent = new Rectangle2D.Double();
 	
+	/** home location */
 	public Rectangle2D extentHome = new Rectangle2D.Double();
 
+	/** does the buffer need to be updated? */
 	private boolean bufferDirty = true;
 
 	/** Transformation to draw shapes in the ShapePane */
 	private final AffineTransform at = new AffineTransform();
 
+	/** current mouse mode */
 	private MapMouseMode activeMouseMode = null;
-	
+		
 	/**
 	 * Constructor
 	 */
@@ -277,8 +280,14 @@ public final class MapBean extends JComponent implements ThemeChangedListener {
 		return result;
 	}
 
+	/** buffer used to pan the map. */
 	private transient Image panBuffer = null;
 	
+	/**
+	 * pan the map.
+	 * @param distanceX, number of pixels to move in the X coordinate.
+	 * @param distanceY, number of pixels to move in the Y coordinate.
+	 */
 	public void pan( int distanceX, int distanceY ) {
 		if ( panBuffer == null ) {
 			panBuffer = this.createImage( getBounds().width,
@@ -369,6 +378,7 @@ public final class MapBean extends JComponent implements ThemeChangedListener {
 		screenTransform.scale( scale, -scale );
 		screenBuffer = null;
 		staticBuffer = null;
+		panBuffer = null;
 		repaint();
 	}
 
@@ -408,18 +418,21 @@ public final class MapBean extends JComponent implements ThemeChangedListener {
 	 * Updates staticBuffer
 	 */
 	private void updateStaticBuffer() {
-		Graphics2D g2D = ( Graphics2D ) staticBuffer.getGraphics();
-		int w = staticBuffer.getWidth( null );
-		int h = staticBuffer.getHeight( null );
-		g2D.setColor( new Color( 204, 204, 204 ) );
-		g2D.fillRect( 0, 0, w, h );
+		Graphics2D g2D = staticBuffer.createGraphics();
+		g2D.setColor( this.getBackground() );
+		g2D.fillRect( 0, 0, staticBuffer.getWidth( null ),
+			staticBuffer.getHeight( null ) );
 		g2D.transform( screenTransform );
 		g2D.setRenderingHint( RenderingHints.KEY_ANTIALIASING, 
 			RenderingHints.VALUE_ANTIALIAS_ON );
-		for ( int i = ( staticThemes.size() - 1 ); i >= 0; i-- ) {
+		ListIterator li = staticThemes.listIterator( staticThemes.size() );
+		while ( li.hasPrevious() ) {
+			( ( Theme ) li.previous() ).paint( g2D );
+		}
+		/*for ( int i = ( staticThemes.size() - 1 ); i >= 0; i-- ) {
 			Theme theme = ( Theme ) staticThemes.get( i );
 			theme.paint( g2D );
-		}
+		}*/
 		staticBufferDirty = false;
 	}
 	
@@ -439,19 +452,23 @@ public final class MapBean extends JComponent implements ThemeChangedListener {
 		} else if ( staticBufferDirty ) {
 			updateStaticBuffer();
 		}
-		Graphics2D g2D = ( Graphics2D ) screenBuffer.getGraphics();
-		int w = screenBuffer.getWidth( null );
-		int h = screenBuffer.getHeight( null );
+		Graphics2D g2D = screenBuffer.createGraphics();
+		//int w = screenBuffer.getWidth( null );
+		//int h = screenBuffer.getHeight( null );
 		g2D.drawImage( staticBuffer, 0, 0, this );
 		g2D.transform( screenTransform );
-		for ( int i = ( themes.size() - 1 ); i >= 0; i-- ) {
+		ListIterator li = themes.listIterator( themes.size() );
+		while ( li.hasPrevious() ) {
+			( ( Theme ) li.previous() ).paint( g2D );
+		}
+		/*for ( int i = ( themes.size() - 1 ); i >= 0; i-- ) {
 			Theme theme = ( Theme ) themes.get( i );
 			if ( theme.isVisible() ){
 				theme.paint( g2D );
 			}
-		}
-		g2D.setColor( Color.black );
-		g2D.drawRect( 0, 0, w, h );
+		}*/
+		//g2D.setColor( Color.black );
+		//g2D.drawRect( 0, 0, w, h );
 		bufferDirty = false;
 	}
 
@@ -465,12 +482,16 @@ public final class MapBean extends JComponent implements ThemeChangedListener {
 		g.drawImage( screenBuffer, 0, 0, this );
 		Graphics2D g2D = ( Graphics2D ) g;
 		g2D.transform( screenTransform );
-		for ( int i = ( themes.size() - 1 ); i >= 0; i-- ) {
+		ListIterator li = themes.listIterator( themes.size() );
+		while ( li.hasPrevious() ) {
+			( ( Theme ) li.previous() ).paintSelections( g2D );
+		}
+		/*for ( int i = ( themes.size() - 1 ); i >= 0; i-- ) {
 			Theme theme = ( Theme ) themes.get( i );
 			if ( theme.isVisible() ){
 				theme.paintSelections( g2D );
 			}
-		}
+		}*/
 	}
 	
 	public void themeChanged( ThemeChangedEvent event ) {
