@@ -21,9 +21,9 @@ public final class IncidentLayer extends AbstractLayer implements
 
 	private Incident [] incidents = null;
 	private ListSelectionModel selectionModel = null;
-	private static final int ONE_MILE = 3218;
-	private static final int FIVE_MILES = 16090;
-	private static final int TEN_MILES = 32180;
+
+	/* the number of map units per mile */
+	private static final int MAP_UNITS_PER_MILE = 3218;
 	private final TMSProxy proxy;
 
 	public IncidentLayer(TMSProxy tms) {
@@ -34,10 +34,6 @@ public final class IncidentLayer extends AbstractLayer implements
 		proxy = tms;
 		setName("incidents");
 		selectionModel = m;
-	}
-
-	public ListSelectionModel getSelectionModel(){
-		return selectionModel;
 	}
 
 	public void setSelectionModel(ListSelectionModel selectionModel){
@@ -105,8 +101,9 @@ public final class IncidentLayer extends AbstractLayer implements
 			for (int i = 0; i < 3; i++){
 				int diameter;
 				try{
-					diameter = dmsList.getRingRadius(i) * ONE_MILE;
+					diameter = dmsList.getRingRadius(i) * MAP_UNITS_PER_MILE;
 				} catch (java.rmi.RemoteException ex){
+					System.out.println("ring radius failed");
 					return false;
 				}
 				g.draw(new Ellipse2D.Double((xCoord - (diameter / 2)),
@@ -117,13 +114,11 @@ public final class IncidentLayer extends AbstractLayer implements
 	}
 
 	private Vector hit(Point2D p){
-		double x = 0;
-		double y = 0;
 		Vector result = new Vector();
 		if (incidents != null) {
 			for ( int i = 0; i < incidents.length; i++ ) {
-				x = incidents[i].getX();
-				y = incidents[i].getY();
+				double x = incidents[i].getX();
+				double y = incidents[i].getY();
 				Rectangle2D r = new Rectangle2D.Double((x - 500),
 					(y - 500), 1000, 1000 );
 				if (r.contains(p)) {
