@@ -24,6 +24,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.JMenu;
@@ -47,7 +48,7 @@ import us.mn.state.dot.shape.shapefile.ShapeRenderer;
  * file.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.38 $ $Date: 2004/04/28 12:41:30 $
+ * @version $Revision: 1.39 $ $Date: 2004/06/04 20:58:52 $
  */
 public final class StationLayer extends ShapeLayer implements
 		StationListener, DdsListener {
@@ -247,35 +248,40 @@ public final class StationLayer extends ShapeLayer implements
 		}
 	}
 
+	/** Lookup the station with the matching index number */
+	protected Station getStation(List stations, int index) {
+		Iterator it = stations.iterator();
+		while(it.hasNext()) {
+			Station stat = (Station)it.next();
+			if(stat.getId() == index) return stat;
+		}
+		return null;
+	}
+
 	/**
 	 * @see us.mn.state.dot.dds.client.DataListener#update(List)
 	 */
 	public void update( List stations ) {
-		for ( int i = shapes.length - 1; i >= 0; i-- ) {
-			ShapeObject shape = shapes[ i ];
-			int station = ( ( Integer )
-				shape.getValue( "STATION2" ) ).intValue() - 1;
-			if ( station > stations.size() - 1 ) {
-				continue;
+		for(int i = shapes.length - 1; i >= 0; i--) {
+			ShapeObject shape = shapes[i];
+			int index = ((Integer)shape.getValue(
+				"STATION2")).intValue();
+			Station stat = getStation(stations, index);
+			if(stat == null) continue;
+			shape.addField("VOLUME",
+				new Integer((int)stat.getVolume()));
+			shape.addField("OCCUPANCY",
+				new Integer((int)stat.getOccupancy()));
+			shape.addField("SPEED",
+				new Integer((int)stat.getSpeed()));
+			String temp = stat.getStatus();
+			Integer status = new Integer(0);
+			if(!temp.equals("ok")) {
+				status = new Integer(1);
 			}
-			if ( station > 0 ) {
-				Station stat = ( Station ) stations.get( station );
-				shape.addField( "VOLUME",
-					new Integer( (int) stat.getVolume() ) );
-				shape.addField( "OCCUPANCY",
-					new Integer( (int) stat.getOccupancy() ) );
-				shape.addField( "SPEED",
-					new Integer( (int) stat.getSpeed() ) );
-				String temp = stat.getStatus();
-				Integer status = new Integer( 0 );
-				if ( !temp.equals( "ok") ) {
-					status = new Integer( 1 );
-				}
-				shape.addField( "STATUS", status );
-			}
+			shape.addField("STATUS", status);
 		}
 		SwingUtilities.invokeLater( new NotifyThread( this,
 			LayerChangedEvent.DATA ) );
 	}
-
 }
