@@ -30,7 +30,7 @@ import us.mn.state.dot.shape.event.*;
  * Displays incidents as icons on map.
  *
  * @author erik.engstrom@dot.state.mn.us
- * @version $Revision: 1.34 $ $Date: 2001/04/20 15:52:03 $
+ * @version $Revision: 1.35 $ $Date: 2001/04/25 19:46:35 $
  */
 public class IncidentLayer extends AbstractLayer implements
 		IncidentListener {
@@ -39,6 +39,8 @@ public class IncidentLayer extends AbstractLayer implements
 	protected ListSelectionModel selectionModel =
 		new DefaultListSelectionModel();
 	private boolean directional = true;
+
+    private boolean dirty = true;
 
 	/* the number of map units per mile */
 	private static final int MAP_UNITS_PER_MILE = 3218;
@@ -59,9 +61,15 @@ public class IncidentLayer extends AbstractLayer implements
 		}
 	}
 
+    /** 
+     * Called by the incident client every 30 seconds, will only call for a 
+     * repaint when there is at least one active incident or the first time
+     * there are no incidents (to clear the layer).
+     */
 	public synchronized void update( Incident[] incidents ){
 		this.incidents = incidents;
 		if ( incidents.length > 0 ){
+            dirty = true;
 			double maxX = incidents[ 0 ].getX();
 			double maxY = incidents[ 0 ].getY();
 			double minX = maxX;
@@ -80,11 +88,13 @@ public class IncidentLayer extends AbstractLayer implements
 			}
 			extent = new Rectangle2D.Double( minX, minY, ( maxX - minX ),
 				( maxY - minY ) );
-			//SwingUtilities.invokeLater( new NotifyThread( this,
-			//	LayerChangedEvent.DATA ) );
             notifyLayerChangedListeners( new LayerChangedEvent( this,
 				LayerChangedEvent.DATA ) );
-		}
+		} else if ( dirty ) { //clear layer
+            notifyLayerChangedListeners( new LayerChangedEvent( this,
+				LayerChangedEvent.DATA ) );
+            dirty = false;
+        }
 	}
 	
 	/**

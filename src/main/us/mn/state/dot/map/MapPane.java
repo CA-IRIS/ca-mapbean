@@ -31,7 +31,7 @@ import java.util.*;
  * subsystem is not available.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.41 $ $Date: 2001/04/20 17:17:54 $
+ * @version $Revision: 1.42 $ $Date: 2001/04/25 19:46:35 $
  */
 public final class MapPane implements ThemeChangedListener {
 	
@@ -71,6 +71,8 @@ public final class MapPane implements ThemeChangedListener {
 	private ArrayList listeners = new ArrayList();
 	
 	private boolean transparent = false;
+
+    private GraphicsConfiguration graphicsConfiguration = null;
 	
 	/** Creates new MapPane without any themes. */
 	public MapPane() {
@@ -145,17 +147,27 @@ public final class MapPane implements ThemeChangedListener {
             return new BufferedImage( width, height,
                 BufferedImage.TYPE_4BYTE_ABGR );
         } else {
-			return new BufferedImage( width, height, 
-				BufferedImage.TYPE_3BYTE_BGR );
-		   // return new BufferedImage( width, height,
-           //     BufferedImage.TYPE_INT_RGB );
+            if ( graphicsConfiguration != null ) {
+                return graphicsConfiguration.createCompatibleImage( width, height );
+            } else {
+                return new BufferedImage( width, height,
+                    BufferedImage.TYPE_INT_RGB );
            //return GraphicsEnvironment.getLocalGraphicsEnvironment()
            //     .getDefaultScreenDevice().getDefaultConfiguration()
            //     .createCompatibleImage( width, height );
            //FIXME there has got to be a better way!
-        }
+            }
+       }
         
     }
+    
+    public void setTransparent( boolean transparent ) {
+        if ( this.transparent != transparent ) {
+            this.transparent = transparent;
+            setSize( new Dimension( width, height ) );
+        }
+    }
+
 	/**
 	 * Get the size of the MapImage.
 	 */
@@ -240,11 +252,12 @@ public final class MapPane implements ThemeChangedListener {
 		if ( staticBuffer == null ) return;
 		synchronized ( staticBuffer ) {
 			Graphics2D g = staticBuffer.createGraphics();
+            g.setBackground( backgroundColor );
 			g.clearRect( 0, 0, staticBuffer.getWidth(),
 				staticBuffer.getHeight() );
-			g.setColor( backgroundColor );
-			g.fillRect( 0, 0, staticBuffer.getWidth(),
-				staticBuffer.getHeight() );
+			//g.setColor( backgroundColor );
+			//g.fillRect( 0, 0, staticBuffer.getWidth(),
+			//	staticBuffer.getHeight() );
 			g.transform( screenTransform );
 			staticBufferDirty = false;
 			ListIterator li = staticThemes.listIterator();
@@ -265,6 +278,10 @@ public final class MapPane implements ThemeChangedListener {
 				if ( staticBufferDirty ) {
 				updateStaticBuffer();
 			}
+            if ( transparent ) {
+                g.setBackground( backgroundColor );
+                g.clearRect( 0, 0, width, height );
+            }
 			g.drawImage( staticBuffer, 0, 0, null );
 			g.transform( screenTransform );
 			bufferDirty = false;
