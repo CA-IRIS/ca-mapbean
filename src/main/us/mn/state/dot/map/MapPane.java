@@ -83,6 +83,19 @@ public final class MapPane extends JPanel {
 		return result;
 	}
 
+	public void mapZoom( Rectangle2D mapSpace, Rectangle2D viewerSpace ) {
+		//change from mapcoordinates to panel coordinates
+		AffineTransform inverse = null;
+		try {
+			inverse = at.createInverse();
+		} catch ( java.awt.geom.NoninvertibleTransformException ex ) {
+			ex.printStackTrace();
+		}
+		Rectangle2D rec = ( Rectangle2D ) inverse.createTransformedShape(
+			mapSpace );
+		zoom( rec, viewerSpace );
+	}
+
 	/** Increases size of this mapPane so that the mapSpace will fit in the
 		viewerSpace */
 	public void zoom( Rectangle2D mapSpace, Rectangle2D viewerSpace ) {
@@ -108,7 +121,7 @@ public final class MapPane extends JPanel {
 			return;
 		}
 		//Set the new size of the panel
-		Point viewLocation = new Point(viewerSpace.getX(), viewerSpace.getY());
+		Point2D viewLocation = new Point2D.Double(viewerSpace.getX(), viewerSpace.getY());
 		setMinimumSize( new Dimension( ( int ) width,
 			( int ) height) );
 		setPreferredSize( new Dimension( ( int ) width,
@@ -120,8 +133,8 @@ public final class MapPane extends JPanel {
 				- shiftX ) * ( getWidth() / oldWidth ) );
 			double Y1 = ( ( mapSpace.getMinY() + viewLocation.getY()
 				- shiftY ) * ( getHeight() / oldHeight ));
-			double newBoxWidth = mapSpace.width * ( getWidth() / oldWidth );
-			double newBoxHeight = mapSpace.height * ( getHeight() / oldHeight );
+			double newBoxWidth = mapSpace.getWidth() * ( getWidth() / oldWidth );
+			double newBoxHeight = mapSpace.getHeight() * ( getHeight() / oldHeight );
 			Point pan = new Point( ( int ) ( X1 - ( ( viewWidth -
 				newBoxWidth) / 2 ) ), ( int ) ( Y1 - ( ( viewHeight -
 				newBoxHeight ) / 2 ) ) );

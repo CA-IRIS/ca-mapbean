@@ -20,16 +20,19 @@ public final class StationLayer extends ShapeLayer implements StationListener {
 	}
 
 	public void update( int[] volume, int[] occupancy, int[] status ){
+		//System.out.println(" length = " + volume.length );
 		IntegerField v = ( IntegerField ) super.getField( "VOLUME" );
 		IntegerField o = ( IntegerField ) super.getField( "OCCUPANCY" );
 		IntegerField s = ( IntegerField ) super.getField( "STATUS" );
 		int [] station = (( IntegerField ) super.getField( "STATION2"
 			)).getData();
 		for ( int i = 0; i < station.length; i++ ){
-			if ( station[i] > 0 ) {
-				v.setValue( i, volume[station[i] - 1] );
-				o.setValue( i, occupancy[station[i] - 1] );
-				s.setValue( i, status[station[i] - 1] );
+			if ( station[ i ] > 0 ) {
+				if ( i - 1 < volume.length ) {
+					v.setValue( i, volume[ station[ i ] - 1 ] );
+					o.setValue( i, occupancy[ station[ i ] - 1 ] );
+					s.setValue( i, status[ station[ i ] - 1 ] );
+				}
 			}
 		}
 		updateLayer();

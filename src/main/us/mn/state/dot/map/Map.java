@@ -127,7 +127,7 @@ public final class Map extends JViewport implements LayerListener {
 	}
 
 	public void zoomToRect( Rectangle2D r ) {
-		map.zoom( r, this.getViewRect() );
+		map.mapZoom( r, this.getViewRect() );
 	}
 
 	public String getToolTipText( MouseEvent e ) {
