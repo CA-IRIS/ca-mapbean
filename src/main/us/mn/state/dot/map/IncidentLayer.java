@@ -89,8 +89,6 @@ public final class IncidentLayer extends AbstractLayer implements
 			}
 			extent = new Rectangle2D.Double( minX, minY, ( maxX - minX )
 				, ( maxY - minY ) );
-			//notifyLayerChangedListeners( new LayerChangedEvent( this,
-			//	LayerChangedEvent.DATA ) );
 			SwingUtilities.invokeLater( new NotifyThread( this,
 				LayerChangedEvent.DATA ) );
 		}
