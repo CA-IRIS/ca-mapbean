@@ -35,7 +35,7 @@ public class CircleMarker extends PointSymbol {
 
 	/** Create a new CircleMarker */
 	public CircleMarker() {
-		this(Color.black);
+		this(Color.BLACK);
 	}
 
 	/**
