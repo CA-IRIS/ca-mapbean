@@ -19,22 +19,22 @@ public class ClassBreaksRenderer extends ShapeRenderer {
 	private NumericField field;
 	private String name = null;
 
-	public ClassBreaksRenderer(NumericField field, int breakCount) {
+	public ClassBreaksRenderer( NumericField field, int breakCount ) {
 		this.field = field;
-		classBreaks = new double[breakCount];
-		symbols = new Symbol[breakCount + 1];
-		//labels = new String[breakCount + 1];
+		classBreaks = new double[ breakCount ];
+		symbols = new Symbol[ breakCount + 1 ];
 	}
 
-	public ClassBreaksRenderer(NumericField field, int breakCount, String name){
-		this(field, breakCount);
+	public ClassBreaksRenderer( NumericField field, int breakCount,
+			String name ){
+		this( field, breakCount );
 		this.name = name;
 	}
 
 	/** overrides Object.toString() */
 	public String toString(){
 		String result = null;
-		if (name == null) {
+		if ( name == null ) {
 			result = super.toString();
 		} else {
 			result = name;
@@ -42,15 +42,15 @@ public class ClassBreaksRenderer extends ShapeRenderer {
 		return result;
 	}
 
-	public void setBreak(int index, double value){
-		classBreaks[index] = value;
+	public void setBreak( int index, double value ){
+		classBreaks[ index ] = value;
 	}
 
-	public double getBreak(int index){
-		return classBreaks[index];
+	public double getBreak( int index ){
+		return classBreaks[ index ];
 	}
 
-	public void setBreaks(double[] values){
+	public void setBreaks( double[] values ){
 		classBreaks = values;
 	}
 
@@ -58,12 +58,12 @@ public class ClassBreaksRenderer extends ShapeRenderer {
 		return classBreaks.length;
 	}
 
-	public void setSymbol(int index, Symbol s){
-		symbols[index] = s;
+	public void setSymbol( int index, Symbol s ){
+		symbols[ index ] = s;
 	}
 
-	public Symbol getSymbol(int index){
-		return symbols[index];
+	public Symbol getSymbol( int index ){
+		return symbols[ index ];
 	}
 
 	public Symbol[] getSymbols(){
@@ -71,14 +71,14 @@ public class ClassBreaksRenderer extends ShapeRenderer {
 	}
 
 	/** Paints a shape. */
-	public void paint(Graphics2D g, GeneralPath path, int index){
-		int classBreak = field.getRenderingClass(index, classBreaks);
-		if ((classBreak > -1) && (symbols[classBreak] != null)){
-			symbols[classBreak].draw(g, path);
+	public void paint( Graphics2D g, GeneralPath path, int index ){
+		int classBreak = field.getRenderingClass( index, classBreaks );
+		if (( classBreak > -1 ) && ( symbols[ classBreak ] != null )){
+			symbols[ classBreak ].draw( g, path );
 		}
 	}
 
-	public void setField(NumericField f){
+	public void setField( NumericField f ){
 		field = f;
 	}
 

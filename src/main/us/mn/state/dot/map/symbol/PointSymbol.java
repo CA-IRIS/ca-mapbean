@@ -14,36 +14,36 @@ import java.awt.geom.*;
 public abstract class PointSymbol extends Symbol {
 
 	public PointSymbol() {
-		super(Color.black);
+		super( Color.black );
 	}
 
-	public PointSymbol(Color c) {
-		super(c);
-		this.setSize(500);
+	public PointSymbol( Color c ) {
+		super( c );
+		this.setSize( 500 );
 	}
 
-	public PointSymbol(Color c, String label){
-		super(c, label);
+	public PointSymbol( Color c, String label ){
+		super( c, label );
 	}
 
-	public PointSymbol(Color c, String label, boolean outline){
-		super(c, label, outline);
+	public PointSymbol( Color c, String label, boolean outline ){
+		super( c, label, outline );
 	}
 
-   abstract protected Shape getShape(float x, float y);
+   abstract protected Shape getShape( double x, double y );
 
 	/** Draw symbol on map */
-	public void draw(Graphics2D g, GeneralPath path){
-		g.setColor(this.getColor());
+	public void draw( Graphics2D g, GeneralPath path ){
+		g.setColor( this.getColor() );
 		Point2D pt = path.getCurrentPoint();
-		float X = (float) pt.getX();
-		float Y = (float) pt.getY();
-		float radius = this.getSize() / 2;
-		Shape shape = getShape(X, Y);
-		g.fill(shape);
-		if (this.getOutLine()){
-			g.setColor(this.getOutLineColor());
-			g.draw(shape);
+		//float X = ( float ) pt.getX();
+		//float Y = ( float ) pt.getY();
+		//float radius = this.getSize() / 2;
+		//Shape shape = getShape( pt.getX(), pt.getY() );
+		g.fill( getShape( pt.getX(), pt.getY() ) );
+		if ( this.getOutLine() ){
+			g.setColor( this.getOutLineColor() );
+			g.draw( getShape( pt.getX(), pt.getY() ) );
 		}
 	}
 }

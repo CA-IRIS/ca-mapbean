@@ -20,11 +20,11 @@ public final class DefaultRenderer extends ShapeRenderer {
 	public DefaultRenderer() {
 	}
 
-	public DefaultRenderer(Symbol s){
-		setSymbol(s);
+	public DefaultRenderer( Symbol s ){
+		setSymbol( s );
 	}
 
-	public void setSymbol(Symbol s){
+	public void setSymbol( Symbol s ){
 		symbol = s;
 	}
 
@@ -32,11 +32,11 @@ public final class DefaultRenderer extends ShapeRenderer {
 		return symbol;
 	}
 
-	public void paint(Graphics2D g, GeneralPath path, int index){
-		symbol.draw(g, path);
+	public void paint( Graphics2D g, GeneralPath path, int index ){
+		symbol.draw( g, path );
 	}
 
-	public void setField(NumericField f){
+	public void setField( NumericField f ){
 		field = f;
 	}
 

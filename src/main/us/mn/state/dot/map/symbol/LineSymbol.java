@@ -13,22 +13,33 @@ import java.awt.geom.*;
 
 public abstract class LineSymbol extends Symbol {
 
+	protected BasicStroke stroke;
+
 	public LineSymbol() {
-		this(Color.black);
+		this( Color.black );
 	}
 
-	public LineSymbol(Color c){
-		this.setColor(c);
+	public LineSymbol( Color c ){
+		this.setColor( c );
+		createStroke();
 	}
 
-	public abstract BasicStroke getStroke();
+	public void setSize( int size ) {
+		super.setSize( size );
+		createStroke();
+	}
+
+	public BasicStroke getStroke(){
+		return stroke;
+	}
+
+	protected abstract void createStroke();
 
 	/** Draw symbol on map */
-	public void draw(Graphics2D g, GeneralPath path){
-		g.setColor(this.getColor());
-		AffineTransform at = g.getTransform();
-		BasicStroke stroke = getStroke();
-		g.setStroke(stroke);
-		g.draw(path);
+	public void draw( Graphics2D g, GeneralPath path ){
+		g.setColor( getColor() );
+		//AffineTransform at = g.getTransform();
+		g.setStroke( stroke );
+		g.draw( path );
 	}
 }

@@ -169,20 +169,20 @@ public final class MapPane extends JPanel {
 	}
 
 	/** Paint the shapes */
-	public void paint ( Graphics g) {
-		Graphics2D g2D = (Graphics2D)g;
+	public void paint ( Graphics g ) {
+		Graphics2D g2D = ( Graphics2D )g;
 		int w = getWidth();
 		int h = getHeight();
-		if(! this.isDisplayable()){
+		if( ! this.isDisplayable() ){
 			w = 600;
 			h = 600;
 		}
 		g2D.setColor(Color.lightGray);
 		g2D.fillRect(0, 0, w, h);
 		g2D.transform( at );
-		for ( int i = (layers.size() - 1); i >= 0; i-- ) {
-			Layer layer = (Layer)layers.get( i );
-			if (layer.isVisible()){
+		for ( int i = ( layers.size() - 1); i >= 0; i-- ) {
+			Layer layer = ( Layer ) layers.get( i );
+			if ( layer.isVisible() ){
 				layer.paint( g2D );
 			}
 		}

@@ -30,22 +30,22 @@ public class FillSymbol extends Symbol {
 		super();
 	}
 
-	public FillSymbol(Color c){
-		super(c);
+	public FillSymbol( Color c ){
+		super( c );
 	}
 
-	public FillSymbol(Color c, String label){
-		super(c, label);
+	public FillSymbol( Color c, String label ){
+		super( c, label );
 	}
 
-	public FillSymbol(Color c, String label, boolean outline){
-		super(c, label, outline);
+	public FillSymbol( Color c, String label, boolean outline ){
+		super( c, label, outline );
 	}
 
 	/** Draw symbol on map */
-	public void draw(Graphics2D g, GeneralPath path){
-		g.setColor(this.getColor());
-		g.fill(path);
+	public void draw( Graphics2D g, GeneralPath path ){
+		g.setColor( this.getColor() );
+		g.fill( path );
 		/*case TRANSPARENT_FILL:
 			break;
 		case HORIZONTAL_FILL:
@@ -66,9 +66,9 @@ public class FillSymbol extends Symbol {
 			break;
 		case DARK_GRAY_FILL:
 			break;*/
-		if (this.getOutLine()){
-			g.setColor(this.getOutLineColor());
-			g.draw(path);
+		if ( getOutLine() ){
+			g.setColor( getOutLineColor() );
+			g.draw( path );
 		}
 	}
 }

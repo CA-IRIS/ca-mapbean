@@ -5,6 +5,7 @@
 //Author:       Erik Engstrom
 //Company:      MnDOT
 //Description:  Your description
+
 package us.mn.state.dot.shape;
 
 import java.util.Vector;
@@ -30,7 +31,7 @@ public abstract class AbstractLayer implements Layer {
 	}
 
 	/** Shows or hides this layer depending on the value of parameter b */
-	public void setVisible(boolean b) {
+	public void setVisible( boolean b ) {
 		visible = b;
 		repaintLayer();
 	}
@@ -41,29 +42,29 @@ public abstract class AbstractLayer implements Layer {
 		return name;
 	}
 
-	public void setName(String s) {
+	public void setName( String s ) {
 		name = s;
 	}
 
 	private Vector layerListeners = new Vector();
 
-	public void addLayerListener(LayerListener l) {
-		if (!layerListeners.contains(l)) {
-			layerListeners.add(l);
+	public void addLayerListener( LayerListener l ) {
+		if ( ! layerListeners.contains( l ) ) {
+			layerListeners.add( l );
 		}
 	}
 
 	public void updateLayer() {
 		ListIterator it = layerListeners.listIterator();
-		while (it.hasNext()){
-			((LayerListener)it.next()).updateLayer(this);
+		while ( it.hasNext() ){
+			(( LayerListener ) it.next() ).updateLayer( this );
 		}
 	}
 
    public void repaintLayer() {
 		ListIterator it = layerListeners.listIterator();
-		while (it.hasNext()){
-			((LayerListener)it.next()).refresh();
+		while ( it.hasNext() ){
+			(( LayerListener ) it.next() ).refresh();
 		}
 	}
 }

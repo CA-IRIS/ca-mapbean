@@ -5,6 +5,7 @@
 //Author:       Erik Engstrom
 //Company:      MnDOT
 //Description:  Your description
+
 package us.mn.state.dot.shape;
 
 import java.awt.*;
@@ -12,15 +13,14 @@ import java.awt.*;
 public class SolidLine extends LineSymbol {
 
 	public SolidLine() {
-		this(Color.black);
+		this( Color.black );
 	}
 
-	public SolidLine(Color c){
-		this.setColor(c);
+	public SolidLine( Color c ){
+		super( c );
 	}
 
-	public BasicStroke getStroke(){
-		return new BasicStroke(getSize());
-	}
-
-} 
+	protected void createStroke(){
+		stroke = new BasicStroke( getSize() );
+    }
+}

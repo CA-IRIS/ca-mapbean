@@ -12,17 +12,20 @@ import java.awt.geom.*;
 
 public class CircleMarker extends PointSymbol {
 
+	private final Ellipse2D shape = new Ellipse2D.Double();
+
 	public CircleMarker() {
-		super();
+		this( Color.black );
 	}
 
-	public CircleMarker(Color c) {
-		super(c);
+	public CircleMarker( Color c ) {
+		super( c );
 	}
 
-	protected Shape getShape(float x, float y){
-		return new Ellipse2D.Double((x - (getSize() / 2)), (y - (getSize() / 2)),
-			getSize(), getSize());
+	protected Shape getShape(double x, double y){
+		shape.setFrame(( x - ( getSize() / 2 )), ( y - ( getSize() / 2 )),
+			getSize(), getSize() );
+		return shape;
 	}
 
 }

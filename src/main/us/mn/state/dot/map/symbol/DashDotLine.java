@@ -5,6 +5,7 @@
 //Author:       Erik Engstrom
 //Company:      MnDOT
 //Description:  Your description
+
 package us.mn.state.dot.shape;
 
 import java.awt.*;
@@ -12,15 +13,15 @@ import java.awt.*;
 public class DashDotLine extends LineSymbol {
 
 	public DashDotLine() {
-		this(Color.black);
+		this( Color.black );
 	}
 
-	public DashDotLine(Color c){
-		this.setColor(c);
+	public DashDotLine( Color c ){
+		super( c );
 	}
 
-	public BasicStroke getStroke(){
-		return new BasicStroke(getSize(), BasicStroke.CAP_BUTT,
-				BasicStroke.JOIN_MITER, 10, new float[]{8, 2, 2, 4}, 0);
+	protected void createStroke(){
+		stroke = new BasicStroke( getSize(), BasicStroke.CAP_BUTT,
+				BasicStroke.JOIN_MITER, 10, new float[]{8, 2, 2, 4}, 0 );
 	}
 }
