@@ -13,6 +13,8 @@ import java.util.*;
 import java.awt.geom.*;
 import java.awt.*;
 import javax.swing.ListSelectionModel;
+import us.mn.state.dot.tms.toast.TMSProxy;
+import us.mn.state.dot.tms.*;
 
 public final class IncidentLayer extends AbstractLayer implements
 		IncidentListener {
@@ -22,12 +24,14 @@ public final class IncidentLayer extends AbstractLayer implements
 	private static final int ONE_MILE = 3218;
 	private static final int FIVE_MILES = 16090;
 	private static final int TEN_MILES = 32180;
+	private final TMSProxy proxy;
 
-	public IncidentLayer() {
-		this(null);
+	public IncidentLayer(TMSProxy tms) {
+		this(null, tms);
 	}
 
-	public IncidentLayer(ListSelectionModel m) {
+	public IncidentLayer(ListSelectionModel m, TMSProxy tms) {
+		proxy = tms;
 		setName("incidents");
 		selectionModel = m;
 	}
@@ -97,12 +101,17 @@ public final class IncidentLayer extends AbstractLayer implements
 			}
 			g.setColor(Color.red);
 			g.setXORMode(Color.white);
-			g.draw(new Ellipse2D.Double((xCoord - (ONE_MILE / 2)),
-				(yCoord - (ONE_MILE / 2)), ONE_MILE, ONE_MILE));
-			g.draw(new Ellipse2D.Double((xCoord - (FIVE_MILES / 2)),
-				(yCoord - (FIVE_MILES / 2)), FIVE_MILES, FIVE_MILES));
-			g.draw(new Ellipse2D.Double((xCoord - (TEN_MILES / 2)),
-				(yCoord - TEN_MILES / 2), TEN_MILES, TEN_MILES));
+			DMSList dmsList = (DMSList) proxy.getDMSList().getList();
+			for (int i = 0; i < 3; i++){
+				int diameter;
+				try{
+					diameter = dmsList.getRingRadius(i) * ONE_MILE;
+				} catch (java.rmi.RemoteException ex){
+					return false;
+				}
+				g.draw(new Ellipse2D.Double((xCoord - (diameter / 2)),
+					(yCoord - (diameter / 2)), diameter, diameter));
+			}
 		}
 		return result;
 	}
