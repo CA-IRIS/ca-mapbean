@@ -295,7 +295,7 @@ public final class MapPane extends JPanel {
 		g2D.setColor( Color.black );
 		g2D.drawRect( 0, 0, w, h );
 		bufferDirty = false;
-		selectionChanged = true;
+		//selectionChanged = true;
 	}
 
    /*	public void updateSelectionBuffer() {
@@ -312,10 +312,10 @@ public final class MapPane extends JPanel {
 	}*/
 
 	private boolean bufferDirty = true;
-	private boolean selectionChanged = false;
+	//private boolean selectionChanged = false;
 
 	public void selectionChanged() {
-		selectionChanged = true;
+		//selectionChanged = true;
 		repaint();
 	}
 

@@ -80,8 +80,11 @@ public final class Map extends JViewport implements LayerListener {
 
 	/** Sets extent to given coordinates  */
 	public void home(){
+		this.setViewSize( this.getSize() );
 		map.setPreferredSize( this.getSize() );
-		map.revalidate();
+		map.resized();
+		map.setLocation( new Point( 0, 0 ) );
+		revalidate();
 	}
 
 	/** Add a new layer to the ShapePane */
