@@ -38,7 +38,7 @@ public class SolidLine extends LineSymbol {
 	 * Create a new SolidLine using the given color.
 	 * @param c, color to use.
 	 */
-	public SolidLine( Color c ){
+	public SolidLine(Color c) {
 		super( c );
 	}
 
@@ -47,8 +47,8 @@ public class SolidLine extends LineSymbol {
 	 * @param c, color to use.
 	 * @param size, width of the line created.
 	 */
-	public SolidLine( Color c, int size ) {
-		super( c, size );
+	public SolidLine(Color c, float size) {
+		super(c, size);
 	}
 
 	protected Stroke createStroke() {
