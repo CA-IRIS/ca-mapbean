@@ -45,7 +45,6 @@ public class MapToolBar extends NavigationBar {
 		JComboBox combo = createRendererCombo(theme, legend);
 		if(combo != null) b.add(combo);
 		b.add(legend);
-		b.add(new JToolBar.Separator());
 		add(b, 0);
 	}
 
