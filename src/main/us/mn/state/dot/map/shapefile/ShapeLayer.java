@@ -48,7 +48,7 @@ public class ShapeLayer extends AbstractLayer {
 	protected ShapeObject[] shapes;
 
 	/** The type of the shape file */
-	private int shapeType;
+	protected final int shapeType;
 
 	/** Create a new ShapeLayer from the specified filename */
 	public ShapeLayer(String fileName, String layerName)
@@ -73,6 +73,7 @@ public class ShapeLayer extends AbstractLayer {
 			new ShapeObject[shapeList.size()]);
 	}
 
+	/** Get the theme to use for this layer */
 	public Theme getTheme() {
 		Symbol symbol = null;
 		switch(shapeType) {
@@ -98,10 +99,6 @@ public class ShapeLayer extends AbstractLayer {
 		}
 	}
 
-	public MapObject[] getMapObjects() {
-		return shapes;
-	}
-
 	public MapObject search(Point2D p, LayerRenderer renderer) {
 		MapObject result = null;
 		for ( int i = ( shapes.length - 1 ); i >= 0; i-- ) {
@@ -113,10 +110,5 @@ public class ShapeLayer extends AbstractLayer {
 			}
 		}
 		return result;
-	}
-
-	/** Get the ShapeObject at the given index */
-	public ShapeObject getShapeObject(int index) {
-		return shapes[index];
 	}
 }
