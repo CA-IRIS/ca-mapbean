@@ -37,18 +37,19 @@ import us.mn.state.dot.shape.Symbol;
  */
 public abstract class LineSymbol implements Symbol {
 
+	/** Default line width */
+	static public final int DEFAULT_SIZE = 10;
+
 	/** Color to paint line */
 	protected Color color = Color.BLACK;
 
 	/** The width of the line */
 	protected int size = 0;
 
-	public static final int DEFAULT_SIZE = 10;
-
 	/** Label to use for legends */
 	protected final String label = "";
 
-	/** The line stroke used to paint the line. */
+	/** The line stroke used to paint the line */
 	private Stroke stroke;
 
 	public LineSymbol() {
