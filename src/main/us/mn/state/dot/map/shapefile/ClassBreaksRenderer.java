@@ -28,7 +28,7 @@ import us.mn.state.dot.shape.shapefile.ShapeObject;
  * A renderer that renders objects base on a numeric field and a set of class breaks.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.20 $ $Date: 2001/08/10 16:21:41 $ 
+ * @version $Revision: 1.21 $ $Date: 2001/08/13 16:23:54 $ 
  */
 public class ClassBreaksRenderer extends ShapeRenderer {
 
@@ -100,17 +100,15 @@ public class ClassBreaksRenderer extends ShapeRenderer {
 	 * Determine which class the value falls into.
 	 */
 	private int getRenderingClass( double value ) {
-		int result = -1;
 		for ( int i = 0; i < classBreaks.length; i++ ) {
 			if ( value <= classBreaks[ i ] ) {
-				result = i;
-				break;
+				return i;
 			}
 		}
-		if ( value > classBreaks[ classBreaks.length -1 ] ) {
-			result = classBreaks.length - 1;
+		if ( value >= classBreaks[ classBreaks.length - 1 ] ) {
+			return classBreaks.length;
 		}
-		return result;
+		return -1;
 	}
 	
 	/**
