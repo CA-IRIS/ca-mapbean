@@ -277,7 +277,7 @@ public class MapBean extends JComponent implements MapChangedListener{
 	}
 
 	public JToolTip createToolTip() {
-		return new JMultiLineToolTip();
+		return new MapToolTip();
 	}
 
 	/**
