@@ -98,9 +98,10 @@ public class MapBean extends JComponent implements MapChangedListener {
 		setCursor(mouseMode.getCursor());
 		addMouseListener(mode);
 		addMouseMotionListener(mode);
-		Iterator it = mapPane.getThemes().iterator();
-		while(it.hasNext()) {
-			Theme t = (Theme)it.next();
+		ListIterator it = mapPane.getThemes().listIterator(
+			mapPane.getThemes().size());
+		while(it.hasPrevious()) {
+			Theme t = (Theme)it.previous();
 			registerWithMouseListener(t);
 		}
 	}
@@ -198,13 +199,15 @@ public class MapBean extends JComponent implements MapChangedListener {
 
 	/** Transform a point from screen to world coordinates */
 	public Point2D transformPoint(Point p) {
-		AffineTransform t = null;
-		try { t = mapPane.getTransform().createInverse(); }
+		try {
+			AffineTransform t =
+				mapPane.getTransform().createInverse();
+			return t.transform(p, null);
+		}
 		catch(NoninvertibleTransformException e) {
 			e.printStackTrace();
 			return null;
 		}
-		return t.transform(p, null);
 	}
 
 	/** Get the tooltip text for the given mouse event */
