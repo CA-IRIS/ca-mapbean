@@ -35,7 +35,7 @@ public abstract class PointSymbol extends AbstractSymbol {
 	protected int size;
 
 	public PointSymbol() {
-		super( Color.black );
+		super(Color.BLACK);
 	}
 
 	public PointSymbol( Color c ) {
