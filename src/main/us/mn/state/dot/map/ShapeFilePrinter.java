@@ -28,7 +28,8 @@ public class ShapeFilePrinter extends java.lang.Object {
 		}
 		String inFileName = args[ 0 ];
 		try {
-			ShapeLayer layer = new ShapeLayer( inFileName );
+			File file = new File( inFileName );
+			ShapeLayer layer = new ShapeLayer( file.toURL(), inFileName );
 			if ( args.length > 1 ) {
 				File outFile = new File( args[ 1 ] );
 				OutputStream out = new FileOutputStream( outFile );

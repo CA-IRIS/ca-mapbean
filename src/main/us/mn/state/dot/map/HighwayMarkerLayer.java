@@ -42,7 +42,7 @@ public final class HighwayMarkerLayer extends ShapeLayer {
 	
 	private final Field highways;
 	
-	private static final String FILE_LOCATION = "/gpoly/markers.shp";
+	private static final String FILE_LOCATION = "gpoly/markers";
 	private static final String LAYER_NAME = "markers";
 	private static final String LOOKUP_FIELD = "highway";
 	private static final String IMAGE_LOCATION = "/images/HighWayMarkers/";
@@ -54,7 +54,7 @@ public final class HighwayMarkerLayer extends ShapeLayer {
 	}
 	
 	public HighwayMarkerLayer( URL fileLocation ) throws IOException {
-		super( URL fileLocation, LAYER_NAME );
+		super( fileLocation, LAYER_NAME );
 		highways = this.getField( LOOKUP_FIELD );
 	}
 	
