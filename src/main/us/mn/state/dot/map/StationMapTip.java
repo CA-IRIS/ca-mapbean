@@ -25,7 +25,7 @@ import us.mn.state.dot.shape.shapefile.ShapeObject;
  * Displays a stations status.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.8 $ $Date: 2001/08/09 20:43:43 $ 
+ * @version $Revision: 1.9 $ $Date: 2004/04/28 12:41:30 $
  */
 public final class StationMapTip implements MapTip {
 
@@ -38,7 +38,9 @@ public final class StationMapTip implements MapTip {
 			.append( "\n Volume = " )
 			.append( shapeObject.getValue( "VOLUME" ) )
 			.append( "\n Occupancy = " )
-			.append( shapeObject.getValue( "OCCUPANCY" ) );
+			.append( shapeObject.getValue( "OCCUPANCY" ) )
+			.append( "\n Speed = " )
+			.append( shapeObject.getValue( "SPEED" ) );
 		return result.toString();
 	}
 }

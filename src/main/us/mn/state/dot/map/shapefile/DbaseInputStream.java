@@ -50,21 +50,21 @@ public final class DbaseInputStream {
   *		10		Record size					short (little)		2
   *		12		Reserved										20
   */
-	
+
 	/** Number of records in file. */
 	private final int records;
-	
+
 	/** Number of fields per record. */
 	private final short fieldCount;
-	
+
 	/** List of field names. */
 	private final List fields = new ArrayList();
-	
+
 	/** Index of the last record read from file. */
 	private int lastRecord = 0;
-	
+
 	private ShapeDataInputStream in;
-	
+
 	/**
 	 * Create a new DbaseInputStream from the supplied file name. */
 	public DbaseInputStream( String name ) throws IOException {
@@ -91,14 +91,14 @@ public final class DbaseInputStream {
 		}
 		in.skipBytes( 1 );
 	}
-	
+
 	/**
 	 * Are there more records to read?
 	 */
 	public boolean hasNext() {
 		return lastRecord < records;
 	}
-	
+
 	/**
 	 * Read the nextRecord in the database file.
 	 */
@@ -115,31 +115,31 @@ public final class DbaseInputStream {
 				value = field.readData( in );
 				map.put( key, value );
 			} catch ( NumberFormatException nfe ) {
-				System.out.println( "Caught NumberFormatException reading " + key.toString() );
+
 				map.put( key, null );
 			}
 		}
 		lastRecord++;
 		return map;
 	}
-	
+
 	/**
 	 * Close the DbaseInputStream.
 	 */
 	public void close() throws IOException {
 		in.close();
 	}
-	
-	
-	
-	
+
+
+
+
 	/**
 	* Class used for reading fields from database files.
-	* 
+	*
 	*     dBase field descriptor 32 bytes
 	*
     *     Position        Field       Value           Type              Size
-    *        0             name                       byte               11  
+    *        0             name                       byte               11
 	*       11             type      C,N,L,D,M,F      byte                1
     *       12             adress                     byte                4
     *       16             length                     byte                1
@@ -147,16 +147,16 @@ public final class DbaseInputStream {
     *       18             Reserved                                      14
 	*/
 	private class ShapeField {
-		
+
 		private String name = "";
-		
+
 		private int length = 0;
-		
+
 		private char type;
-		
+
 		private int decimal;
-		
-		
+
+
 		public ShapeField( ShapeDataInputStream in ) throws IOException {
 			name = in.readString( 11 ).trim();
 			type = in.readString( 1 ).charAt( 0 );
@@ -165,7 +165,7 @@ public final class DbaseInputStream {
 			decimal = in.readByte();
 			in.skipBytes( 14 );
 		}
-		
+
 		public Object readData( ShapeDataInputStream in ) throws IOException {
 			String value = in.readString( length );
 			Object result = null;
@@ -174,7 +174,6 @@ public final class DbaseInputStream {
 					result = value;
 					break;
 				case 'N':
-					
 					if ( decimal == 0 ) {
 						result = new Integer( value );
 					} else {
@@ -189,7 +188,7 @@ public final class DbaseInputStream {
 			}
 			return result;
 		}
-		
+
 		private boolean parseBoolean( String value ) {
 			boolean result = false;
 			char tempChar = value.charAt( 0 );
@@ -201,14 +200,14 @@ public final class DbaseInputStream {
 				default:
 					result = false; //Shouldn't happen.
 			}
-			return result;		
+			return result;
 		}
-		
-		
+
+
 		public String getName() {
 			return name;
 		}
-		
+
 		public int getLength() {
 			return length;
 		}

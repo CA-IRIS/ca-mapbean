@@ -47,7 +47,7 @@ import us.mn.state.dot.shape.shapefile.ShapeRenderer;
  * file.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.37 $ $Date: 2004/04/27 13:41:00 $
+ * @version $Revision: 1.38 $ $Date: 2004/04/28 12:41:30 $
  */
 public final class StationLayer extends ShapeLayer implements
 		StationListener, DdsListener {
@@ -75,7 +75,7 @@ public final class StationLayer extends ShapeLayer implements
 	 * updates the data of this layer
 	 * @param volume an array containing the new volume values
 	 * @param occupancy an array containing the new occupancy values
-	 * @param occupancy an array containing the new speed values
+	 * @param speed an array containing the new speed values
 	 * @param status an array containing the new status values
 	 */
 	public final synchronized void update( int[] volume, int[] occupancy,

@@ -32,7 +32,7 @@ import java.util.List;
   *
   * @author Douglas Lau
   * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
-  * @version $Revision: 1.5 $ $Date: 2003/05/19 21:23:41 $
+  * @version $Revision: 1.6 $ $Date: 2004/04/28 12:41:30 $
   */
 public final class ShapeFile {
 
@@ -65,10 +65,10 @@ public final class ShapeFile {
 	private double maxX;
 	private double minY;
 	private double maxY;
-	
+
 	/** List of shapes in the ShapeFile */
 	private final List shapes = new ArrayList();
-	
+
 	public ShapeFile( URL url ) throws IOException {
 		ShapeDataInputStream in = new ShapeDataInputStream( url.openStream() );
 		String location = url.toExternalForm();
@@ -77,15 +77,15 @@ public final class ShapeFile {
 		DbaseInputStream dbaseStream = new DbaseInputStream( dbUrl );
 		readData( in, dbaseStream );
 	}
-	
+
 	/** Constructor */
 	public ShapeFile( String name ) throws IOException {
-		ShapeDataInputStream in = new ShapeDataInputStream( 
+		ShapeDataInputStream in = new ShapeDataInputStream(
 			new FileInputStream( name + ".shp" ) );
 		DbaseInputStream dbaseStream = new DbaseInputStream( name + ".dbf" );
 		readData( in, dbaseStream );
 	}
-	
+
 	public void readData( ShapeDataInputStream shapeIn,
 			DbaseInputStream dbaseStream ) throws IOException {
 		shapeIn.skipBytes( 28 ); //start of header unused
@@ -98,8 +98,8 @@ public final class ShapeFile {
 		shapeIn.skipBytes( 32 ); //end of header unused
 		try {
 			while( dbaseStream.hasNext() ) {
-				shapes.add( new ShapeObject( ShapeFactory.readShape( shapeIn ), 
-					dbaseStream.nextRecord() ) );
+				shapes.add( new ShapeObject( ShapeFactory.readShape(
+					shapeIn ), dbaseStream.nextRecord() ) );
 			}
 		} catch( EOFException e ) {
 			throw new IOException( "Shape file and Dbase file have different " +
@@ -108,7 +108,7 @@ public final class ShapeFile {
 		dbaseStream.close();
 		shapeIn.close();
 	}
-	
+
 	/**
 	 * Get the extent of the shape file.
 	 */
@@ -117,9 +117,9 @@ public final class ShapeFile {
 		double width = maxX - minX;
 		return new Rectangle2D.Double( minX, minY, width, height );
 	}
-	
+
 	public List getShapeList() {
-		return shapes; 
+		return shapes;
 	}
 
 	/** Get the version number */
