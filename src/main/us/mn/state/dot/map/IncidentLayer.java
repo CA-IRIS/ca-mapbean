@@ -30,7 +30,7 @@ import us.mn.state.dot.shape.event.*;
  * Displays incidents as icons on map.
  *
  * @author erik.engstrom@dot.state.mn.us
- * @version $Revision: 1.36 $ $Date: 2001/08/09 20:43:43 $
+ * @version $Revision: 1.37 $ $Date: 2001/08/10 16:21:41 $
  */
 public class IncidentLayer extends AbstractLayer implements
 		IncidentListener {
@@ -268,6 +268,10 @@ public class IncidentLayer extends AbstractLayer implements
 		
 		public double getY() {
 			return incident.getY();
+		}
+		
+		public String toString() {
+			return incident.toString();
 		}
 		
 	}
