@@ -102,9 +102,9 @@ public class ShapeLayer extends AbstractLayer {
 	public MapObject search(Point2D p, LayerRenderer renderer) {
 		Iterator it = shapes.iterator();
 		while(it.hasNext()) {
-			MapObject object = (MapObject)it.next();
-			Shape target = renderer.getShape(object);
-			if(target.contains(p)) return object;
+			MapObject o = (MapObject)it.next();
+			Shape s = renderer.getShape(o);
+			if(s != null && s.contains(p)) return o;
 		}
 		return null;
 	}
