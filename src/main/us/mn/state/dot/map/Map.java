@@ -26,11 +26,11 @@ public final class Map extends JViewport implements LayerListener {
 	/** Map panel */
 	private MapPane map = new MapPane(this);
 
-	public Graphics2D getMapGraphics(){
+	/*public Graphics2D getMapGraphics(){
 		Graphics2D g = (Graphics2D) map.getGraphics();
 		g.transform(map.getTransform());
 		return g;
-	}
+	} */
 
 	/** Transformation to draw shapes in the ShapePane */
 	private final AffineTransform at = new AffineTransform();

@@ -112,7 +112,6 @@ public final class MapPane extends JPanel {
 				h = 600;
 				w = 600;
 			}
-
 			if ( h == 0 ) {
 				return;
 			}
