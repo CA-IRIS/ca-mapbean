@@ -24,48 +24,40 @@ public final class Map extends JViewport implements LayerListener {
 	public static final int PAN = 3;
 
 	/** Map panel */
-	private MapPane map = new MapPane(this);
-
-	/*public Graphics2D getMapGraphics(){
-		Graphics2D g = (Graphics2D) map.getGraphics();
-		g.transform(map.getTransform());
-		return g;
-	} */
+	private MapPane map = new MapPane( this );
 
 	/** Transformation to draw shapes in the ShapePane */
 	private final AffineTransform at = new AffineTransform();
 
 	/** Constructor */
 	public Map() {
-		this(new Vector());
+		this( new ArrayList() );
 	}
 
-	public Map(Vector layers){
+	public Map( java.util.List layers ){
 		addMouseListener( mouse );
 		addMouseMotionListener( mouse );
-		this.setView(map);
-		this.setToolTipText("");
-		//ListIterator li = layers.listIterator();
-		//while (li.hasNext()) {
-		for (ListIterator li = layers.listIterator(); li.hasNext();){
-			addLayer((Layer) li.next());
+		this.setView( map );
+		this.setToolTipText( "" );
+		for ( ListIterator li = layers.listIterator(); li.hasNext(); ){
+			addLayer( ( Layer ) li.next() );
 		}
-		setMouseAction(SELECT);
+		setMouseAction( SELECT );
 	}
 
 	/** holds current mouse behavior*/
 	private int mouseAction = SELECT;
 
 	/** Sets the action occuring on mouse events */
-	public void setMouseAction(int m){
-		switch (m) {
+	public void setMouseAction( int m ){
+		switch ( m ) {
 		case NONE: case ZOOM: case PAN:
 			mouseAction = m;
-			this.setToolTipText(null);
+			this.setToolTipText( null );
 			break;
 		case SELECT:
 			mouseAction = m;
-			this.setToolTipText("");
+			this.setToolTipText( "" );
 			break;
 		default:
 			return;
@@ -73,36 +65,36 @@ public final class Map extends JViewport implements LayerListener {
 	}
 
 	/** Gets the action occuring on mouse events */
-	public int getMouseAction(){
+	public int getMouseAction() {
 		return mouseAction;
 	}
 
-	public Layer getLayer(String name){
-		return map.getLayer(name);
+	public Layer getLayer( String name ){
+		return map.getLayer( name );
 	}
 
 	/** Sets extent to given coordinates  */
 	public void home(){
-		map.setPreferredSize(this.getSize());
+		map.setPreferredSize( this.getSize() );
 		this.revalidate();
 	}
 
 	/** Add a new layer to the ShapePane */
 	public void addLayer( Layer layer ) {
-		map.addLayer(layer);
-		layer.addLayerListener(this);
+		map.addLayer( layer );
+		layer.addLayerListener( this );
 	}
 
 	public void refresh(){
 		map.refresh();
 	}
 
-	public void refreshLayer(int index){
-		map.refreshLayer(index);
+	public void refreshLayer( int index ){
+		map.refreshLayer( index );
 	}
 
-	public void refreshLayer(Layer l){
-		map.refreshLayer(l);
+	public void refreshLayer( Layer l ){
+		map.refreshLayer( l );
 	}
 
 	/** Draw an XOR box (rubberbanding box) */
@@ -116,46 +108,44 @@ public final class Map extends JViewport implements LayerListener {
 	}
 
 	/** Pan to point on map */
-	void panTo(Point p){
+	void panTo( Point p ){
 		Point scrollTo = p;
 
-		if ((scrollTo.getX() + this.getWidth()) > map.getWidth()) {
+		if ( ( scrollTo.getX() + this.getWidth() ) > map.getWidth() ) {
 			scrollTo.x = map.getWidth() - this.getWidth();
 		}
-		if ((scrollTo.getY() + this.getHeight()) > map.getHeight()) {
+		if ( ( scrollTo.getY() + this.getHeight()) > map.getHeight() ) {
 			scrollTo.y = map.getHeight()- this.getHeight();
 		}
-		if (scrollTo.getX() < 0) {
+		if ( scrollTo.getX() < 0 ) {
 			scrollTo.x = 0;
 		}
-		if (scrollTo.getY() < 0) {
+		if ( scrollTo.getY() < 0 ) {
 			scrollTo.y = 0;
 		}
-		this.setViewPosition(scrollTo);
+		this.setViewPosition( scrollTo );
 	}
 
-	public String getToolTipText(MouseEvent e) {
+	public String getToolTipText( MouseEvent e ) {
 		String strings = null;
 		AffineTransform t = map.getTransform();
 		AffineTransform world = null;
 		try {
 			world = t.createInverse();
-		} catch (NoninvertibleTransformException ex) {
+		} catch ( NoninvertibleTransformException ex ) {
 			ex.printStackTrace();
 		}
 		double xCoord = e.getPoint().getX();
 		double yCoord = e.getPoint().getY();
 		Point2D viewPosition = this.getViewPosition();
-		Point2D p1 = new Point2D.Double(xCoord + viewPosition.getX(),
-			yCoord + viewPosition.getY());
-		Point2D p = world.transform(p1, new Point(0, 0));
+		Point2D p1 = new Point2D.Double( xCoord + viewPosition.getX(),
+			yCoord + viewPosition.getY() );
+		Point2D p = world.transform( p1, new Point( 0, 0 ) );
 		ArrayList layers = map.getLayers();
-		//ListIterator it = layers.listIterator();
-		//while (it.hasNext()){
-		for (ListIterator it = layers.listIterator(); it.hasNext();) {
-			Layer l = (Layer) it.next();
-			strings = l.getTip(p);
-			if (strings != null) {
+		for ( ListIterator it = layers.listIterator(); it.hasNext(); ) {
+			Layer l = ( Layer ) it.next();
+			strings = l.getTip( p );
+			if ( strings != null ) {
 				break;
 			}
 		}
@@ -167,18 +157,19 @@ public final class Map extends JViewport implements LayerListener {
 	}
 
 	/** Mouse helper class */
-	private final MouseHelper mouse = new MouseHelper((JViewport) this);
+	private final MouseHelper mouse = new MouseHelper( ( JViewport ) this );
 
-	public void updateLayer(Layer l) {
-		map.refreshLayer(l);
+	public void updateLayer( Layer l ) {
+		map.refreshLayer( l );
 	}
 
-	public void setExtent(Rectangle2D r){
-		map.setExtent(r);
+	public void setExtent( Rectangle2D r ){
+		map.setExtent( r );
 	}
 
 	/** Inner class to take care of mouse events */
-	private class MouseHelper extends MouseAdapter implements MouseMotionListener {
+	private final class MouseHelper extends MouseAdapter implements
+			MouseMotionListener {
 		boolean box = false;
 		int x1;
 		int y1;
@@ -189,7 +180,7 @@ public final class Map extends JViewport implements LayerListener {
 		private Point scrollTo = new Point();
 		private JViewport viewport;
 
-		public MouseHelper (JViewport viewport){
+		public MouseHelper ( JViewport viewport ){
 			this.viewport = viewport;
 		}
 
@@ -201,28 +192,28 @@ public final class Map extends JViewport implements LayerListener {
 		}
 
 		public void mouseReleased( MouseEvent e ) {
-			if (SwingUtilities.isLeftMouseButton(e)){
-				switch (mouseAction){
+			if ( SwingUtilities.isLeftMouseButton( e ) ){
+				switch ( mouseAction ){
 				//Mouse Select
 				case SELECT:
 					break;
 				//Mouse Zoom
 				case ZOOM:
 					if ( box ) {
-						drawBox(rect);
+						drawBox( rect );
 						box = false;
 						y2 = e.getY();
 						x2 = e.getX();
 						int w;
 						int h;
 						int temp;
-						if (x1 > x2){
+						if ( x1 > x2 ){
 							temp = x1;
 							x1 = x2;
 							x2 = temp;
 						}
 						w = x2 - x1;
-						if (y1 > y2) {
+						if ( y1 > y2 ) {
 							temp = y1;
 							y1 = y2;
 							y2 = temp;
@@ -232,49 +223,53 @@ public final class Map extends JViewport implements LayerListener {
 						//Calculate the new size of the panel
 						double oldWidth = map.getMapWidth();
 						double oldHeight = map.getMapHeight();
-						double ratioMap = oldWidth/oldHeight;
+						double ratioMap = oldWidth / oldHeight;
 						double width = 0;
 						double height = 0;
 						double viewWidth = viewport.getViewRect().getWidth();
 						double viewHeight = viewport.getViewRect().getHeight();
-						if (w >= h) {
-							width = oldWidth * (viewWidth / w);
+						if ( w >= h ) {
+							width = oldWidth * ( viewWidth / w );
 							height = width / ratioMap;
-						} else if (h > w) {
-							height = oldHeight * (viewHeight / h);
+						} else if ( h > w ) {
+							height = oldHeight * ( viewHeight / h );
 							width = height * ratioMap;
 						}
 
 						//Cheap way to limit zoom FIX LATER!!!!!!!
-						if ((width > 5000) || (height > 5000)){
+						if ( ( width > 5000 ) || ( height > 5000 ) ){
 							return;
 						}
 
 						//Set the new size of the panel
 						Point viewLocation = viewport.getViewPosition();
-						map.setMinimumSize(new Dimension((int) width,
-							(int) height));
-						map.setPreferredSize(new Dimension((int) width,
-							(int) height));
-						map.setSize((int) width, (int) height);
+						map.setMinimumSize( new Dimension( ( int ) width,
+							( int ) height) );
+						map.setPreferredSize( new Dimension( ( int ) width,
+							( int ) height ) );
+						map.setSize( ( int ) width, ( int ) height );
 
 						//Scroll to the center of the zoom rectangle
 						viewWidth = viewport.getViewRect().getWidth();
 						viewHeight = viewport.getViewRect().getHeight();
-						double newX1 = ((x1 + viewLocation.getX()
-							- map.getShiftX()) * (map.getWidth() / oldWidth));
-						double newY1 = ((y1 + viewLocation.getY()
-							- map.getShiftY()) * (map.getHeight() / oldHeight));
-						double newX2 = ((x2 + viewLocation.getX()
-							- map.getShiftX()) * (map.getWidth() / oldWidth));
-						double newY2 = ((y2 + viewLocation.getY()
-							- map.getShiftY()) * (map.getHeight() / oldHeight));
-						double newBoxWidth = newX2-newX1;
-						double newBoxHeight = newY2-newY1;
-						Point pan = new Point((int) (newX1
-							- ((viewWidth - newBoxWidth) / 2)),
-							(int) (newY1 - ((viewHeight - newBoxHeight) / 2)));
-						panTo(pan);
+						double newX1 = ( ( x1 + viewLocation.getX()
+							- map.getShiftX()) * ( map.getWidth() / oldWidth ));
+						double newY1 = ( ( y1 + viewLocation.getY()
+							- map.getShiftY() ) * ( map.getHeight() /
+							oldHeight ));
+						double newX2 = ( ( x2 + viewLocation.getX()
+							- map.getShiftX() ) * ( map.getWidth() /
+							oldWidth ));
+						double newY2 = ( ( y2 + viewLocation.getY()
+							- map.getShiftY() ) * ( map.getHeight() / oldHeight
+							));
+						double newBoxWidth = newX2 - newX1;
+						double newBoxHeight = newY2 - newY1;
+						Point pan = new Point( ( int ) ( newX1
+							- ( ( viewWidth - newBoxWidth) / 2 ) ),
+							( int ) ( newY1 - ( ( viewHeight - newBoxHeight) /
+							2 ) ) );
+						panTo( pan );
 					}
 					break;
 					//Mouse Pan
@@ -284,49 +279,49 @@ public final class Map extends JViewport implements LayerListener {
 				}
 			}
 
-		public void mouseClicked(MouseEvent e){
-			if (SwingUtilities.isRightMouseButton(e)){
-				switch (mouseAction){
+		public void mouseClicked( MouseEvent e ){
+			if ( SwingUtilities.isRightMouseButton( e ) ){
+				switch ( mouseAction ){
 				case SELECT:
 					break;
 				case ZOOM:
-					Double width = new Double(map.getSize().getWidth() / 1.5);
-					Double height = new Double(map.getSize().getHeight() / 1.5);
-					map.setMinimumSize(new Dimension(width.intValue(),
-						height.intValue()));
-					map.setPreferredSize(new Dimension(width.intValue(),
-						height.intValue()));
-					map.setSize(width.intValue(), height.intValue());
+					Double width = new Double( map.getSize().getWidth() / 1.5 );
+					Double height = new Double( map.getSize().getHeight() /
+						1.5 );
+					map.setMinimumSize( new Dimension( width.intValue(),
+						height.intValue() ) );
+					map.setPreferredSize( new Dimension( width.intValue(),
+						height.intValue() ) );
+					map.setSize( width.intValue(), height.intValue() );
 					break;
 				case PAN:
 					break;
 				}
-			} else if (SwingUtilities.isLeftMouseButton(e)) {
-				switch (mouseAction){
+			} else if ( SwingUtilities.isLeftMouseButton( e ) ) {
+				switch ( mouseAction ){
 				case SELECT:
-					Graphics2D g = (Graphics2D) map.getGraphics();
+					Graphics2D g = ( Graphics2D ) map.getGraphics();
 					AffineTransform t = map.getTransform();
 					AffineTransform world;
 					try {
 						world = t.createInverse();
-					} catch (NoninvertibleTransformException ex) {
+					} catch ( NoninvertibleTransformException ex ) {
 						ex.printStackTrace();
 						return;
 					}
 					double pointX = e.getPoint().getX();
 					double pointY = e.getPoint().getY();
 					Point2D viewPosition = viewport.getViewPosition();
-					Point2D p1 = new Point2D.Double(pointX +
-						viewPosition.getX(), pointY + viewPosition.getY());
-					Point2D p = world.transform(p1, new Point(0, 0));
+					Point2D p1 = new Point2D.Double( pointX +
+						viewPosition.getX(), pointY + viewPosition.getY() );
+					Point2D p = world.transform( p1, new Point( 0, 0 ) );
 					ArrayList layers = map.getLayers();
-					g.setTransform(t);
+					g.setTransform( t );
 					boolean found = false;
-					//ListIterator it = layers.listIterator();
-					//while (it.hasNext()){
-					for (ListIterator it = layers.listIterator(); it.hasNext();){
-						Layer l = (Layer) it.next();
-						found = l.mouseClick(e.getClickCount(), p, g);
+					for ( ListIterator it = layers.listIterator();
+							it.hasNext();){
+						Layer l = ( Layer ) it.next();
+						found = l.mouseClick( e.getClickCount(), p, g );
 						if ( found ) {
 							break;
 						}
@@ -340,10 +335,10 @@ public final class Map extends JViewport implements LayerListener {
 		}
 
 		public void mouseDragged( MouseEvent e ) {
-			if (SwingUtilities.isLeftMouseButton(e)){
+			if ( SwingUtilities.isLeftMouseButton( e ) ){
 				x2 = e.getX();
 				y2 = e.getY();
-				switch (mouseAction){
+				switch ( mouseAction ){
 				case SELECT:
 					break;
 				case ZOOM:
@@ -371,13 +366,13 @@ public final class Map extends JViewport implements LayerListener {
 					break;
 				case PAN:
 					Point viewPos = viewport.getViewPosition();
-					Point offset = new Point((x2 - last.x),
-						(y2 - last.y));
+					Point offset = new Point( ( x2 - last.x ),
+						( y2 - last.y ) );
 					last.x = x2;
 					last.y = y2;
 					scrollTo.x = viewPos.x - offset.x;
 					scrollTo.y = viewPos.y - offset.y;
-					panTo(scrollTo);
+					panTo( scrollTo );
 					break;
 				}
 			}

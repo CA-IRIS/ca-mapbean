@@ -45,11 +45,11 @@ public final class MapPane extends JPanel {
 	private double shiftX;
 	private double shiftY;
 
-	double getShiftX(){
+	double getShiftX() {
 		return shiftX;
 	}
 
-	double getShiftY(){
+	double getShiftY() {
 		return shiftY;
 	}
 
@@ -64,17 +64,15 @@ public final class MapPane extends JPanel {
 	}
 
 	/** Returns layer at index l */
-	public Layer getLayer(int l) {
-		return (Layer) layers.get(l);
+	public Layer getLayer( int l ) {
+		return ( Layer ) layers.get( l );
 	}
 
-	public Layer getLayer(String name) {
+	public Layer getLayer( String name ) {
 		Layer result = null;
-		//ListIterator li = layers.listIterator();
-		//while (li.hasNext()) {
-		for (ListIterator li = layers.listIterator(); li.hasNext();){
-			Layer temp = (Layer) li.next();
-			if (name.equals(temp.getName())) {
+		for ( ListIterator li = layers.listIterator(); li.hasNext(); ){
+			Layer temp = ( Layer ) li.next();
+			if ( name.equals( temp.getName() ) ) {
 				result = temp;
 				break;
 			}
@@ -83,7 +81,7 @@ public final class MapPane extends JPanel {
 	}
 
 	/** Set the bounding box for display */
-	public void setExtent(Rectangle2D r){
+	public void setExtent( Rectangle2D r ){
 		extent = r;
 		resized();
 		repaint();
@@ -91,10 +89,10 @@ public final class MapPane extends JPanel {
 
 	/** Constructor */
 	public MapPane(){
-		this(null);
+		this( null );
 	}
 
-	public MapPane(Map vp) {
+	public MapPane( Map vp ) {
 		viewport = vp;
 		addComponentListener( new ComponentAdapter() {
 			public void componentResized( ComponentEvent e ) {
@@ -106,10 +104,10 @@ public final class MapPane extends JPanel {
 
 	/** Called when the ShapePane is resized */
 	public void resized() {
-		if (!layers.isEmpty()) {
+		if ( ! layers.isEmpty() ) {
 			int w = getWidth();
 			int h = getHeight();
-			if (! this.isDisplayable()) {
+			if ( ! this.isDisplayable() ) {
 				h = 600;
 				w = 600;
 			}
@@ -119,22 +117,22 @@ public final class MapPane extends JPanel {
 			if ( w == 0 ) {
 				return;
 			}
-			if (extent == null) {
+			if ( extent == null ) {
 				return;
 			}
-			double scaleX = (double) w / extent.getWidth();
-			double scaleY = (double) h / extent.getHeight();
+			double scaleX = ( double ) w / extent.getWidth();
+			double scaleY = ( double ) h / extent.getHeight();
 			double scaleTemp = scaleX;
 			shiftX = 0;
-			shiftY = (h - (extent.getHeight() * scaleTemp)) / 2;
+			shiftY = ( h - ( extent.getHeight() * scaleTemp ) ) / 2;
 			if ( scaleTemp > scaleY ) {
 				scaleTemp = scaleY;
 				shiftY = 0;
-				shiftX = (w - (extent.getWidth() * scaleTemp)) / 2;
+				shiftX = ( w - ( extent.getWidth() * scaleTemp ) ) / 2;
 			}
 			scale = scaleTemp;
-			at.setToTranslation( -( extent.getMinX() * scale )
-				+ shiftX, (extent.getMaxY() * scale) + shiftY );
+			at.setToTranslation( - ( extent.getMinX() * scale )
+				+ shiftX, ( extent.getMaxY() * scale ) + shiftY );
 			at.scale( scale, -scale );
 		}
 	}
@@ -142,7 +140,7 @@ public final class MapPane extends JPanel {
 	/** Add a new layer to the ShapePane */
 	public void addLayer( Layer layer ) {
 		layers.add( layer );
-		setExtent( layer.getExtent());
+		setExtent( layer.getExtent() );
 	}
 
 	/** Overridden to prevent flashing */
@@ -150,14 +148,14 @@ public final class MapPane extends JPanel {
 		paint( g );
 	}
 
-	public void refreshLayer(int index){
-		ListIterator it = layers.listIterator(index + 1);
-		repaintLayers(it);
+	public void refreshLayer( int index ){
+		ListIterator it = layers.listIterator( index++ );
+		repaintLayers( it );
 	}
 
-	public void refreshLayer(Layer l){
-		ListIterator it = layers.listIterator(layers.lastIndexOf(l) + 1);
-		repaintLayers(it);
+	public void refreshLayer( Layer l ){
+		ListIterator it = layers.listIterator( layers.lastIndexOf( l ) + 1 );
+		repaintLayers( it );
 	}
 
 	private void repaintLayers(ListIterator it){
@@ -177,8 +175,8 @@ public final class MapPane extends JPanel {
 			w = 600;
 			h = 600;
 		}
-		g2D.setColor(Color.lightGray);
-		g2D.fillRect(0, 0, w, h);
+		g2D.setColor( Color.lightGray );
+		g2D.fillRect( 0, 0, w, h );
 		g2D.transform( at );
 		for ( int i = ( layers.size() - 1); i >= 0; i-- ) {
 			Layer layer = ( Layer ) layers.get( i );
@@ -186,7 +184,7 @@ public final class MapPane extends JPanel {
 				layer.paint( g2D );
 			}
 		}
-		g2D.setColor(Color.black);
-		g2D.drawRect(0, 0, w, h);
+		g2D.setColor( Color.black );
+		g2D.drawRect( 0, 0, w, h );
 	}
 }

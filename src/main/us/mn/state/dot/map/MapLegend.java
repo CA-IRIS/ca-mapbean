@@ -15,14 +15,14 @@ public final class MapLegend extends JPanel {
 
 	public final LegendCellRenderer cellMaker = new LegendCellRenderer();
 
-	public MapLegend(ClassBreaksRenderer renderer) {
-		setMapRenderer(renderer);
+	public MapLegend( ClassBreaksRenderer renderer ) {
+		setMapRenderer( renderer );
 	}
 
-	public void setMapRenderer(ClassBreaksRenderer renderer){
+	public void setMapRenderer( ClassBreaksRenderer renderer ){
 		this.removeAll();
-		for (int i = 0; i < renderer.getBreakCount(); i++){
-			add(cellMaker.getRenderedCell(renderer.getSymbol(i)));
+		for ( int i = 0; i < renderer.getBreakCount(); i++ ){
+			add( cellMaker.getRenderedCell( renderer.getSymbol( i ) ) );
 		}
 		revalidate();
 		repaint();
