@@ -61,16 +61,16 @@ public class LineSymbol extends Symbol {
 			BasicStroke.JOIN_MITER, 10, new float[]{120, 40}, 0);
 			break;
 		case DOT_LINE:
-			stroke = new BasicStroke(super.getSize(), BasicStroke.CAP_BUTT
-				,BasicStroke.JOIN_MITER, 10, new float[]{4, 4}, 0);
+			stroke = new BasicStroke(super.getSize(), BasicStroke.CAP_BUTT,
+				BasicStroke.JOIN_MITER, 10, new float[]{4, 4}, 0);
 			break;
 		case DASH_DOT_LINE:
-			stroke = new BasicStroke(super.getSize(),BasicStroke.CAP_BUTT
-				,BasicStroke.JOIN_MITER, 10, new float[]{8, 2, 2, 4}, 0);
+			stroke = new BasicStroke(super.getSize(),BasicStroke.CAP_BUTT,
+				BasicStroke.JOIN_MITER, 10, new float[]{8, 2, 2, 4}, 0);
 			break;
 		case DASH_DOT_DOT_LINE:
-			stroke = new BasicStroke(super.getSize(), BasicStroke.CAP_BUTT
-				,BasicStroke.JOIN_MITER, 10, new float[]{8, 1, 2, 1, 2, 1}, 0);
+			stroke = new BasicStroke(super.getSize(), BasicStroke.CAP_BUTT,
+				BasicStroke.JOIN_MITER, 10, new float[]{8, 1, 2, 1, 2, 1}, 0);
 			break;
 		}
 		g.setStroke(stroke);

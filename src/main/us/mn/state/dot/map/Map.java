@@ -385,7 +385,5 @@ public final class Map extends JViewport implements LayerListener {
 
 	public void setExtent(Rectangle2D r){
 		map.setExtent(r);
-		//map.refresh();
-		//System.out.println("map extent changed");
 	}
 }
