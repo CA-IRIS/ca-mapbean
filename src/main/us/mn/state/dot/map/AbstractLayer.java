@@ -27,7 +27,7 @@ import java.awt.*;
  * interface.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.24 $ $Date: 2001/08/09 21:03:34 $ 
+ * @version $Revision: 1.25 $ $Date: 2001/08/09 21:24:09 $ 
  * @since 1.0
  */
 public abstract class AbstractLayer implements Layer {
