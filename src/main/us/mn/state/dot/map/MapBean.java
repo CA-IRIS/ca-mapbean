@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000  Minnesota Department of Transportation
+ * Copyright (C) 2000-2004  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,7 +16,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package us.mn.state.dot.shape;
 
 import java.awt.Color;
@@ -50,11 +49,10 @@ import us.mn.state.dot.shape.event.SelectMouseMode;
  * the internal MapPane.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.27 $ $Date: 2003/08/15 19:42:46 $
  * @see us.mn.state.dot.shape.MapPane
  */
-public final class MapBean extends JComponent implements MapChangedListener{
-	
+public class MapBean extends JComponent implements MapChangedListener{
+
 	/** buffer used to pan the map. */
 	private transient Image panBuffer = null;
 
@@ -63,10 +61,10 @@ public final class MapBean extends JComponent implements MapChangedListener{
 
 	/** current mouse mode */
 	private MapMouseMode activeMouseMode = null;
-	
+
 	/** MapPane that will create the map */
 	private final MapPane mapPane;
-		
+
 	/**
 	 * Constructor
 	 */
@@ -92,7 +90,7 @@ public final class MapBean extends JComponent implements MapChangedListener{
 		});
 		setMouseMode( new SelectMouseMode() );
 	}
-	
+
    /**
     * Set the background color of the MapBean.
     * @param c, the color to use for the background.
@@ -101,7 +99,7 @@ public final class MapBean extends JComponent implements MapChangedListener{
 		super.setBackground( c );
 		mapPane.setBackground( c );
 	}
-	
+
 	/**
 	 * Sets the action occuring on mouse events
 	 * @param m an integer describing mouse action either Map.NONE, Map.SELECT,
@@ -128,7 +126,7 @@ public final class MapBean extends JComponent implements MapChangedListener{
 			}
 		}
 	}
-	
+
 	/**
 	 * Gets the action occuring on mouse events
 	 * @return an int describing the current mouse action
@@ -136,7 +134,7 @@ public final class MapBean extends JComponent implements MapChangedListener{
 	public MapMouseMode getMouseMode() {
 		return activeMouseMode;
 	}
-	
+
 	/**
 	 * Add a new Theme to the Map.
 	 * @param theme Theme to be added to the Map
@@ -147,7 +145,7 @@ public final class MapBean extends JComponent implements MapChangedListener{
 		registerWithMouseListener( theme );
 	}
 
-	/** 
+	/**
 	 * Remove a Theme from the Map.
 	 * @param name Name of theme to be removed.
  	 */
@@ -157,24 +155,24 @@ public final class MapBean extends JComponent implements MapChangedListener{
 			removeTheme( theme );
 		}
 	}
-	
-	/** 
+
+	/**
 	 * Remove a Theme from the Map.
 	 * @param theme Theme to be removed.
  	 */
 	public void removeTheme( Theme theme ) {
 		if ( ! theme.isStatic() ) {
 			MapMouseListener listener = theme.getMapMouseListener();
-			if ( listener != null && activeMouseMode != null && 
+			if ( listener != null && activeMouseMode != null &&
 					listener.listensToMouseMode( activeMouseMode.getID() ) ) {
 				activeMouseMode.removeMapMouseListener( listener );
 			}
 		}
 		mapPane.removeTheme( theme );
 	}
-	
+
 	/**
-	 * Remove all themes from the map. 
+	 * Remove all themes from the map.
 	 */
 	public void removeAllThemes() {
 		List list = mapPane.getThemes();
@@ -184,7 +182,7 @@ public final class MapBean extends JComponent implements MapChangedListener{
 			removeTheme( theme );
 		}
 	}
-		
+
 	/**
 	 * Add a new theme to the Map at the specified index.
 	 * @param theme Theme to be added to the Map
@@ -194,17 +192,17 @@ public final class MapBean extends JComponent implements MapChangedListener{
 		mapPane.addTheme( theme, index );
 		registerWithMouseListener( theme );
 	}
-	
+
 	private void registerWithMouseListener( Theme theme ){
 		if ( ! theme.isStatic() ) {
 			MapMouseListener listener = theme.getMapMouseListener();
-			if ( listener != null && activeMouseMode != null && 
+			if ( listener != null && activeMouseMode != null &&
 					listener.listensToMouseMode( activeMouseMode.getID() ) ){
 				activeMouseMode.addMapMouseListener( listener );
 			}
 		}
 	}
-	
+
 	/**
 	 * Add a List of themes to the Map
 	 * @param themes List of themes to be added to the map
@@ -215,7 +213,7 @@ public final class MapBean extends JComponent implements MapChangedListener{
 			addTheme( ( Theme ) li.next() );
 		}
 	}
-	
+
 	public void addLayers( java.util.List layers ) {
 		for ( ListIterator li = layers.listIterator(); li.hasNext(); ){
 			Object ob = li.next();
@@ -230,7 +228,7 @@ public final class MapBean extends JComponent implements MapChangedListener{
 			addTheme( theme );
 		}
 	}
-	
+
 	/**
 	 * Gets the theme with the name name from the Map.
 	 * @param name the string containing the Name of layer to return.
@@ -239,7 +237,7 @@ public final class MapBean extends JComponent implements MapChangedListener{
 	public Theme getTheme( String name ) {
 		return mapPane.getTheme( name );
 	}
-	
+
 	/**
 	 * Returns a List of the themes contained by this Map.
 	 * @return List of current themes contained by this Map
@@ -255,7 +253,7 @@ public final class MapBean extends JComponent implements MapChangedListener{
 		setExtent( extentHome );
 		repaint();
 	}
-		
+
 	public String getToolTipText( MouseEvent e ) {
 		String result = null;
 		AffineTransform world = null;
@@ -266,7 +264,7 @@ public final class MapBean extends JComponent implements MapChangedListener{
 		}
 		Point p1 = new Point();
 		Point2D p = world.transform( e.getPoint(), p1 );
-		for ( ListIterator it = mapPane.getThemes().listIterator( 
+		for ( ListIterator it = mapPane.getThemes().listIterator(
 				mapPane.getThemes().size() ); it.hasPrevious(); ) {
 			Theme l = ( Theme ) it.previous();
 			if ( l.isVisible() ) {
@@ -282,26 +280,26 @@ public final class MapBean extends JComponent implements MapChangedListener{
 	public JToolTip createToolTip() {
 		return new JMultiLineToolTip();
 	}
-	
+
 	/**
 	 * Set the bounding box for display
 	 * @param r The rectangle which describes the new bounding box for the
 	 *	display.
 	 */
 	public void setExtent( Rectangle2D r ) {
-		setExtent( r.getMinX(), r.getMinY(), r.getWidth(), r.getHeight() );		
+		setExtent( r.getMinX(), r.getMinY(), r.getWidth(), r.getHeight() );
 	}
-	
+
 	public void setExtent( double x, double y, double width, double height ) {
 		mapPane.setExtentFrame( x, y, width, height );
 		extentHome.setFrame( x, y, width, height );
 		repaint();
 	}
-	
+
 	public Rectangle2D getExtent() {
 		return mapPane.getExtent();
 	}
-	
+
 	/**
 	 * Pan the map.
 	 * @param distanceX, number of pixels to move in the X coordinate.
@@ -321,7 +319,7 @@ public final class MapBean extends JComponent implements MapChangedListener{
 		pb.dispose();
 		g.dispose();
 	}
-	
+
 	public void finishPan( Point2D start, Point2D end ) {
 		AffineTransform transform = mapPane.getTransform();
 		try {
@@ -333,19 +331,19 @@ public final class MapBean extends JComponent implements MapChangedListener{
 		double newX = start.getX() - end.getX();
 		double newY = start.getY() - end.getY();
 		Rectangle2D extent = mapPane.getExtent();
-		mapPane.setExtentFrame( extent.getX() + newX, extent.getY() + newY, 
+		mapPane.setExtentFrame( extent.getX() + newX, extent.getY() + newY,
 			extent.getWidth(), extent.getHeight() );
 		repaint();
 	}
-	
+
 	public void zoomOut( Point center ) { // FIXME CHANGE SO THAT IT CENTERS THE VIEW AT THE POINT OF CLICK
 		Rectangle2D extent = mapPane.getExtent();
-		mapPane.setExtentFrame( extent.getX() - extent.getWidth() / 2, 
+		mapPane.setExtentFrame( extent.getX() - extent.getWidth() / 2,
 			extent.getY() - extent.getHeight() / 2, extent.getWidth() * 2,
 			extent.getHeight() * 2 );
 		repaint();
 	}
-	
+
 	/**
 	 * Increase the size of this MapPane so that the mapSpace will fill the
 	 * viewerSpace
@@ -373,7 +371,7 @@ public final class MapBean extends JComponent implements MapChangedListener{
 	}
 
 	public void zoomTo( Rectangle2D extent ) {
-		mapPane.setExtentFrame( extent.getX(), extent.getY(), 
+		mapPane.setExtentFrame( extent.getX(), extent.getY(),
 			extent.getWidth(), extent.getHeight() );
 		repaint();
 	}
@@ -388,7 +386,7 @@ public final class MapBean extends JComponent implements MapChangedListener{
 			repaint();
 		}
 	}
-	
+
 	/**
 	 * Get the transform that the map uses to convert from map coordinates
 	 * to screen coordinates.
@@ -411,11 +409,11 @@ public final class MapBean extends JComponent implements MapChangedListener{
 			( ( Theme ) li.previous() ).paintSelections( g2d );
 		}
 	}
-	
+
 	public void mapChanged() {
 		repaint();
 	}
-	
+
 	public BufferedImage getImage() {
 		return mapPane.getImage();
 	}

@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000  Minnesota Department of Transportation
+ * Copyright (C) 2000-2004  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +18,6 @@
  *
  * Created on October 24, 2000, 2:02 PM
  */
-
 package us.mn.state.dot.shape;
 
 import java.awt.Color;
@@ -37,54 +36,53 @@ import java.util.ListIterator;
  * subsystem is not available.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.50 $ $Date: 2003/05/19 21:23:41 $
  */
 public final class MapPane implements ThemeChangedListener {
-	
+
 	/** buffer for map */
 	private transient BufferedImage screenBuffer;
-	
+
 	/** buffer for static themes in map */
 	private transient BufferedImage staticBuffer;
-	
+
 	/** List of dynamic themes */
 	private final List themes = new ArrayList();
-	
+
 	/** List of static themes */
 	private final List staticThemes = new ArrayList();
-	
+
 	/** Transformation to draw shapes on the map */
 	private final AffineTransform screenTransform = new AffineTransform();
-	
+
 	/** Bounding box */
 	private Rectangle2D extent = new Rectangle2D.Double();
-	
+
 	/** does the buffer need to be updated? */
 	private boolean bufferDirty = true;
-	
+
 	/** does the static buffer need to be updated? */
 	private boolean staticBufferDirty = false;
-	
+
 	/** Background color of map */
 	private Color backgroundColor = Color.gray;
-	
+
 	/** height of map image */
 	private int height = 0;
-	
+
 	/** width of map image */
 	private int width = 0;
-	
+
 	private List listeners = new ArrayList();
-	
+
 	private boolean transparent = false;
 
     private GraphicsConfiguration graphicsConfiguration = null;
-	
+
 	/** Creates new MapPane without any themes. */
 	public MapPane() {
 		this( new ArrayList() );
 	}
-	
+
 	/**
 	 * Constructs a Map using the themes contained in the themes parameter.
 	 * @param themes a list of themes to be used in the map
@@ -103,7 +101,7 @@ public final class MapPane implements ThemeChangedListener {
 			addTheme( theme );
 		}
 	}
-	
+
 	/**
 	 * Add a MapChangedListener to the listeners of this MapPane.
 	 * @param l, the listener to add.
@@ -111,7 +109,7 @@ public final class MapPane implements ThemeChangedListener {
 	public void addMapChangedListener( MapChangedListener l ) {
 		listeners.add( l );
 	}
-	
+
 	/**
 	 * Gets the list of themes contained in the MapPane.
 	 * @return the list of themes contained by the MapPane
@@ -131,7 +129,7 @@ public final class MapPane implements ThemeChangedListener {
             setSize( new Dimension( width, height ) );
         }
     }
-		
+
 	/**
 	 * Set the size of the MapImage.
 	 * @param d, the new dimension of the image.
@@ -157,7 +155,7 @@ public final class MapPane implements ThemeChangedListener {
 		staticBuffer = createImage( width, height );
 		rescale();
 	}
-	
+
     private BufferedImage createImage( int width, int height ) {
         if ( transparent ) {
             return new BufferedImage( width, height,
@@ -172,7 +170,7 @@ public final class MapPane implements ThemeChangedListener {
             }
        }
     }
-    
+
 	/**
 	 * Get the size of the MapImage.
 	 */
@@ -184,7 +182,7 @@ public final class MapPane implements ThemeChangedListener {
 			screenBuffer.getHeight() );
 		}
 	}
-	
+
 	/**
 	 * Add a new Theme to the Map.
 	 * @param theme Theme to be added to the Map
@@ -199,7 +197,7 @@ public final class MapPane implements ThemeChangedListener {
 		theme.addThemeChangedListener( this );
 		setExtent( theme.getExtent() );
 	}
-	
+
 	/**
 	 * Remove a Theme from the map.
 	 * @param theme Theme to remove.
@@ -213,7 +211,7 @@ public final class MapPane implements ThemeChangedListener {
 		theme.removeThemeChangedListener( this );
 		theme.setMap( null );
 	}
-	
+
 	/**
 	 * Add a new theme to the Map at the specified index.
 	 * @param theme Theme to be added to the Map
@@ -224,7 +222,7 @@ public final class MapPane implements ThemeChangedListener {
 		theme.setMap( this );
 		theme.addThemeChangedListener( this );
 	}
-	
+
 	/**
 	 * Called when the MapBean is resized or the extent is changed.
 	 */
@@ -257,7 +255,7 @@ public final class MapPane implements ThemeChangedListener {
 		bufferDirty = true;
 		staticBufferDirty = true;
 	}
-	
+
 	/**
 	 * Sets the background color of the map.
 	 * @param color, new color for the backgound.
@@ -265,7 +263,7 @@ public final class MapPane implements ThemeChangedListener {
 	public void setBackground( Color color ) {
 		backgroundColor = color;
 	}
-	
+
 	/**
 	 * Updates staticBuffer
 	 */
@@ -285,7 +283,7 @@ public final class MapPane implements ThemeChangedListener {
 			g.dispose();
 		}
 	}
-	
+
 	/**
 	 * Updates screenBuffer.
 	 */
@@ -310,14 +308,14 @@ public final class MapPane implements ThemeChangedListener {
 			g.dispose();
 		}
 	}
-	
+
 	public BufferedImage getImage() {
 		if ( bufferDirty || staticBufferDirty ) {
 			updateScreenBuffer();
 		}
 		return screenBuffer;
 	}
-	
+
 	public void themeChanged( final ThemeChangedEvent event ) {
 		switch ( event.getReason() ) {
 			case ThemeChangedEvent.DATA: case ThemeChangedEvent.SHADE:
@@ -334,7 +332,7 @@ public final class MapPane implements ThemeChangedListener {
 		}
 		notifyMapChangedListeners();
 	}
-	
+
 	/**
 	 * Gets the theme with the name name from the Map.
 	 * @param name the string containing the Name of layer to return.
@@ -351,7 +349,7 @@ public final class MapPane implements ThemeChangedListener {
 		}
 		return result;
 	}
-	
+
 	/**
 	 * Notifies all registered MapChangedListeners that the map image has
 	 * changed.
@@ -363,21 +361,21 @@ public final class MapPane implements ThemeChangedListener {
 			listener.mapChanged();
 		}
 	}
-	
+
 	/**
 	 * Get the AffineTransform of the map.
 	 */
 	public AffineTransform getTransform() {
 		return screenTransform;
 	}
-	
+
 	/**
 	 * Get the extent of the MapImage.
 	 */
 	public Rectangle2D getExtent(){
 		return extent;
 	}
-	
+
 	/**
 	 * Set the bounding box for display
 	 * @param r The rectangle which describes the new bounding box for the
@@ -386,7 +384,7 @@ public final class MapPane implements ThemeChangedListener {
 	public void setExtent( Rectangle2D r ) {
 		setExtent( r.getMinX(), r.getMinY(), r.getWidth(), r.getHeight() );
 	}
-	
+
 	/**
 	 * Set the bounding box for display
 	 * @param x, the new x-coordinate for the map.
@@ -397,7 +395,7 @@ public final class MapPane implements ThemeChangedListener {
 	public void setExtent( double x, double y, double width, double height ) {
 		setExtentFrame( x, y, width, height );
 	}
-	
+
 	/**
 	 * Set the bounding box for display
 	 * @param x, the new x-coordinate for the map.
