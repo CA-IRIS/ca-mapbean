@@ -24,10 +24,10 @@ public final class StationLayer extends ShapeLayer implements StationListener {
         IntegerField v = null;
         IntegerField o = null;
         IntegerField s = null;
-		int [] station = new int [0];
+		int [] station = null;
 		for (int i = 0; i < fields.length; i++) {
-		if ((fields[i].getName()).equals("VOLUME")) {
-			v = ((IntegerField) fields[i]);
+			if ((fields[i].getName()).equals("VOLUME")) {
+				v = ((IntegerField) fields[i]);
 			} else if ((fields[i].getName()).equals("OCCUPANCY")) {
 				o = ((IntegerField) fields[i]);
 			} else if ((fields[i].getName()).equals("STATUS")) {
