@@ -38,7 +38,7 @@ public class LegendMenu extends JMenu {
 
 	/** Set the LayerRenderer that this menu displays */
 	public void setMapRenderer(LayerRenderer r) {
-		this.removeAll();
+		removeAll();
 		Symbol[] symbols = r.getSymbols();
 		for(int i = 0; i < symbols.length; i++) {
 			add(symbols[i].getLegend());
