@@ -54,8 +54,12 @@ public final class HighwayMarkerLayer extends ShapeLayer {
 	private final ImageIcon getImageIcon( String key ) {
 		ImageIcon icon = ( ImageIcon ) map.get( key );
 		if ( icon != null ) return icon;
-		String resource = "/images/HighWayMarkers/" + key + ".png";
+		String resource = "/images/HighWayMarkers/" + key + ".gif";
 		URL url = this.getClass().getResource( resource );
+		if ( url == null ) {
+			resource = "/images/HighWayMarkers/" + key + ".png";
+			url = this.getClass().getResource( resource );
+		}
 		if ( url != null ) {
 			icon = new ImageIcon( url );
 			map.put( key, icon );

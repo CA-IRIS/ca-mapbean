@@ -54,7 +54,6 @@
       <include name="**/manifest.mf" />
       <include name="**/*.properties" />
     </copydir>
-
     <copydir src="${src.images.dir}" dest="${build.classes}/images">
     </copydir>
   </target>
