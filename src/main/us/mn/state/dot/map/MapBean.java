@@ -123,9 +123,21 @@ public final class MapBean extends JComponent implements MapChangedListener,
 	 */
 	public void addTheme( Theme theme ) {
 		mapPane.addTheme( theme );
+		extentHome = theme.getExtent();
 		theme.addThemeChangedListener( this );
 		registerWithMouseListener( theme );
 	}
+
+	/** 
+	 * Remove a Theme from the Map.
+	 * @param name Name of theme to be removed.
+ 	 */
+	/*public void removeTheme( String name ) {
+		Theme theme = mapPane.getTheme( name );
+		theme.removeThemeChangedListener( this );
+		mapPane.removeTheme( name );
+	}*/
+		
 	
 	/**
 	 * Add a new theme to the Map at the specified index.

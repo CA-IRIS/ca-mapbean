@@ -32,7 +32,7 @@ import us.mn.state.dot.tms.toast.TMSProxy;
  * Displays incidents as icons on map.
  *
  * @author erik.engstrom@dot.state.mn.us
- * @version 
+ * @version $Revision: 1.30 $ $Date: 2001/02/26 23:29:43 $
  */
 public class IncidentLayer extends AbstractLayer implements
 		IncidentListener {

@@ -119,19 +119,27 @@ public final class MapPane implements ThemeChangedListener {
 	 * @param d, the new dimension of the image.
 	 */
 	public void setSize( Dimension d ) {
-		if ( d.height < 0 ) {
+		int height = d.height;
+		int width = d.width;
+		if ( height < 0 ) {
 			throw new IllegalArgumentException(
-			"Height must be greater than 0: height= " + d.height );
+			"Height must be greater than 0: height= " + height );
 		}
-		if ( d.width < 0 ) {
+		if ( width < 0 ) {
 			throw new IllegalArgumentException(
-			"Width must be greater than 0: width= " + d.width );
+			"Width must be greater than 0: width= " + width );
 		}
-		screenBuffer = new BufferedImage( d.width, d.height,
+		if ( height == 0 ) {
+			height = 1;
+		}
+		if ( width == 0 ) {
+			width = 1;
+		}
+		screenBuffer = new BufferedImage( width, height,
 		BufferedImage.TYPE_INT_RGB );
-		staticBuffer = new BufferedImage( d.width, d.height,
+		staticBuffer = new BufferedImage( width, height,
 		BufferedImage.TYPE_INT_RGB );
-		//selectionBuffer = new BufferedImage( d.width, d.height,
+		//selectionBuffer = new BufferedImage( width, height,
 //		BufferedImage.TYPE_INT_RGB );
 		rescale();
 	}
@@ -223,9 +231,9 @@ public final class MapPane implements ThemeChangedListener {
 		g.setColor( backgroundColor );
 		g.fillRect( 0, 0, staticBuffer.getWidth(), staticBuffer.getHeight() );
 		g.transform( screenTransform );
-		ListIterator li = staticThemes.listIterator( staticThemes.size() );
-		while ( li.hasPrevious() ) {
-			( ( Theme ) li.previous() ).paint( g );
+		ListIterator li = staticThemes.listIterator();
+		while ( li.hasNext() ) {
+			( ( Theme ) li.next() ).paint( g );
 		}
 	}
 	
@@ -237,9 +245,9 @@ public final class MapPane implements ThemeChangedListener {
 		Graphics2D g = screenBuffer.createGraphics();
 		g.drawImage( staticBuffer, 0, 0, null );
 		g.transform( screenTransform );
-		ListIterator li = themes.listIterator( themes.size() );
-		while ( li.hasPrevious() ) {
-			( ( Theme ) li.previous() ).paint( g );
+		ListIterator li = themes.listIterator();
+		while ( li.hasNext() ) {
+			( ( Theme ) li.next() ).paint( g );
 		}
 		notifyMapChangedListeners();
 	}
@@ -252,9 +260,9 @@ public final class MapPane implements ThemeChangedListener {
 		Graphics2D g = selectionBuffer.createGraphics();
 		g.drawImage( screenBuffer, 0, 0, null );
 		g.transform( screenTransform );
-		ListIterator li = themes.listIterator( themes.size() );
-		while ( li.hasPrevious() ) {
-			( ( Theme ) li.previous() ).paintSelections( g );
+		ListIterator li = themes.listIterator();
+		while ( li.hasNext() ) {
+			( ( Theme ) li.next() ).paintSelections( g );
 		}
 	}*/
 	

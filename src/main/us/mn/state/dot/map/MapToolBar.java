@@ -62,8 +62,7 @@ public final class MapToolBar extends NavigationBar {
 		paintCombo.setLightWeightPopupEnabled( false );
 		ListIterator li = map.getTheme( theme ).getLayerRenderers().listIterator();
 		while ( li.hasNext() ) {
-			LayerRenderer rend = ( LayerRenderer ) li.next();
-			paintCombo.addItem( rend );
+			paintCombo.addItem( li.next() );
 		}
 		paintCombo.addActionListener( new ActionListener() {
 			public void actionPerformed( ActionEvent e ) {

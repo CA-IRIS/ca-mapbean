@@ -17,13 +17,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-//Title:        Renderer
-//Version:      1.0
-//Copyright:    Copyright (c) 1999
-//Author:       Erik Engstrom
-//Company:      MnDOT
-//Description:  Interface all layer renderers must implement.
-
 package us.mn.state.dot.shape;
 
 import java.awt.*;
@@ -35,8 +28,8 @@ public abstract class ShapeRenderer implements LayerRenderer {
 	private String name = "";
 
     public abstract Symbol render( int index );
-	public abstract void setField( Field f );
-	public abstract Field getField();
+    public abstract void setField( Field f );
+    public abstract Field getField();
 	
     public void setTip( MapTip m ) {
         mapTip = m;

@@ -34,10 +34,6 @@ public final class DefaultRenderer extends ShapeRenderer {
 	private NumericField field = null;
 	private String name = null;
 
-	public DefaultRenderer() {
-		super();
-	}
-
 	public DefaultRenderer( Symbol s ){
 		setSymbol( s );
 	}
