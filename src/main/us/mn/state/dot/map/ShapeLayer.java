@@ -18,7 +18,8 @@ import us.mn.state.dot.shape.DbaseReader.*;
 
 public class ShapeLayer extends AbstractLayer {
 
-	private DbaseReader dbFile;
+	//private DbaseReader dbFile;
+	private Field [] fields;
 
 	/** Set symbol to paint layer with */
 	public void setSymbol( Symbol s ){
@@ -43,11 +44,11 @@ public class ShapeLayer extends AbstractLayer {
 	protected GeneralPath [] paths;
 
 	public Field [] getFields(){
-		return dbFile.getFields();
+		return fields;//dbFile.getFields();
 	}
 
 	public Field getField( String name ){
-		Field [] fields = dbFile.getFields();
+		//Field [] fields = dbFile.getFields();
 		Field result = null;
 		for ( int i = 0; i < fields.length; i++ ) {
 			if ( ( fields[ i ].getName()).equalsIgnoreCase( name ) ) {
@@ -63,10 +64,11 @@ public class ShapeLayer extends AbstractLayer {
 		setName( layerName );
 		JarFile file = new JarFile( ShapeLayer.class.getResource(
 				jarFileName ).getFile() );
-		dbFile = new DbaseReader( file.getInputStream( file.getEntry(
+		DbaseReader dbFile = new DbaseReader( file.getInputStream( file.getEntry(
 				fileName + ".dbf" ) ) );
 		ShapeFile shapeFile = new ShapeFile( file.getInputStream(
 				file.getEntry( fileName + ".shp" ) ));
+		fields = dbFile.getFields();
 		createShapeLayer( shapeFile );
 	}
 
@@ -77,13 +79,14 @@ public class ShapeLayer extends AbstractLayer {
 		if ( url == null ) {
 			System.out.println( "File " + fileName + ".dbf was not found" );
 		}
-		dbFile = new DbaseReader( url );
+		DbaseReader dbFile = new DbaseReader( url );
 		url = ShapeLayer.class.getResource( "/" + fileName + ".shp" );
 		//url = new URL("file:\\" + fileName + ".shp");
 		if ( url == null ) {
 			System.out.println( "File " + fileName + ".shp was not found" );
 		}
 		ShapeFile file = new ShapeFile( url );
+		fields = dbFile.getFields();
 		createShapeLayer( file );
 	}
 
