@@ -30,7 +30,7 @@ import java.util.jar.*;
   *
   * @author Douglas Lau
   * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
-  * @version $Revision: 1.2 $ $Date: 2001/08/09 21:03:34 $
+  * @version $Revision: 1.3 $ $Date: 2001/08/10 15:47:44 $
   */
 public final class ShapeFile {
 
@@ -111,8 +111,8 @@ public final class ShapeFile {
 	 * Get the extent of the shape file.
 	 */
 	public Rectangle2D getExtent() {
-		double width = maxY - minY;
-		double height = maxX - minX;
+		double height = maxY - minY;
+		double width = maxX - minX;
 		return new Rectangle2D.Double( minX, minY, width, height );
 	}
 	
