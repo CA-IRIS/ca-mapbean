@@ -97,14 +97,6 @@ public final class Map extends JViewport implements LayerListener {
 		map.refresh();
 	}
 
-	/*public void refreshLayer( int index ){
-		map.refreshLayer( index );
-	}
-
-	public void refreshLayer( Layer l ){
-		map.refreshLayer( l );
-	} */
-
 	/** Draw an XOR box (rubberbanding box) */
 	void drawBox( Rectangle r ) {
 		Graphics g = getGraphics();
@@ -133,21 +125,12 @@ public final class Map extends JViewport implements LayerListener {
 		this.setViewPosition( scrollTo );
 	}
 
-   /*	public void scrollVisible( Rectangle2D r ) {
-		Rectangle2D rec = map.convertRectangle( r, this.getViewRect() );
-		this.scrollRectToVisible( rec.getBounds() );
-	} */
-
 	public void scrollToMapPoint( Point2D center ) {
 		Point2D p = map.convertPoint( center );
 		Rectangle2D rec = new Rectangle2D.Double( p.getX() - 25, p.getY() - 25,
 			50, 50 );
 		map.scrollRectToVisible( rec.getBounds() );
 	}
-
-	/*public void zoomToRect( Rectangle2D r ) {
-		map.mapZoom( r, this.getViewRect() );
-	}*/
 
 	public String getToolTipText( MouseEvent e ) {
 		AffineTransform t = map.getTransform();
@@ -183,7 +166,6 @@ public final class Map extends JViewport implements LayerListener {
 	private final MouseHelper mouse = new MouseHelper( ( JViewport ) this );
 
 	public void updateLayer( Layer l ) {
-		//map.refreshLayer( l );
 		map.refresh();
 	}
 
