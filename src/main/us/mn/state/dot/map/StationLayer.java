@@ -35,6 +35,7 @@ import us.mn.state.dot.dds.client.DataListener;
 import us.mn.state.dot.dds.client.Station;
 import us.mn.state.dot.dds.client.StationClient;
 import us.mn.state.dot.dds.client.StationListener;
+import us.mn.state.dot.dds.client.XmlClient;
 import us.mn.state.dot.shape.event.MapMouseListener;
 import us.mn.state.dot.shape.event.SelectMouseMode;
 import us.mn.state.dot.shape.shapefile.ShapeLayer;
@@ -46,7 +47,7 @@ import us.mn.state.dot.shape.shapefile.ShapeRenderer;
  * file.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.33 $ $Date: 2003/08/14 15:00:43 $ 
+ * @version $Revision: 1.34 $ $Date: 2003/08/14 20:22:41 $ 
  */
 public final class StationLayer extends ShapeLayer implements
 		StationListener, DataListener {
@@ -63,6 +64,11 @@ public final class StationLayer extends ShapeLayer implements
 	public StationLayer( StationClient stationClient ) throws IOException {
 		this();
 		stationClient.addStationListener( this );
+	}
+	
+	public StationLayer( XmlClient xmlClient ) throws IOException {
+		this();
+		xmlClient.addDataListener( this );
 	}
 
 	/**
