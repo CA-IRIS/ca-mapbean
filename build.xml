@@ -5,121 +5,141 @@
 <!-- ======================================================================= -->
 
 <project name="MapBean" default="jar" basedir=".">
-    <target name="init">
-        <tstamp/>
-        <property name="Name" value="MapBean" /> 
-        <property name="name" value="MapBean"/>
-        <property name="version" value="1.1" /> 
-        <property name="MapBean.home" value="." /> 
-        <property name="bin.dir" value="bin" /> 
-        <property name="src.bin.dir" value="src/bin" /> 
-        <property name="src.images.dir" value="src/images" />
-        <property name="src.dir" value="src/main" /> 
-        <property name="lib.dir" value="lib" /> 
-        <property name="docs.dir" value="docs" /> 
-        <property name="build.dir" value="../build/MapBean" /> 
-        <property name="build.classes" value="${build.dir}/classes" /> 
-        <property name="build.javadocs" value="${build.dir}/javadocs" /> 
-        <property name="MapBean.dist.dir" value="../dist/MapBean" /> 
-        <property name="classpath" value="k:\SignClient\toast.jar;..\dds\client\lib\ddsClient.jar" /> 
-        <property name="packages" value="us.mn.state.dot.shape.*" /> 
-        <property name="manifest" value="src/etc/manifest" /> 
-        <property name="build.compiler" value="modern" /> 
+    <property name="name" value="MapBean"/>
+    <property name="version" value="1.1" /> 
+     <property name="src.images.dir" value="src/images" />
+    <property name="src.dir" value="src/main" /> 
+    <property name="lib.dir" value="lib" /> 
+    <property name="docs.dir" value="docs" /> 
+    <property name="build.dir" value="build/MapBean" /> 
+    <property name="build.classes" value="${build.dir}/classes" /> 
+    <property name="build.javadocs" value="${build.dir}/javadocs" /> 
+    <property name="MapBean.dist.dir" value="dist/MapBean" /> 
+    <property name="jar.location" value="k:\IrisClient\lib"/>
+	<path id="classpath">
+		<fileset dir = "${jar.location}"
+				 includes="*.jar"
+				 excludes="MapBean.jar"/>
+	</path>
+    <property name="packages" value="us.mn.state.dot.shape.*" /> 
+    <property name="manifest" value="src/etc/manifest" /> 
+    <property name="build.compiler" value="modern" /> 
 
+    <!--  ===================================================================  --> 
+    <!--  Prepares the build directory                                         --> 
+    <!--  ===================================================================  --> 
+    <target name="prepare"
+            description="Creates the build directory for this project.">
+        <mkdir dir="${build.dir}" /> 
     </target>
 
-  <!--  ===================================================================  --> 
-  <!--  Prepares the build directory                                         --> 
-  <!--  ===================================================================  --> 
-  <target name="prepare">
-    <mkdir dir="${build.dir}" /> 
-  </target>
-
-  <!-- =================================================================== -->
-  <!-- Compiles the source code                                            -->
-  <!-- =================================================================== -->
-  <target name="compile" depends="prepare">
-    <mkdir dir="${build.classes}"/>
-
-    <javac srcdir="${src.dir}"
-           destdir="${build.classes}"
-           classpath="${classpath}"
-           debug="on"
-           deprecation="off"
-           optimize="on">
-    </javac>
+    <!-- =================================================================== -->
+    <!-- Compiles the source code                                            -->
+    <!-- =================================================================== -->
+    <target name="compile"
+            depends="prepare"
+            description="Compiles all of the source code for this project.">
+        <mkdir dir="${build.classes}"/>
+        <javac srcdir="${src.dir}"
+               destdir="${build.classes}"
+               debug="on"
+               deprecation="off"
+               optimize="on">
+			   <classpath refid="classpath"/>
+        </javac>
  
-    <copydir src="${src.dir}" dest="${build.classes}">
-      <include name="**/manifest.mf" />
-      <include name="**/*.properties" />
-    </copydir>
-    <copydir src="${src.images.dir}" dest="${build.classes}/images">
-    </copydir>
-  </target>
+        <copy todir="${build.classes}">
+            <fileset dir="${src.dir}">
+                <include name="**/manifest.mf" />
+                <include name="**/*.properties" />
+            </fileset>
+        </copy>
+        <copy todir="${build.classes}/images">
+            <fileset dir="${src.images.dir}" />
+        </copy>
+    </target>
 
-  <!-- =================================================================== -->
-  <!-- Creates the jar archive                                             -->
-  <!-- =================================================================== -->
-  <target name="jar" depends="compile">
-    <mkdir dir="${lib.dir}"/>
-    <jar jarfile="${lib.dir}/${name}.jar"
-         basedir="${build.classes}"
-         manifest="${manifest}"
-    />
-  </target>
+    <!-- =================================================================== -->
+    <!-- Creates the jar archive                                             -->
+    <!-- =================================================================== -->
+    <target name="jar"
+            depends="compile"
+            description="Creates the jar file for this project.">
+        <mkdir dir="${lib.dir}"/>
+        <jar jarfile="${lib.dir}/${name}.jar"
+             basedir="${build.classes}"
+             manifest="${manifest}"/>
+    </target>
 
-  <!-- =================================================================== -->
-  <!-- Creates the API documentation                                       -->
-  <!-- =================================================================== -->
-  <target name="javadocs" depends="prepare">
-    <mkdir dir="${build.javadocs}"/>
-    <javadoc packagenames="${packages}"
-             sourcepath="${basedir}/${src.dir}"
-             destdir="${build.javadocs}"
-             author="true"
-             version="true"
-             windowtitle="${Name} API"
-             doctitle="${Name}"
-             bottom="Copyright &#169; Minnesota Department of Transportation. All Rights Reserved."
-    />
-  </target>
+    <!-- =================================================================== -->
+    <!-- Creates the API documentation                                       -->
+    <!-- =================================================================== -->
+    <target name="javadocs"
+            depends="prepare"
+            description="Creates the javadocs for this project.">
+        <mkdir dir="${build.javadocs}"/>
+        <javadoc packagenames="${packages}"
+                 sourcepath="${basedir}/${src.dir}"
+                 destdir="${build.javadocs}"
+                 author="true"
+                 version="true"
+                 windowtitle="${name} API"
+                 doctitle="${name}"
+                 bottom="Copyright &#169; Minnesota Department of
+                         Transportation. All Rights Reserved."/>
+    </target>
 
-  <!-- =================================================================== -->
-  <!-- Creates the distribution                                            -->
-  <!-- =================================================================== -->
-  <target name="dist" depends="jar,javadocs">
-     <mkdir dir="${SignClient.dist.dir}"/>
-     <mkdir dir="${SignClient.dist.dir}/bin"/>
-     <mkdir dir="${SignClient.dist.dir}/lib"/>
-     <mkdir dir="${SignClient.dist.dir}/docs"/>
-     <mkdir dir="${SignClient.dist.dir}/docs/api"/>
-     <mkdir dir="${SignClient.dist.dir}/src"/>
+    <!-- =================================================================== -->
+    <!-- Creates the distribution                                            -->
+    <!-- =================================================================== -->
+    <target name="dist"
+            depends="jar, javadocs"
+            description="Creates the distribution directory and copies all
+                         necessary files.">
+        <mkdir dir="${MapBean.dist.dir}"/>
+        <mkdir dir="${MapBean.dist.dir}/bin"/>
+        <mkdir dir="${MapBean.dist.dir}/lib"/>
+        <mkdir dir="${MapBean.dist.dir}/docs"/>
+        <mkdir dir="${MapBean.dist.dir}/docs/api"/>
+        <mkdir dir="${MapBean.dist.dir}/src"/>
+        <copy todir="${MapBean.dist.dir}/src">
+            <fileset dir="${src.dir}" />
+        </copy>
+        <copy todir="${MapBean.dist.dir}/lib">
+            <fileset dir="${lib.dir}" />
+        </copy>
+        <copy file="build.xml" tofile="${MapBean.dist.dir}/lib/build.xml"/>
+        <copy todir="${MapBean.dist.dir}/bin">
+            <fileset dir="src/bin" />
+        </copy>
+        <copy todir="${MapBean.dist.dir}/docs">
+            <fileset dir="${docs.dir}" />
+        </copy>
+        <copy todir="${MapBean.dist.dir}/docs/api">
+            <fileset dir="${build.javadocs}" />
+        </copy>
+        <copy file="README" tofile="${MapBean.dist.dir}/README"/>
+        <copy file="LICENSE" tofile="${MapBean.dist.dir}/LICENSE"/>
+    </target>
 
-     <copydir src="${src.dir}" dest="${SignClient.dist.dir}/src"/>
-     <copydir src="${lib.dir}" dest="${SignClient.dist.dir}/lib"/>
+    <!-- =================================================================== -->
+    <!-- Cleans up generated stuff                                           -->
+    <!-- =================================================================== -->
+    <target name="clean"
+            description="Deletes the build and distribution directories.">
+        <delete dir="${build.dir}"
+                verbose="true"/>
+        <delete dir="${MapBean.dist.dir}"
+                verbose="true"/>
+    </target>
 
-     <copyfile src="build.xml" dest="${SignClient.dist.dir}/lib/build.xml"/>
-     <copydir src="src/bin" dest="${SignClient.dist.dir}/bin"/>
-     <copydir src="${docs.dir}" dest="${SignClient.dist.dir}/docs"/>
-     <copydir src="${build.javadocs}" dest="${SignClient.dist.dir}/docs/api"/>
-
-     <copyfile src="README" dest="${SignClient.dist.dir}/README"/>
-     <copyfile src="LICENSE" dest="${SignClient.dist.dir}/LICENSE"/>
-  </target>
-
-  <!-- =================================================================== -->
-  <!-- Cleans up generated stuff                                           -->
-  <!-- =================================================================== -->
-  <target name="clean">
-    <deltree dir="${build.dir}"/>
-    <deltree dir="${SignClient.dist.dir}"/>
-  </target>
-
-  <!-- =================================================================== -->
-  <!-- Total cleanup                                                       -->
-  <!-- =================================================================== -->
-  <target name="total-clean" depends="clean">
-    <deltree dir="${bin.dir}"/>
-    <delete file="${lib.dir}/${name}.jar"/>
-  </target>
+    <!-- =================================================================== -->
+    <!-- Total cleanup                                                       -->
+    <!-- =================================================================== -->
+    <target name="total-clean"
+            depends="clean"
+            description="Deletes the jar file for this project.">
+        <delete file="${lib.dir}/${name}.jar"
+                verbose="true"/>
+    </target>
 </project>
