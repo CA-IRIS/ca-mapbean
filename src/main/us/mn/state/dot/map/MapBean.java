@@ -55,8 +55,8 @@ public class MapBean extends JComponent implements MapChangedListener{
 	/** Buffer used to pan the map */
 	private transient Image panBuffer = null;
 
-	/** home location */
-	private Rectangle2D extentHome = new Rectangle2D.Double();
+	/** Home extents */
+	protected final Rectangle2D extentHome = new Rectangle2D.Double();
 
 	/** current mouse mode */
 	protected MapMouseMode mouseMode = null;
@@ -120,17 +120,6 @@ public class MapBean extends JComponent implements MapChangedListener{
 	/** Add a new theme to the map */
 	public void addTheme(Theme theme) {
 		mapPane.addTheme(theme);
-		extentHome = theme.getExtent();
-		registerWithMouseListener(theme);
-	}
-
-	/**
-	 * Add a new theme to the Map at the specified index.
-	 * @param theme Theme to be added to the Map
-	 * @param index the index at which the theme should be added
-	 */
-	public void addTheme(Theme theme, int index) {
-		mapPane.addTheme(theme, index);
 		registerWithMouseListener(theme);
 	}
 
@@ -229,8 +218,7 @@ public class MapBean extends JComponent implements MapChangedListener{
 
 	/** Sets extent to home coordinates */
 	public void home() {
-		setExtent(extentHome);
-		repaint();
+		setHomeExtent(extentHome);
 	}
 
 	public String getToolTipText( MouseEvent e ) {
@@ -259,18 +247,16 @@ public class MapBean extends JComponent implements MapChangedListener{
 		return new MapToolTip();
 	}
 
-	/**
-	 * Set the bounding box for display
-	 * @param r The rectangle which describes the new bounding box for the
-	 *	display.
-	 */
-	public void setExtent( Rectangle2D r ) {
-		setExtent( r.getMinX(), r.getMinY(), r.getWidth(), r.getHeight() );
+	/** Set the home extents */
+	public void setHomeExtent(Rectangle2D r) {
+		extentHome.setFrame(r.getMinX(), r.getMinY(), r.getWidth(),
+			r.getHeight());
+		setExtent(r.getMinX(), r.getMinY(), r.getWidth(),
+			r.getHeight());
 	}
 
-	public void setExtent( double x, double y, double width, double height ) {
-		mapPane.setExtentFrame( x, y, width, height );
-		extentHome.setFrame( x, y, width, height );
+	public void setExtent(double x, double y, double width, double height) {
+		mapPane.setExtent(x, y, width, height);
 		repaint();
 	}
 
@@ -309,17 +295,16 @@ public class MapBean extends JComponent implements MapChangedListener{
 		double newX = start.getX() - end.getX();
 		double newY = start.getY() - end.getY();
 		Rectangle2D extent = mapPane.getExtent();
-		mapPane.setExtentFrame( extent.getX() + newX, extent.getY() + newY,
-			extent.getWidth(), extent.getHeight() );
-		repaint();
+		setExtent(extent.getX() + newX, extent.getY() + newY,
+			extent.getWidth(), extent.getHeight());
 	}
 
-	public void zoomOut( Point center ) { // FIXME CHANGE SO THAT IT CENTERS THE VIEW AT THE POINT OF CLICK
+	public void zoomOut( Point center ) {
+		// FIXME: SHOULD CENTER THE VIEW AT THE POINT OF CLICK
 		Rectangle2D extent = mapPane.getExtent();
-		mapPane.setExtentFrame( extent.getX() - extent.getWidth() / 2,
-			extent.getY() - extent.getHeight() / 2, extent.getWidth() * 2,
-			extent.getHeight() * 2 );
-		repaint();
+		setExtent(extent.getX() - extent.getWidth() / 2,
+			extent.getY() - extent.getHeight() / 2,
+			extent.getWidth() * 2, extent.getHeight() * 2);
 	}
 
 	/**
@@ -344,23 +329,19 @@ public class MapBean extends JComponent implements MapChangedListener{
 		double y = Math.min( upperLeft.getY(), lowerRight.getY() );
 		double width = Math.abs( upperLeft.getX() - lowerRight.getX() );
 		double height = Math.abs( upperLeft.getY() - lowerRight.getY() );
-		mapPane.setExtentFrame( x, y, width, height );
-		repaint();
+		setExtent(x, y, width, height);
 	}
 
 	public void zoomTo( Rectangle2D extent ) {
-		mapPane.setExtentFrame( extent.getX(), extent.getY(),
-			extent.getWidth(), extent.getHeight() );
-		repaint();
+		setExtent(extent.getX(), extent.getY(),
+			extent.getWidth(), extent.getHeight());
 	}
 
-	/**
-	 * Called when the MapBean is resized or the extent is changed.
-	 */
+	/** Called when the map is resized or the extent is changed */
 	private synchronized void rescale() {
-		mapPane.setSize( this.getSize() );
+		mapPane.setSize(this.getSize());
 		panBuffer = null;
-		if ( this.isShowing() ) {
+		if(this.isShowing()) {
 			repaint();
 		}
 	}

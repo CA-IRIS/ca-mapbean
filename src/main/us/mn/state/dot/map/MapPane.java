@@ -56,7 +56,7 @@ public class MapPane implements ThemeChangedListener {
 	private final AffineTransform screenTransform = new AffineTransform();
 
 	/** Bounding box */
-	private Rectangle2D extent = new Rectangle2D.Double();
+	protected Rectangle2D extent = new Rectangle2D.Double();
 
 	/** does the buffer need to be updated? */
 	private boolean bufferDirty = true;
@@ -194,18 +194,6 @@ public class MapPane implements ThemeChangedListener {
 		}
 		theme.setMap(this);
 		theme.addThemeChangedListener(this);
-		setExtent(theme.getExtent());
-	}
-
-	/**
-	 * Add a new theme to the Map at the specified index.
-	 * @param theme Theme to be added to the Map
-	 * @param index int specifying the index at which the theme should be added
-	 */
-	public void addTheme(Theme theme, int index) {
-		themes.add(index, theme);
-		theme.setMap(this);
-		theme.addThemeChangedListener(this);
 	}
 
 	/** Remove a Theme from the map */
@@ -219,9 +207,7 @@ public class MapPane implements ThemeChangedListener {
 		theme.setMap(null);
 	}
 
-	/**
-	 * Called when the MapBean is resized or the extent is changed.
-	 */
+	/** Called when the map is resized or the extent is changed */
 	private synchronized void rescale() {
 		if ( screenBuffer == null ) {
 			return;
@@ -367,8 +353,9 @@ public class MapPane implements ThemeChangedListener {
 	 * @param r The rectangle which describes the new bounding box for the
 	 *	display.
 	 */
-	public void setExtent( Rectangle2D r ) {
-		setExtent( r.getMinX(), r.getMinY(), r.getWidth(), r.getHeight() );
+	public void setExtent(Rectangle2D r) {
+		setExtent(r.getMinX(), r.getMinY(), r.getWidth(),
+			r.getHeight());
 	}
 
 	/**
@@ -378,21 +365,8 @@ public class MapPane implements ThemeChangedListener {
 	 * @param width, the new width for the map.
 	 * @param height, the new height for the map.
 	 */
-	public void setExtent( double x, double y, double width, double height ) {
-		setExtentFrame( x, y, width, height );
-	}
-
-	/**
-	 * Set the bounding box for display
-	 * @param x, the new x-coordinate for the map.
-	 * @param y, the new y-coordinate for the map.
-	 * @param width, the new width for the map.
-	 * @param height, the new height for the map.
-	 */
-	protected void setExtentFrame(double x, double y, double width,
-		double height)
-	{
-		extent.setFrame( x, y, width, height );
+	public void setExtent(double x, double y, double width, double height) {
+		extent.setFrame(x, y, width, height);
 		rescale();
 	}
 }
