@@ -35,7 +35,7 @@ import javax.swing.JLabel;
  * Symol for painting MapObjects as images.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.5 $ $Date: 2003/05/06 20:58:15 $
+ * @version $Revision: 1.6 $ $Date: 2003/05/07 15:07:09 $
  */
 public class ImageSymbol implements Symbol {
 
@@ -108,7 +108,7 @@ public class ImageSymbol implements Symbol {
 	public String getLabel() {
 		return label;
 	}
-	
+
 	/**
 	 * Draw the ImageSymbol.  If size == null then the image is drawn at full
 	 * size.

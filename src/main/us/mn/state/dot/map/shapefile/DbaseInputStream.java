@@ -108,7 +108,16 @@ public final class DbaseInputStream {
 		Iterator it = fields.iterator();
 		while ( it.hasNext() ) {
 			ShapeField field = ( ShapeField ) it.next();
-			map.put( field.getName(), field.readData( in ) );
+			Object key = null;
+			Object value = null;
+			try {
+				key = field.getName();
+				value = field.readData( in );
+				map.put( key, value );
+			} catch ( NumberFormatException nfe ) {
+				System.out.println( "Caught NumberFormatException reading " + key.toString() );
+				map.put( key, null );
+			}
 		}
 		lastRecord++;
 		return map;
@@ -165,6 +174,7 @@ public final class DbaseInputStream {
 					result = value;
 					break;
 				case 'N':
+					
 					if ( decimal == 0 ) {
 						result = new Integer( value );
 					} else {
