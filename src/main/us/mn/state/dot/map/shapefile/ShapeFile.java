@@ -24,6 +24,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
   * ShapeFile is an ESRI shape file reader.  It reads the file and creates an
@@ -31,7 +32,7 @@ import java.util.ArrayList;
   *
   * @author Douglas Lau
   * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
-  * @version $Revision: 1.4 $ $Date: 2003/05/06 20:58:15 $
+  * @version $Revision: 1.5 $ $Date: 2003/05/19 21:23:41 $
   */
 public final class ShapeFile {
 
@@ -66,7 +67,7 @@ public final class ShapeFile {
 	private double maxY;
 	
 	/** List of shapes in the ShapeFile */
-	private final ArrayList shapes = new ArrayList();
+	private final List shapes = new ArrayList();
 	
 	public ShapeFile( URL url ) throws IOException {
 		ShapeDataInputStream in = new ShapeDataInputStream( url.openStream() );
@@ -117,7 +118,7 @@ public final class ShapeFile {
 		return new Rectangle2D.Double( minX, minY, width, height );
 	}
 	
-	public ArrayList getShapeList() {
+	public List getShapeList() {
 		return shapes; 
 	}
 

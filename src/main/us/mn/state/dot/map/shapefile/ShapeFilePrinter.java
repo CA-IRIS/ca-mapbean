@@ -21,17 +21,27 @@ package us.mn.state.dot.shape.shapefile;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 
 /**
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.2 $ $Date: 2003/05/06 20:58:15 $ 
+ * @version $Revision: 1.3 $ $Date: 2003/05/19 21:23:41 $ 
  */
 public class ShapeFilePrinter extends java.lang.Object {
+		
+	private ShapeLayer layer;
 
 	/** Creates new ShapeFilePrinter */
-    public ShapeFilePrinter() {
+    public ShapeFilePrinter( String fileName ) throws IOException {
+		File file = new File( fileName );
+		layer = new ShapeLayer( file.toURL(), fileName );
+
+    }
+    
+    public void print( OutputStream out ) throws IOException {
+    	layer.printData( out );
     }
 
     /**
@@ -43,14 +53,13 @@ public class ShapeFilePrinter extends java.lang.Object {
 		}
 		String inFileName = args[ 0 ];
 		try {
-			File file = new File( inFileName );
-			ShapeLayer layer = new ShapeLayer( file.toURL(), inFileName );
+			ShapeFilePrinter printer = new ShapeFilePrinter( inFileName );
 			if ( args.length > 1 ) {
 				File outFile = new File( args[ 1 ] );
 				OutputStream out = new FileOutputStream( outFile );
-				layer.printData( out );
+				printer.print( out );
 			} else {
-				layer.printData( System.out );
+				printer.print( System.out );
 			}
 		} catch ( java.io.IOException ioe ) {
 			ioe.printStackTrace();

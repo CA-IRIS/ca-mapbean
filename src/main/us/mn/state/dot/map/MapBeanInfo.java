@@ -25,7 +25,7 @@ import java.beans.SimpleBeanInfo;
 /**
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.2 $ $Date: 2003/05/06 20:58:15 $ 
+ * @version $Revision: 1.3 $ $Date: 2003/05/19 21:23:41 $ 
  */
 public class MapBeanInfo extends SimpleBeanInfo {
 
@@ -51,7 +51,6 @@ public class MapBeanInfo extends SimpleBeanInfo {
     private static String iconNameM32 = null; //GEN-END:Icons
 
     private static int defaultPropertyIndex = -1; //GEN-BEGIN:Idx
-    private static int defaultEventIndex = -1; //GEN-END:Idx
 
 
     /**
@@ -159,7 +158,8 @@ public class MapBeanInfo extends SimpleBeanInfo {
                     iconMono32 = loadImage( iconNameM32 );
                 return iconMono32;
             }
+        default:
+        	return null;
         }
-        return null;
     }
 }

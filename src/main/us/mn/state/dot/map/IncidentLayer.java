@@ -41,7 +41,7 @@ import us.mn.state.dot.shape.event.SelectMouseMode;
  * Displays incidents as icons on map.
  *
  * @author erik.engstrom@dot.state.mn.us
- * @version $Revision: 1.40 $ $Date: 2003/05/06 20:58:15 $
+ * @version $Revision: 1.41 $ $Date: 2003/05/19 21:23:41 $
  */
 public class IncidentLayer extends AbstractLayer implements
 		IncidentListener {
@@ -330,7 +330,6 @@ public class IncidentLayer extends AbstractLayer implements
 			g.setTransform( map.getTransform() );
 			Point2D point = null;
 			point = at.transform( event.getPoint(), point );
-			IncidentLayer layer = ( IncidentLayer ) getLayer();
 			MapObject incident = getIncident( point );
 			if ( incident == null ) {
 				setSelections( new MapObject[ 0 ] );

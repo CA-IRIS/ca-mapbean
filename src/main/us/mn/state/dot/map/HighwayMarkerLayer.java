@@ -20,11 +20,11 @@
 package us.mn.state.dot.shape;
 
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.RenderingHints;
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.ImageIcon;
 
@@ -35,7 +35,7 @@ import us.mn.state.dot.shape.shapefile.ShapeObject;
  * This layer is used for displaying highway markers on the map.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.11 $ $Date: 2003/05/06 20:58:15 $
+ * @version $Revision: 1.12 $ $Date: 2003/05/19 21:23:41 $
  */
 public final class HighwayMarkerLayer extends ShapeLayer {
 	
@@ -84,7 +84,7 @@ public final class HighwayMarkerLayer extends ShapeLayer {
 	}
 
 	/** Cache of ImageIcons */
-	private final HashMap map = new HashMap();
+	private final Map map = new HashMap();
 
 	/** Get a requested ImageIcon resource */
 	private final ImageIcon getImageIcon( String key ) {
@@ -111,10 +111,4 @@ public final class HighwayMarkerLayer extends ShapeLayer {
 		return getImageIcon( key );
 	}
 
-	/** Get an image from a string name */
-	private final Image getImage( String key ) {
-		ImageIcon icon = getImageIcon( key );
-		if( icon == null ) return null;
-		return icon.getImage();
-	}
 }

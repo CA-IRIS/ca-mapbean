@@ -27,24 +27,34 @@ import java.net.URL;
 /**
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.3 $ $Date: 2003/05/07 15:28:57 $ 
+ * @version $Revision: 1.4 $ $Date: 2003/05/19 21:23:41 $ 
  */
 public class ShapePrinter {
+	
+	private ShapeLayer cameraLayer;
 
-	public ShapePrinter( String source, String dest ) {
+	public ShapePrinter( String source ) {
 		try{
-			ShapeLayer cameraLayer = new ShapeLayer( new URL( source ), "cms");
-			OutputStream out = new FileOutputStream( dest );
-			cameraLayer.printData( out );
-			out.flush();
-			out.close();
+			cameraLayer = new ShapeLayer( new URL( source ), "cms");
 		} catch (IOException ex){
 			ex.printStackTrace();
 		}
 
 	}
+	
+	public void print( String dest ) throws IOException {
+		OutputStream out = new FileOutputStream( dest );
+		cameraLayer.printData( out );
+		out.flush();
+		out.close();
+	}
 
 	public static void main(String[] args) {
-		ShapePrinter shapePrinter = new ShapePrinter( args[0], args[1] );
+		ShapePrinter shapePrinter = new ShapePrinter( args[0] );
+		try {
+			shapePrinter.print( args[ 1 ]);
+		} catch ( IOException ioe ) {
+			ioe.printStackTrace();
+		}
 	}
 } 

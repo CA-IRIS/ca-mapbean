@@ -45,7 +45,7 @@ import us.mn.state.dot.shape.Theme;
   *
   * @author Douglas Lau
   * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
-  * @version $Revision: 1.6 $ $Date: 2003/05/06 20:58:15 $
+  * @version $Revision: 1.7 $ $Date: 2003/05/19 21:23:41 $
   */
 public class ShapeLayer extends AbstractLayer {
 
@@ -89,6 +89,8 @@ public class ShapeLayer extends AbstractLayer {
 			case ShapeFactory.POLYGON:
 				symbol = new FillSymbol();
 				break;
+			default:
+			    symbol = null;
 		}
 		return new Theme( this, new DefaultRenderer( symbol ) );
 	}

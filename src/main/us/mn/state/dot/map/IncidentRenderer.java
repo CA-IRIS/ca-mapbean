@@ -24,6 +24,7 @@ import java.awt.Shape;
 import java.awt.geom.Rectangle2D;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.ImageIcon;
 
@@ -33,11 +34,11 @@ import us.mn.state.dot.shape.IncidentLayer.IncidentWrapper;
 /**
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.3 $ $Date: 2003/05/06 20:58:15 $
+ * @version $Revision: 1.4 $ $Date: 2003/05/19 21:23:41 $
  */
 public class IncidentRenderer implements LayerRenderer {
 	
-	protected final HashMap symbols = new HashMap();
+	protected final Map symbols = new HashMap();
 	
 	/** Creates new IncidentRenderer */
     public IncidentRenderer() {

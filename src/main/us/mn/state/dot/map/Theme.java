@@ -24,13 +24,14 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import us.mn.state.dot.shape.event.MapMouseListener;
 
 /**
  * Base class for all themes.
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.18 $ $Date: 2003/05/06 20:58:15 $ 
+ * @version $Revision: 1.19 $ $Date: 2003/05/19 21:23:41 $ 
  */
 public class Theme implements LayerChangedListener {
 	
@@ -58,7 +59,7 @@ public class Theme implements LayerChangedListener {
 	protected MapPane map = null;
 	
 	/** ThemeChangedListeners that listen to this theme.*/
-	private ArrayList listeners = new ArrayList();
+	private List listeners = new ArrayList();
 
 	/**
 	 * Constructs a new theme based on the layer parameter.  The theme will have

@@ -28,15 +28,13 @@ import java.util.ListIterator;
  * interface.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.29 $ $Date: 2003/05/07 15:28:57 $ 
+ * @version $Revision: 1.30 $ $Date: 2003/05/19 21:23:41 $ 
  * @since 1.0
  */
 public abstract class AbstractLayer implements Layer {
 
 	/** extent of layer */
 	protected Rectangle2D extent = new Rectangle2D.Double();
-
-	private boolean visible = true;
 
 	private String name;
 

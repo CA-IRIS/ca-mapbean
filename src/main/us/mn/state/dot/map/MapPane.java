@@ -29,6 +29,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.ListIterator;
 
 /**
@@ -36,7 +37,7 @@ import java.util.ListIterator;
  * subsystem is not available.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.49 $ $Date: 2003/05/07 15:28:57 $
+ * @version $Revision: 1.50 $ $Date: 2003/05/19 21:23:41 $
  */
 public final class MapPane implements ThemeChangedListener {
 	
@@ -47,10 +48,10 @@ public final class MapPane implements ThemeChangedListener {
 	private transient BufferedImage staticBuffer;
 	
 	/** List of dynamic themes */
-	private final ArrayList themes = new ArrayList();
+	private final List themes = new ArrayList();
 	
 	/** List of static themes */
-	private final ArrayList staticThemes = new ArrayList();
+	private final List staticThemes = new ArrayList();
 	
 	/** Transformation to draw shapes on the map */
 	private final AffineTransform screenTransform = new AffineTransform();
@@ -73,7 +74,7 @@ public final class MapPane implements ThemeChangedListener {
 	/** width of map image */
 	private int width = 0;
 	
-	private ArrayList listeners = new ArrayList();
+	private List listeners = new ArrayList();
 	
 	private boolean transparent = false;
 
@@ -115,7 +116,7 @@ public final class MapPane implements ThemeChangedListener {
 	 * Gets the list of themes contained in the MapPane.
 	 * @return the list of themes contained by the MapPane
 	 */
-	public ArrayList getThemes() {
+	public List getThemes() {
 		ArrayList result = new ArrayList( staticThemes );
 		result.addAll( themes );
 		return result;

@@ -34,6 +34,7 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.ListIterator;
 
 import javax.swing.JComponent;
@@ -49,7 +50,7 @@ import us.mn.state.dot.shape.event.SelectMouseMode;
  * the internal MapPane.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.24 $ $Date: 2003/05/06 20:58:15 $
+ * @version $Revision: 1.25 $ $Date: 2003/05/19 21:23:41 $
  * @see us.mn.state.dot.shape.MapPane
  */
 public final class MapBean extends JComponent implements MapChangedListener{
@@ -175,7 +176,7 @@ public final class MapBean extends JComponent implements MapChangedListener{
 	 * Remove all themes from the map. 
 	 */
 	public void removeAllThemes() {
-		ArrayList list = mapPane.getThemes();
+		List list = mapPane.getThemes();
 		Iterator it = list.iterator();
 		while ( it.hasNext() ) {
 			Theme theme = ( Theme ) it.next();

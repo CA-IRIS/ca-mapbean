@@ -83,7 +83,7 @@ public final class DbaseInputStream {
 		in.skipBytes( 4 );
 		records = in.readLittleInt();
 		short headSize = in.readLittleShort();
-		short recSize = in.readLittleShort();
+		in.readLittleShort(); // skip recordSize
 		fieldCount = ( short )( ( ( headSize - 1 ) / 32 ) - 1 );
 		in.skipBytes( 20 );
 		for ( int i = 0; i < fieldCount; i++ ) {
@@ -184,6 +184,8 @@ public final class DbaseInputStream {
 				case 'L':
 					result = new Boolean( parseBoolean( value ) );
 					break;
+				default:
+				    result = null; //Shouldn't happen.
 			}
 			return result;
 		}
@@ -196,6 +198,8 @@ public final class DbaseInputStream {
 					result = true;
 				case 'N': case 'n': case 'F': case 'f':
 					result = false;
+				default:
+					result = false; //Shouldn't happen.
 			}
 			return result;		
 		}

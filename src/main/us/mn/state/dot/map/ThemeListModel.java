@@ -31,7 +31,7 @@ import javax.swing.JCheckBox;
  * that set the visible property.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.3 $ $Date: 2003/05/06 20:58:15 $ 
+ * @version $Revision: 1.4 $ $Date: 2003/05/19 21:23:41 $ 
  */
 public final class ThemeListModel extends CheckListModel {
 
@@ -99,8 +99,8 @@ public final class ThemeListModel extends CheckListModel {
 	 */
 	public void removeTheme( Theme theme ){
 		int index = items.indexOf( theme );
-		items.removeElementAt( index );
-		checks.removeElementAt( index );
+		items.remove( index );
+		checks.remove( index );
 		fireIntervalRemoved( this, index, index );
 	}
 	
@@ -109,8 +109,8 @@ public final class ThemeListModel extends CheckListModel {
 	 */
 	public void removeAllThemes() {
 		int last = items.size();
-		checks.removeAllElements();
-		items.removeAllElements();
+		checks.clear();
+		items.clear();
 		fireIntervalRemoved( this, 0, last );
 	}
 }

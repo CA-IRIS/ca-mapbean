@@ -27,11 +27,9 @@ import java.awt.Stroke;
  * A LineSymbol that paints a dotted line _ _ _ _ _ .
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.6 $ $Date: 2003/05/06 20:58:15 $ 
+ * @version $Revision: 1.7 $ $Date: 2003/05/19 21:23:41 $ 
  */
 public class DottedLine extends LineSymbol {
-
-	private BasicStroke stroke;
 
 	/**
 	 * Create a new DottedLine. With the default color.

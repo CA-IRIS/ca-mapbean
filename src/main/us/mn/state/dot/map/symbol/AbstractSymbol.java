@@ -34,7 +34,7 @@ import javax.swing.JLabel;
  * Base class for Symbol implementations.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.9 $ $Date: 2003/05/06 20:58:15 $ 
+ * @version $Revision: 1.10 $ $Date: 2003/05/19 21:23:41 $ 
  */
 public abstract class AbstractSymbol implements LegendItem, Symbol {
 
@@ -115,7 +115,6 @@ public abstract class AbstractSymbol implements LegendItem, Symbol {
 	}
 
 	public Rectangle2D getBounds( MapObject object ) {
-		Shape shape = object.getShape();
 		if ( isOutLined() ) {
 			return outlineSymbol.getBounds( object );
 		} else {
