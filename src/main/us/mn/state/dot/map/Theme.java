@@ -95,14 +95,6 @@ public class Theme implements LayerChangedListener {
 		selectionRenderer = renderer;
 	}
 
-	public void setMap(MapPane map) {
-		if(map != null) {
-			layer.addLayerChangedListener(this);
-		} else {
-			layer.removeLayerChangedListener(this);
-		}
-	}
-
 	/** Add a LayerRenderer to this themes list of available renderers */
 	public void addLayerRenderer(LayerRenderer renderer) {
 		layerRenderers.add(renderer);

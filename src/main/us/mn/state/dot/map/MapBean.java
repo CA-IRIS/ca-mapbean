@@ -51,7 +51,7 @@ import us.mn.state.dot.shape.event.SelectMouseMode;
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
  * @see us.mn.state.dot.shape.MapPane
  */
-public class MapBean extends JComponent implements MapChangedListener{
+public class MapBean extends JComponent implements MapChangedListener {
 
 	/** Buffer used to pan the map */
 	protected transient Image panBuffer = null;
@@ -135,7 +135,7 @@ public class MapBean extends JComponent implements MapChangedListener{
 		}
 	}
 
-	/** Register the theme with mouse listener */
+	/** Register a theme with the mouse listener */
 	protected void registerWithMouseListener(Theme theme) {
 		if(theme.layer instanceof DynamicLayer) {
 			MapMouseMode m = mouseMode;
@@ -151,28 +151,16 @@ public class MapBean extends JComponent implements MapChangedListener{
 	/** Remove a theme from the map */
 	public void removeTheme(String name) {
 		Theme theme = mapPane.getTheme(name);
-		if(theme != null) {
-			removeTheme(theme);
-		}
+		if(theme != null) removeTheme(theme);
 	}
 
 	/** Remove a theme from the map */
-	public void removeTheme(Theme theme) {
+	protected void removeTheme(Theme theme) {
 		mapPane.removeTheme(theme);
 		unregisterWithMouseListener(theme);
 	}
 
-	/** Remove all themes from the map */
-	public void removeAllThemes() {
-		List list = mapPane.getThemes();
-		Iterator it = list.iterator();
-		while(it.hasNext()) {
-			Theme theme = (Theme)it.next();
-			removeTheme(theme);
-		}
-	}
-
-	/** Unregister the theme with the mouse listener */
+	/** Unregister a theme with the mouse listener */
 	protected void unregisterWithMouseListener(Theme theme) {
 		if(theme.layer instanceof DynamicLayer) {
 			MapMouseMode m = mouseMode;
@@ -380,5 +368,15 @@ public class MapBean extends JComponent implements MapChangedListener{
 
 	public BufferedImage getImage() {
 		return mapPane.getImage();
+	}
+
+	/** Dispose of the map */
+	public void dispose() {
+		List list = mapPane.getThemes();
+		Iterator it = list.iterator();
+		while(it.hasNext()) {
+			Theme theme = (Theme)it.next();
+			removeTheme(theme);
+		}
 	}
 }

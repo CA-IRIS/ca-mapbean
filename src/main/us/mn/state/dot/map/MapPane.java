@@ -183,8 +183,8 @@ public class MapPane implements ThemeChangedListener {
 		} else {
 			staticThemes.add(theme);
 		}
-		theme.setMap(this);
 		theme.addThemeChangedListener(this);
+		theme.layer.addLayerChangedListener(theme);
 	}
 
 	/** Remove a theme from the map */
@@ -195,7 +195,7 @@ public class MapPane implements ThemeChangedListener {
 			staticThemes.remove(theme);
 		}
 		theme.removeThemeChangedListener(this);
-		theme.setMap(null);
+		theme.layer.removeLayerChangedListener(theme);
 	}
 
 	/** Called when the map is resized or the extent is changed */
