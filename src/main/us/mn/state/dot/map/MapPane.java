@@ -188,29 +188,29 @@ public class MapPane implements ThemeChangedListener {
 	 * Add a new Theme to the Map.
 	 * @param theme Theme to be added to the Map
 	 */
-	public void addTheme( Theme theme ) {
-		if ( theme.isStatic() ) {
-			staticThemes.add( theme );
+	public void addTheme(Theme theme) {
+		if(theme.isStatic()) {
+			staticThemes.add(theme);
 		} else {
-			themes.add( theme );
+			themes.add(theme);
 		}
-		theme.setMap( this );
-		theme.addThemeChangedListener( this );
-		setExtent( theme.getExtent() );
+		theme.setMap(this);
+		theme.addThemeChangedListener(this);
+		setExtent(theme.getExtent());
 	}
 
 	/**
 	 * Remove a Theme from the map.
 	 * @param theme Theme to remove.
 	 */
-	public void removeTheme( Theme theme ) {
-		if ( theme.isStatic() ) {
-			staticThemes.remove( theme );
+	public void removeTheme(Theme theme) {
+		if(theme.isStatic()) {
+			staticThemes.remove(theme);
 		} else {
-			themes.remove( theme );
+			themes.remove(theme);
 		}
-		theme.removeThemeChangedListener( this );
-		theme.setMap( null );
+		theme.removeThemeChangedListener(this);
+		theme.setMap(null);
 	}
 
 	/**
@@ -317,19 +317,20 @@ public class MapPane implements ThemeChangedListener {
 		return screenBuffer;
 	}
 
-	public void themeChanged( final ThemeChangedEvent event ) {
-		switch ( event.getReason() ) {
-			case ThemeChangedEvent.DATA: case ThemeChangedEvent.SHADE:
-				Theme theme = ( Theme ) event.getSource();
-				if ( theme.isStatic() ) {
-                    staticBufferDirty = true;
+	public void themeChanged(final ThemeChangedEvent event) {
+		switch(event.getReason()) {
+			case ThemeChangedEvent.DATA:
+			case ThemeChangedEvent.SHADE:
+				Theme theme = (Theme)event.getSource();
+				if(theme.isStatic()) {
+					staticBufferDirty = true;
 				}
-                bufferDirty = true;
+				bufferDirty = true;
 				break;
 			case ThemeChangedEvent.SELECTION:
 				break;
-				default:
-					break;
+			default:
+				break;
 		}
 		notifyMapChangedListeners();
 	}

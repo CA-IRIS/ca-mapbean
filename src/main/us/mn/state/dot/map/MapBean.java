@@ -138,20 +138,53 @@ public class MapBean extends JComponent implements MapChangedListener{
 	 * Add a new Theme to the Map.
 	 * @param theme Theme to be added to the Map
 	 */
-	public void addTheme( Theme theme ) {
-		mapPane.addTheme( theme );
+	public void addTheme(Theme theme) {
+		mapPane.addTheme(theme);
 		extentHome = theme.getExtent();
-		registerWithMouseListener( theme );
+		registerWithMouseListener(theme);
+	}
+
+	/**
+	 * Add a new theme to the Map at the specified index.
+	 * @param theme Theme to be added to the Map
+	 * @param index the index at which the theme should be added
+	 */
+	public void addTheme(Theme theme, int index) {
+		mapPane.addTheme(theme, index);
+		registerWithMouseListener(theme);
+	}
+
+	/**
+	 * Add a List of themes to the Map
+	 * @param themes List of themes to be added to the map
+	 */
+	public void addThemes(java.util.List themes) {
+		ListIterator li = themes.listIterator();
+		while(li.hasNext()) {
+			addTheme((Theme)li.next());
+		}
+	}
+
+	/** Register the theme with mouse listener */
+	protected void registerWithMouseListener(Theme theme) {
+		if(!theme.isStatic()) {
+			MapMouseListener l = theme.getMapMouseListener();
+			if(l != null && activeMouseMode != null &&
+				l.listensToMouseMode(activeMouseMode.getID()))
+			{
+				activeMouseMode.addMapMouseListener(l);
+			}
+		}
 	}
 
 	/**
 	 * Remove a Theme from the Map.
 	 * @param name Name of theme to be removed.
  	 */
-	public void removeTheme( String name ) {
-		Theme theme = mapPane.getTheme( name );
-		if ( theme != null ) {
-			removeTheme( theme );
+	public void removeTheme(String name) {
+		Theme theme = mapPane.getTheme(name);
+		if(theme != null) {
+			removeTheme(theme);
 		}
 	}
 
@@ -159,57 +192,30 @@ public class MapBean extends JComponent implements MapChangedListener{
 	 * Remove a Theme from the Map.
 	 * @param theme Theme to be removed.
  	 */
-	public void removeTheme( Theme theme ) {
-		if ( ! theme.isStatic() ) {
-			MapMouseListener listener = theme.getMapMouseListener();
-			if ( listener != null && activeMouseMode != null &&
-					listener.listensToMouseMode( activeMouseMode.getID() ) ) {
-				activeMouseMode.removeMapMouseListener( listener );
-			}
-		}
-		mapPane.removeTheme( theme );
+	public void removeTheme(Theme theme) {
+		mapPane.removeTheme(theme);
+		unregisterWithMouseListener(theme);
 	}
 
-	/**
-	 * Remove all themes from the map.
-	 */
+	/** Remove all themes from the map */
 	public void removeAllThemes() {
 		List list = mapPane.getThemes();
 		Iterator it = list.iterator();
-		while ( it.hasNext() ) {
-			Theme theme = ( Theme ) it.next();
-			removeTheme( theme );
+		while(it.hasNext()) {
+			Theme theme = (Theme)it.next();
+			removeTheme(theme);
 		}
 	}
 
-	/**
-	 * Add a new theme to the Map at the specified index.
-	 * @param theme Theme to be added to the Map
-	 * @param index int specifying the index at which the theme should be added
-	 */
-	public void addTheme( Theme theme, int index ) {
-		mapPane.addTheme( theme, index );
-		registerWithMouseListener( theme );
-	}
-
-	private void registerWithMouseListener( Theme theme ){
-		if ( ! theme.isStatic() ) {
-			MapMouseListener listener = theme.getMapMouseListener();
-			if ( listener != null && activeMouseMode != null &&
-					listener.listensToMouseMode( activeMouseMode.getID() ) ){
-				activeMouseMode.addMapMouseListener( listener );
+	/** Unregister the theme with the mouse listener */
+	protected void unregisterWithMouseListener(Theme theme) {
+		if(!theme.isStatic()) {
+			MapMouseListener l = theme.getMapMouseListener();
+			if(l != null && activeMouseMode != null &&
+				l.listensToMouseMode(activeMouseMode.getID()))
+			{
+				activeMouseMode.removeMapMouseListener(l);
 			}
-		}
-	}
-
-	/**
-	 * Add a List of themes to the Map
-	 * @param themes List of themes to be added to the map
-	 */
-	public void addThemes( java.util.List themes ) {
-		ListIterator li = themes.listIterator();
-		while ( li.hasNext() ) {
-			addTheme( ( Theme ) li.next() );
 		}
 	}
 
@@ -233,8 +239,8 @@ public class MapBean extends JComponent implements MapChangedListener{
 	 * @param name the string containing the Name of layer to return.
 	 * @return Theme or null if not found.
 	 */
-	public Theme getTheme( String name ) {
-		return mapPane.getTheme( name );
+	public Theme getTheme(String name) {
+		return mapPane.getTheme(name);
 	}
 
 	/**
@@ -245,11 +251,9 @@ public class MapBean extends JComponent implements MapChangedListener{
 		return mapPane.getThemes();
 	}
 
-	/**
-	 * Sets extent to given coordinates
-	 */
+	/** Sets extent to home coordinates */
 	public void home() {
-		setExtent( extentHome );
+		setExtent(extentHome);
 		repaint();
 	}
 
