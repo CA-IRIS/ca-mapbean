@@ -336,10 +336,6 @@ public final class Map extends JViewport {
 					}
 					break;
 					case ZOOM:
-					/*Point2D center = new Point2D.Double( ( e.getX() +
-						getViewPosition().getX() ), ( e.getY() +
-						getViewPosition().getY() ) );
-					map.zoomOut( center, 1.5 );*/
 					map.zoomOut( e.getPoint() );
 					break;
 					case PAN:
@@ -401,14 +397,6 @@ public final class Map extends JViewport {
 					box = true;
 					break;
 					case PAN:
-					/*Point viewPos = viewport.getViewPosition();
-					Point offset = new Point( ( x2 - last.x ),
-					( y2 - last.y ) );
-					last.x = x2;
-					last.y = y2;
-					scrollTo.x = viewPos.x - offset.x;
-					scrollTo.y = viewPos.y - offset.y;
-					panTo( scrollTo );*/
 					map.pan( x2 - last.x, y2 - last.y );
 					break;
 				}

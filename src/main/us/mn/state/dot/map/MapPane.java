@@ -56,18 +56,6 @@ public final class MapPane extends JPanel implements ThemeChangedListener {
 	private Rectangle2D extent = new Rectangle2D.Double();
 	public Rectangle2D extentHome = new Rectangle2D.Double();
 
-	/** Scale factor */
-	// use screenTransform.getScaleX()
-	//private double scale;
-
-	/** X-Axis */
-	//use screenTransform.getTranslateX()
-	//private double ;
-
-	/** Y-Axis */
-	//use screenTransform.getTranslateY()
-	//private double shiftY;
-
 	private boolean bufferDirty = true;
 
 	/**
@@ -139,7 +127,7 @@ public final class MapPane extends JPanel implements ThemeChangedListener {
 	 * move the viewport so that the point is visible
 	 * @param center a Point2D in world coordinates
 	 */
-	public void scrollToMapPoint(Point2D center) {
+	/*public void scrollToMapPoint(Point2D center) {
 		Point2D p = null;
 		p = screenTransform.transform( center, p );
 		Rectangle2D rec = new Rectangle2D.Double( p.getX(), p.getY(),
@@ -189,7 +177,7 @@ public final class MapPane extends JPanel implements ThemeChangedListener {
 
 			viewport.setViewPosition( new Point( xPos, yPos ) );
 		}
-	}
+	}*/
 
 	/**
 	 * Converts a Point2D from world coordinates to screen coordinates.
@@ -202,7 +190,7 @@ public final class MapPane extends JPanel implements ThemeChangedListener {
 		return result;
 	}
 
-	private Point shiftExtent( Point scrollTo, Point how ) {
+	/*private Point shiftExtent( Point scrollTo, Point how ) {
 		AffineTransform inverse = null;
 		try {
 			inverse = screenTransform.createInverse();
@@ -229,7 +217,7 @@ public final class MapPane extends JPanel implements ThemeChangedListener {
 		resized();
 		screenTransform.transform( point, point );
 		return new Point( ( int ) point.getX(), ( int ) point.getY() );
-	}
+	}*/
 	
 	private transient Image panBuffer = null;
 	
@@ -268,7 +256,7 @@ public final class MapPane extends JPanel implements ThemeChangedListener {
 	}
 	
 	/** Pan to point on map */
-	public void panTo(Point p) {
+	/*public void panTo(Point p) {
 		Point scrollTo = p;
 		if ( scrollTo.getX() < 0 ) {
 			if ( extent.getX() > extentHome.getX() ) {
@@ -307,12 +295,12 @@ public final class MapPane extends JPanel implements ThemeChangedListener {
 			}
 		}
 		viewport.setViewPosition( scrollTo );
-	}
+	}*/
 
 	/**
 	 *
 	 */
-	public void zoomOut( Point2D center, double factor ) {
+	/*public void zoomOut( Point2D center, double factor ) {
 		try {
 			screenTransform.inverseTransform( center, center );
 		} catch ( NoninvertibleTransformException ex ) {
@@ -360,7 +348,7 @@ public final class MapPane extends JPanel implements ThemeChangedListener {
 		yCoor = Math.min( yCoor, yMax );
 		viewport.setViewPosition( new Point( xCoor, yCoor ) );
 		revalidate();
-	}
+	}*/
 
 	/**
 	 * Increase the size of this MapPane so that the mapSpace will fill the
@@ -369,8 +357,10 @@ public final class MapPane extends JPanel implements ThemeChangedListener {
 	 * @param viewerSpace current viewport size.
 	 */
 	public void zoom( Rectangle2D mapSpace, Rectangle2D viewerSpace ) {
-		Point2D upperLeft = new Point2D.Double( mapSpace.getMinX(), mapSpace.getMinY() );
-		Point2D lowerRight = new Point2D.Double( mapSpace.getMaxX(), mapSpace.getMaxY() );
+		Point2D upperLeft = new Point2D.Double( mapSpace.getMinX(),
+			mapSpace.getMinY() );
+		Point2D lowerRight = new Point2D.Double( mapSpace.getMaxX(),
+			mapSpace.getMaxY() );
 		try {
 			screenTransform.inverseTransform( upperLeft, upperLeft );
 			screenTransform.inverseTransform( lowerRight, lowerRight );
@@ -383,59 +373,6 @@ public final class MapPane extends JPanel implements ThemeChangedListener {
 		double height = Math.abs( upperLeft.getY() - lowerRight.getY() );
 		extent.setFrame( x, y, width, height );
 		resized();
-		/*double w = mapSpace.getWidth();
-		double h = mapSpace.getHeight();
-		double scale = screenTransform.getScaleX();
-		//Calculate the new size of the panel
-		double oldWidth = extent.getWidth() * scale;
-		double oldHeight = extent.getHeight() * scale;
-		double ratioMap = oldWidth / oldHeight;
-		double viewWidth = viewerSpace.getWidth();
-		double viewHeight = viewerSpace.getHeight();
-		double maxWidth = 1776;
-		double maxHeight = 2268;
-		double width = 0;
-		double height = 0;
-		if ( ( int ) w >= ( int ) h ) {
-			width = oldWidth * ( viewWidth / w );
-			height = width / ratioMap;
-		} else {
-			height = oldHeight * ( viewHeight / h );
-			width = height * ratioMap;
-		}
-		Point2D viewLocation = new Point2D.Double( viewerSpace.getX(),
-		viewerSpace.getY() );
-		Point2D ptHome = new Point2D.Double( ( mapSpace.getX() +
-			viewLocation.getX() ), ( mapSpace.getY() +
-			viewLocation.getY() ) );
-		AffineTransform inverse = null;
-		try {
-			inverse = screenTransform.createInverse();
-		} catch ( NoninvertibleTransformException ex ) {
-			ex.printStackTrace();
-		}
-		inverse.transform( ptHome, ptHome );
-		if ( ( width > maxWidth ) || ( height > maxHeight ) ){
-			width = maxWidth;
-			height = maxHeight;
-			Point2D ptMax = new Point2D.Double( ( mapSpace.getMaxX() +
-				viewLocation.getX() ), ( mapSpace.getMaxY() +
-				viewLocation.getY() ) );
-			inverse.transform( ptMax, ptMax );
-			double xDist = ptMax.getX() - ptHome.getX();
-			double yDist = ptHome.getY() - ptMax.getY();
-			extent.setRect( ( ptHome.getX() - xDist ),
-				( ( ptHome.getY() - yDist ) ), ( xDist * 3 ), ( yDist * 3 ) );
-		}
-		Dimension d = new Dimension( ( int ) width, ( int ) height );
-		setSize( d );
-		setPreferredSize( d );
-		resized();
-		screenTransform.transform( ptHome, ptHome );
-		viewport.setViewPosition( new Point( (int) ptHome.getX(),
-			( int ) ptHome.getY() ) );
-		repaint();
-		*/
 	}
 
 	/**
