@@ -34,9 +34,11 @@ public abstract class PointSymbol extends Symbol {
 
 	/** Draw symbol on map */
 	public final void draw( Graphics2D g, GeneralPath path ){
-		g.setColor( color );
 		Point2D pt = path.getCurrentPoint();
-		g.fill( getShape( pt.getX(), pt.getY() ) );
+		if ( filled ) {
+			g.setColor( color );
+			g.fill( getShape( pt.getX(), pt.getY() ) );
+		}
 		if ( outline ){
 			g.setColor( outlineColor );
 			g.draw( getShape( pt.getX(), pt.getY() ) );

@@ -18,6 +18,7 @@ public abstract class Symbol implements LegendItem {
 	protected Color outlineColor = Color.black;
 	protected int size;
 	protected boolean outline = false;
+	protected boolean filled = true;
 	private String label = "";
 
 	public abstract void draw( Graphics2D g, GeneralPath path );
@@ -46,6 +47,14 @@ public abstract class Symbol implements LegendItem {
 
 	public Color getColor(){
 		return color;
+	}
+
+	public boolean isFilled() {
+		return filled;
+	}
+
+	public void setFilled( boolean f ) {
+		filled = f;
 	}
 
 	public void setSize ( int size ){
