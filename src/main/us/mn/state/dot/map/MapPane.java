@@ -136,9 +136,9 @@ public final class MapPane implements ThemeChangedListener {
 			width = 1;
 		}
 		screenBuffer = new BufferedImage( width, height,
-			BufferedImage.TYPE_INT_RGB );
+			BufferedImage.TYPE_4BYTE_ABGR );
 		staticBuffer = new BufferedImage( width, height,
-			BufferedImage.TYPE_INT_RGB );
+			BufferedImage.TYPE_4BYTE_ABGR );
 		rescale();
 	}
 	
@@ -226,7 +226,8 @@ public final class MapPane implements ThemeChangedListener {
 		if ( staticBuffer == null ) return;
 		Graphics2D g = staticBuffer.createGraphics();
 		g.setColor( backgroundColor );
-		g.fillRect( 0, 0, staticBuffer.getWidth(), staticBuffer.getHeight() );
+		g.fillRect( 0, 0, staticBuffer.getWidth(),
+			staticBuffer.getHeight() );
 		g.transform( screenTransform );
 		staticBufferDirty = false;
 		ListIterator li = staticThemes.listIterator();
