@@ -152,10 +152,6 @@ public class ImageSymbol implements Symbol {
 			icon.getImageObserver() );
 	}
 
-	public LineSymbol getOutLineSymbol() {
-		return null;
-	}
-
 	public Dimension getSize() {
 		return size;
 	}

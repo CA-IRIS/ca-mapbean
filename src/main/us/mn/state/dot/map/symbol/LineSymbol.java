@@ -63,7 +63,6 @@ public abstract class LineSymbol implements Symbol {
 		color = c;
 		setSize(size);
 		stroke = createStroke();
-		setOutlineSymbol(this);
 	}
 
 	/** Set the color to paint the line */
@@ -112,13 +111,6 @@ public abstract class LineSymbol implements Symbol {
 	/** Get the color of this line */
 	public Color getOutlineColor() {
 		return getColor();
-	}
-
-	public void setOutlineSymbol(LineSymbol symbol) {
-	}
-
-	public LineSymbol getOutLineSymbol() {
-		return this;
 	}
 
 	public String getLabel() {
