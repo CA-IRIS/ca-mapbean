@@ -35,6 +35,7 @@ public final class IncidentLayer extends AbstractLayer implements
 	}
 
 	public IncidentLayer( ListSelectionModel m, TMSProxy tms ) {
+		setStatic( false );
 		proxy = tms;
 		setName( "incidents" );
 		selectionModel = m;

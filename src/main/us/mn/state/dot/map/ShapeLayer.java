@@ -86,6 +86,8 @@ public class ShapeLayer extends AbstractLayer {
 		createShapeLayer( file );
 	}
 
+	private int shapeType;
+
 	private final void createShapeLayer( ShapeFile file ){
 		ArrayList list = file.getShapeList();
 		paths = new GeneralPath [ list.size() ];
@@ -98,7 +100,8 @@ public class ShapeLayer extends AbstractLayer {
 		extent = new Rectangle2D.Double( file.getXmin(), file.getYmin(),
 			( file.getXmax() - file.getXmin() ),
 			( file.getYmax() - file.getYmin() ) );
-		switch( file.getShapeType() ) {
+		shapeType = file.getShapeType();
+		switch( shapeType ) {
 		case ShapeTypes.POINT:
 			painter.setSymbol( new CircleMarker() );
 			break;
@@ -134,12 +137,27 @@ public class ShapeLayer extends AbstractLayer {
 
 	private final java.util.List hit( Point2D p ){
 		java.util.List result = new ArrayList();
-		Rectangle2D r = null;
-		for ( int i = ( paths.length - 1 ); i >= 0; i-- ) {
-			r = paths[ i ].getBounds2D();
-			if ( r.contains( p ) ) {
-				result.add( paths[ i ] );
+		switch( shapeType ) {
+		case ShapeTypes.POINT:
+			double size = painter.getSymbol().getSize();
+			Rectangle2D r = new Rectangle2D.Double( p.getX() - ( size / 2 ),
+				p.getY() - ( size / 2 ), size, size );
+			for ( int i = ( paths.length - 1 ); i >= 0; i-- ) {
+				if ( r.contains( paths[ i ].getBounds() ) ) {
+					result.add( paths[ i ] );
+					break;
+				}
 			}
+			break;
+		case ShapeTypes.POLYLINE: case ShapeTypes.POLYGON:
+			//Rectangle2D r = null;
+			for ( int i = ( paths.length - 1 ); i >= 0; i-- ) {
+				if ( paths[ i ].contains( p ) ) {
+					result.add( paths[ i ] );
+					break;
+				}
+			}
+			break;
 		}
 		return result;
 	}
@@ -171,12 +189,32 @@ public class ShapeLayer extends AbstractLayer {
 
 	public final String getTip( Point2D p ){
 		String result = null;
-		Rectangle2D searchZone = new Rectangle2D.Double( ( p.getX() - 250 ),
+		/*Rectangle2D searchZone = new Rectangle2D.Double( ( p.getX() - 250 ),
 			( p.getY() - 250 ), 500, 500 );
 		Rectangle2D r = null;
-		Point2D q = null;
-		for ( int i = ( paths.length - 1 ); i >= 0; i-- ) {
-			r = paths[ i ].getBounds2D();
+		Point2D q = null;*/
+		switch( shapeType ) {
+		case ShapeTypes.POINT:
+			double size = painter.getSymbol().getSize();
+			Rectangle2D r = new Rectangle2D.Double( p.getX() - ( size / 2 ),
+				p.getY() - ( size / 2 ), size, size );
+			for ( int i = ( paths.length - 1 ); i >= 0; i-- ) {
+				if ( r.contains( paths[ i ].getBounds() ) ) {
+					result = painter.getTip( this, i );
+					break;
+				}
+			}
+			break;
+		case ShapeTypes.POLYLINE: case ShapeTypes.POLYGON:
+			for ( int i = ( paths.length - 1 ); i >= 0; i-- ) {
+				if ( paths[ i ].contains( p ) ) {
+					result = painter.getTip( this, i );
+					break;
+				}
+			}
+			break;
+		}
+			/*r = paths[ i ].getBounds2D();
 			if ( ( r.getWidth() == 0) || ( r.getHeight() == 0 ) ) {
 				q = paths[ i ].getCurrentPoint();
 				if ( searchZone.contains( q ) ) {
@@ -190,7 +228,7 @@ public class ShapeLayer extends AbstractLayer {
 					break;
 				}
 			}
-		}
+		} */
 		return result;
 	}
 }

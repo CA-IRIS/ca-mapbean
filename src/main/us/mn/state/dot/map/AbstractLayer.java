@@ -69,4 +69,14 @@ public abstract class AbstractLayer implements Layer {
 
 	public void paintSelections( Graphics2D g ) {
 	}
+
+	private boolean dynamic = false;
+
+	public boolean isStatic(){
+		return ! dynamic;
+	}
+
+	public void setStatic( boolean b ) {
+		dynamic = ! b;
+	}
 }

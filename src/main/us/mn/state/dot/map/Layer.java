@@ -24,4 +24,6 @@ public interface Layer {
 	public void addLayerListener( LayerListener listener );
 	public void updateLayer();
 	public void repaintLayer();
+	public boolean isStatic();
+	public void setStatic( boolean b );
 }

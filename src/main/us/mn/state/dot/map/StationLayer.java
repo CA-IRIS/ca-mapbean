@@ -17,6 +17,7 @@ public final class StationLayer extends ShapeLayer implements StationListener {
 
     public StationLayer() throws IOException {
 		super( "gpoly/gpoly", "gpoly" );
+		this.setStatic( false );
 	}
 
 	public void update( int[] volume, int[] occupancy, int[] status ){
