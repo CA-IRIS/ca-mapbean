@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000  Minnesota Department of Transportation
+ * Copyright (C) 2000-2004  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,7 +16,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package us.mn.state.dot.shape.event;
 
 import java.awt.Color;
@@ -26,156 +25,120 @@ import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.MouseEvent;
 import java.net.URL;
-
 import javax.swing.ImageIcon;
 import javax.swing.SwingUtilities;
-
 import us.mn.state.dot.shape.MapBean;
 
 /**
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.3 $ $Date: 2003/05/06 20:58:15 $
  */
 public class ZoomMouseMode extends MouseModeAdapter {
-	
+
 	/**
-     * Mouse Mode identifier, which is "Zoom".
-     * This is returned on getID()
-     */
-    public final static transient String modeID = "Zoom".intern();
+	 * Mouse Mode identifier, which is "Zoom".
+	 * This is returned on getID()
+	 */
+	static public final transient String modeID = "Zoom".intern();
 
 	/** Are we drawing a selectionbox? */
 	private boolean selecting = false;
-	
-	/** The start of a mouse drag*/
+
+	/** The start of a mouse drag */
 	private Point startPoint = null;
-	
-	/** The end of a mouse drag*/
-	//private Point endPoint = null;
-	
+
 	/** The last selection rectangle to be drawn */
 	private Rectangle selectionArea = new Rectangle();
-	
-    /**
-	 * Creates new ZoomMouseMode 
-	 * Default constructor.  Sets the ID to the modeID, and the
-     * consume mode to true. 
-     */
-    public ZoomMouseMode() {
-		this( true );
-    }
 
 	/**
-     * Construct a ZoomMouseMode.
-     * The constructor that lets you set the consume mode. 
-     * @param consumeEvents the consume mode setting.
-     */
-    public ZoomMouseMode( boolean consumeEvents ){
-		super( modeID, consumeEvents );
-		URL url = getClass().getResource( "/images/zoomMod.gif" );
-		ImageIcon img = new ImageIcon( url );
-		cursor = Toolkit.getDefaultToolkit().createCustomCursor( img.getImage(),
-			new Point( 0, 0 ), "Zoom" );
-    }
+	 * Creates new ZoomMouseMode
+	 * Default constructor.  Sets the ID to the modeID, and the
+	 * consume mode to true.
+	 */
+	public ZoomMouseMode() {
+		this(true);
+	}
 
-    /**
-     * Fires the MapMouseSupport method.
-     * @param e mouse event.
-     */
-    public void mouseClicked( MouseEvent e ) {
-		if ( SwingUtilities.isRightMouseButton( e ) ){
-			MapBean map = ( MapBean ) e.getSource();
-			map.zoomOut( e.getPoint() );
-		} 
-		mouseSupport.fireMapMouseClicked( e );
-    }
+	/**
+	 * Construct a ZoomMouseMode.
+	 * The constructor that lets you set the consume mode.
+	 * @param consumeEvents the consume mode setting.
+	 */
+	public ZoomMouseMode(boolean consumeEvents) {
+		super(modeID, consumeEvents);
+		URL url = getClass().getResource("/images/zoomMod.gif");
+		ImageIcon img = new ImageIcon(url);
+		cursor = Toolkit.getDefaultToolkit().createCustomCursor(
+			img.getImage(), new Point(0, 0), "Zoom");
+	}
 
-    /**
-     * Fires the MapMouseSupport method.
-     * @param e mouse event.
-     */
-    public void mousePressed( MouseEvent e ) {
-		startPoint = e.getPoint();
-		//endPoint = e.getPoint();
-		selecting = false;
-		mouseSupport.fireMapMousePressed( e );
-    }
-
-    /**
-     * Fires the MapMouseSupport method.
-     * @param e mouse event.
-     */
-    public void mouseReleased( MouseEvent e ) {
-		if ( selecting ) {
-			MapBean map = ( MapBean ) e.getSource();
-			drawBox( map, selectionArea );
-			selecting = false;
-			map.zoom( selectionArea );
+	public void mouseClicked(MouseEvent e) {
+		if(SwingUtilities.isRightMouseButton(e)) {
+			MapBean map = (MapBean)e.getSource();
+			map.zoomOut(e.getPoint());
 		}
-		mouseSupport.fireMapMouseReleased( e );
-    }
-	
+		mouseSupport.fireMapMouseClicked(e);
+	}
+
+	public void mousePressed(MouseEvent e) {
+		startPoint = e.getPoint();
+		selecting = false;
+		mouseSupport.fireMapMousePressed(e);
+	}
+
+	public void mouseReleased(MouseEvent e) {
+		if(selecting) {
+			MapBean map = (MapBean)e.getSource();
+			drawBox(map, selectionArea);
+			selecting = false;
+			map.zoom(selectionArea);
+		}
+		mouseSupport.fireMapMouseReleased(e);
+	}
+
 	/** Draw an XOR box (rubberbanding box) */
-	protected void drawBox( MapBean map, Rectangle r ) {
+	protected void drawBox(MapBean map, Rectangle r) {
 		Graphics g = map.getGraphics();
-		if ( g == null ) {
+		if(g == null) {
 			return;
 		}
-		g.setXORMode( Color.white );
-		g.drawRect( r.x, r.y, r.width, r.height );
+		g.setXORMode(Color.white);
+		g.drawRect(r.x, r.y, r.width, r.height);
 	}
-		
 
-    /**
-     * Fires the MapMouseSupport method.
-     * @param e mouse event.
-     */
-    public void mouseEntered( MouseEvent e ) {
-		mouseSupport.fireMapMouseEntered( e );
-    }
+	public void mouseEntered(MouseEvent e) {
+		mouseSupport.fireMapMouseEntered(e);
+	}
 
-    /**
-     * Fires the MapMouseSupport method.
-     * @param e mouse event.
-     */
-    public void mouseExited( MouseEvent e ) {
-		mouseSupport.fireMapMouseExited( e );
-    }
+	public void mouseExited(MouseEvent e) {
+		mouseSupport.fireMapMouseExited(e);
+	}
 
-    /**
-     * Fires the MapMouseSupport method.
-     * @param e mouse event.
-     */
-    public void mouseDragged( MouseEvent e ) {
-		if ( SwingUtilities.isLeftMouseButton( e ) ){
-			MapBean map = ( MapBean ) e.getSource();
+	public void mouseDragged(MouseEvent e) {
+		if(SwingUtilities.isLeftMouseButton(e)) {
+			MapBean map = (MapBean)e.getSource();
 			Point endPoint = e.getPoint();
-			if ( selecting ){
-				drawBox( map, selectionArea );
+			if(selecting) {
+				drawBox(map, selectionArea);
 			}
-			selectionArea.x = ( int ) Math.min( startPoint.getX(),
-				endPoint.getX() );
-			selectionArea.width = ( int ) Math.abs( endPoint.getX() -
-				startPoint.getX() );
-			selectionArea.y = ( int ) Math.min( startPoint.getY(),
-				endPoint.getY() );
-			selectionArea.height = ( int ) Math.abs( endPoint.getY() -
-				startPoint.getY() );
-			drawBox( map, selectionArea );
+			selectionArea.x = (int)Math.min(startPoint.getX(),
+				endPoint.getX());
+			selectionArea.width = (int)Math.abs(endPoint.getX() -
+				startPoint.getX());
+			selectionArea.y = (int)Math.min(startPoint.getY(),
+				endPoint.getY());
+			selectionArea.height = (int)Math.abs(endPoint.getY() -
+				startPoint.getY());
+			drawBox(map, selectionArea);
 			selecting = true;
 		}
-		mouseSupport.fireMapMouseDragged( e );
-    }
+		mouseSupport.fireMapMouseDragged(e);
+	}
 
-    /**
-     * Fires the MapMouseSupport method.
-     * @param e mouse event.
-     */
-    public void mouseMoved( MouseEvent e ) {
-		if ( selecting ) {
+	public void mouseMoved(MouseEvent e) {
+		if(selecting) {
 			selecting = false;
 		}
-		mouseSupport.fireMapMouseMoved( e );
-    }
+		mouseSupport.fireMapMouseMoved(e);
+	}
 }
