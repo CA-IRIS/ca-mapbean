@@ -14,26 +14,16 @@ import java.awt.geom.*;
 import java.awt.*;
 import javax.swing.ListSelectionModel;
 
-public final class IncidentLayer implements Layer, IncidentListener {
-	private Vector layerListeners = new Vector();
+public final class IncidentLayer extends AbstractLayer implements IncidentListener {
 	private Incident [] incidents = null;
-	private Rectangle2D.Double extent = null;
 	private ListSelectionModel selectionModel = null;
-	private boolean visible = true;
-
-	public Rectangle2D getExtent(){
-		return extent;
-	}
-
-	public String getName(){
-		return new String("incidents");
-	}
 
 	public IncidentLayer() {
 		this(null);
 	}
 
 	public IncidentLayer(ListSelectionModel m) {
+		setName("incidents");
 		selectionModel = m;
 	}
 
@@ -44,27 +34,6 @@ public final class IncidentLayer implements Layer, IncidentListener {
 	public void setSelectionModel(ListSelectionModel selectionModel){
 		this.selectionModel = selectionModel;
 	}
-
-	public void addLayerListener(LayerListener l) {
-		if (!layerListeners.contains(l)) {
-			layerListeners.add(l);
-		}
-	}
-
-	public void updateLayer(Layer l) {
-		ListIterator it = layerListeners.listIterator();
-		while (it.hasNext()){
-			((LayerListener)it.next()).updateLayer(l);
-		}
-	}
-
-	public void repaintLayer(Layer l) {
-		ListIterator it = layerListeners.listIterator();
-		while (it.hasNext()){
-			((LayerListener)it.next()).repaintLayer(l);
-		}
-	}
-
 
 	public void update(Incident[] incidents){
 		this.incidents = incidents;
@@ -91,7 +60,7 @@ public final class IncidentLayer implements Layer, IncidentListener {
 	}
 
 	public void paint(Graphics2D g){
-		if (visible) {
+		if (isVisible()) {
 			if (incidents != null) {
 				for (int i = 0; i < incidents.length; i++){
 					incidents[i].paint(g);
@@ -135,14 +104,5 @@ public final class IncidentLayer implements Layer, IncidentListener {
 			result = ((Incident) li.next()).toString();
 		}
 		return result;
-	}
-
-	public void setVisible(boolean b) {
-		visible = b;
-		repaintLayer(this);
-	}
-
-	public boolean isVisible() {
-		return visible;
 	}
 }

@@ -13,22 +13,7 @@ import java.util.*;
 import java.io.*;
 import us.mn.state.dot.shape.DbaseReader.*;
 
-public class ShapeLayer implements Layer {
-	private Vector layerListeners = new Vector();
-
-	private boolean visible = true;
-	private String name = null;
-
-	public String getName(){
-		return name;
-	}
-
-	/** Bounding box */
-	private Rectangle2D.Double extent;
-
-	public Rectangle2D getExtent(){
-		return extent;
-	}
+public class ShapeLayer extends AbstractLayer {
 
 	private DbaseReader dbFile;
 
@@ -69,7 +54,7 @@ public class ShapeLayer implements Layer {
 	}
 
 	public ShapeLayer(String fileName, String layerName) throws IOException {
-		name = layerName;
+		setName(layerName);
 		dbFile = new DbaseReader( fileName + ".dbf" );
 		ShapeFile file = new ShapeFile( fileName + ".shp" );
 		ArrayList list = file.getShapeList();
@@ -103,7 +88,7 @@ public class ShapeLayer implements Layer {
 
 	/** Paint this Layer */
 	public void paint( Graphics2D g ) {
-		if (visible) {
+		if (isVisible()) {
 			for (int i = 0; i < paths.length; i++) {
 				painter.paint(g, paths[i], i);
 			}
@@ -119,19 +104,6 @@ public class ShapeLayer implements Layer {
 			}
 		}
 		return result;
-	}
-
-	public void setVisible(boolean b) {
-		visible = b;
-		repaintLayer(this);
-	}
-
-	public boolean isVisible() {
-		return visible;
-	}
-
-	public String toString(){
-		return name;
 	}
 
 	public boolean writeToFile(FileWriter f){   //only works for point shapes
@@ -180,25 +152,5 @@ public class ShapeLayer implements Layer {
 			}
 		}
 		return result;
-	}
-
-	public void addLayerListener(LayerListener l) {
-		if (!layerListeners.contains(l)) {
-			layerListeners.add(l);
-		}
-	}
-
-	public void updateLayer(Layer l) {
-		ListIterator it = layerListeners.listIterator();
-		while (it.hasNext()){
-			((LayerListener) it.next()).updateLayer(l);
-		}
-	}
-
-	public void repaintLayer(Layer l) {
-		ListIterator it = layerListeners.listIterator();
-		while (it.hasNext()){
-			((LayerListener) it.next()).repaintLayer(l);
-		}
 	}
 }

@@ -44,6 +44,10 @@ public final class ShapeTypes {
 			b.reverseBytes8( 12 );
 			Y = b.getDouble( 12 );
 		}
+		public Point( double x, double y) {
+			X = x;
+			Y = y;
+		}
 		public int currentSegment( double [] coords ) {
 			coords[ 0 ] = X;
 			coords[ 1 ] = Y;
