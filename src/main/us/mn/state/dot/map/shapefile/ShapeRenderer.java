@@ -28,13 +28,18 @@ import us.mn.state.dot.shape.Symbol;
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
  */
-public abstract class ShapeRenderer implements LayerRenderer {
+abstract public class ShapeRenderer implements LayerRenderer {
+
+	/** Name of renderer */
+	protected final String name;
 
 	/** MapTip to display */
 	protected MapTip mapTip = null;
 
-	/** Name of renderer */
-	private String name = "";
+	/** Create a new shape renderer */
+	public ShapeRenderer(String n) {
+		name = n;
+	}
 
 	/** Set the MapTip used by this renderer */
 	public void setTip(MapTip m) {
@@ -50,19 +55,9 @@ public abstract class ShapeRenderer implements LayerRenderer {
 		return result;
 	}
 
-	/** Set the name of this renderer */
-	public void setName(String s) {
-		name = s;
-	}
-
 	/** Overrides Object.toString() */
 	public String toString() {
-		String result = null;
-		if(name == null) {
-			result = super.toString();
-		} else {
-			result = name;
-		}
-		return result;
+		if(name == null) return super.toString();
+		else return name;
 	}
 }

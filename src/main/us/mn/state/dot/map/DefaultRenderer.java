@@ -24,16 +24,15 @@ import java.awt.Shape;
 import java.awt.geom.Rectangle2D;
 
 /**
- * A default implementation of a ShapeRenderer.
+ * The default implementation of LayerRenderer.
  * Shapes are all rendered with the same symbol.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
  */
 public class DefaultRenderer implements LayerRenderer {
 
-	private String name = null;
-
-	private Symbol symbol;
+	/** Symbol to render */
+	protected Symbol symbol;
 
 	/**
 	 * Create a new DefaultRenderer.
@@ -61,22 +60,6 @@ public class DefaultRenderer implements LayerRenderer {
 	/** Get the legend for this layer */
 	public Component[] getLegend() {
 		return new Component[0];
-	}
-
-	/** Set the name of this renderer */
-	public void setName(String s) {
-		name = s;
-	}
-
-	/** Overrides Object.toString() */
-	public String toString() {
-		String result = null;
-		if(name == null) {
-			result = super.toString();
-		} else {
-			result = name;
-		}
-		return result;
 	}
 
 	/** Get the bounds of the rendered MapObject */

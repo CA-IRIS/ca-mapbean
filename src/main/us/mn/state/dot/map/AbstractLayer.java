@@ -35,14 +35,19 @@ import us.mn.state.dot.shape.event.LayerChangedListener;
  */
 abstract public class AbstractLayer implements Layer {
 
+	/** Layer name */
+	protected final String name;
+
 	/** Extent of layer */
 	protected Rectangle2D extent = new Rectangle2D.Double();
 
-	/** Layer name */
-	protected String name;
-
 	/** Layer change listeners */
 	protected final List layerChangedListeners = new LinkedList();
+
+	/** Create a new abstract layer */
+	public AbstractLayer(String n) {
+		name = n;
+	}
 
 	/** Get the extent of the layer */
 	public Rectangle2D getExtent() {
@@ -52,11 +57,6 @@ abstract public class AbstractLayer implements Layer {
 	/** Get the name of the layer */
 	public String getName() {
 		return name;
-	}
-
-	/** Set the name of the layer */
-	public void setName(String s) {
-		name = s;
 	}
 
 	/** Add a LayerListener that is notified when the layer data changes */

@@ -48,13 +48,10 @@ public class ClassBreaksRenderer extends ShapeRenderer {
 	protected final String field;
 	protected final LinkedList classBreaks = new LinkedList();
 
-	public ClassBreaksRenderer(String field) {
-		this.field = field;
-	}
-
+	/** Create a new class breaks renderer */
 	public ClassBreaksRenderer(String field, String name) {
-		this(field);
-		setName(name);
+		super(name);
+		this.field = field;
 	}
 
 	/** Add a break to this renderer */

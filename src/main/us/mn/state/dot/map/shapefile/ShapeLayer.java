@@ -58,10 +58,11 @@ public class ShapeLayer extends AbstractLayer {
 			layerName);
 	}
 
+	/** Create a new shape layer */
 	public ShapeLayer(URL fileLocation, String layerName)
 		throws IOException
 	{
-		setName(layerName);
+		super(layerName);
 		String url = fileLocation.toExternalForm();
 		if(!url.endsWith(".shp")) throw new IOException(
 			"fileLocation must be a '.shp' file");
