@@ -18,57 +18,24 @@
  */
 package us.mn.state.dot.map;
 
-import java.awt.Component;
-import java.awt.Graphics2D;
-import java.awt.Shape;
-import java.awt.geom.Rectangle2D;
-
 /**
  * The default implementation of LayerRenderer.
  * Shapes are all rendered with the same symbol.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
  */
-public class DefaultRenderer implements LayerRenderer {
+public class DefaultRenderer extends AbstractRenderer {
 
 	/** Symbol to render */
-	protected Symbol symbol;
+	protected final Symbol symbol;
 
-	/**
-	 * Create a new DefaultRenderer.
-	 * @param s, symbol that all shapes will be painted with.
-	 */
+	/** Create a new DefaultRenderer */
 	public DefaultRenderer(Symbol s) {
-		setSymbol(s);
-	}
-
-	/** Set the symbol used by the renderer */
-	public void setSymbol(Symbol s) {
 		symbol = s;
 	}
 
-	/** Get the shape that would be used to render this object */
-	public Shape getShape(MapObject object) {
-		return symbol.getShape(object);
-	}
-
-	/** Render the MapObject on the graphics */
-	public void render(Graphics2D g, MapObject object) {
-		symbol.draw(g, object.getShape());
-	}
-
-	/** Get the legend for this layer */
-	public Component[] getLegend() {
-		return new Component[0];
-	}
-
-	/** Get the bounds of the rendered MapObject */
-	public Rectangle2D getBounds(MapObject object) {
-		return symbol.getBounds(object);
-	}
-
-	/** Get tooltip text for the given map object */
-	public String getTip(MapObject o) {
-		return o.toString();
+	/** Get the symbol for the specified map object */
+	protected Symbol getSymbol(MapObject o) {
+		return symbol;
 	}
 }
