@@ -25,16 +25,17 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 import javax.swing.*;
+import us.mn.state.dot.shape.shapefile.ShapeLayer;
+import us.mn.state.dot.shape.shapefile.ShapeObject;
 
 /** 
  * This layer is used for displaying highway markers on the map.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.7 $ $Date: 2001/05/07 22:16:24 $
+ * @version $Revision: 1.8 $ $Date: 2001/08/09 20:43:43 $
  */
 public final class HighwayMarkerLayer extends ShapeLayer {
 	
-	private final Field highways;
 	/** Location of the shape file */
 	private static final String FILE_LOCATION = "gpoly/markers";
 	/** Name of the layer */
@@ -47,20 +48,20 @@ public final class HighwayMarkerLayer extends ShapeLayer {
   	/** Creates new HighwayMarkerLayer */
   	public HighwayMarkerLayer() throws IOException {
 		super( FILE_LOCATION, LAYER_NAME );
-		highways = this.getField( LOOKUP_FIELD );
 	}
 	
 	/** Create a new Highway MarkerLayer */
 	public HighwayMarkerLayer( URL fileLocation ) throws IOException {
 		super( fileLocation, LAYER_NAME );
-		highways = this.getField( LOOKUP_FIELD );
 	}
 	
 	public void paint( Graphics2D g, LayerRenderer renderer ) {
-		for ( int i = ( paths.length - 1 ) ; i >= 0; i-- ){
-			double xCoord = paths[ i ].getBounds().getX();
-			double yCoord = paths[ i ].getBounds().getY();
-			ImageIcon icon = getIcon( highways.getStringValue( i ) );
+		for ( int i = ( shapes.length - 1 ) ; i >= 0; i-- ){
+			ShapeObject shape = shapes[ i ];
+			double xCoord = shape.getShape().getBounds().getX();
+			double yCoord = shape.getShape().getBounds().getY();
+			ImageIcon icon = getIcon( ( String ) shape.getValue( 
+				LOOKUP_FIELD ) );
 			g.setRenderingHint( RenderingHints.KEY_ANTIALIASING,
 				RenderingHints.VALUE_ANTIALIAS_OFF );
 			g.drawImage( icon.getImage(), ( ( int ) xCoord - 1000 ),
@@ -70,7 +71,7 @@ public final class HighwayMarkerLayer extends ShapeLayer {
 	}
 	
 	public void paintSelections( Graphics2D g, LayerRenderer renderer,
-			ArrayList selections ) {
+			MapObject[] selections ) {
 	}
 
 	/** Cache of ImageIcons */

@@ -19,25 +19,26 @@
 
 package us.mn.state.dot.shape;
 
-import us.mn.state.dot.shape.*;
+import us.mn.state.dot.shape.shapefile.ShapeObject;
 
 /**
  * Displays a stations status.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.7 $ $Date: 2001/07/09 21:10:19 $ 
+ * @version $Revision: 1.8 $ $Date: 2001/08/09 20:43:43 $ 
  */
 public final class StationMapTip implements MapTip {
 
-	public String getTip( Layer layer, int i ){
+	public String getTip( MapObject object ){
+		ShapeObject shapeObject = ( ShapeObject ) object;
 		StringBuffer result = new StringBuffer( "Station " );
-		result.append( layer.getField( "STATION2" ).getStringValue( i ) )
+		result.append( shapeObject.getValue( "STATION2" ) )
 			.append( ": " )
-			.append( layer.getField( "NAME" ).getStringValue( i ) )
+			.append( shapeObject.getValue( "NAME" ) )
 			.append( "\n Volume = " )
-			.append( layer.getField( "VOLUME" ).getStringValue( i ) )
+			.append( shapeObject.getValue( "VOLUME" ) )
 			.append( "\n Occupancy = " )
-			.append( layer.getField( "OCCUPANCY" ).getStringValue( i ) );
+			.append( shapeObject.getValue( "OCCUPANCY" ) );
 		return result.toString();
 	}
 }

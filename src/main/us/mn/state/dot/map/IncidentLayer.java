@@ -30,12 +30,12 @@ import us.mn.state.dot.shape.event.*;
  * Displays incidents as icons on map.
  *
  * @author erik.engstrom@dot.state.mn.us
- * @version $Revision: 1.35 $ $Date: 2001/04/25 19:46:35 $
+ * @version $Revision: 1.36 $ $Date: 2001/08/09 20:43:43 $
  */
 public class IncidentLayer extends AbstractLayer implements
 		IncidentListener {
 
-	protected Incident [] incidents = null;
+	protected IncidentWrapper [] incidents = null;
 	protected ListSelectionModel selectionModel =
 		new DefaultListSelectionModel();
 	private boolean directional = true;
@@ -67,14 +67,15 @@ public class IncidentLayer extends AbstractLayer implements
      * there are no incidents (to clear the layer).
      */
 	public synchronized void update( Incident[] incidents ){
-		this.incidents = incidents;
+		this.incidents = new IncidentWrapper[ incidents.length ];
 		if ( incidents.length > 0 ){
             dirty = true;
 			double maxX = incidents[ 0 ].getX();
 			double maxY = incidents[ 0 ].getY();
 			double minX = maxX;
 			double minY = maxY;
-			for ( int i = 1; i < incidents.length; i++ ) {
+			for ( int i = 0; i < incidents.length; i++ ) {
+				this.incidents[ i ] = new IncidentWrapper( incidents[ i ] );
 				if ( incidents[ i ].getX() < minX ) {
 					minX = incidents[ i ].getX();
 				} else if ( incidents[ i ].getX() > maxX ) {
@@ -117,7 +118,7 @@ public class IncidentLayer extends AbstractLayer implements
 	}
 
 	public void paintSelections( Graphics2D g, LayerRenderer renderer,
-			int[] selection ) {
+			MapObject[] selection ) {
 		selectionModel.clearSelection();
 		int[] diameters = new int[ 3 ];
 		diameters = getDefaultDiameters();
@@ -145,15 +146,15 @@ public class IncidentLayer extends AbstractLayer implements
 		if ( incidents != null ) {
 			for ( int i = ( incidents.length - 1 ); i >= 0; i-- ){
 				if ( directional ) {
-					incidents[ i ].paintDirectionalIcon( g );
+					incidents[ i ].getIncident().paintDirectionalIcon( g );
 				} else {
-					incidents[ i ].paintIncidentIcon( g );
+					incidents[ i ].getIncident().paintIncidentIcon( g );
 				}
 			}
 		}
 	}
 
-	public java.util.List getPaths( Point2D p ){
+	public java.util.List getPaths( Point2D p, LayerRenderer renderer ){
 		ArrayList result = new ArrayList();
 		if ( incidents != null ) {
 			for ( int i = ( incidents.length - 1 ); i >= 0; i-- ) {
@@ -169,8 +170,8 @@ public class IncidentLayer extends AbstractLayer implements
 		return result;
 	}
 	
-	private int getIncident( Point2D p ) {
-		int result = -1;
+	private MapObject getIncident( Point2D p ) {
+		MapObject result = null;
 		if ( incidents != null ) {
 			for ( int i = ( incidents.length - 1 ); i >= 0; i-- ) {
 				double x = incidents[ i ].getX();
@@ -178,7 +179,7 @@ public class IncidentLayer extends AbstractLayer implements
 				Rectangle2D r = new Rectangle2D.Double( ( x - 500 ),
 					( y - 500 ), 1000, 1000 );
 				if ( r.contains( p ) ) {
-					result = i;
+					result = incidents[ i ];
 					break;
 				}
 			}
@@ -186,8 +187,8 @@ public class IncidentLayer extends AbstractLayer implements
 		return result;
 	}
 	
-	public final int search( Rectangle2D searchArea ) {
-		int result = -1;
+	public final MapObject search( Rectangle2D searchArea, LayerRenderer renderer ) {
+		MapObject result = null;
 		if ( incidents != null ) {
 			for ( int i = ( incidents.length - 1 ); i >= 0; i-- ) {
 				double x = incidents[ i ].getX();
@@ -196,7 +197,24 @@ public class IncidentLayer extends AbstractLayer implements
 					( y - 500 ), 1000, 1000 );
 				if ( r.contains( searchArea ) || r.intersects( searchArea ) ||
 						searchArea.contains( r ) ) {
-					result = i;
+					result = incidents[ i ];
+					break;
+				}
+			}
+		}
+		return result;
+	}
+	
+	public MapObject search( Point2D p, LayerRenderer renderer ) {
+		MapObject result = null;
+		if ( incidents != null ) {
+			for ( int i = ( incidents.length - 1 ); i >= 0; i-- ) {
+				double x = incidents[ i ].getX();
+				double y = incidents[ i ].getY();
+				Rectangle2D r = new Rectangle2D.Double( ( x - 500 ),
+					( y - 500 ), 1000, 1000 );
+				if ( r.contains( p ) ) {
+					result = incidents[ i ];
 					break;
 				}
 			}
@@ -211,15 +229,47 @@ public class IncidentLayer extends AbstractLayer implements
 	public Theme getTheme() {
 		Theme result = new IncidentTheme( this );
 		result.setTip( new MapTip() {
-			public String getTip( Layer layer, int i ) {
+			public String getTip( MapObject object ) {
 				String result = null;
-				if ( i >= 0 && i < incidents.length ) {
-					result = incidents[ i ].toString();
+				if ( object != null ) {
+					result = object.toString();
 				}
 				return result;
 			}
 		});
 		return result;
+	}
+	
+	public class IncidentWrapper implements MapObject {
+		
+		private final Incident incident;
+		
+		private final Shape shape;
+		
+		public IncidentWrapper( Incident incident ) {
+			this.incident = incident;
+			GeneralPath path = new GeneralPath();
+			path.moveTo( ( float ) incident.getX(),
+				( float ) incident.getY() );
+			shape = path;
+		}
+		
+		public Incident getIncident() {
+			return incident;
+		}
+		
+		public Shape getShape() {
+			return shape;
+		}
+		
+		public double getX() {
+			return incident.getX();
+		}
+		
+		public double getY() {
+			return incident.getY();
+		}
+		
 	}
 	
 	private class IncidentTheme extends Theme implements MapMouseListener {
@@ -286,18 +336,19 @@ public class IncidentLayer extends AbstractLayer implements
 			Point2D point = null;
 			point = at.transform( event.getPoint(), point );
 			IncidentLayer layer = ( IncidentLayer ) getLayer();
-			int index = getIncident( point );
-			if ( index == -1 ) {
-				setSelections( new int[ 0 ] );
+			MapObject incident = getIncident( point );
+			if ( incident == null ) {
+				setSelections( new MapObject[ 0 ] );
 				notifyThemeChangedListeners( new ThemeChangedEvent( this,
 					ThemeChangedEvent.SELECTION ) );
 				return false;
 			} else {
-				int[] oldSelections = getSelections();
-				if ( oldSelections.length > 0 && index == oldSelections[ 0 ] ) {
+				MapObject[] oldSelections = getSelections();
+				if ( oldSelections.length > 0 && incident == 
+						oldSelections[ 0 ] ) {
 					clearSelections();
 				} else {
-					int[] selections = { index };
+					MapObject[] selections = { incident };
 					setSelections( selections );
 				}
 				notifyThemeChangedListeners( new ThemeChangedEvent( this,

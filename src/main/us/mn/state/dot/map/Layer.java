@@ -19,15 +19,15 @@
 
 package us.mn.state.dot.shape;
 
-import java.awt.*;
-import java.util.*;
+import java.awt.Graphics2D;
+import java.util.List;
 import java.awt.geom.*;
 
 /**
  * This interface should be used to add data to a MapBean object. 
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 0.20 $ $Date: 2001/07/09 21:12:37 $ 
+ * @version $Revision: 0.21 $ $Date: 2001/08/09 20:43:43 $ 
  */
 public interface Layer {
 	
@@ -45,7 +45,7 @@ public interface Layer {
 	 * Paint selected objects on this layer.
 	 */
 	public void paintSelections( Graphics2D g, LayerRenderer renderer,
-		int[] selections );
+		MapObject[] selections );
 	
 	/**
 	 * Get the name of this layer.
@@ -77,22 +77,12 @@ public interface Layer {
 	 */
 	public void setStatic( boolean b );
 	
-	/**
-	 * Get the fields available for this layer.
-	 */
-	public Field [] getFields();
-	
-	/**
-	 * Get a field by its name.
-	 */
-	public Field getField( String name );
-	
 	/*
 	 * Gets all of the paths present at the Point2D p in this layer.
 	 * @param p The Point2D at which to search.
 	 * @returns a java.util.List containing all of the paths found.
 	 */
-	public java.util.List getPaths( Point2D p );
+	public java.util.List getPaths( Point2D p, LayerRenderer renderer );
 	
 	/*
 	 * Returns an int representing the index of the first path found that
@@ -101,7 +91,16 @@ public interface Layer {
 	 * @returns an int representing the index of the first found path, returns
 	 * -1 if nothing found.
 	 */
-	public int search( Rectangle2D searchArea );
+	public MapObject search( Rectangle2D searchArea, LayerRenderer renderer );
+	
+	/*
+	 * Returns an int representing the index of the first path found that
+	 * is contained by, intersects, or contains the Point2D searchArea.
+	 * @param p Point2D representing the point to search.
+	 * @returns an int representing the index of the first found path, returns
+	 * -1 if nothing found.
+	 */
+	public MapObject search( Point2D p, LayerRenderer renderer );
 	
 	/**
 	 * Get the theme for this layer.

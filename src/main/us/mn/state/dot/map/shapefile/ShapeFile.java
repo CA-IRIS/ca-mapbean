@@ -16,8 +16,9 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-package us.mn.state.dot.shape;
+package us.mn.state.dot.shape.shapefile;
 
+import java.awt.geom.Rectangle2D;
 import java.io.*;
 import java.util.*;
 import java.net.*;
@@ -29,7 +30,7 @@ import java.util.jar.*;
   *
   * @author Douglas Lau
   * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
-  * @version $Revision: 0.6 $ $Date: 2001/05/12 00:10:40 $
+  * @version $Revision: 1.1 $ $Date: 2001/08/09 20:43:43 $
   */
 public final class ShapeFile {
 
@@ -56,27 +57,92 @@ public final class ShapeFile {
   *		84		Mmin				0.0		double (little)	8
   *		92		Mmax				0.0		double (little)	8
   */
-	private final int shapeType;
-	private final int version;
-	private final double minX;
-	private final double maxX;
-	private final double minY;
-	private final double maxY;
+	private int shapeType;
+	private int version;
+	private double minX;
+	private double maxX;
+	private double minY;
+	private double maxY;
 	
 	/** List of shapes in the ShapeFile */
 	private final ArrayList shapes = new ArrayList();
 	
+	public ShapeFile( URL url ) throws IOException {
+		ShapeDataInputStream in = new ShapeDataInputStream( url.openStream() );
+		String location = url.toExternalForm();
+		location = location.substring( 0, location.length() - 4 ) + ".dbf";
+		URL dbUrl = new URL( location );
+		DbaseInputStream dbaseStream = new DbaseInputStream( dbUrl );
+		readData( in, dbaseStream );
+	}
+	
 	/** Constructor */
 	public ShapeFile( String name ) throws IOException {
-		this( new FileInputStream( name ) );
+		//this( new FileInputStream( name + ".shp" ) );
+		ShapeDataInputStream in = new ShapeDataInputStream( 
+			new FileInputStream( name + ".shp" ) );
+		DbaseInputStream dbaseStream = new DbaseInputStream( name + ".dbf" );
+		readData( in, dbaseStream );
+		//ShapeFileInputStream in = new ShapeFileInputStream( i );
+		/*in.skipBytes( 28 ); //start of header unused
+		version = in.readLittleInt();
+		shapeType = in.readLittleInt();
+		minX = in.readLittleDouble();
+		minY = in.readLittleDouble();
+		maxX = in.readLittleDouble();
+		maxY = in.readLittleDouble();
+		in.skipBytes( 32 ); //end of header unused
+		try {
+			while( dbaseStream.hasNext() ) {
+				shapes.add( new ShapeObject( ShapeFactory.readShape( in ), 
+					dbaseStream.nextRecord() ) );
+			}
+		} catch( EOFException e ) {
+			throw new IOException( "Shape file and Dbase file have different " +
+				" numbers of records." );
+		}
+		dbaseStream.close();
+		in.close();*/
 	}
-
-	public ShapeFile( URL url ) throws IOException {
-		this( url.openStream() );
+	
+	public void readData( ShapeDataInputStream shapeIn,
+			DbaseInputStream dbaseStream ) throws IOException {
+		shapeIn.skipBytes( 28 ); //start of header unused
+		version = shapeIn.readLittleInt();
+		shapeType = shapeIn.readLittleInt();
+		minX = shapeIn.readLittleDouble();
+		minY = shapeIn.readLittleDouble();
+		maxX = shapeIn.readLittleDouble();
+		maxY = shapeIn.readLittleDouble();
+		shapeIn.skipBytes( 32 ); //end of header unused
+		try {
+			while( dbaseStream.hasNext() ) {
+				shapes.add( new ShapeObject( ShapeFactory.readShape( shapeIn ), 
+					dbaseStream.nextRecord() ) );
+			}
+		} catch( EOFException e ) {
+			throw new IOException( "Shape file and Dbase file have different " +
+				" numbers of records." );
+		}
+		dbaseStream.close();
+		shapeIn.close();
 	}
+	
+	/**
+	 * Get the extent of the shape file.
+	 */
+	public Rectangle2D getExtent() {
+		double width = maxY - minY;
+		double height = maxX - minX;
+		return new Rectangle2D.Double( minX, minY, width, height );
+	}
+	
+	//public ShapeFile( URL url ) throws IOException {
+	//	this( url.openStream() );
+	//}
 
 	/** Constructor */
-	public ShapeFile( InputStream i ) throws IOException {
+	/*public ShapeFile( InputStream i ) throws IOException {
 		ShapeFileInputStream in = new ShapeFileInputStream( i );
 		in.skipBytes( 28 ); //start of header unused
 		version = in.readLittleInt();
@@ -93,7 +159,7 @@ public final class ShapeFile {
 		}
 		catch( EOFException e ) {}
 		i.close();
-	}
+	}*/
 
 	public ArrayList getShapeList() {
 		return shapes; 
@@ -109,23 +175,4 @@ public final class ShapeFile {
 		return shapeType;
 	}
 
-	/** Get the X minimum value */
-	public double getXmin() {
-		return minX;
-	}
-
-	/** Get the Y minimum value */
-	public double getYmin() {
-		return minY;
-	}
-
-	/** Get the X maximum value */
-	public double getXmax() {
-		return maxX;
-	}
-
-	/** Get the Y maximum value */
-	public double getYmax() {
-		return maxY;
-	}
 }

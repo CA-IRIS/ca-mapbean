@@ -17,7 +17,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-package us.mn.state.dot.shape;
+package us.mn.state.dot.shape.shapefile;
 
 import java.io.*;
 
@@ -25,12 +25,12 @@ import java.io.*;
   * Adds little endian double and integer reading to DataInputStream.
   *
   * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
-  * @version $Revision: 1.1 $ $Date: 2001/05/12 00:10:40 $ 
+  * @version $Revision: 1.1 $ $Date: 2001/08/09 20:43:43 $ 
   */
-public class ShapeFileInputStream extends DataInputStream {
+public class ShapeDataInputStream extends DataInputStream {
 
 	/** Creates new ShapeFileInputStream */
-    public ShapeFileInputStream( InputStream in ) {
+    public ShapeDataInputStream( InputStream in ) {
 		super( in );
     }
 	

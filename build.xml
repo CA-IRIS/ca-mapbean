@@ -2,12 +2,12 @@
 
 <!-- ======================================================================= -->
 <!-- MapBean build file 	                                             -->
-<!-- $Revision: 1.11 $ $Date: 2001/06/01 16:45:38 $                          -->
+<!-- $Revision: 1.12 $ $Date: 2001/08/09 20:43:43 $                          -->
 <!-- ======================================================================= -->
 
 <project name="MapBean" default="jar" basedir=".">
     <property name="name" value="MapBean"/>
-    <property name="version" value="1.1" /> 
+    <property name="version" value="1.22" /> 
     <property name="src.images.dir" value="src/images" />
     <property name="src.dir" value="src/main" /> 
     <property name="lib.dir" value="lib" /> 
@@ -106,12 +106,12 @@
     </target>
 
     <!-- =================================================================== -->
-    <!-- Creates the distribution                                            -->
+    <!-- Creates the distribution without javadocs.                          -->
     <!-- =================================================================== -->
-    <target name="dist"
-            depends="jar, javadocs"
-            description="Creates the distribution directory and copies all
-                         necessary files.">
+    <target name="dist-lite"
+             depends="jar"
+             description="Creates the distribution directory and copies all
+                          files except javadocs.">
         <mkdir dir="${MapBean.dist.dir}"/>
         <mkdir dir="${MapBean.dist.dir}/bin"/>
         <mkdir dir="${MapBean.dist.dir}/lib"/>
@@ -133,11 +133,20 @@
         <copy todir="${MapBean.dist.dir}/docs">
             <fileset dir="${docs.dir}" />
         </copy>
+        <copy file="README" tofile="${MapBean.dist.dir}/README"/>
+        <copy file="LICENSE" tofile="${MapBean.dist.dir}/LICENSE"/>
+    </target>
+             
+    <!-- =================================================================== -->
+    <!-- Creates the distribution                                            -->
+    <!-- =================================================================== -->
+    <target name="dist"
+            depends="dist-lite, javadocs"
+            description="Creates the distribution directory and copies all
+                         necessary files.">
         <copy todir="${MapBean.dist.dir}/docs/api">
             <fileset dir="${build.javadocs}" />
         </copy>
-        <copy file="README" tofile="${MapBean.dist.dir}/README"/>
-        <copy file="LICENSE" tofile="${MapBean.dist.dir}/LICENSE"/>
     </target>
 
     <!-- =================================================================== -->

@@ -27,7 +27,7 @@ import us.mn.state.dot.shape.event.MapMouseListener;
 /**
  * Base class for all themes.
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.14 $ $Date: 2001/06/21 22:42:41 $ 
+ * @version $Revision: 1.15 $ $Date: 2001/08/09 20:43:43 $ 
  */
 public class Theme implements LayerChangedListener {
 	/** The Layer that this theme controls.*/
@@ -46,7 +46,7 @@ public class Theme implements LayerChangedListener {
 	private String name;
 	
 	/** Currently selected shapes.*/
-	private int[] selections = new int[ 0 ];
+	private MapObject[] selections = new MapObject[ 0 ];
 	
 	/** Visibility flag for this theme.*/
 	private boolean visible = true;
@@ -135,14 +135,14 @@ public class Theme implements LayerChangedListener {
 	}
 	
 	public void clearSelections() {
-		setSelections( new int[ 0 ] );
+		setSelections( new MapObject[ 0 ] );
 	}
 			
-	public void setSelections( int[] newSelections ) {
+	public void setSelections( MapObject[] newSelections ) {
 		selections = newSelections;
 	}
 	
-	public int[] getSelections() {
+	public MapObject[] getSelections() {
 		return selections;
 	}
 	
@@ -195,9 +195,10 @@ public class Theme implements LayerChangedListener {
 			searchArea = new Rectangle2D.Double( point.getX(),
 				point.getY(), 1, 1 );
 		}
-		int index = layer.search( searchArea );
-		if ( mapTip != null && index != -1 ) {
-			result = mapTip.getTip( layer, index );
+		//int index = layer.search( searchArea, renderer );
+		MapObject object = layer.search( searchArea, renderer );
+		if ( mapTip != null && object != null ) {
+			result = mapTip.getTip( object );
 		}
 		return result;
 	}
@@ -287,13 +288,13 @@ public class Theme implements LayerChangedListener {
 			e.getReason() ) );
 	}
 	
-	public Field [] getFields(){
+	/*public Field [] getFields(){
 		return layer.getFields();
 	}
 	
 	public Field getField( String name ) {
 		return layer.getField( name );
-	}
+	}*/
 	
 	public Layer getLayer() {
 		return layer;

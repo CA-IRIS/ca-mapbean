@@ -23,11 +23,12 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import javax.swing.*;
+import us.mn.state.dot.shape.shapefile.*;
 
 /**
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.1 $ $Date: 2001/04/19 16:52:59 $ 
+ * @version $Revision: 1.2 $ $Date: 2001/08/09 20:43:43 $ 
  */
 public class Viewer extends JFrame {
 

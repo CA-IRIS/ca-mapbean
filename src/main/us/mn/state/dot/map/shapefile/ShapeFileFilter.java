@@ -17,7 +17,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-package us.mn.state.dot.shape;
+package us.mn.state.dot.shape.shapefile;
 
 import java.io.File;
 import java.util.HashSet;
@@ -27,7 +27,7 @@ import javax.swing.filechooser.*;
 /**
  * A file filter for filtering for ESRI shape files.
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.2 $ $Date: 2001/05/07 22:16:24 $ 
+ * @version $Revision: 1.1 $ $Date: 2001/08/09 20:43:43 $ 
  */
 public class ShapeFileFilter extends FileFilter {	
 	

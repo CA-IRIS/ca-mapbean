@@ -17,16 +17,21 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-package us.mn.state.dot.shape;
+package us.mn.state.dot.shape.shapefile;
 
 import java.awt.*;
 import java.awt.geom.*;
+import us.mn.state.dot.shape.LayerRenderer;
+import us.mn.state.dot.shape.MapTip;
+import us.mn.state.dot.shape.Symbol;
+import us.mn.state.dot.shape.MapObject;
+
 
 /**
  * Base class for all renderers used for shape files.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.11 $ $Date: 2001/07/09 21:10:19 $ 
+ * @version $Revision: 1.1 $ $Date: 2001/08/09 20:43:43 $ 
  */
 public abstract class ShapeRenderer implements LayerRenderer {
     
@@ -37,20 +42,15 @@ public abstract class ShapeRenderer implements LayerRenderer {
 	/** Name of renderer */
 	private String name = "";
 	
-	/** 
-	 * Render the object at the given index.
-	 */
-	public abstract Symbol render( int index );
-	
 	/**
 	 * Set the field for this renderer.
 	 */
-    public abstract void setField( Field f );
+    public abstract void setField( String field );
 	
 	/**
 	 * Get the field used by this renderer.
 	 */
-    public abstract Field getField();
+    public abstract String getField();
 	
 	/**
 	 * Set the MapTip used by this renderer.
@@ -78,10 +78,10 @@ public abstract class ShapeRenderer implements LayerRenderer {
 	 * @param layer, Layer that contains the map object.
 	 * @param i, index of the object.
 	 */
-    public String getTip( ShapeLayer layer, int i ){
+    public String getTip( MapObject object ){
         String result = null;
-        if (mapTip != null){
-            result = mapTip.getTip(layer, i);
+        if ( mapTip != null ){
+            result = mapTip.getTip( object );
         }
     	return result;
     }
@@ -112,5 +112,9 @@ public abstract class ShapeRenderer implements LayerRenderer {
 			result = name;
 		}
 		return result;
+	}
+	
+	public boolean isVisible( int index ) {
+		return true;
 	}
 }

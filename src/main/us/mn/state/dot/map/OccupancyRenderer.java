@@ -23,13 +23,13 @@ import us.mn.state.dot.shape.*;
 import java.awt.*;
 
 /**
- *
+ * Renderer for showing occupancy on gpoly layer.
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.2 $ $Date: 2001/04/19 16:49:31 $ 
+ * @version $Revision: 1.3 $ $Date: 2001/08/09 20:43:43 $ 
  */
 public class OccupancyRenderer extends ClassBreaksRenderer {
 
-	public OccupancyRenderer( NumericField field, MapTip tip ) {
+	public OccupancyRenderer( String field, MapTip tip ) {
 		super( field, 4, "Occupancy" );
 		setSymbol( 0, ( new FillSymbol( Color.gray, "No Data" ) ) );
 		setSymbol( 1, ( new FillSymbol( Color.green, "0-13%" ) ) );

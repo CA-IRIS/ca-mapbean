@@ -17,7 +17,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-package us.mn.state.dot.shape;
+package us.mn.state.dot.shape.shapefile;
 
 import java.io.*;
 import java.net.*;
@@ -25,7 +25,7 @@ import java.net.*;
 /**
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.5 $ $Date: 2001/07/18 16:20:28 $ 
+ * @version $Revision: 1.1 $ $Date: 2001/08/09 20:43:43 $ 
  */
 public class ShapePrinter {
 

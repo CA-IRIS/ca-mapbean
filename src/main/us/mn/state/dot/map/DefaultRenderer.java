@@ -19,20 +19,21 @@
 
 package us.mn.state.dot.shape;
 
-import java.awt.geom.*;
-import java.awt.*;
+import java.awt.Shape;
+import java.awt.Graphics2D;
 
 /**
  * A default implementation of a ShapeRenderer.  Shapes are all rendered with the
  * same symbol.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.14 $ $Date: 2001/07/09 21:10:19 $ 
+ * @version $Revision: 1.15 $ $Date: 2001/08/09 20:43:43 $ 
  */
-public final class DefaultRenderer extends ShapeRenderer {
+public final class DefaultRenderer implements LayerRenderer {
 
-	private NumericField field = null;
 	private String name = null;
+	
+	private Symbol symbol;
 
 	/**
 	 * Create a new DefaultRenderer.
@@ -42,15 +43,54 @@ public final class DefaultRenderer extends ShapeRenderer {
 		setSymbol( s );
 	}
 
-	public Symbol render( int index ){
-		return symbol;
+	public boolean isVisible( int index ) {
+		return true;
 	}
-
-	public void setField( Field f ){
-		field = ( NumericField ) f;
+	
+	public void setSymbol( Symbol s ) {
+		symbol = s;
 	}
-
-	public Field getField(){
-		return field;
+	
+	/**
+	 * Gets the shape that would be used to render this object.
+	 */
+	public Shape getShape( MapObject object ) {
+		return object.getShape();
 	}
+	
+	/**
+	 * Renders the MapObject on the graphics.
+	 * @param object, the MapObject to render.
+	 */
+	public void render( Graphics2D g, MapObject object ) {
+		symbol.draw( g, object.getShape() );		
+	}
+	
+	/**
+	 * Get they symbols used by this renderer.
+	 */
+	public Symbol[] getSymbols() {
+		return new Symbol[] { symbol };
+	}
+	
+	/**
+	 * Set the name of this renderer.
+	 */
+	public void setName( String s ) {
+		name = s;
+	}
+	
+	/** 
+	 * Overrides Object.toString() 
+	 */
+	public final String toString(){
+		String result = null;
+		if ( name == null ) {
+			result = super.toString();
+		} else {
+			result = name;
+		}
+		return result;
+	}
+	
 }

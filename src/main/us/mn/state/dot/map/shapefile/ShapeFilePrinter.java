@@ -17,19 +17,41 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-package us.mn.state.dot.shape;
+package us.mn.state.dot.shape.shapefile;
+
+import java.io.*;
 
 /**
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.4 $ $Date: 2001/05/12 00:10:40 $ 
+ * @version $Revision: 1.1 $ $Date: 2001/08/09 20:43:43 $ 
  */
-public abstract class NumericField extends Field {
+public class ShapeFilePrinter extends java.lang.Object {
 
-	public NumericField(int type, String name, int length){
-		super(type, name, length);
-	}
+	/** Creates new ShapeFilePrinter */
+    public ShapeFilePrinter() {
+    }
 
-	public abstract int getRenderingClass( int index, double[] classBreaks );
-
-} 
+    /**
+    * @param args the command line arguments
+    */
+    public static void main( String args[] ) {
+		if ( args.length < 1 ) { 
+			System.out.println( "must include name of shape file to read" );
+		}
+		String inFileName = args[ 0 ];
+		try {
+			File file = new File( inFileName );
+			ShapeLayer layer = new ShapeLayer( file.toURL(), inFileName );
+			if ( args.length > 1 ) {
+				File outFile = new File( args[ 1 ] );
+				OutputStream out = new FileOutputStream( outFile );
+				layer.printData( out );
+			} else {
+				layer.printData( System.out );
+			}
+		} catch ( java.io.IOException ioe ) {
+			ioe.printStackTrace();
+		}
+    }
+}

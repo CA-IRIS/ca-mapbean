@@ -25,12 +25,15 @@ import java.util.*;
 import javax.swing.*;
 import us.mn.state.dot.dds.client.*;
 import us.mn.state.dot.shape.event.*;
+import us.mn.state.dot.shape.shapefile.ShapeLayer;
+import us.mn.state.dot.shape.shapefile.ShapeObject;
+import us.mn.state.dot.shape.shapefile.ShapeRenderer;
 
 /**
  * A StationLayer displays detector station data represented as a gpoly.shp file.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.27 $ $Date: 2001/06/14 22:54:36 $ 
+ * @version $Revision: 1.28 $ $Date: 2001/08/09 20:43:43 $ 
  */
 public final class StationLayer extends ShapeLayer implements StationListener {
 	/**
@@ -56,12 +59,12 @@ public final class StationLayer extends ShapeLayer implements StationListener {
 	 */
 	public final synchronized void update( int[] volume, int[] occupancy,
 			int[] status ) {
-		IntegerField v = ( IntegerField ) super.getField( "VOLUME" );
-		IntegerField o = ( IntegerField ) super.getField( "OCCUPANCY" );
-		IntegerField s = ( IntegerField ) super.getField( "STATUS" );
-		int [] station = ( ( IntegerField ) super.getField( "STATION2"
-			) ).getData();
-		for ( int i = ( station.length - 1 ); i >= 0; i-- ){
+		//IntegerField v = ( IntegerField ) super.getField( "VOLUME" );
+		//IntegerField o = ( IntegerField ) super.getField( "OCCUPANCY" );
+		//IntegerField s = ( IntegerField ) super.getField( "STATUS" );
+		//int [] station = ( ( IntegerField ) super.getField( "STATION2"
+		//	) ).getData();
+		/*for ( int i = ( station.length - 1 ); i >= 0; i-- ){
 			if ( station[ i ] > 0 ) {
 				if ( station[ i ] - 1 < volume.length ) {
 					v.setValue( i, volume[ station[ i ] - 1 ] );
@@ -69,6 +72,21 @@ public final class StationLayer extends ShapeLayer implements StationListener {
 					s.setValue( i, status[ station[ i ] - 1 ] );
 				}
 			}
+		}*/
+		for ( int i = shapes.length - 1; i >= 0; i-- ) {
+			ShapeObject shape = shapes[ i ];
+			int station = ( ( Integer ) 
+				shape.getValue( "STATION2" ) ).intValue() - 1;
+			if ( station > 0 ) {
+				if ( station < volume.length ) {
+					shape.addField( "VOLUME",
+						new Integer( volume[ station ] ) );
+					shape.addField( "OCCUPANCY",
+						new Integer( occupancy[ station ] ) );
+					shape.addField( "STATUS",
+						new Integer( status[ station ] ) );
+				}
+			}	
 		}
 		SwingUtilities.invokeLater( new NotifyThread( this,
 			LayerChangedEvent.DATA ) );
@@ -91,12 +109,18 @@ public final class StationLayer extends ShapeLayer implements StationListener {
 	
 	public final Theme getTheme() {
 		StationMapTip mapTip = new StationMapTip();
-		NumericField field = ( NumericField ) getField( "OCCUPANCY" );
+		//NumericField field = ( NumericField ) getField( "OCCUPANCY" );
 		ShapeRenderer renderer = new OccupancyRenderer(
-			field, mapTip );
+			"OCCUPANCY", mapTip );
 		Theme result = new StationTheme( this, renderer );
 		result.setTip( mapTip );
 		return result;
+	}
+	
+	/**
+	 * Paint selected objects on this layer.
+	 */
+	public void paintSelections(Graphics2D g, LayerRenderer renderer, Object[] selections) {
 	}
 	
 	private final class StationTheme extends Theme implements MapMouseListener {
@@ -106,9 +130,11 @@ public final class StationLayer extends ShapeLayer implements StationListener {
 		private final JMenuItem idMenuItem = new JMenuItem( "ID" );
 		private final JMenuItem volumeMenuItem = new JMenuItem( "Volume" );
 		private final JMenuItem occMenuItem = new JMenuItem( "occ" );
+		private final ShapeLayer layer;
 		
-		public StationTheme( Layer layer, LayerRenderer renderer ){
+		public StationTheme( ShapeLayer layer, LayerRenderer renderer ){
 			super( layer, renderer );
+			this.layer = layer;
 			Symbol symbol = new FillSymbol();
 			symbol.getOutLineSymbol().setColor( Color.magenta );
 			symbol.getOutLineSymbol().setSize( 50 );
@@ -146,22 +172,29 @@ public final class StationLayer extends ShapeLayer implements StationListener {
 		}
 		
 		public boolean mousePressed( final java.awt.event.MouseEvent event ) {
-			int index = getIndex( event );
-			if ( index == -1 ) {
+			MapObject searchResult = getMapObject( event );
+			if ( searchResult == null ) {
 				return false;
 			} else {
-				int[] selections = { index };
+				MapObject[] selections = { searchResult };
 				setSelections( selections );
 				notifyThemeChangedListeners( new ThemeChangedEvent( this,
 					ThemeChangedEvent.SELECTION ) );
 				if ( SwingUtilities.isRightMouseButton( event ) ) {
-					idMenuItem.setText( "Station " + layer.getField( "STATION2"
-						).getStringValue( index ) + ": " + layer.getField( "NAME"
-						).getStringValue( index ) );
-					volumeMenuItem.setText( " Volume = " + layer.getField( "VOLUME"
-						).getStringValue( index ) );
-					occMenuItem.setText( " Occupancy = " +
-						layer.getField( "OCCUPANCY" ).getStringValue( index ) );
+					ShapeObject shapeObject = ( ShapeObject ) searchResult;
+					idMenuItem.setText( "Station " + shapeObject.getValue( 
+						"STATION2" ) + ": " + shapeObject.getValue( "NAME" ) );
+					//idMenuItem.setText( "Station " + layer.getField( "STATION2"
+					//	).getStringValue( index ) + ": " + layer.getField( "NAME"
+					//	).getStringValue( index ) );
+					//volumeMenuItem.setText( " Volume = " + layer.getField( "VOLUME"
+					//	).getStringValue( index ) );
+					volumeMenuItem.setText( " Volume = " + 
+						shapeObject.getValue( "VOLUME" ) );
+					occMenuItem.setText( " Occupancy = " + 
+						shapeObject.getValue( "OCCUPANCY" ) );
+					//occMenuItem.setText( " Occupancy = " +
+					//	layer.getField( "OCCUPANCY" ).getStringValue( index ) );
 					JPopupMenu menu = rightClickMenu.getPopupMenu();
 					menu.show( event.getComponent(), event.getX(),
 						event.getY() );
@@ -184,21 +217,20 @@ public final class StationLayer extends ShapeLayer implements StationListener {
 			return false;
 		}
 		
-		private int getIndex( final java.awt.event.MouseEvent event ) {
+		private MapObject getMapObject( final java.awt.event.MouseEvent event ) {
 			MapBean map = ( MapBean ) event.getSource();
 			AffineTransform at = null;
 			try {
 				at = map.getTransform().createInverse();
 			} catch ( NoninvertibleTransformException ex ){
-				return -1;
+				return null;
 			}
 			Graphics2D g = ( Graphics2D ) map.getGraphics();
 			g.setTransform( map.getTransform() );
 			Point2D point = null;
 			point = at.transform( event.getPoint(), point );
-			int index = layer.search( new Rectangle2D.Double( point.getX(),
-				point.getY(), 0, 0 ) );
-			return index;
+			return layer.search( new Rectangle2D.Double( point.getX(),
+				point.getY(), 0, 0 ), null );
 		}
 		
 		public boolean mouseClicked( final java.awt.event.MouseEvent event ) {

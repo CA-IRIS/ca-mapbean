@@ -25,7 +25,7 @@ import java.awt.*;
  * Interface for symbols used by themes to draw layer data.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.16 $ $Date: 2001/07/09 21:10:19 $ 
+ * @version $Revision: 1.17 $ $Date: 2001/08/09 20:43:43 $ 
  */
 public interface Symbol {
 	
@@ -42,7 +42,7 @@ public interface Symbol {
 	public void setSize ( int size );
 	
 	public int getSize();
-
+	
 	public void setOutLined( boolean outlined );
 	
 	public boolean isOutLined();

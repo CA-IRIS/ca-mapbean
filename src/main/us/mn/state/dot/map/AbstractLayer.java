@@ -27,12 +27,13 @@ import java.awt.*;
  * interface.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.22 $ $Date: 2001/06/21 22:42:41 $ 
+ * @version $Revision: 1.23 $ $Date: 2001/08/09 20:43:43 $ 
  * @since 1.0
  */
 public abstract class AbstractLayer implements Layer {
+	
 	/** extent of layer */
-	protected Rectangle2D.Double extent = new Rectangle2D.Double();
+	protected Rectangle2D extent = new Rectangle2D.Double();
 
 	private boolean visible = true;
 
@@ -103,7 +104,8 @@ public abstract class AbstractLayer implements Layer {
 		return ! dynamic;
 	}
 
-	/** if set to false layer is static and the data will not change.  Static
+	/** 
+	 * If set to false layer is static and the data will not change.  Static
 	 * layers are painted behind non-static (dynamic) layers on a map.  If it is
 	 * desired for a static layer to be higher in the map it setStatic() must be
 	 * set to true.
@@ -115,14 +117,15 @@ public abstract class AbstractLayer implements Layer {
 	public void setStatic( boolean b ) {
 		dynamic = ! b;
 	}
-	public Field[] getFields() {
+	/*public Field[] getFields() {
 		return null;
 	}
 	public Field getField( String name ) {
 		return null;
-	}
+	}*/
 	
 	public Theme getTheme() {
-		return new Theme( this );
+		return new Theme( this, new DefaultRenderer( new CircleMarker () ) );
 	}
+	
 }

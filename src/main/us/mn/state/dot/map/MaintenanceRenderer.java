@@ -20,17 +20,18 @@
 package us.mn.state.dot.shape;
 
 import java.awt.*;
+import us.mn.state.dot.shape.shapefile.ShapeObject;
 
 /**
  * Renderer used for coloring in Maintenence districts on gpoly layer.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.6 $ $Date: 2001/04/19 16:49:31 $ 
+ * @version $Revision: 1.7 $ $Date: 2001/08/09 20:43:43 $ 
  */
 public final class MaintenanceRenderer extends ClassBreaksRenderer {
 
-	public MaintenanceRenderer( NumericField field ) {
-		super( field, 17, "Maintenance" );
+	public MaintenanceRenderer( String fieldName ) {
+		super( fieldName, 17, "Maintenance" );
 		for ( int i = 0; i < 17; i++ ) {
 			setBreak( i, i + 1 );
 		}
@@ -53,10 +54,11 @@ public final class MaintenanceRenderer extends ClassBreaksRenderer {
 		setSymbol( 16, new FillSymbol( new Color( 183, 0, 255 ), "17" ) );
 		setSymbol( 17, new FillSymbol( new Color( 0, 96, 0 ), "18" ) );
 		setTip( new MapTip(){
-			public String getTip( Layer layer, int i ){
+			public String getTip( MapObject object ){
+				ShapeObject shapeObject = ( ShapeObject ) object;
 				String result = null;
 				result = new String( "Maintenance District - "
-					+ layer.getField( "MAINT" ).getStringValue( i ) );
+					+ shapeObject.getValue( "MAINT" ) );
 				return result;
 			}
 		});

@@ -26,28 +26,24 @@ import java.awt.geom.*;
  * A LayerRenderer determines how a Layers data is rendered on the map.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.3 $ $Date: 2001/07/09 21:10:19 $ 
+ * @version $Revision: 1.4 $ $Date: 2001/08/09 20:43:43 $ 
  */
 public interface LayerRenderer {
 	
 	/** 
-	 * Called by the Theme to render a layers data.
-	 * @param index, the index of the object to render.
+	 * Renders the MapObject on the graphics.
+	 * @param object, the MapObject to render.
 	 */
-    public Symbol render( int index );
+    public void render( Graphics2D g, MapObject object );
 	
 	/**
-	 * Set the field used by this renderer to render the data.
+	 * Gets the shape that would be used to render this object.
 	 */
-    public void setField( Field f );
-	
-	/** 
-	 * Get the field used by this renderer to render the data.
-	 */
-    public Field getField();
+	public Shape getShape( MapObject object );
 	
 	/**
 	 * Get they symbols used by this renderer.
 	 */
 	public Symbol[] getSymbols();
+	
 }
