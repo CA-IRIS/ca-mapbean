@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000  Minnesota Department of Transportation
+ * Copyright (C) 2000-2004  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,50 +16,47 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
-package us.mn.state.dot.map;
+package us.mn.state.dot.map.shapefile;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
-
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-
 import us.mn.state.dot.map.shapefile.ShapeFileFilter;
 import us.mn.state.dot.map.shapefile.ShapeLayer;
 
 /**
+ * Shapefile Viewer
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.5 $ $Date: 2004/08/19 15:53:41 $ 
  */
 public class Viewer extends JFrame {
 
 	private final MapBean map = new MapBean();
-		
-	/** Creates new Viewer */
-    public Viewer() {
+
+	/** Create a new Viewer */
+	public Viewer() {
 		super( "Shapefile Viewer" );
 		this.setJMenuBar( buildMenus() );
 		this.getContentPane().setLayout( new BorderLayout() );
 		this.getContentPane().add( map, BorderLayout.CENTER );
 		NavigationBar toolbar = new NavigationBar( map );
 		this.getContentPane().add( toolbar, BorderLayout.NORTH );
-    }
-	
+	}
+
 	private JMenuBar buildMenus() {
 		JMenuBar menuBar = new JMenuBar();
 		menuBar.add( createFileMenu() );
 		menuBar.add( createViewMenu() );
 		return menuBar;
 	}
-	
+
 	private JMenu createFileMenu(){
 		JMenu file = new JMenu( "File" );
 		JMenuItem newItem = new JMenuItem( "New" );
@@ -76,7 +73,7 @@ public class Viewer extends JFrame {
 		file.add( exitItem );
 		return file;
 	}
-	
+
 	private JMenu createViewMenu() {
 		JMenu viewMenu = new JMenu( "View" );
 		JMenuItem addLayer = new JMenuItem( "Add Layer" );
@@ -100,7 +97,7 @@ public class Viewer extends JFrame {
 		viewMenu.add( removeLayer );
 		return viewMenu;
 	}
-	
+
 	private void addLayer( File file ) {
 		try {
 			Layer layer = new ShapeLayer( file.toURL(), getName( file ) );
@@ -109,7 +106,7 @@ public class Viewer extends JFrame {
 			ioe.printStackTrace();
 		}
 	}
-	
+
 	private String getName( File file ) {
 		String fileName = file.getName();
 		int index = fileName.lastIndexOf( '.' );
@@ -120,5 +117,5 @@ public class Viewer extends JFrame {
 		Viewer viewer = new Viewer();
 		viewer.setSize( 100, 100 );
 		viewer.setVisible( true );
-	}	
+	}
 }
