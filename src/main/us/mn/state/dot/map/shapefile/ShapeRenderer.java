@@ -48,16 +48,7 @@ abstract public class ShapeRenderer implements LayerRenderer {
 
 	/** Get the tip for the given map object */
 	public String getTip(MapObject object) {
-		String result = null;
-		if(mapTip != null) {
-			result = mapTip.getTip(object);
-		}
-		return result;
-	}
-
-	/** Overrides Object.toString() */
-	public String toString() {
-		if(name == null) return super.toString();
-		else return name;
+		if(mapTip != null) return mapTip.getTip(object);
+		return null;
 	}
 }
