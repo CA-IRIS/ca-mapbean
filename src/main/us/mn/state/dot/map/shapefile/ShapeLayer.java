@@ -32,7 +32,7 @@ import us.mn.state.dot.shape.*;
   *
   * @author Douglas Lau
   * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
-  * @version $Revision: 1.3 $ $Date: 2001/08/15 21:24:44 $
+  * @version $Revision: 1.4 $ $Date: 2001/08/17 22:14:38 $
   */
 public class ShapeLayer extends AbstractLayer {
 
@@ -119,11 +119,10 @@ public class ShapeLayer extends AbstractLayer {
 	
 	public MapObject search( Point2D p, LayerRenderer renderer ) { 
 		MapObject result = null;
-		Rectangle2D r = new Rectangle2D.Double();
 		for ( int i = ( shapes.length - 1 ); i >= 0; i-- ) {
 			MapObject object = shapes[ i ];
-			r.setFrame( renderer.getBounds( object ) );
-			if ( r.contains( p ) ) {
+			Shape target = renderer.getShape( object );
+			if ( target.contains( p ) ) {
 				result = object;
 				break;
 			}
@@ -134,11 +133,10 @@ public class ShapeLayer extends AbstractLayer {
 	
 	public final java.util.List getPaths( Point2D p, LayerRenderer renderer ){
 		java.util.List result = new ArrayList();
-		Rectangle2D r = new Rectangle2D.Double();
 		for ( int i = ( shapes.length - 1 ); i >= 0; i-- ) {
 			MapObject object = shapes[ i ];
-			r.setFrame( renderer.getBounds( object ) );
-			if ( r.contains( p ) ) {
+			Shape target = renderer.getShape( object );
+			if ( target.contains( p ) ) {
 				result.add( object );
 				break;
 			}

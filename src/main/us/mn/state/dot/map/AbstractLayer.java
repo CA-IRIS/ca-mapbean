@@ -27,7 +27,7 @@ import java.awt.*;
  * interface.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.25 $ $Date: 2001/08/09 21:24:09 $ 
+ * @version $Revision: 1.26 $ $Date: 2001/08/17 22:14:38 $ 
  * @since 1.0
  */
 public abstract class AbstractLayer implements Layer {
@@ -66,7 +66,7 @@ public abstract class AbstractLayer implements Layer {
 	 *
 	 * @param s String containing the name of the layer
 	 */
-	public void setName(String s) {
+	public void setName( String s ) {
 		name = s;
 	}
 
