@@ -18,8 +18,12 @@
  */
 package us.mn.state.dot.map.shapefile;
 
+import java.awt.Shape;
+import java.awt.geom.GeneralPath;
+import java.awt.geom.PathIterator;
 import java.awt.geom.Rectangle2D;
 import java.io.EOFException;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
@@ -27,91 +31,49 @@ import java.util.List;
 import java.util.LinkedList;
 
 /**
- * ShapeFile is an ESRI shape file reader.  It reads the file and creates an
- * array of all the shapes and their coordinates.
+ * ShapeFile is an ESRI shape file reader.  It reads the file and creates a
+ * list of all the shapes (as java.awt.Shape).
+ *
+ * The specification for ESRI(tm) shapefile can be found at
+ * http://www.esri.com/library/whitepapers/pdfs/shapefile.pdf
  *
  * @author Douglas Lau
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
  */
 public class ShapeFile {
 
-	/**
-	 *	ShapeFile header (100 bytes)
-	 *
-	 *	Pos	Field		Value	Type			Size
-	 *
-	 *	0	File Code	9994	int (big)		4
-	 *	4	Unused		0	int (big)		4
-	 *	8	Unused		0	int (big)		4
-	 *	12	Unused		0	int (big)		4
-	 *	16	Unused		0	int (big)		4
-	 *	20	Unused		0	int (big)		4
-	 *	24	File Length		int (big)		4
-	 *	28	Version		1000	int (little)		4
-	 *	32	Shape Type		int (little)		4
-	 *	36	Xmin			double (little)		8
-	 *	44	Ymin			double (little)		8
-	 *	52	Xmax			double (little)		8
-	 *	60	Ymax			double (little)		8
-	 *	68	Zmin		0.0	double (little)		8
-	 *	76	Zmax		0.0	double (little)		8
-	 *	84	Mmin		0.0	double (little)		8
-	 *	92	Mmax		0.0	double (little)		8
-	 */
-	private int shapeType;
-	private int version;
-	private double minX;
-	private double maxX;
-	private double minY;
-	private double maxY;
+	/** File Code (magic number) to indicate ESRI shape file */
+	static protected final int FILE_CODE = 9994;
 
-	/** List of shapes in the ShapeFile */
-	protected final List shapes = new LinkedList();
+	/** Supported version of ESRI shape file specification */
+	static protected final int SHAPEFILE_VERSION = 1000;
 
-	/** Create a ShapeFile object from the specified URL */
-	public ShapeFile( URL url ) throws IOException {
-		ShapeDataInputStream in = new ShapeDataInputStream( url.openStream() );
-		String location = url.toExternalForm();
-		location = location.substring(0, location.length() - 4) + ".dbf";
-		URL dbUrl = new URL(location);
-		DbaseInputStream dbaseStream = new DbaseInputStream( dbUrl );
-		readData( in, dbaseStream );
-	}
-
-	/** Create a ShapeFile object from the specified file name */
-	public ShapeFile( String name ) throws IOException {
-		ShapeDataInputStream in = new ShapeDataInputStream(
-			new FileInputStream( name + ".shp" ) );
-		DbaseInputStream dbaseStream = new DbaseInputStream(
-			name + ".dbf");
-		readData(in, dbaseStream);
-	}
-
-	/** Read the contents of the shape file */
-	protected void readData(ShapeDataInputStream shapeIn,
-		DbaseInputStream dbaseStream) throws IOException
-	{
-		shapeIn.skipBytes(28); //start of header unused
-		version = shapeIn.readLittleInt();
-		shapeType = shapeIn.readLittleInt();
-		minX = shapeIn.readLittleDouble();
-		minY = shapeIn.readLittleDouble();
-		maxX = shapeIn.readLittleDouble();
-		maxY = shapeIn.readLittleDouble();
-		shapeIn.skipBytes(32); //end of header unused
-		try {
-			while(dbaseStream.hasNext()) {
-				shapes.add(new ShapeObject(
-					ShapeFactory.readShape(shapeIn),
-					dbaseStream.nextRecord()));
-			}
-		} catch(EOFException e) {
-			throw new IOException("Shape file and Dbase file " +
-				"have different numbers of records.");
+	/** Shape file parse exception */
+	protected class ParseException extends IOException {
+		protected ParseException(String m) {
+			super(m);
 		}
-		dbaseStream.close();
-		shapeIn.close();
 	}
+
+	/** Shape type code */
+	protected int shapeType;
+
+	/** Get the shape type code */
+	public int getShapeType() {
+		return shapeType;
+	}
+
+	/** Minimum X extent */
+	protected double minX;
+
+	/** Maximum X extent */
+	protected double maxX;
+
+	/** Minimum Y extent */
+	protected double minY;
+
+	/** Maximum Y extent */
+	protected double maxY;
 
 	/** Get the extent of the shape file */
 	public Rectangle2D getExtent() {
@@ -120,18 +82,402 @@ public class ShapeFile {
 		return new Rectangle2D.Double(minX, minY, width, height);
 	}
 
+	/** List of shapes in the ShapeFile */
+	protected final List shapes = new LinkedList();
+
+	/** Create a ShapeFile object from the specified file name */
+	public ShapeFile( String name ) throws IOException {
+		this(new File(name).toURL());
+	}
+
+	/** Create a ShapeFile object from the specified URL */
+	public ShapeFile(URL url) throws IOException {
+		ShapeDataInputStream in = new ShapeDataInputStream(
+			url.openStream());
+		try {
+			readHeader(in);
+			readShapes(in);
+		}
+		finally {
+			in.close();
+		}
+	}
+
+	/** Total (16-bit) words in the file */
+	protected int total_words;
+
+	/** Current word within file */
+	protected int word = 0;
+
+	/**
+	 * Read the Shape File header (100 bytes).
+	 *
+	 *	Pos	Field		Type	Byte Order	Size
+	 *
+	 *	0	File Code	int	big		4
+	 *	4	Unused		int	big		4
+	 *	8	Unused		int	big		4
+	 *	12	Unused		int	big		4
+	 *	16	Unused		int	big		4
+	 *	20	Unused		int	big		4
+	 *	24	File Length	int	big		4
+	 *	28	Version		int	little		4
+	 *	32	Shape Type	int	little		4
+	 *	36	Xmin		double	little		8
+	 *	44	Ymin		double	little		8
+	 *	52	Xmax		double	little		8
+	 *	60	Ymax		double	little		8
+	 *	68	Zmin		double	little		8
+	 *	76	Zmax		double	little		8
+	 *	84	Mmin		double	little		8
+	 *	92	Mmax		double	little		8
+	 */
+	protected void readHeader(ShapeDataInputStream shapeIn)
+		throws IOException
+	{
+		int magic = shapeIn.readInt();
+		if(magic != FILE_CODE) throw new ParseException(
+			"Invalid shape file (bad file code)");
+		shapeIn.skipBytes(20); // unused (reserved for future use)
+		total_words = shapeIn.readInt();
+		int version = shapeIn.readLittleInt();
+		if(version != SHAPEFILE_VERSION) throw new ParseException(
+			"Unsupported shape file version: " + version);
+		shapeType = shapeIn.readLittleInt();
+		minX = shapeIn.readLittleDouble();
+		minY = shapeIn.readLittleDouble();
+		maxX = shapeIn.readLittleDouble();
+		maxY = shapeIn.readLittleDouble();
+		shapeIn.skipBytes(32); // ignore Z and M extents
+		word = 50;
+	}
+
+	/** Read the shapes from the file */
+	protected void readShapes(ShapeDataInputStream in) throws IOException
+	{
+		while(moreShapes()) {
+			shapes.add(new ShapeObject(nextShape(in)));
+		}
+	}
+
+	/** Check if the file contains more shapes */
+	protected boolean moreShapes() {
+		return word < total_words;
+	}
+
 	/** Get the list of all shapes from the file */
 	public List getShapeList() {
 		return shapes;
 	}
 
-	/** Get the version number */
-	public int getVersion() {
-		return version;
+	/** Null shape type */
+	static public final int NULL = 0;
+
+	/** Point shape type */
+	static public final int POINT = 1;
+
+	/** Polyline shape type */
+	static public final int POLYLINE = 3;
+
+	/** Polygon shape type */
+	static public final int POLYGON = 5;
+
+	/** Point Z shape type */
+	static public final int POINT_Z = 11;
+
+	/** Polyline M shape type */
+	static public final int POLYLINE_M = 23;
+
+	/** Read a geometric shape from a shape input stream */
+	protected Shape nextShape(ShapeDataInputStream in)
+		throws IOException
+	{
+		int skipped = in.skipBytes(8); // skip the record header
+		int shape_type = in.readLittleInt();
+		if(shape_type != shapeType) throw new ParseException(
+			"Shape type does not match header");
+		word += 6;
+		GeneralPath path = new GeneralPath(GeneralPath.WIND_EVEN_ODD);
+		path.append(readPath(in), false);
+		return path;
 	}
 
-	/** Get the shape type */
-	public int getShapeType() {
-		return shapeType;
+	/** Read a path iterator from a shape input stream */
+	protected PathIterator readPath(ShapeDataInputStream in)
+		throws IOException
+	{
+		switch(shapeType) {
+			case NULL:
+				return new Null();
+			case POINT:
+				return new Point(in);
+			case POLYLINE:
+				return new PolyLine(in);
+			case POLYGON:
+				return new Polygon(in);
+			case POINT_Z:
+				return new PointZ(in);
+			case POLYLINE_M:
+				return new PolyLineM(in);
+		}
+		throw new IOException("Invalid shape type: " + shapeType);
+	}
+
+	/** Null shape */
+	public class Null implements PathIterator {
+
+		public int currentSegment(double [] coords) {
+			return SEG_MOVETO;
+		}
+
+		public int currentSegment(float [] coords) {
+			return SEG_MOVETO;
+		}
+
+		public void next() {}
+
+		public boolean isDone() {
+			return true;
+		}
+
+		public int getWindingRule() {
+			return WIND_EVEN_ODD;
+		}
+	}
+
+	/**
+	 * Point shape structure
+	 *
+	 * Pos	Field		Type		Size
+	 * 0	Shape Type	int (little)	4
+	 * 4	X		double (little)	8
+	 * 12	Y		double (little)	8
+	 */
+	public class Point implements PathIterator {
+
+		protected final double x;
+		protected final double y;
+		protected boolean done = false;
+
+		public Point(ShapeDataInputStream in) throws IOException {
+			x = in.readLittleDouble();
+			y = in.readLittleDouble();
+			word += 8;
+		}
+
+		public int currentSegment(double [] coords) {
+			coords[0] = x;
+			coords[1] = y;
+			return SEG_MOVETO;
+		}
+
+		public int currentSegment(float [] coords) {
+			coords[0] = (float)x;
+			coords[1] = (float)y;
+			return SEG_MOVETO;
+		}
+
+		public void next() {
+			done = true;
+		}
+
+		public boolean isDone() {
+			return done;
+		}
+
+		public int getWindingRule() {
+			return WIND_EVEN_ODD;
+		}
+	}
+
+	/**
+	 * Point Z shape structure
+	 *
+	 * Pos	Field		Type			Size
+	 * 0	Shape Type	int (little)		4
+	 * 4	X		double (little)		8
+	 * 12	Y		double (little)		8
+	 * 20	Z		double (little)		8
+	 * 28	M		double (little)		8
+	 */
+	public class PointZ extends Point {
+
+		protected final double z;
+		protected final double measure;
+
+		public PointZ(ShapeDataInputStream in) throws IOException {
+			super(in);
+			z = in.readLittleDouble();
+			measure = in.readLittleDouble();
+			word += 8;
+		}
+	}
+
+	/**
+	 * PolyLine / Polygon shape structure
+	 *
+	 * Pos	Field		Type			Size
+	 * 0	Shape Type	int (little)		4
+	 * 4	Xmin		double (little)		8
+	 * 12	Ymin		double (little)		8
+	 * 20	Xmax		double (little)		8
+	 * 28	Ymax		double (little)		8
+	 * 36	NumParts	int (little)		4
+	 * 40	NumPoints	int (little)		4
+	 * 44	Parts		int (little)		4 * NumParts
+	 * X	Points		point			16 * NumPoints
+	 */
+	public abstract class Poly implements PathIterator {
+		protected int numParts;
+		protected int numPoints;
+		protected int point = 0;
+		protected double[] x;
+		protected double[] y;
+		protected int[] parts;
+
+		public Poly(ShapeDataInputStream in) throws IOException {
+			in.skipBytes(32);
+			numParts = in.readLittleInt();
+			numPoints = in.readLittleInt();
+			word += 20;
+			x = new double[numPoints];
+			y = new double[numPoints];
+			parts = new int[numParts];
+			int i;
+			for(i = 0; i < numParts; i++) {
+				parts[i] = in.readLittleInt();
+				word += 2;
+			}
+			for(i = 0; i < numPoints; i++) {
+				x[i] = in.readLittleDouble();
+				y[i] = in.readLittleDouble();
+				word += 8;
+			}
+		}
+
+		protected void fillCurrentSegment(double [] coords) {
+			coords[0] = x[point];
+			coords[1] = y[point];
+		}
+
+		public int currentSegment(double [] coords) {
+			fillCurrentSegment(coords);
+			return currentSegmentType();
+		}
+
+		protected void fillCurrentSegment(float [] coords) {
+			coords[0] = (float)x[point];
+			coords[1] = (float)y[point];
+		}
+
+		public int currentSegment(float [] coords) {
+			fillCurrentSegment(coords);
+			return currentSegmentType();
+		}
+
+		abstract protected int currentSegmentType();
+
+		public void next() {
+			point++;
+		}
+
+		public boolean isDone() {
+			if(point < numPoints) return false;
+			return true;
+		}
+
+		public int getWindingRule() {
+			return WIND_EVEN_ODD;
+		}
+	}
+
+	/** PolyLine shape structure */
+	public class PolyLine extends Poly {
+
+		public PolyLine(ShapeDataInputStream in) throws IOException {
+			super(in);
+		}
+
+		protected int currentSegmentType() {
+			for(int i = 0; i < numParts; i++) {
+				if(point == parts[i]) {
+					return SEG_MOVETO;
+				}
+			}
+			return SEG_LINETO;
+		}
+	}
+
+	/** Polygon shape structure */
+	public class Polygon extends Poly {
+
+		public Polygon(ShapeDataInputStream in) throws IOException {
+			super(in);
+		}
+
+		protected int currentSegmentType() {
+			int nextPoint = point + 1;
+			for(int i = 0; i < numParts; i++) {
+				int part = parts[i];
+				if(point == part) {
+					return SEG_MOVETO;
+				} else if(nextPoint == part) {
+					return SEG_CLOSE;
+				}
+			}
+			if(nextPoint == numPoints) {
+				return SEG_CLOSE;
+			}
+			return SEG_LINETO;
+		}
+	}
+
+	/**
+	 * PolyLineM / PolygonM shape structure
+	 *
+	 * Pos	Field		Type			Size
+	 * 0	Shape Type	int (little)		4
+	 * 4	Xmin		double (little)		8
+	 * 12	Ymin		double (little)		8
+	 * 20	Xmax		double (little)		8
+	 * 28	Ymax		double (little)		8
+	 * 36	NumParts	int (little)		4
+	 * 40	NumPoints	int (little)		4
+	 * 44	Parts		int (little)		4 * NumParts
+	 * X	Points		point			16 * NumPoints
+	 * Y	Mmin		double (little)		4
+	 * Y+8	Mmax		double (little)		4
+	 * Y+16 Marray		double (little)		4 * NumPoints
+	 */
+	public abstract class PolyM extends Poly {
+		protected double[] mpoints;
+
+		public PolyM(ShapeDataInputStream in) throws IOException {
+			super(in);
+			mpoints = new double[numPoints];
+			in.skipBytes(16); // skip M range
+			word += 8;
+			for(int i = 0; i < numPoints; i++) {
+				mpoints[i] = in.readLittleDouble();
+				word += 4;
+			}
+		}
+	}
+
+	/** PolyLineM shape structure */
+	public class PolyLineM extends PolyM {
+
+		public PolyLineM(ShapeDataInputStream in) throws IOException {
+			super(in);
+		}
+
+		protected int currentSegmentType() {
+			for(int i = 0; i < numParts; i++) {
+				if(point == parts[i]) {
+					return SEG_MOVETO;
+				}
+			}
+			return SEG_LINETO;
+		}
 	}
 }

@@ -20,6 +20,7 @@ package us.mn.state.dot.map.shapefile;
 
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
+import java.util.HashMap;
 import java.util.Map;
 import us.mn.state.dot.map.MapObject;
 
@@ -27,6 +28,7 @@ import us.mn.state.dot.map.MapObject;
  * A ShapeObject represents a record from an ESRI shape file.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
+ * @author Douglas Lau
  */
 public class ShapeObject implements MapObject {
 
@@ -34,12 +36,11 @@ public class ShapeObject implements MapObject {
 	protected final Shape shape;
 
 	/** Fields attached to the shape */
-	protected final Map fieldMap;
+	protected Map fields = null;
 
 	/** Create a new shape object */
-	public ShapeObject(Shape shape, Map fields) {
-		this.shape = shape;
-		this.fieldMap = fields;
+	public ShapeObject(Shape s) {
+		shape = s;
 	}
 
 	/** Get the shape to draw this object */
@@ -52,13 +53,20 @@ public class ShapeObject implements MapObject {
 		return null;
 	}
 
-	/** Add a field to this ShapeObject */
+	/** Set the field mapping */
+	public void setFields(Map f) {
+		fields = f;
+	}
+
+	/** Add a field mapping */
 	public void addField(String key, Object value) {
-		fieldMap.put(key, value);
+		if(fields == null) fields = new HashMap();
+		fields.put(key, value);
 	}
 
 	/** Get the value of the specified field */
 	public Object getValue(String key) {
-		return fieldMap.get(key);
+		if(fields == null) return null;
+		else return fields.get(key);
 	}
 }

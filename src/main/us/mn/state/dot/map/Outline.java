@@ -29,6 +29,12 @@ import java.awt.Stroke;
  */
 public class Outline {
 
+	/** Cap to render endpoints */
+	static protected final int CAP = BasicStroke.CAP_ROUND;
+
+	/** Join to render line joins */
+	static protected final int JOIN = BasicStroke.JOIN_MITER;
+
 	/** Color to render the outline */
 	public final Color color;
 
@@ -47,39 +53,35 @@ public class Outline {
 
 	/** Create a solid outline */
 	static public Outline createSolid(Color c, float w) {
-		Stroke s = new BasicStroke(w);
+		Stroke s = new BasicStroke(w, CAP, JOIN);
 		return new Outline(c, w, s);
 	}
 
 	/** Create a dotted outline */
 	static public Outline createDotted(Color c, float w) {
 		float[] dash = new float[] { w, w * 2 };
-		Stroke s = new BasicStroke(w, BasicStroke.CAP_BUTT,
-			BasicStroke.JOIN_MITER, w, dash, 0);
+		Stroke s = new BasicStroke(w, CAP, JOIN, w, dash, 0);
 		return new Outline(c, w, s);
 	}
 
 	/** Create a dashed outline */
 	static public Outline createDashed(Color c, float w) {
 		float[] dash = new float[] { w * 3, w * 2 };
-		Stroke s = new BasicStroke(w, BasicStroke.CAP_BUTT,
-			BasicStroke.JOIN_MITER, w, dash, 0);
+		Stroke s = new BasicStroke(w, CAP, JOIN, w, dash, 0);
 		return new Outline(c, w, s);
 	}
 
 	/** Create a dash-dot outline */
 	static public Outline createDashDotted(Color c, float w) {
 		float[] dash = new float[] { w * 3, w * 2, w, w * 2 };
-		Stroke s = new BasicStroke(w, BasicStroke.CAP_BUTT,
-			BasicStroke.JOIN_MITER, w, dash, 0);
+		Stroke s = new BasicStroke(w, CAP, JOIN, w, dash, 0);
 		return new Outline(c, w, s);
 	}
 
 	/** Create a dash-dot-dot outline */
 	static public Outline createDashDotDotted(Color c, float w) {
 		float[] dash = new float[] { w * 3, w * 2, w, w * 2, w, w * 2 };
-		Stroke s = new BasicStroke(w, BasicStroke.CAP_BUTT,
-			BasicStroke.JOIN_MITER, w, dash, 0);
+		Stroke s = new BasicStroke(w, CAP, JOIN, w, dash, 0);
 		return new Outline(c, w, s);
 	}
 }

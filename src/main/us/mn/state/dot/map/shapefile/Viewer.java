@@ -21,6 +21,8 @@ package us.mn.state.dot.map.shapefile;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
 import javax.swing.JFileChooser;
@@ -36,6 +38,7 @@ import us.mn.state.dot.map.NavigationBar;
  * Shapefile Viewer
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
+ * @author Douglas Lau
  */
 public class Viewer extends JFrame {
 
@@ -48,7 +51,17 @@ public class Viewer extends JFrame {
 		this.getContentPane().setLayout( new BorderLayout() );
 		this.getContentPane().add( map, BorderLayout.CENTER );
 		NavigationBar toolbar = new NavigationBar( map );
+		toolbar.setFloatable(false);
 		this.getContentPane().add( toolbar, BorderLayout.NORTH );
+                addWindowListener(new WindowAdapter() {
+                        public void windowClosing(WindowEvent evt) {
+                                quit();
+                        }
+                });
+	}
+
+	protected void quit() {
+		System.exit(0);
 	}
 
 	private JMenuBar buildMenus() {
@@ -71,6 +84,11 @@ public class Viewer extends JFrame {
 		file.add( saveItem );
 		file.addSeparator();
 		JMenuItem exitItem = new JMenuItem( "Exit" );
+		exitItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				quit();
+			}
+		});
 		file.add( exitItem );
 		return file;
 	}

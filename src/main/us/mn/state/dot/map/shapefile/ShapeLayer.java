@@ -23,6 +23,7 @@ import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.geom.Point2D;
 import java.io.IOException;
+import java.io.FileNotFoundException;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
@@ -49,40 +50,63 @@ public class ShapeLayer extends AbstractLayer {
 	/** The type of the shape file */
 	protected final int shapeType;
 
-	/** Create a new ShapeLayer from the specified filename */
-	public ShapeLayer(String fileName, String layerName)
-		throws IOException
-	{
-		this(ShapeLayer.class.getResource("/" + fileName + ".shp"),
-			layerName);
+	/** Create a new shape layer */
+	public ShapeLayer(URL url, String layerName) throws IOException {
+		super(layerName);
+		String f = url.toExternalForm();
+		if(!f.endsWith(".shp")) throw new IOException(
+			"URL must be a '.shp' file");
+		ShapeFile s = new ShapeFile(url);
+		shapeType = s.getShapeType();
+		extent = s.getExtent();
+		shapes = s.getShapeList();
+		readDbaseFile(f);
 	}
 
-	/** Create a new shape layer */
-	public ShapeLayer(URL fileLocation, String layerName)
-		throws IOException
-	{
-		super(layerName);
-		String url = fileLocation.toExternalForm();
-		if(!url.endsWith(".shp")) throw new IOException(
-			"fileLocation must be a '.shp' file");
-		ShapeFile shapeFile = new ShapeFile( fileLocation );
-		this.extent = shapeFile.getExtent();
-		shapes = shapeFile.getShapeList();
-		shapeType = shapeFile.getShapeType();
+	/** Read the Dbase file for the shape file */
+	protected void readDbaseFile(String f) throws IOException {
+		URL url = new URL(f.substring(0, f.length() - 4) + ".dbf");
+		try {
+			DbaseInputStream in = new DbaseInputStream(url);
+			try { readDbase(in); }
+			finally {
+				in.close();
+			}
+		}
+		catch(FileNotFoundException e) {
+			// Ignore
+		}
+	}
+
+	/** Read the contents of the Dbase file */
+	protected void readDbase(DbaseInputStream in) throws IOException {
+		Iterator it = shapes.iterator();
+		while(in.hasNext() && it.hasNext()) {
+			ShapeObject s = (ShapeObject)it.next();
+			s.setFields(in.nextRecord());
+		}
 	}
 
 	/** Get the symbol to draw the shape layer */
 	protected Symbol getSymbol() {
 		switch(shapeType) {
-			case ShapeFactory.POINT:
+			case ShapeFile.POINT:
 				return new PenSymbol("Point",
 					Outline.createSolid(Color.BLACK, 20),
 					Color.WHITE);
-			case ShapeFactory.POLYLINE:
-				return new PenSymbol("Polyline",
+			case ShapeFile.POINT_Z:
+				return new PenSymbol("PointZ",
+					Outline.createSolid(Color.BLACK, 20),
+					Color.WHITE);
+			case ShapeFile.POLYLINE:
+				return new PenSymbol("PolyLine",
 					Outline.createSolid(Color.BLACK, 20),
 					null);
-			case ShapeFactory.POLYGON:
+			case ShapeFile.POLYLINE_M:
+				return new PenSymbol("PolyLineZ",
+					Outline.createSolid(Color.BLACK, 20),
+					null);
+			case ShapeFile.POLYGON:
 				return new PenSymbol("Polygon", null,
 					Color.BLACK);
 		}
