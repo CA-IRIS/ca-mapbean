@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000  Minnesota Department of Transportation
+ * Copyright (C) 2000-2004  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,8 +16,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
-package us.mn.state.dot.shape;
+package us.mn.state.dot.shape.symbol;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -29,12 +28,11 @@ import java.awt.geom.Rectangle2D;
  * Symbol object used to render point shapes on map.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.15 $ $Date: 2003/05/06 20:58:15 $ 
  */
 public abstract class PointSymbol extends AbstractSymbol {
-	
+
 	protected int size;
-	
+
 	public PointSymbol() {
 		super( Color.black );
 	}
@@ -53,7 +51,7 @@ public abstract class PointSymbol extends AbstractSymbol {
 		super( c, label, outlined );
 		this.setSize( 500 );
 	}
-	
+
 	public void setSize ( int size ){
 		if ( size < 0 ) {
 			throw new IllegalArgumentException( "Size can't be less than 0: " +
@@ -62,7 +60,7 @@ public abstract class PointSymbol extends AbstractSymbol {
 			this.size = size;
 		}
 	}
-	
+
 	public int getSize(){
 		return size;
 	}
@@ -70,28 +68,28 @@ public abstract class PointSymbol extends AbstractSymbol {
 	abstract protected Shape getShape( double x, double y );
 
 	/** Draw symbol on map */
-	public final void draw( Graphics2D g, Shape shape ){
+	public void draw(Graphics2D g, Shape shape) {
 		Rectangle2D pt = shape.getBounds();
-		if ( isFilled() ) {
-			g.setColor( color );
-			g.fill( getShape( pt.getX(), pt.getY() ) );
+		if(isFilled()) {
+			g.setColor(color);
+			g.fill(getShape(pt.getX(), pt.getY()));
 		}
-		if ( this.isOutLined() ){
-			outlineSymbol.draw( g, getShape( pt.getX(), pt.getY() ) );
+		if(isOutLined()) {
+			outlineSymbol.draw(g, getShape(pt.getX(), pt.getY()));
 		}
 	}
-	
+
 	public Rectangle2D getBounds( MapObject object ) {
 		return getShape( object ).getBounds();
 	}
-	
+
 	public Shape getShape( MapObject object ) {
 		Rectangle2D bounds = object.getShape().getBounds();
 		Shape renderedShape = getShape( bounds.getX(), bounds.getY() );
 		GeneralPath path = new GeneralPath();
-		if ( isOutLined() ) {
-			path.append( outlineSymbol.getStroke().createStrokedShape( 
-				renderedShape ), true );
+		if(isOutLined()) {
+			path.append(outlineSymbol.getStroke().createStrokedShape(
+				renderedShape), true);
 		}
 		path.append( renderedShape, true );
 		return path;

@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000  Minnesota Department of Transportation
+ * Copyright (C) 2000-2004  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,8 +16,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
-package us.mn.state.dot.shape;
+package us.mn.state.dot.shape.symbol;
 
 import java.awt.Color;
 import java.awt.Shape;
@@ -26,15 +25,11 @@ import java.awt.geom.GeneralPath;
 /**
  * A TriangleMarker is a triangular shape for representing data from point shape
  * files.
- * @since 1.0
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.9 $ $Date: 2003/05/06 20:58:15 $ 
  */
 public class TriangleMarker extends PointSymbol {
-	
-	/** 
-	 * Constructs a TriangleMarker
-	 */
+
+	/** Create a new TriangleMarker */
 	public TriangleMarker() {
 		super();
 	}
@@ -46,7 +41,7 @@ public class TriangleMarker extends PointSymbol {
 	public TriangleMarker( Color c ) {
 		super( c );
 	}
-	
+
 	/**
 	 * Create a new TriangleMarker with the given color and the given legend
 	 * lable.
@@ -78,4 +73,4 @@ public class TriangleMarker extends PointSymbol {
 		p.lineTo( ( float ) ( x - length ),  ( float ) ( y - a ) );
 		return p;
 	}
-} 
+}

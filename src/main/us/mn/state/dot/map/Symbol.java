@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000  Minnesota Department of Transportation
+ * Copyright (C) 2000-2004  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,8 +16,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
-package us.mn.state.dot.shape;
+package us.mn.state.dot.shape.symbol;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -29,35 +28,34 @@ import java.awt.geom.Rectangle2D;
  * Interface for symbols used by themes to draw layer data.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.20 $ $Date: 2001/08/16 22:43:59 $ 
  */
 public interface Symbol {
-	
+
 	public void draw( Graphics2D g, Shape shape );
 
 	public void setColor( Color color );
-	
+
 	public Color getColor();
-	
+
 	public boolean isFilled();
-	
+
 	public void setFilled( boolean f );
 
 	public void setOutLined( boolean outlined );
-	
+
 	public boolean isOutLined();
-	
+
 	public void setOutLineSymbol( LineSymbol symbol );
-	
+
 	public LineSymbol getOutLineSymbol();
-	
+
 	public String getLabel();
-	
+
 	public void setLabel( String l );
 
 	public Component getLegend();
-	
+
 	public Rectangle2D getBounds( MapObject object );
-	
+
 	public Shape getShape( MapObject object );
 }

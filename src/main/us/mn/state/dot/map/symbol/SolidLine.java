@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000  Minnesota Department of Transportation
+ * Copyright (C) 2000-2004  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,8 +16,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
-package us.mn.state.dot.shape;
+package us.mn.state.dot.shape.symbol;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -27,15 +26,12 @@ import java.awt.Stroke;
  * A LineSymbol that renders a solid line.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.9 $ $Date: 2003/05/06 20:58:15 $ 
  */
-public final class SolidLine extends LineSymbol {
+public class SolidLine extends LineSymbol {
 
-	/**
-	 * Create a new SolidLine.
-	 */
+	/** Create a new SolidLine */
 	public SolidLine() {
-		this( Color.black );
+		this(Color.black);
 	}
 
 	/**
@@ -45,7 +41,7 @@ public final class SolidLine extends LineSymbol {
 	public SolidLine( Color c ){
 		super( c );
 	}
-	
+
 	/**
 	 * Create a new SolidLine using the given color of the given size.
 	 * @param c, color to use.
@@ -54,8 +50,8 @@ public final class SolidLine extends LineSymbol {
 	public SolidLine( Color c, int size ) {
 		super( c, size );
 	}
-	
-	protected final Stroke createStroke(){
-		return new BasicStroke( size );
-    }
+
+	protected Stroke createStroke() {
+		return new BasicStroke(size);
+	}
 }

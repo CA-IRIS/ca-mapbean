@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000  Minnesota Department of Transportation
+ * Copyright (C) 2000-2004  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,8 +16,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
-package us.mn.state.dot.shape;
+package us.mn.state.dot.shape.symbol;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -26,7 +25,6 @@ import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Rectangle2D;
-
 import javax.swing.Icon;
 import javax.swing.JLabel;
 
@@ -34,7 +32,6 @@ import javax.swing.JLabel;
  * Base class for Symbol implementations.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.10 $ $Date: 2003/05/19 21:23:41 $ 
  */
 public abstract class AbstractSymbol implements LegendItem, Symbol {
 
@@ -46,7 +43,7 @@ public abstract class AbstractSymbol implements LegendItem, Symbol {
 
 	public abstract void draw( Graphics2D g, Shape shape );
 
-	public AbstractSymbol(){
+	public AbstractSymbol() {
 		this( Color.black );
 	}
 
@@ -64,7 +61,7 @@ public abstract class AbstractSymbol implements LegendItem, Symbol {
 		this.label = label;
 	}
 
-	public final void setColor ( Color color ){
+	public void setColor(Color color) {
 		this.color = color;
 	}
 
@@ -121,20 +118,19 @@ public abstract class AbstractSymbol implements LegendItem, Symbol {
 			return object.getShape().getBounds2D();
 		}
 	}
-	
+
 	public Shape getShape( MapObject object ) {
 		GeneralPath path = new GeneralPath();
 		if ( isOutLined() ) {
-			path.append( outlineSymbol.getStroke().createStrokedShape( 
+			path.append( outlineSymbol.getStroke().createStrokedShape(
 				object.getShape() ), true );
 		}
 		path.append( object.getShape(), true );
 		return path;
 	}
-	
+
 	class ColorIcon implements Icon {
-		
-		/** Fill color of icon. */
+
 		private int width;
 		private int height;
 		private final Symbol symbol;
@@ -159,7 +155,7 @@ public abstract class AbstractSymbol implements LegendItem, Symbol {
 				g.fillRect( x + 1, y + 1, width - 2, height - 2 );
 			}
 		}
-		
+
 		public int getIconWidth() {
 			return width;
 		}

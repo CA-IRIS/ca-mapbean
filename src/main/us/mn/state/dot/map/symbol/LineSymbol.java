@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000  Minnesota Department of Transportation
+ * Copyright (C) 2000-2004  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,8 +16,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
-package us.mn.state.dot.shape;
+package us.mn.state.dot.shape.symbol;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -26,7 +25,6 @@ import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.Stroke;
 import java.awt.geom.Rectangle2D;
-
 import javax.swing.Icon;
 import javax.swing.JLabel;
 
@@ -34,21 +32,20 @@ import javax.swing.JLabel;
  * Abstract base class for shapes that render lines on a map.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.16 $ $Date: 2003/05/06 20:58:15 $ 
  */
 public abstract class LineSymbol implements Symbol {
 
 	/** Color to paint line */
 	protected Color color = Color.black;
-	
+
 	/** The width of the line */
 	protected int size = 0;
-	
+
 	public static final int DEFAULT_SIZE = 10;
-	
+
 	/** Label to use for legends. */
 	private String label = "";
-	
+
 	/** The line stroke used to paint the line. */
 	private Stroke stroke;
 
@@ -59,26 +56,21 @@ public abstract class LineSymbol implements Symbol {
 	public LineSymbol( Color c ){
 		this( c, DEFAULT_SIZE );
 	}
-	
+
 	public LineSymbol( Color c, int size ) {
 		color = c;
 		setSize( size );
 		stroke = createStroke();
 		this.setOutLineSymbol( this );
 	}
-	
-	/**
-	 * Set the color to paint the line
-	 * @param color, new color to use for painting.
-	 */
-	public final void setColor ( Color color ){
+
+	/** Set the color to paint the line */
+	public void setColor(Color color) {
 		this.color = color;
 	}
 
-	/**
-	 * Get the color of this line.
-	 */
-	public Color getColor(){
+	/** Get the color of this line */
+	public Color getColor() {
 		return color;
 	}
 
@@ -124,18 +116,17 @@ public abstract class LineSymbol implements Symbol {
 	public void setLabel( String l ){
 		label = l;
 	}
-	
-	
-	public final Stroke getStroke(){
+
+	public Stroke getStroke() {
 		return stroke;
 	}
 
 	protected abstract Stroke createStroke();
-	
-	public final void draw( Graphics2D g, Shape shape ) {
-		g.setColor( color );
-		g.setStroke( stroke );
-		g.draw( shape );
+
+	public void draw(Graphics2D g, Shape shape) {
+		g.setColor(color);
+		g.setStroke(stroke);
+		g.draw(shape);
 	}
 
 	public Component getLegend(){
@@ -151,11 +142,11 @@ public abstract class LineSymbol implements Symbol {
 	public Rectangle2D getBounds( MapObject object ) {
 		return stroke.createStrokedShape( object.getShape() ).getBounds2D();
 	}
-	
+
 	public Shape getShape(MapObject object) {
 		return stroke.createStrokedShape( object.getShape() );
 	}
-	
+
 	class ColorIcon implements Icon {
 		private Color color;
 		private int w, h;
@@ -180,7 +171,7 @@ public abstract class LineSymbol implements Symbol {
 			g.setColor( color );
 			g.fillRect( x + 1, y + 1, w - 2, h - 2 );
 		}
-		
+
 		public Color getColor() {
 			return color;
 		}

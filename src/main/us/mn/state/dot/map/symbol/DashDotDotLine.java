@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000  Minnesota Department of Transportation
+ * Copyright (C) 2000-2004  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,8 +16,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
-package us.mn.state.dot.shape;
+package us.mn.state.dot.shape.symbol;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -27,13 +26,10 @@ import java.awt.Stroke;
  * A LineSymbol that renders a _.._.._ type of line.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.8 $ $Date: 2003/05/06 20:58:15 $ 
  */
-public final class DashDotDotLine extends LineSymbol {
-	
-	/**
-	 * Create a new DashDotDotLine.
-	 */
+public class DashDotDotLine extends LineSymbol {
+
+	/** Create a new DashDotDotLine */
 	public DashDotDotLine() {
 		this( Color.black );
 	}
@@ -51,5 +47,4 @@ public final class DashDotDotLine extends LineSymbol {
 			BasicStroke.JOIN_MITER, 10, new float[]{ 8, 1, 2, 1, 2, 1 },
 				0 );
 	}
-
-} 
+}

@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000  Minnesota Department of Transportation
+ * Copyright (C) 2000-2004  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,7 +16,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package us.mn.state.dot.shape;
 
 import java.awt.Color;
@@ -24,7 +23,6 @@ import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Shape;
-
 import javax.swing.Icon;
 import javax.swing.JLabel;
 
@@ -32,9 +30,8 @@ import javax.swing.JLabel;
  * A FillSymbol is used to paint a polygon on a Map only SOLID_FILL is implemented.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.13 $ $Date: 2003/05/06 20:58:15 $ 
  */
-public final class FillSymbol extends AbstractSymbol {
+public class FillSymbol extends AbstractSymbol {
 
 	/** fill constants */
 	public static final int SOLID_FILL = 0;
@@ -67,7 +64,7 @@ public final class FillSymbol extends AbstractSymbol {
 
 	/** Draw symbol on map */
 	public void draw( Graphics2D g, Shape shape ){
-		if ( isFilled() ) { 
+		if ( isFilled() ) {
 			g.setColor( color );
 			g.fill( shape );
 		}
@@ -75,7 +72,7 @@ public final class FillSymbol extends AbstractSymbol {
 			outlineSymbol.draw( g, shape );
 		}
 	}
-	
+
 	public Component getLegend(){
 		JLabel label = new JLabel();
 		if ( ( getLabel() != null ) && ( ! getLabel().equals( "" ) ) ) {
@@ -87,7 +84,7 @@ public final class FillSymbol extends AbstractSymbol {
 	}
 
 	class FillSymbolIcon implements Icon {
-		
+
 		private final FillSymbol symbol;
 		private int width;
 		private int height;
@@ -105,7 +102,7 @@ public final class FillSymbol extends AbstractSymbol {
 		public void paintIcon( Component c, Graphics g, int x, int y ) {
 			Graphics2D g2 = ( Graphics2D ) g;
 			if ( symbol.isOutLined() ) {
-				//g2.setStroke( 
+				//g2.setStroke(
 				g2.setColor( symbol.getOutLineSymbol().getColor() );
 				g2.drawRect( x, y, width - 1, height - 1 );
 			}
@@ -114,7 +111,7 @@ public final class FillSymbol extends AbstractSymbol {
 				g.fillRect( x + 1, y + 1, width - 2, height - 2 );
 			}
 		}
-		
+
 		public int getIconWidth() {
 			return width;
 		}

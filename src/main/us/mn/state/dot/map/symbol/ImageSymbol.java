@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000  Minnesota Department of Transportation
+ * Copyright (C) 2000-2004  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,8 +16,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
-package us.mn.state.dot.shape;
+package us.mn.state.dot.shape.symbol;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -27,7 +26,6 @@ import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
@@ -35,7 +33,6 @@ import javax.swing.JLabel;
  * Symol for painting MapObjects as images.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.9 $ $Date: 2003/09/02 16:09:10 $
  */
 public class ImageSymbol implements Symbol {
 
@@ -47,20 +44,20 @@ public class ImageSymbol implements Symbol {
 
 	protected boolean drawFullSize = true;
 
-	/** Creates new ImageSymbol */
-    public ImageSymbol( ImageIcon icon ) {
-		this( icon, "" );
-    }
-
-	public ImageSymbol( ImageIcon icon, String label ) {
-		this( icon, label, null );
+	/** Create a new ImageSymbol */
+	public ImageSymbol(ImageIcon icon) {
+		this(icon, "");
 	}
 
-	public ImageSymbol( ImageIcon icon, String label, Dimension size ) {
+	public ImageSymbol(ImageIcon icon, String label) {
+		this(icon, label, null);
+	}
+
+	public ImageSymbol(ImageIcon icon, String label, Dimension size) {
 		this.icon = icon;
 		this.label = label;
 		this.size = size;
-		if ( size != null ) {
+		if(size != null) {
 			drawFullSize = false;
 		}
 	}
@@ -108,8 +105,8 @@ public class ImageSymbol implements Symbol {
 	}
 
 	/**
-	 * Draw the ImageSymbol.  If size == null then the image is drawn at full
-	 * size.
+	 * Draw the ImageSymbol.
+	 * If size == null then the image is drawn at full size.
 	 */
 	public void draw( Graphics2D g, Shape shape ) {
 		Rectangle2D rect = shape.getBounds2D();
@@ -171,5 +168,4 @@ public class ImageSymbol implements Symbol {
 	public void setLabel( String l ) {
 		label = l;
 	}
-
 }

@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000  Minnesota Department of Transportation
+ * Copyright (C) 2000-2004  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,8 +16,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
-package us.mn.state.dot.shape;
+package us.mn.state.dot.shape.symbol;
 
 import java.awt.Color;
 import java.awt.Shape;
@@ -27,15 +26,12 @@ import java.awt.geom.Rectangle2D;
  * A PointSymbol that renders a square.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.12 $ $Date: 2003/05/06 20:58:15 $ 
  */
-public final class SquareMarker extends PointSymbol {
+public class SquareMarker extends PointSymbol {
 
 	private final Rectangle2D.Double shape = new Rectangle2D.Double();
 
-	/**
-	 * Create a new SquareMarker.
-	 */
+	/** Create a new SquareMarker */
 	public SquareMarker() {
 		super();
 	}
@@ -70,7 +66,7 @@ public final class SquareMarker extends PointSymbol {
 		super( c, label, outlined );
 	}
 
-	protected final Shape getShape( double x, double y ){
+	protected Shape getShape(double x, double y) {
 		shape.setRect( ( x - ( size / 2 ) ), ( y -
 			( size / 2 ) ), size, size );
 		return shape;

@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000  Minnesota Department of Transportation
+ * Copyright (C) 2000-2004  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,8 +16,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
-package us.mn.state.dot.shape;
+package us.mn.state.dot.shape.symbol;
 
 import java.awt.Color;
 import java.awt.Shape;
@@ -27,55 +26,52 @@ import java.awt.geom.Ellipse2D;
  * A PointSymbol that renders a circle.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.10 $ $Date: 2003/05/06 20:58:15 $ 
  */
-public final class CircleMarker extends PointSymbol {
+public class CircleMarker extends PointSymbol {
 
 	private final Ellipse2D shape = new Ellipse2D.Double();
-	
+
 	private int radius;
 
-	/** 
-	 * Constructs a CircleMarker
-	 */
+	/** Create a new CircleMarker */
 	public CircleMarker() {
-		this( Color.black );
+		this(Color.black);
 	}
 
 	/**
 	 * Constructs a CircleMarker with the color set to c.
 	 * @param c The color of the Circle Marker.
 	 */
-	public CircleMarker( Color c ) {
-		super( c );
+	public CircleMarker(Color c) {
+		super(c);
 	}
-	
+
 	/**
-	 * Create a new CircleMarker with the given color and the given legend 
+	 * Create a new CircleMarker with the given color and the given legend
 	 * lable.
 	 * @param c, color to use.
 	 * @param label, the label to use in this symbols legend.
 	 */
-	public CircleMarker( Color c, String label ) {
-		super( c, label );
+	public CircleMarker(Color c, String label) {
+		super(c, label);
 	}
-	
+
 	/**
 	 * Create a new CircleMarker with the given color, and label.
 	 * @param c, color to use.
 	 * @param lable, the label to use in this symbols legend.
 	 * @param outlined, the symbol is outlined if true.
 	 */
-	public CircleMarker( Color c, String label, boolean outlined ) {
-		super( c, label, outlined );
+	public CircleMarker(Color c, String label, boolean outlined) {
+		super(c, label, outlined);
 	}
-	
-	public void setSize( int size ) {
-		super.setSize( size );
+
+	public void setSize(int size) {
+		super.setSize(size);
 		radius = this.size / 2;
 	}
 
-	protected final Shape getShape( double x, double y ){
+	protected Shape getShape(double x, double y) {
 		shape.setFrame( ( x - radius ), ( y - radius ),
 			size, size );
 		return shape;
