@@ -42,7 +42,7 @@ public abstract class AbstractSymbol implements Symbol {
 	protected Color outlineColor = Color.BLACK;
 	protected boolean outlined = false;
 	protected LineSymbol outlineSymbol = new SolidLine();
-	private String label = "";
+	protected final String label;
 
 	public abstract void draw(Graphics2D g, Shape shape);
 
@@ -100,10 +100,6 @@ public abstract class AbstractSymbol implements Symbol {
 		return label;
 	}
 
-	public void setLabel(String l) {
-		label = l;
-	}
-
 	public Rectangle2D getBounds(MapObject object) {
 		if(isOutlined()) {
 			return outlineSymbol.getBounds(object);
@@ -124,13 +120,12 @@ public abstract class AbstractSymbol implements Symbol {
 
 	/** Get the legend component for the symbol */
 	public Component getLegend() {
-		String l = getLabel();
-		JLabel label = new JLabel();
-		if(l != null && (!l.equals(""))) {
-			label.setText(l);
-			label.setIcon(new LegendIcon());
+		JLabel l = new JLabel();
+		if(label != null && (!label.equals(""))) {
+			l.setText(label);
+			l.setIcon(new LegendIcon());
 		}
-		return label;
+		return l;
 	}
 
 	/** Inner class for icon displayed on the legend */

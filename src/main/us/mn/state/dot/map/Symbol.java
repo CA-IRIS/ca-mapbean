@@ -33,8 +33,6 @@ public interface Symbol {
 
 	public String getLabel();
 
-	public void setLabel(String l);
-
 	public void draw(Graphics2D g, Shape shape);
 
 	public void setColor(Color color);

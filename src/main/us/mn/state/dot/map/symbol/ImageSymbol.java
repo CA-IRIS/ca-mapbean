@@ -38,7 +38,7 @@ import us.mn.state.dot.shape.Symbol;
  */
 public class ImageSymbol implements Symbol {
 
-	private String label;
+	protected final String label;
 
 	private ImageIcon icon;
 
@@ -172,9 +172,5 @@ public class ImageSymbol implements Symbol {
 	}
 
 	public void setFilled( boolean f ) {
-	}
-
-	public void setLabel( String l ) {
-		label = l;
 	}
 }

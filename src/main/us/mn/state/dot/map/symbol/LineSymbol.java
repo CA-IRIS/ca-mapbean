@@ -45,8 +45,8 @@ public abstract class LineSymbol implements Symbol {
 
 	public static final int DEFAULT_SIZE = 10;
 
-	/** Label to use for legends. */
-	private String label = "";
+	/** Label to use for legends */
+	protected final String label = "";
 
 	/** The line stroke used to paint the line. */
 	private Stroke stroke;
@@ -125,10 +125,6 @@ public abstract class LineSymbol implements Symbol {
 		return label;
 	}
 
-	public void setLabel( String l ){
-		label = l;
-	}
-
 	public Stroke getStroke() {
 		return stroke;
 	}
@@ -142,13 +138,13 @@ public abstract class LineSymbol implements Symbol {
 	}
 
 	public Component getLegend() {
-		JLabel label = new JLabel();
-		if ( ( getLabel() != null ) && ( ! getLabel().equals( "" ) ) ) {
-			label.setText( getLabel() );
-			ColorIcon icon = new ColorIcon( getColor() );
-			label.setIcon( icon );
+		JLabel l = new JLabel();
+		if((label != null) && (!label.equals(""))) {
+			l.setText(label);
+			ColorIcon icon = new ColorIcon(getColor());
+			l.setIcon(icon);
 		}
-		return label;
+		return l;
 	}
 
 	public Shape getShape(MapObject object) {
