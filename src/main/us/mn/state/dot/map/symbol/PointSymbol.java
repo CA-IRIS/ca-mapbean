@@ -33,23 +33,23 @@ import us.mn.state.dot.map.MapObject;
 public class PointSymbol extends AbstractSymbol {
 
 	/** Create a new point symbol */
-	public PointSymbol(int s) {
-		this(s, Color.BLACK);
+	public PointSymbol() {
+		this(Color.BLACK);
 	}
 
 	/** Create a new point symbol */
-	public PointSymbol(int s, Color c) {
-		this(s, c, "");
+	public PointSymbol(Color c) {
+		this("", c);
 	}
 
 	/** Create a new point symbol */
-	public PointSymbol(int s, Color c, String l) {
-		this(s, c, l, null);
+	public PointSymbol(String l, Color c) {
+		this(l, c, null);
 	}
 
 	/** Create a new point symbol */
-	public PointSymbol(int s, Color c, String l, Color o) {
-		super(s, c, l, o);
+	public PointSymbol(String l, Color c, Color o) {
+		super(l, c, o);
 	}
 
 	/** Draw symbol on map */

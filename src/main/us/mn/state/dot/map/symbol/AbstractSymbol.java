@@ -36,36 +36,28 @@ import us.mn.state.dot.map.Symbol;
  */
 abstract public class AbstractSymbol implements Symbol {
 
-	/** Size of the symbol */
-	protected final int size;
+	/** Symbol label */
+	protected final String label;
 
 	/** Fill color */
-	protected Color color;
+	protected final Color color;
 
 	/** Outline symbol */
-	protected LineSymbol outline = new SolidLine(Color.BLACK, 20);
-
-	/** Label */
-	protected final String label;
+	protected LineSymbol outline = new SolidLine(Color.BLACK, 0.05f);
 
 	/** Draw a map object with this symbol */
 	abstract public void draw(Graphics2D g, MapObject o);
 
 	/** Create a new abstract symbol */
-	public AbstractSymbol(int s, Color c, String l, Color o) {
-		size = s;
-		color = c;
+	public AbstractSymbol(String l, Color c, Color o) {
 		label = l;
+		color = c;
 		outline.setColor(o);
 	}
 
-	public int getSize() {
-		return size;
-	}
-
-	/** Set the fill color (null means not filled) */
-	public void setColor(Color c) {
-		color = c;
+	/** Get the symbol label */
+	public String getLabel() {
+		return label;
 	}
 
 	/** Get the fill color (null means not filled) */
@@ -73,18 +65,9 @@ abstract public class AbstractSymbol implements Symbol {
 		return color;
 	}
 
-	/** Set the outline color (null means not outlined) */
-	public void setOutlineColor(Color c) {
-		outline.setColor(c);
-	}
-
 	/** Get the outline color (null means not outlined) */
 	public Color getOutlineColor() {
 		return outline.getColor();
-	}
-
-	public String getLabel() {
-		return label;
 	}
 
 	/** Get the legend component for the symbol */

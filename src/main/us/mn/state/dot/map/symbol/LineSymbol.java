@@ -37,19 +37,19 @@ import us.mn.state.dot.map.Symbol;
 abstract public class LineSymbol implements Symbol {
 
 	/** Default line width */
-	static public final int DEFAULT_SIZE = 10;
+	static public final float DEFAULT_SIZE = 0.1f;
 
 	/** Color to paint line */
 	protected Color color = Color.BLACK;
 
 	/** The width of the line */
-	protected int size = 0;
+	protected final float size;
 
 	/** Label to use for legends */
 	protected final String label = "";
 
 	/** The line stroke used to paint the line */
-	private Stroke stroke;
+	protected Stroke stroke;
 
 	public LineSymbol() {
 		this(Color.BLACK);
@@ -59,9 +59,9 @@ abstract public class LineSymbol implements Symbol {
 		this(c, DEFAULT_SIZE);
 	}
 
-	public LineSymbol(Color c, int size) {
+	public LineSymbol(Color c, float s) {
 		color = c;
-		setSize(size);
+		size = s;
 		stroke = createStroke();
 	}
 
@@ -75,17 +75,7 @@ abstract public class LineSymbol implements Symbol {
 		return color;
 	}
 
-	public void setSize ( int size ){
-		if ( size < 0 ) {
-			throw new IllegalArgumentException( "Size can't be less than 0: " +
-				size );
-		} else {
-			this.size = size;
-			stroke = createStroke( );
-		}
-	}
-
-	public int getSize() {
+	public float getSize() {
 		return size;
 	}
 
@@ -155,7 +145,7 @@ abstract public class LineSymbol implements Symbol {
 			return color;
 		}
 
-		public void setColor( Color color ){
+		public void setColor(Color color) {
 			this.color = color;
 		}
 
@@ -163,7 +153,7 @@ abstract public class LineSymbol implements Symbol {
 			return w;
 		}
 
-		public int getIconHeight(){
+		public int getIconHeight() {
 			return h;
 		}
 	}
