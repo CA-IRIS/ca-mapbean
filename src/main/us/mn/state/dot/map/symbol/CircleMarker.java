@@ -31,6 +31,8 @@ import java.awt.geom.*;
 public final class CircleMarker extends PointSymbol {
 
 	private final Ellipse2D shape = new Ellipse2D.Double();
+	
+	private int radius;
 
 	public CircleMarker() {
 		this( Color.black );
@@ -39,9 +41,14 @@ public final class CircleMarker extends PointSymbol {
 	public CircleMarker( Color c ) {
 		super( c );
 	}
+	
+	public void setSize( int size ) {
+		super.setSize( size );
+		radius = this.size / 2;
+	}
 
 	protected final Shape getShape( double x, double y ){
-		shape.setFrame( ( x - ( size / 2 ) ), ( y - ( size / 2 ) ),
+		shape.setFrame( ( x - radius ), ( y - radius ),
 			size, size );
 		return shape;
 	}

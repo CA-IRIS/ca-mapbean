@@ -191,6 +191,38 @@ public class ShapeLayer extends AbstractLayer {
 		return result;
 	}
 	
+	public int search( Point2D p ) {
+		int result = -1;
+		switch( shapeType ) {
+		/*case ShapeTypes.POINT:
+			Symbol symbol = painter.getSymbol();
+			if ( symbol == null ) {
+				return result;
+			}
+			double size = symbol.getSize();
+			Rectangle2D r = new Rectangle2D.Double( p.getX() - ( size / 2 ),
+				p.getY() - ( size / 2 ), size, size );
+			for ( int i = ( paths.length - 1 ); i >= 0; i-- ) {
+				if ( r.contains( paths[ i ].getBounds() ) ) {
+					result.add( paths[ i ] );
+					break;
+				}
+			}
+			break;*/
+		case ShapeTypes.POLYLINE: case ShapeTypes.POLYGON:
+			//Rectangle2D r = null;
+			for ( int i = ( paths.length - 1 ); i >= 0; i-- ) {
+				if ( paths[ i ].contains( p ) ) {
+					result = i;
+					break;
+				}
+			}
+			break;
+		}
+		return result;
+	}
+
+	
 	public final java.util.List getPaths( Point2D p ){
 		java.util.List result = new ArrayList();
 		switch( shapeType ) {

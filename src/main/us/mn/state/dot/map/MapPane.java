@@ -136,9 +136,9 @@ public final class MapPane implements ThemeChangedListener {
 			width = 1;
 		}
 		screenBuffer = new BufferedImage( width, height,
-		BufferedImage.TYPE_INT_RGB );
+			BufferedImage.TYPE_INT_RGB );
 		staticBuffer = new BufferedImage( width, height,
-		BufferedImage.TYPE_INT_RGB );
+			BufferedImage.TYPE_INT_RGB );
 		//selectionBuffer = new BufferedImage( width, height,
 //		BufferedImage.TYPE_INT_RGB );
 		rescale();
@@ -207,10 +207,12 @@ public final class MapPane implements ThemeChangedListener {
 			shiftY = ( height - ( mapHeight * scale ) ) / 2;
 		}
 		screenTransform.setToTranslation( - ( extent.getMinX() * scale )
-		+ shiftX, ( extent.getMaxY() * scale ) + shiftY );
+			+ shiftX, ( extent.getMaxY() * scale ) + shiftY );
 		screenTransform.scale( scale, -scale );
-		updateStaticBuffer();
-		updateScreenBuffer();
+		//updateStaticBuffer();
+		//updateScreenBuffer();
+		this.bufferDirty = true;
+		this.staticBufferDirty = true;
 		//updateSelectionBuffer();
 	}
 	
@@ -231,10 +233,12 @@ public final class MapPane implements ThemeChangedListener {
 		g.setColor( backgroundColor );
 		g.fillRect( 0, 0, staticBuffer.getWidth(), staticBuffer.getHeight() );
 		g.transform( screenTransform );
+		staticBufferDirty = false;
 		ListIterator li = staticThemes.listIterator();
 		while ( li.hasNext() ) {
 			( ( Theme ) li.next() ).paint( g );
 		}
+		g.dispose();
 	}
 	
 	/**
@@ -243,12 +247,17 @@ public final class MapPane implements ThemeChangedListener {
 	public void updateScreenBuffer() {
 		if ( screenBuffer == null ) return;
 		Graphics2D g = screenBuffer.createGraphics();
+		if ( staticBufferDirty ) {
+			updateStaticBuffer();
+		}
 		g.drawImage( staticBuffer, 0, 0, null );
 		g.transform( screenTransform );
+		bufferDirty = false;
 		ListIterator li = themes.listIterator();
 		while ( li.hasNext() ) {
 			( ( Theme ) li.next() ).paint( g );
 		}
+		g.dispose();
 		notifyMapChangedListeners();
 	}
 	
@@ -268,6 +277,9 @@ public final class MapPane implements ThemeChangedListener {
 	
 	
 	public BufferedImage getImage() {
+		if ( bufferDirty || staticBufferDirty ) {
+			updateScreenBuffer();
+		}
 		return screenBuffer;
 	}
 	

@@ -67,10 +67,11 @@ public final class MapBean extends JComponent implements MapChangedListener,
 		mapPane.addMapChangedListener( this );
 		mapPane.setBackground( this.getBackground() );
 		this.setDoubleBuffered( true );
+		this.setOpaque( false );
 		this.setToolTipText( " " );
 		addComponentListener( new ComponentAdapter() {
 			public void componentResized( ComponentEvent e ) {
-				mapPane.setSize( e.getComponent().getSize() );
+				//mapPane.setSize( e.getComponent().getSize() );
 				rescale();
 			}
 		});
@@ -208,6 +209,7 @@ public final class MapBean extends JComponent implements MapChangedListener,
 	 */
 	public void home() {
 		setExtent( extentHome );
+		repaint();
 	}
 		
 	public String getToolTipText( MouseEvent e ) {
@@ -249,6 +251,7 @@ public final class MapBean extends JComponent implements MapChangedListener,
 	public void setExtent( double x, double y, double width, double height ) {
 		mapPane.setExtentFrame( x, y, width, height );
 		extentHome.setFrame( x, y, width, height );
+		repaint();
 	}
 	
 	/**
@@ -267,6 +270,8 @@ public final class MapBean extends JComponent implements MapChangedListener,
 		pb.drawImage( mapPane.getImage(), distanceX, distanceY, this );
 		Graphics g = this.getGraphics();
 		g.drawImage( panBuffer, 0, 0, this );
+		pb.dispose();
+		g.dispose();
 	}
 	
 	public void finishPan( Point2D start, Point2D end ) {
@@ -282,6 +287,7 @@ public final class MapBean extends JComponent implements MapChangedListener,
 		Rectangle2D extent = mapPane.getExtent();
 		mapPane.setExtentFrame( extent.getX() + newX, extent.getY() + newY, 
 			extent.getWidth(), extent.getHeight() );
+		repaint();
 	}
 	
 	public void zoomOut( Point center ) { // FIXME CHANGE SO THAT IT CENTERS THE VIEW AT THE POINT OF CLICK
@@ -289,6 +295,7 @@ public final class MapBean extends JComponent implements MapChangedListener,
 		mapPane.setExtentFrame( extent.getX() - extent.getWidth() / 2, 
 			extent.getY() - extent.getHeight() / 2, extent.getWidth() * 2,
 			extent.getHeight() * 2 );
+		repaint();
 	}
 	
 	/**
@@ -314,6 +321,7 @@ public final class MapBean extends JComponent implements MapChangedListener,
 		double width = Math.abs( upperLeft.getX() - lowerRight.getX() );
 		double height = Math.abs( upperLeft.getY() - lowerRight.getY() );
 		mapPane.setExtentFrame( x, y, width, height );
+		repaint();
 	}
 
 	/**
@@ -322,7 +330,9 @@ public final class MapBean extends JComponent implements MapChangedListener,
 	private synchronized void rescale() {
 		mapPane.setSize( this.getSize() );
 		panBuffer = null;
-		repaint();
+		if ( this.isShowing() ) {
+			repaint();
+		}
 	}
 	
 	/**
@@ -337,13 +347,14 @@ public final class MapBean extends JComponent implements MapChangedListener,
 	 * Overridden to prevent flashing
 	 * @param g Graphics object to paint on
 	 */
-	public void update( Graphics g ) {
+	/*public void update( Graphics g ) {
 		paint( g );
-	}
+	}*/
 
 	public void paintComponent( Graphics g ) {
+		super.paintComponent( g );
 		BufferedImage image = mapPane.getImage();
-		Graphics2D g2d = ( Graphics2D) g;
+		Graphics2D g2d = ( Graphics2D ) g;
 		g2d.drawImage( image, 0, 0, this );
 		g2d.transform( mapPane.getTransform() );
 		java.util.List themes = mapPane.getThemes();

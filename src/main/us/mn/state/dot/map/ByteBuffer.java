@@ -60,6 +60,7 @@ public final class ByteBuffer {
 			return dis.readUnsignedByte();
 		}
 		catch( IOException e ) { return 0; }
+		//return ( buffer[ offset ] * 0xff );
 	}
 
 	/** Get a short value from the buffer */
@@ -75,24 +76,20 @@ public final class ByteBuffer {
 
 	/** Get an int value from the buffer */
 	public int getInt( int offset ) {
-		try {
-			ByteArrayInputStream bis =
-				new ByteArrayInputStream( buffer, offset, 4 );
-			DataInputStream dis = new DataInputStream( bis );
-			return dis.readInt();
+		int result = 0;
+		for ( int i = 0, j = 3; i < 4; i++, j-- ) {
+			result += (( buffer[ offset + i ] & 0xff ) << ( j * 8 ) );
+			//result += ( getByte( offset + i ) << ( j * 8 ) );
 		}
-		catch( IOException e ) { return 0; }
+		return result;
 	}
 
 	/** Get a double value from the buffer */
 	public double getDouble( int offset ) {
-		try {
-			ByteArrayInputStream bis =
-				new ByteArrayInputStream( buffer, offset, 8 );
-			DataInputStream dis = new DataInputStream( bis );
-			return dis.readDouble();
-		}
-		catch( IOException e ) { return 0d; }
+		int int1 = getInt( offset );
+		int int2 = getInt( offset + 4 );
+		long temp = (( int1 & 0xFFFFFFFFL ) << 32 ) + ( int2 & 0xFFFFFFFFL );
+		return Double.longBitsToDouble( temp );
 	}
 
 	/** Reverse the byte-order of a 2-byte value */

@@ -36,7 +36,9 @@ public abstract class LineSymbol implements Symbol {
 	protected Color color = Color.black;
 	
 	/** The width of the line */
-	protected int size = 10;
+	protected int size = 0;
+	
+	public static final int DEFAULT_SIZE = 10;
 	
 	/** Label to use for legends. */
 	private String label = "";
@@ -49,7 +51,12 @@ public abstract class LineSymbol implements Symbol {
 	}
 
 	public LineSymbol( Color c ){
+		this( c, DEFAULT_SIZE );
+	}
+	
+	public LineSymbol( Color c, int size ) {
 		color = c;
+		setSize( size );
 		stroke = createStroke();
 		this.setOutLineSymbol( this );
 	}

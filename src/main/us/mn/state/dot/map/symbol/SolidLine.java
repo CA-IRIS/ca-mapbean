@@ -37,7 +37,11 @@ public final class SolidLine extends LineSymbol {
 	public SolidLine( Color c ){
 		super( c );
 	}
-
+	
+	public SolidLine( Color c, int size ) {
+		super( c, size );
+	}
+	
 	protected final Stroke createStroke(){
 		return new BasicStroke( size );
     }
