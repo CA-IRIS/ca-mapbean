@@ -29,7 +29,7 @@ package us.mn.state.dot.shape;
 import java.awt.*;
 import java.awt.geom.*;
 
-public final class FillSymbol extends Symbol {
+public final class FillSymbol extends AbstractSymbol {
 
 	/** fill constants */
 	public static final int SOLID_FILL = 0;
@@ -61,7 +61,7 @@ public final class FillSymbol extends Symbol {
 	}
 
 	/** Draw symbol on map */
-	public void draw( Graphics2D g, GeneralPath path ){
+	public void draw( Graphics2D g, Shape path ){
 		if ( isFilled() ) { 
 			g.setColor( color );
 			g.fill( path );

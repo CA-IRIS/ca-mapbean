@@ -46,7 +46,7 @@ public class ShapeLayer extends AbstractLayer {
 	}
 
 	/** Array to hold all shape information */
-	protected GeneralPath [] paths;
+	protected Shape [] paths;
 
 	public final Field [] getFields(){
 		return fields;
@@ -154,7 +154,7 @@ public class ShapeLayer extends AbstractLayer {
 		int result = -1;
 		if ( searchArea.getWidth() == 0 || searchArea.getHeight() == 0 ) {
 			for ( int i = ( paths.length - 1 ); i >= 0; i-- ) {
-				GeneralPath target = paths[ i ];
+				Shape target = paths[ i ];
 				Point2D point = new Point2D.Double( searchArea.getX(),
 					searchArea.getY() );
 				if ( target.contains( point ) ) {
@@ -164,7 +164,7 @@ public class ShapeLayer extends AbstractLayer {
 			}
 		} else {
 			for ( int i = ( paths.length - 1 ); i >= 0; i-- ) {
-				GeneralPath target = paths[ i ];
+				Shape target = paths[ i ];
 				if ( target.intersects( searchArea ) ||
 						target.contains( searchArea )  ||
 						searchArea.contains( target.getBounds2D() ) ) {
@@ -217,8 +217,8 @@ public class ShapeLayer extends AbstractLayer {
 			f.write( "\r\n" );
 			for ( int i = 0; i < fields[ 1 ].getLength(); i++ ){
 				System.out.println( i );
-				f.write( paths[ i ].getCurrentPoint().getX() + "\t" +
-					paths[ i ].getCurrentPoint().getY() + "\t" );
+				f.write( paths[ i ].getBounds().getX() + "\t" +
+					paths[ i ].getBounds().getY() + "\t" );
 				for ( int j = 0; j < fields.length; j++ ) {
 					f.write( fields[ j ].getStringValue( i ) + "\t" );
 				}

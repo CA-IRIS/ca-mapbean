@@ -28,36 +28,139 @@ package us.mn.state.dot.shape;
 
 import java.awt.*;
 import java.awt.geom.*;
+import javax.swing.*;
 
-public abstract class LineSymbol extends Symbol {
+public abstract class LineSymbol implements Symbol {
 
-	protected BasicStroke stroke;
+	protected Color color = Color.black;
+	protected int size = 10;
+	private String label = "";
+	protected Stroke stroke;
 
 	public LineSymbol() {
 		this( Color.black );
 	}
 
 	public LineSymbol( Color c ){
-		super( c );
-		createStroke();
+		this.color = color;
+		stroke = createStroke();
 		this.setOutLineSymbol( this );
 	}
-
-	public void setSize( int size ) {
-		super.setSize( size );
-		createStroke();
+	
+	public final void setColor ( Color color ){
+		this.color = color;
 	}
 
-	public final BasicStroke getStroke(){
+	public Color getColor(){
+		return color;
+	}
+
+	public boolean isFilled() {
+		return true;
+	}
+
+	public void setFilled( boolean f ) {
+	}
+
+	public void setSize ( int size ){
+		if ( size < 0 ) {
+			throw new IllegalArgumentException( "Size can't be less than 0: " +
+				size );
+		} else {
+			this.size = size;
+			stroke = createStroke( );
+		}
+	}
+
+	public int getSize(){
+		return size;
+	}
+
+	public void setOutLined( boolean outlined ){
+	}
+
+	public boolean isOutLined(){
+		return true;
+	}
+
+	public void setOutLineSymbol( LineSymbol symbol ){
+	}
+
+	public LineSymbol getOutLineSymbol(){
+		return this;
+	}
+
+	public String getLabel(){
+		return label;
+	}
+
+	public void setLabel( String l ){
+		label = l;
+	}
+	
+	
+	public final Stroke getStroke(){
 		return stroke;
 	}
 
-	protected abstract void createStroke();
+	protected abstract Stroke createStroke();
 
 	/** Draw symbol on map */
-	public final void draw( Graphics2D g, GeneralPath path ){
+	public final void draw( Graphics2D g, Shape path ){
 		g.setColor( color );
 		g.setStroke( stroke );
 		g.draw( path );
+	}
+
+	public Component getLegend(){
+		JLabel label = new JLabel();
+		if ( ( getLabel() != null ) && ( ! getLabel().equals( "" ) ) ) {
+			label.setText( getLabel() );
+			ColorIcon icon = new ColorIcon( getColor() );
+			label.setIcon( icon );
+		}
+		return label;
+	}
+
+	class ColorIcon implements Icon {
+		private Color color;
+		private int w, h;
+
+		public ColorIcon(){
+			this( Color.gray, 25, 15 );
+		}
+
+		public ColorIcon( Color color ){
+			this( color, 25, 15 );
+		}
+
+		public ColorIcon( Color color, int w, int h ){
+			this.color = color;
+			this.w = w;
+			this.h = h;
+		}
+
+		public void paintIcon( Component c, Graphics g, int x, int y ) {
+			g.setColor( Color.black );
+			g.drawRect( x, y, w - 1, h - 1 );
+			g.setColor( color );
+			g.fillRect( x + 1, y + 1, w - 2, h - 2 );
+		}
+		
+		public Color getColor() {
+			return color;
+		}
+
+		public void setColor( Color color ){
+			this.color = color;
+		}
+
+		public int getIconWidth() {
+			return w;
+		}
+
+		public int getIconHeight(){
+			return h;
+		}
 	}
 }

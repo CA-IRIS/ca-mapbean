@@ -38,7 +38,7 @@ public final class SolidLine extends LineSymbol {
 		super( c );
 	}
 
-	protected final void createStroke(){
-		stroke = new BasicStroke( size );
+	protected final Stroke createStroke(){
+		return new BasicStroke( size );
     }
 }

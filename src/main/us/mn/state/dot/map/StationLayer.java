@@ -18,7 +18,6 @@
  */
 package us.mn.state.dot.shape;
 
-
 import java.awt.*;
 import java.awt.geom.*;
 import java.io.*;
@@ -26,7 +25,6 @@ import java.util.*;
 import javax.swing.*;
 import us.mn.state.dot.dds.client.*;
 import us.mn.state.dot.shape.event.*;
-
 
 /**
  * A StationLayer displays detector station data represented as a gpoly.shp file.
@@ -94,8 +92,12 @@ public final class StationLayer extends ShapeLayer implements StationListener {
 		
 		public StationTheme( Layer layer, LayerRenderer renderer ){
 			super( layer, renderer );
-			setSelectionRenderer( new DefaultRenderer( new FillSymbol(
-				Color.cyan ) ) );
+			Symbol symbol = new FillSymbol();
+			symbol.getOutLineSymbol().setColor( Color.magenta );
+			symbol.getOutLineSymbol().setSize( 50 );
+			symbol.setOutLined( true );
+			symbol.setFilled( false );
+			setSelectionRenderer( new DefaultRenderer( symbol ) );
 			rightClickMenu.add( statusMenu );
 			statusMenu.add( idMenuItem );
 			statusMenu.add( volumeMenuItem );
@@ -128,15 +130,21 @@ public final class StationLayer extends ShapeLayer implements StationListener {
 		
 		public boolean mousePressed( final java.awt.event.MouseEvent event ) {
 			boolean result = false;
-			int index = getIndex( event );
-			if ( index != -1 ) {
-				result = true;
-				idMenuItem.setText( "Station " + layer.getField( "STATION2" ).getStringValue( index ) + ": " + layer.getField( "NAME" ).getStringValue( index ) );
-				volumeMenuItem.setText( " Volume = " + layer.getField( "VOLUME" ).getStringValue( index ) );
-				occMenuItem.setText( " Occupancy = " + layer.getField( "OCCUPANCY" ).getStringValue( index ) );
-				JPopupMenu menu = rightClickMenu.getPopupMenu();
-				menu.show( event.getComponent(), event.getX(),
-					event.getY() );
+			if ( SwingUtilities.isRightMouseButton( event ) ) {
+				int index = getIndex( event );
+				if ( index != -1 ) {
+					result = true;
+					idMenuItem.setText( "Station " + layer.getField( "STATION2"
+						).getStringValue( index ) + ": " + layer.getField( "NAME"
+						).getStringValue( index ) );
+					volumeMenuItem.setText( " Volume = " + layer.getField( "VOLUME"
+						).getStringValue( index ) );
+					occMenuItem.setText( " Occupancy = " +
+						layer.getField( "OCCUPANCY" ).getStringValue( index ) );
+					JPopupMenu menu = rightClickMenu.getPopupMenu();
+					menu.show( event.getComponent(), event.getX(),
+						event.getY() );
+				}
 			}
 			return result;
 		}

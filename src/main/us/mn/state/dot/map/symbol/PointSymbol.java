@@ -29,7 +29,7 @@ package us.mn.state.dot.shape;
 import java.awt.*;
 import java.awt.geom.*;
 
-public abstract class PointSymbol extends Symbol {
+public abstract class PointSymbol extends AbstractSymbol {
 
 	public PointSymbol() {
 		super( Color.black );
@@ -51,8 +51,8 @@ public abstract class PointSymbol extends Symbol {
 	abstract protected Shape getShape( double x, double y );
 
 	/** Draw symbol on map */
-	public final void draw( Graphics2D g, GeneralPath path ){
-		Point2D pt = path.getCurrentPoint();
+	public final void draw( Graphics2D g, Shape path ){
+		Rectangle2D pt = path.getBounds();
 		if ( isFilled() ) {
 			g.setColor( color );
 			g.fill( getShape( pt.getX(), pt.getY() ) );

@@ -12,8 +12,8 @@
  * **********************************************************************
  * 
  * $Source: /home/lau1dou/cvsroot/MapBean/src/main/us/mn/state/dot/map/event/Attic/MapMouseAdapter.java,v $
- * $Revision: 1.1 $
- * $Date: 2000/07/05 22:37:06 $
+ * $Revision: 1.2 $
+ * $Date: 2000/07/13 21:38:50 $
  * $Author: engs1eri $
  * 
  * **********************************************************************
@@ -28,7 +28,7 @@ import java.awt.event.MouseEvent;
  * a convenience.  If you extend an object from this adapter, you just
  * have to implement the methods that you want to deal with.
  */
-public class MapMouseAdapter implements MapMouseListener {
+public abstract class MapMouseAdapter implements MapMouseListener {
 
     /**
      * Return a list of the modes that are interesting to the

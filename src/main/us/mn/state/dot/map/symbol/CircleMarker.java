@@ -41,7 +41,7 @@ public final class CircleMarker extends PointSymbol {
 	}
 
 	protected final Shape getShape( double x, double y ){
-		shape.setFrame(( x - ( size / 2 )), ( y - ( size / 2 )),
+		shape.setFrame( ( x - ( size / 2 ) ), ( y - ( size / 2 ) ),
 			size, size );
 		return shape;
 	}

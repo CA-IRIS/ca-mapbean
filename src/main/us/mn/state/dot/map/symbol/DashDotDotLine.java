@@ -38,9 +38,10 @@ public final class DashDotDotLine extends LineSymbol {
 		super( c );
 	}
 
-	protected void createStroke(){
-		stroke = new BasicStroke( getSize(), BasicStroke.CAP_BUTT,
-				BasicStroke.JOIN_MITER, 10, new float[]{8, 1, 2, 1, 2, 1}, 0 );
+	protected Stroke createStroke(){
+		return new BasicStroke( getSize(), BasicStroke.CAP_BUTT,
+			BasicStroke.JOIN_MITER, 10, new float[]{ 8, 1, 2, 1, 2, 1 },
+				0 );
 	}
 
 } 
