@@ -26,7 +26,7 @@ import us.mn.state.dot.shape.event.LayerChangedEvent;
 import us.mn.state.dot.shape.event.LayerChangedListener;
 
 /**
- * This interface should be used to add data to a MapBean object.
+ * A layer is a grouping of similar elements which are painted on the map
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
  */

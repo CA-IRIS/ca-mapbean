@@ -38,9 +38,11 @@ abstract public class AbstractLayer implements Layer {
 	/** Extent of layer */
 	protected Rectangle2D extent = new Rectangle2D.Double();
 
-	private String name;
+	/** Layer name */
+	protected String name;
 
-	private final List layerChangedListeners = new LinkedList();
+	/** Layer change listeners */
+	protected final List layerChangedListeners = new LinkedList();
 
 	/** Get the extent of the layer */
 	public Rectangle2D getExtent() {
