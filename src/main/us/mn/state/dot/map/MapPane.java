@@ -31,7 +31,7 @@ import java.util.*;
  * subsystem is not available.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.45 $ $Date: 2001/06/01 16:45:38 $
+ * @version $Revision: 1.46 $ $Date: 2001/06/21 22:42:41 $
  */
 public final class MapPane implements ThemeChangedListener {
 	
@@ -162,10 +162,6 @@ public final class MapPane implements ThemeChangedListener {
             } else {
                 return new BufferedImage( width, height,
                     BufferedImage.TYPE_INT_RGB );
-           //return GraphicsEnvironment.getLocalGraphicsEnvironment()
-           //     .getDefaultScreenDevice().getDefaultConfiguration()
-           //     .createCompatibleImage( width, height );
-           //FIXME there has got to be a better way!
             }
        }
         
@@ -193,6 +189,7 @@ public final class MapPane implements ThemeChangedListener {
 		} else {
 			themes.add( theme );
 		}
+		theme.setMap( this );
 		theme.addThemeChangedListener( this );
 		setExtent( theme.getExtent() );
 	}
@@ -208,6 +205,7 @@ public final class MapPane implements ThemeChangedListener {
 			themes.remove( theme );
 		}
 		theme.removeThemeChangedListener( this );
+		theme.setMap( null );
 	}
 	
 	/**
@@ -217,6 +215,7 @@ public final class MapPane implements ThemeChangedListener {
 	 */
 	public void addTheme( Theme theme, int index ) {
 		themes.add( index, theme );
+		theme.setMap( this );
 		theme.addThemeChangedListener( this );
 	}
 	

@@ -27,7 +27,7 @@ import us.mn.state.dot.shape.event.MapMouseListener;
 /**
  * Base class for all themes.
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.13 $ $Date: 2001/04/19 16:49:31 $ 
+ * @version $Revision: 1.14 $ $Date: 2001/06/21 22:42:41 $ 
  */
 public class Theme implements LayerChangedListener {
 	/** The Layer that this theme controls.*/
@@ -50,6 +50,8 @@ public class Theme implements LayerChangedListener {
 	
 	/** Visibility flag for this theme.*/
 	private boolean visible = true;
+	
+	protected MapPane map = null;
 	
 	/** ThemeChangedListeners that listen to this theme.*/
 	private ArrayList listeners = new ArrayList();
@@ -84,11 +86,20 @@ public class Theme implements LayerChangedListener {
 	 */
 	public Theme( Layer layer, LayerRenderer renderer, boolean visible ) {
 		this.layer = layer;
-		this.layer.addLayerChangedListener( this );
+		//this.layer.addLayerChangedListener( this );
 		this.renderer = renderer;
 		this.name = layer.getName();
 		this.visible = visible;
 		selectionRenderer = renderer;
+	}
+	
+	public void setMap( MapPane map ) {
+		if ( map != null ) {
+			layer.addLayerChangedListener( this );
+		} else {
+			layer.removeLayerChangedListener( this );
+		}
+		this.map = map;
 	}
 	
 	/**

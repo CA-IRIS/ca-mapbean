@@ -27,7 +27,7 @@ import java.awt.*;
  * interface.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.21 $ $Date: 2001/04/19 16:49:31 $ 
+ * @version $Revision: 1.22 $ $Date: 2001/06/21 22:42:41 $ 
  * @since 1.0
  */
 public abstract class AbstractLayer implements Layer {
@@ -79,6 +79,13 @@ public abstract class AbstractLayer implements Layer {
 		if ( ! layerChangedListeners.contains( l ) ) {
 			layerChangedListeners.add( l );
 		}
+	}
+	
+	/**
+	 * Remove a LayerListener from the layer.
+	 */
+	public void removeLayerChangedListener( LayerChangedListener l ) {
+		layerChangedListeners.remove( l );
 	}
 	
 	public void notifyLayerChangedListeners( LayerChangedEvent event ) {
