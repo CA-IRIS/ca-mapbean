@@ -16,8 +16,22 @@ public abstract class Symbol {
 	private Color outlineColor = Color.black;
 	private int size;
 	private boolean outline = false;
+	private String label = "";
 
 	public abstract void draw(Graphics2D g, GeneralPath path);
+
+	public Symbol(){
+		this(Color.black);
+	}
+
+	public Symbol(Color c){
+		this(c, "");
+	}
+
+	public Symbol(Color color, String label){
+		this.color = color;
+		this.label = label;
+	}
 
 	public void setColor (Color color){
 		this.color = color;
@@ -28,7 +42,12 @@ public abstract class Symbol {
 	}
 
 	public void setSize (int size){
-		this.size = size;
+		if (size < 0) {
+			throw new IllegalArgumentException("Size can't be less than 0: " +
+				size);
+		} else {
+			this.size = size;
+		}
 	}
 
 	public int getSize(){
@@ -49,5 +68,13 @@ public abstract class Symbol {
 
 	public Color getOutLineColor(){
 		return outlineColor;
+	}
+
+	public String getLabel(){
+		return label;
+	}
+
+	public void setLabel(String l){
+		label = l;
 	}
 }

@@ -27,11 +27,15 @@ public class FillSymbol extends Symbol {
 	//public static final int DARK_GRAY_FILL = 10;
 
 	public FillSymbol() {
-		this(Color.black);
+		super();
 	}
 
 	public FillSymbol(Color c){
-		setColor(c);
+		super(c);
+	}
+
+	public FillSymbol(Color c, String label){
+		super(c, label);
 	}
 
 	/** Draw symbol on map */

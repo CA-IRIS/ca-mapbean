@@ -70,8 +70,9 @@ public final class MapPane extends JPanel {
 
 	public Layer getLayer(String name) {
 		Layer result = null;
-		ListIterator li = layers.listIterator();
-		while (li.hasNext()) {
+		//ListIterator li = layers.listIterator();
+		//while (li.hasNext()) {
+		for (ListIterator li = layers.listIterator(); li.hasNext();){
 			Layer temp = (Layer) li.next();
 			if (name.equals(temp.getName())) {
 				result = temp;
@@ -160,16 +161,6 @@ public final class MapPane extends JPanel {
 	}
 
 	private void repaintLayers(ListIterator it){
-		 /*if (this.isShowing()){
-			Graphics2D g = (Graphics2D) this.getGraphics();
-			g.setClip(getVisibleRect());
-			if (g != null){
-				g.transform( at );
-				while (it.hasPrevious ()) {
-					((Layer) it.previous()).paint(g);
-				}
-			}
-		}*/
 		repaint();
 	}
 

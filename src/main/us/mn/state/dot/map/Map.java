@@ -45,8 +45,9 @@ public final class Map extends JViewport implements LayerListener {
 		addMouseMotionListener( mouse );
 		this.setView(map);
 		this.setToolTipText("");
-		ListIterator li = layers.listIterator();
-		while (li.hasNext()) {
+		//ListIterator li = layers.listIterator();
+		//while (li.hasNext()) {
+		for (ListIterator li = layers.listIterator(); li.hasNext();){
 			addLayer((Layer) li.next());
 		}
 		setMouseAction(SELECT);
@@ -149,8 +150,9 @@ public final class Map extends JViewport implements LayerListener {
 			yCoord + viewPosition.getY());
 		Point2D p = world.transform(p1, new Point(0, 0));
 		ArrayList layers = map.getLayers();
-		ListIterator it = layers.listIterator();
-		while (it.hasNext()){
+		//ListIterator it = layers.listIterator();
+		//while (it.hasNext()){
+		for (ListIterator it = layers.listIterator(); it.hasNext();) {
 			Layer l = (Layer) it.next();
 			strings = l.getTip(p);
 			if (strings != null) {
@@ -318,10 +320,11 @@ public final class Map extends JViewport implements LayerListener {
 						viewPosition.getX(), pointY + viewPosition.getY());
 					Point2D p = world.transform(p1, new Point(0, 0));
 					ArrayList layers = map.getLayers();
-					ListIterator it = layers.listIterator();
 					g.setTransform(t);
 					boolean found = false;
-					while (it.hasNext()){
+					//ListIterator it = layers.listIterator();
+					//while (it.hasNext()){
+					for (ListIterator it = layers.listIterator(); it.hasNext();){
 						Layer l = (Layer) it.next();
 						found = l.mouseClick(e.getClickCount(), p, g);
 						if ( found ) {
