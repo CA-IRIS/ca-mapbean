@@ -31,6 +31,7 @@ public class DefaultRenderer extends AbstractRenderer {
 
 	/** Create a new DefaultRenderer */
 	public DefaultRenderer(Symbol s) {
+		super(s.getLabel());
 		symbol = s;
 	}
 

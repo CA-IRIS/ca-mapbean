@@ -24,6 +24,7 @@ import java.awt.Shape;
 import java.awt.geom.Rectangle2D;
 import java.util.Iterator;
 import java.util.LinkedList;
+import us.mn.state.dot.map.AbstractRenderer;
 import us.mn.state.dot.map.MapObject;
 import us.mn.state.dot.map.Symbol;
 import us.mn.state.dot.map.symbol.FillSymbol;
@@ -34,7 +35,7 @@ import us.mn.state.dot.map.symbol.FillSymbol;
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
  */
-abstract public class ClassBreaksRenderer extends ShapeRenderer {
+abstract public class ClassBreaksRenderer extends AbstractRenderer {
 
 	/** A field value and symbol together make up a class break */
 	class ClassBreak {
@@ -75,9 +76,9 @@ abstract public class ClassBreaksRenderer extends ShapeRenderer {
 		return (Component [])legend.toArray(new Component[0]);
 	}
 
-	/** Determine which class the value falls into */
-	protected Symbol getSymbol(MapObject object) {
-		ShapeObject shapeObject = (ShapeObject)object;
+	/** Get the symbol for the specified map object */
+	protected Symbol getSymbol(MapObject o) {
+		ShapeObject shapeObject = (ShapeObject)o;
 		Number number = (Number)shapeObject.getValue(field);
 		if(number == null) return null;
 		double value = number.doubleValue();
@@ -86,31 +87,6 @@ abstract public class ClassBreaksRenderer extends ShapeRenderer {
 			ClassBreak b = (ClassBreak)it.next();
 			if(value <= b.value) return b.symbol;
 		}
-		return null;
-	}
-
-	/** Draw the object */
-	public void render(Graphics2D g, MapObject object) {
-		Symbol symbol = getSymbol(object);
-		if(symbol != null) symbol.draw(g, object.getShape());
-	}
-
-	/** Get the shape that would be used to render this object */
-	public Shape getShape(MapObject object) {
-		Symbol symbol = getSymbol(object);
-		if(symbol == null) return null;
-		else return symbol.getShape(object);
-	}
-
-	/** Get the bounds of the specified map object */
-	public Rectangle2D getBounds(MapObject object) {
-		Symbol symbol = getSymbol(object);
-		if(symbol == null) return null;
-		else return symbol.getBounds(object);
-	}
-
-	/** Get tooltip text for the specified map object */
-	public String getTip(MapObject o) {
 		return null;
 	}
 }

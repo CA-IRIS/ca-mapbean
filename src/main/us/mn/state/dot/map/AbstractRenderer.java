@@ -32,7 +32,21 @@ import us.mn.state.dot.map.Symbol;
  */
 abstract public class AbstractRenderer implements LayerRenderer {
 
-	/** Determine which class the value falls into */
+	/** Name of renderer */
+	protected final String name;
+
+	/** Create a new abstract renderer */
+	protected AbstractRenderer(String n) {
+		name = n;
+	}
+
+	/** Get a string representation of the renderer */
+	public String toString() {
+		if(name == null) return super.toString();
+		else return name;
+	}
+
+	/** Get the symbol for the specified map object */
 	abstract protected Symbol getSymbol(MapObject o);
 
 	/** Render a map object on the map */
@@ -41,7 +55,7 @@ abstract public class AbstractRenderer implements LayerRenderer {
 		if(s != null) s.draw(g, o.getShape());
 	}
 
-	/** Get the shape that would be used to render this object */
+	/** Get the shape of the specified map object */
 	public Shape getShape(MapObject o) {
 		Symbol s = getSymbol(o);
 		if(s == null) return null;
