@@ -18,6 +18,7 @@ public final class DefaultRenderer extends ShapeRenderer {
 	private String name = null;
 
 	public DefaultRenderer() {
+		super();
 	}
 
 	public DefaultRenderer( Symbol s ){

@@ -72,7 +72,7 @@ public final class IncidentLayer extends AbstractLayer implements
 	public void paint( Graphics2D g ){
 		if ( isVisible() ) {
 			if ( incidents != null ) {
-				for ( int i = 0; i < incidents.length; i++ ){
+				for ( int i = ( incidents.length - 1 ); i >= 0; i-- ){
 					incidents[ i ].paint( g );
 				}
 			}
@@ -124,7 +124,7 @@ public final class IncidentLayer extends AbstractLayer implements
 	private Vector hit( Point2D p ){
 		Vector result = new Vector();
 		if ( incidents != null ) {
-			for ( int i = 0; i < incidents.length; i++ ) {
+			for ( int i = ( incidents.length - 1 ); i >= 0; i-- ) {
 				double x = incidents[ i ].getX();
 				double y = incidents[ i ].getY();
 				Rectangle2D r = new Rectangle2D.Double( ( x - 500 ),

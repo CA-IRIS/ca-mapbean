@@ -85,16 +85,85 @@ public final class MapPane extends JPanel {
 
 	public void mapZoom( Rectangle2D mapSpace, Rectangle2D viewerSpace ) {
 		//change from mapcoordinates to panel coordinates
+		/*System.out.println(" MapX = " + mapSpace.getMinX() + " MapY = " + mapSpace.getY() +
+			" MapWidth = " + mapSpace.getWidth() + " mapHeight = " + mapSpace.getHeight());
+		System.out.println("ExtentX = " + extent.getX() + " ExtentY = " + extent.getY() +
+			" ExtentWidth = " + extent.getWidth() + " Extent Height = " + extent.getHeight());
+		AffineTransform inverse = null;
+		try {
+			inverse = at.createInverse();
+		} catch ( java.awt.geom.NoninvertibleTransformException ex ) {
+			ex.printStackTrace();
+		}*/
+		Point2D oldPoints[] = new Point2D.Double[ 2 ];
+		Point2D newPoints[] = new Point2D.Double[ 2 ];
+		oldPoints[ 0 ] = new Point2D.Double( mapSpace.getMinX(),
+			mapSpace.getMinY() );
+		oldPoints[ 1 ] = new Point2D.Double( mapSpace.getMaxX(),
+			mapSpace.getMaxY() );
+		at.transform( oldPoints, 0, newPoints, 0, 2 );
+		double xCoor = 0;
+		double width = 0;
+		if ( newPoints[ 0 ].getX() < newPoints[ 1 ].getX() ) {
+			xCoor = newPoints[ 0 ].getX();
+			width = newPoints[ 1 ].getX() - xCoor;
+		} else {
+			xCoor = newPoints[ 1 ].getX();
+			width = newPoints[ 0 ].getX() - xCoor;
+		}
+		double yCoor = 0;
+		double height = 0;
+		if ( newPoints[ 0 ].getY() < newPoints[ 1 ].getY() ) {
+			yCoor = newPoints[ 0 ].getY();
+			height = newPoints[ 1 ].getY() - yCoor;
+		} else {
+			yCoor = newPoints[ 1 ].getY();
+			height = newPoints[ 0 ].getY() - yCoor;
+		}
+		/*System.out.println(" PX = " + xCoor + " PY = " + yCoor + " PWidth = " +
+			width + " pHeight = " + height );
+		System.out.println("Panel Width = " + this.getWidth() + " Panel Height = " + this.getHeight() );
+		*/
+		double newWidth = ( width / this.getWidth() ) * viewerSpace.getWidth();
+		double newHeight = ( height / this.getHeight() ) *
+			viewerSpace.getHeight();
+		double newXcoor = ( ( xCoor / this.getWidth() ) *
+			viewerSpace.getWidth() ) + viewerSpace.getMinX();
+		double newYcoor = ( ( yCoor / this.getHeight() ) *
+			viewerSpace.getHeight() ) + viewerSpace.getMinY();
+		Rectangle2D rec = new Rectangle2D.Double( newXcoor, newYcoor, newWidth,
+			newHeight );
+		/*System.out.println( "X = " + newXcoor + " Y = " + newYcoor + " width = " + newWidth + " height = " + newHeight );
+		System.out.println( "View X = " + viewerSpace.getMinX() + " View Y = " + viewerSpace.getMinY() +
+			" View Width = " + viewerSpace.getWidth() + " View Height = " + viewerSpace.getHeight() );
+		 */
+		zoom( rec, viewerSpace );
+	}
+
+	/*private Rectangle2D transformRec( Rectangle2D rec ) {
 		AffineTransform inverse = null;
 		try {
 			inverse = at.createInverse();
 		} catch ( java.awt.geom.NoninvertibleTransformException ex ) {
 			ex.printStackTrace();
 		}
-		Rectangle2D rec = ( Rectangle2D ) inverse.createTransformedShape(
-			mapSpace );
-		zoom( rec, viewerSpace );
+		Point2D oldPoints[] = new Point2D.Double[ 2 ];
+		Point2D newPoints[] = new Point2D.Double[ 2 ];
+		oldPoints[ 0 ] = new Point2D.Double( rec.getMinX(), rec.getMinY() );
+		oldPoints[ 1 ] = new Point2D.Double( rec.getMaxX(), rec.getMaxY() );
+		inverse.transform( oldPoints, 0, newPoints, 0, 2 );
+		double xCoor = newPoints[ 0 ].getX();
+		double yCoor = newPoints[ 0 ].getY();
+		double height = newPoints[ 1 ].getY() - yCoor;
+		double width = newPoints[ 1 ].getX() - xCoor;
+		Rectangle2D result = new Rectangle2D.Double( xCoor,	yCoor, width,
+			height );
+		return result;
 	}
+
+	private void zoom( double w, double h, Rectangle2D viewerSpace ) {
+
+	} */
 
 	/** Increases size of this mapPane so that the mapSpace will fit in the
 		viewerSpace */
@@ -121,7 +190,8 @@ public final class MapPane extends JPanel {
 			return;
 		}
 		//Set the new size of the panel
-		Point2D viewLocation = new Point2D.Double(viewerSpace.getX(), viewerSpace.getY());
+		Point2D viewLocation = new Point2D.Double( viewerSpace.getX(),
+			viewerSpace.getY() );
 		setMinimumSize( new Dimension( ( int ) width,
 			( int ) height) );
 		setPreferredSize( new Dimension( ( int ) width,
@@ -132,14 +202,17 @@ public final class MapPane extends JPanel {
 			double X1 = ( ( mapSpace.getMinX() + viewLocation.getX()
 				- shiftX ) * ( getWidth() / oldWidth ) );
 			double Y1 = ( ( mapSpace.getMinY() + viewLocation.getY()
-				- shiftY ) * ( getHeight() / oldHeight ));
-			double newBoxWidth = mapSpace.getWidth() * ( getWidth() / oldWidth );
-			double newBoxHeight = mapSpace.getHeight() * ( getHeight() / oldHeight );
+				- shiftY ) * ( getHeight() / oldHeight ) );
+			double newBoxWidth = mapSpace.getWidth() * ( getWidth() /
+				oldWidth );
+			double newBoxHeight = mapSpace.getHeight() * ( getHeight() /
+				oldHeight );
 			Point pan = new Point( ( int ) ( X1 - ( ( viewWidth -
 				newBoxWidth) / 2 ) ), ( int ) ( Y1 - ( ( viewHeight -
 				newBoxHeight ) / 2 ) ) );
 			viewport.panTo( pan );
 		}
+		//zoom( w, h, viewerSpace );
 	}
 
 	/** Set the bounding box for display */

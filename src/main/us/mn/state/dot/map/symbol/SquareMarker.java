@@ -1,6 +1,6 @@
 
 //Title:        SignClient
-//Version:      
+//Version:
 //Copyright:    Copyright (c) 1999
 //Author:       Erik Engstrom
 //Company:      MnDOT
@@ -32,8 +32,8 @@ public final class SquareMarker extends PointSymbol {
 	}
 
 	protected final Shape getShape( double x, double y ){
-		shape.setRect(( x - ( size / 2 )), ( y -
-			( size / 2 )), size, size );
+		shape.setRect( ( x - ( size / 2 ) ), ( y -
+			( size / 2 ) ), size, size );
 		return shape;
 	}
-} 
+}

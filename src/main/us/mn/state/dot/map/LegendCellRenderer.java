@@ -15,7 +15,7 @@ public final class LegendCellRenderer implements ListCellRenderer {
 
 	public Component getListCellRendererComponent( JList list, Object value,
 			 int index, boolean isSelected, boolean cellHasFocus ) {
-		return (( LegendItem ) value).getLegend();
+		return ( ( LegendItem ) value ).getLegend();
 	}
 
 	public Component getRenderedCell( Object value ){

@@ -119,8 +119,7 @@ public class ShapeLayer extends AbstractLayer {
 	/** Paint this Layer */
 	public final void paint( Graphics2D g ) {
 		if ( isVisible() ) {
-			//for ( int i = 0; i < paths.length; i++ ) {
-			for ( int i = paths.length - 1; i >= 0; i--){
+			for ( int i = ( paths.length - 1 ) ; i >= 0; i-- ){
 				painter.paint( g, paths[ i ], i );
 			}
 		}
@@ -136,7 +135,7 @@ public class ShapeLayer extends AbstractLayer {
 	private final java.util.List hit( Point2D p ){
 		java.util.List result = new ArrayList();
 		Rectangle2D r = null;
-		for ( int i = 0; i < paths.length; i++ ) {
+		for ( int i = ( paths.length - 1 ); i >= 0; i-- ) {
 			r = paths[ i ].getBounds2D();
 			if ( r.contains( p ) ) {
 				result.add( paths[ i ] );
@@ -176,7 +175,7 @@ public class ShapeLayer extends AbstractLayer {
 			( p.getY() - 250 ), 500, 500 );
 		Rectangle2D r = null;
 		Point2D q = null;
-		for ( int i = 0; i < paths.length; i++ ) {
+		for ( int i = ( paths.length - 1 ); i >= 0; i-- ) {
 			r = paths[ i ].getBounds2D();
 			if ( ( r.getWidth() == 0) || ( r.getHeight() == 0 ) ) {
 				q = paths[ i ].getCurrentPoint();
