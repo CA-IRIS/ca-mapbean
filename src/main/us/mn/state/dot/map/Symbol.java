@@ -13,6 +13,7 @@ import java.awt.geom.*;
 import javax.swing.*;
 
 public abstract class Symbol implements LegendItem {
+
 	private Color color = Color.black;
 	private Color outlineColor = Color.black;
 	private int size;
