@@ -65,11 +65,11 @@ public class ShapeLayer extends AbstractLayer {
 			 throws IOException {
 		setName( layerName );
 		JarFile file = new JarFile( ShapeLayer.class.getResource(
-				jarFileName ).getFile() );
-		DbaseReader dbFile = new DbaseReader( file.getInputStream( file.getEntry(
-				fileName + ".dbf" ) ) );
+			jarFileName ).getFile() );
+		DbaseReader dbFile = new DbaseReader( file.getInputStream(
+			file.getEntry( fileName + ".dbf" ) ) );
 		ShapeFile shapeFile = new ShapeFile( file.getInputStream(
-				file.getEntry( fileName + ".shp" ) ));
+			file.getEntry( fileName + ".shp" ) ) );
 		fields = dbFile.getFields();
 		createShapeLayer( shapeFile );
 	}
@@ -137,7 +137,17 @@ public class ShapeLayer extends AbstractLayer {
 	}
 	
 	public void paintSelections( Graphics2D g, LayerRenderer renderer,
-			ArrayList selections ) {
+			int[] selections ) {
+		if ( selections == null ) {
+			return;
+		}
+		for ( int i = ( selections.length - 1 ); i >= 0; i-- ) {
+			Symbol drawSymbol = symbol;
+			if ( renderer != null ) {
+				drawSymbol = renderer.render( i );
+			}
+			drawSymbol.draw( g, paths[ selections[ i ] ] );
+		}
 	}
 	
 	public int search( Rectangle2D searchArea ) {
@@ -145,7 +155,8 @@ public class ShapeLayer extends AbstractLayer {
 		if ( searchArea.getWidth() == 0 || searchArea.getHeight() == 0 ) {
 			for ( int i = ( paths.length - 1 ); i >= 0; i-- ) {
 				GeneralPath target = paths[ i ];
-				Point2D point = new Point2D.Double( searchArea.getX(), searchArea.getY() );
+				Point2D point = new Point2D.Double( searchArea.getX(),
+					searchArea.getY() );
 				if ( target.contains( point ) ) {
 					result = i;
 					break;

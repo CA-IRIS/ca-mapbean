@@ -108,7 +108,7 @@ public final class MapBean extends JComponent implements ThemeChangedListener {
 				resized();
 			}
 		});
-		setMouseMode( new ZoomMouseMode() );
+		setMouseMode( new SelectMouseMode() );
 	}
 	
 	/**
@@ -117,8 +117,11 @@ public final class MapBean extends JComponent implements ThemeChangedListener {
 	 * Map.PAN, or Map.ZOOM
 	 */
 	public void setMouseMode( MapMouseMode mode ) {
-		removeMouseListener( activeMouseMode );
-		removeMouseMotionListener( activeMouseMode );
+		if ( activeMouseMode != null ) {
+			removeMouseListener( activeMouseMode );
+			removeMouseMotionListener( activeMouseMode );
+			activeMouseMode.removeAllMapMouseListeners();
+		}
 		activeMouseMode = mode;
 		setCursor( activeMouseMode.getCursor() );
 		addMouseListener( mode );
@@ -127,6 +130,12 @@ public final class MapBean extends JComponent implements ThemeChangedListener {
 		Iterator it = themes.iterator();
 		while ( it.hasNext() ) {
 			Theme theme = ( Theme ) it.next();
+			System.out.println("Checking " + theme.getLayer().getName() );
+			MapMouseListener listener = theme.getMapMouseListener();
+			if ( listener != null && listener.listensToMouseMode( modeId ) ) {
+				System.out.println("Registering " + theme.getLayer().getName() );
+				activeMouseMode.addMapMouseListener( listener );
+			}
 		}
 	}
 	
@@ -151,6 +160,10 @@ public final class MapBean extends JComponent implements ThemeChangedListener {
 			staticThemes.add( theme );
 		} else {
 			themes.add( theme );
+			MapMouseListener listener = theme.getMapMouseListener();
+			if ( listener != null && listener.listensToMouseMode( activeMouseMode.getID() ) ){
+				activeMouseMode.addMapMouseListener( listener );
+			}
 		}
 		theme.addThemeChangedListener( this );
 		setExtent( theme.getExtent() );

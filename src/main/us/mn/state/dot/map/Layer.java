@@ -28,7 +28,7 @@ public interface Layer {
     public Rectangle2D getExtent();
 	public void paint( Graphics2D g, LayerRenderer r );
 	public void paintSelections( Graphics2D g, LayerRenderer renderer,
-		ArrayList selections );
+		int[] selections );
 	public String getName();
 	public void addLayerChangedListener( LayerChangedListener listener );
 	public void updateLayer();

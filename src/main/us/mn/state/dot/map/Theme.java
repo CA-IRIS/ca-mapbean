@@ -28,6 +28,7 @@ package us.mn.state.dot.shape;
 import java.util.*;
 import java.awt.geom.*;
 import java.awt.*;
+import us.mn.state.dot.shape.event.MapMouseListener;
 
 /**
  * Base class for all themes.
@@ -45,7 +46,7 @@ public class Theme implements LayerChangedListener {
 	private String name;
 	
 	/** Currently selected shapes.*/
-	private ArrayList selections = null;
+	private int[] selections = null;
 	
 	/** Visibility flag for this theme.*/
 	private boolean visible = true;
@@ -129,10 +130,10 @@ public class Theme implements LayerChangedListener {
 	 * @param point location of click
 	 * @param g Graphics2D object that click occured on
 	 */
-	public boolean mouseClick( int clickCount, Point2D point,
+	/*public boolean mouseClick( int clickCount, Point2D point,
 			Graphics2D g ) {
 		return false;
-	}
+	}*/
 	
 	/**
 	 * Called by the map to get appropriate tool tip text
@@ -257,5 +258,13 @@ public class Theme implements LayerChangedListener {
 	
 	public Layer getLayer() {
 		return layer;
+	}
+	
+	/**
+	 * Themes that wish to respond to mouse events should over ride this
+	 * method.
+	 */
+	public MapMouseListener getMapMouseListener() {
+		return null;
 	}
 }

@@ -33,6 +33,7 @@ import java.awt.*;
 import javax.swing.ListSelectionModel;
 import us.mn.state.dot.tms.toast.TMSProxy;
 import us.mn.state.dot.tms.*;
+import us.mn.state.dot.shape.event.*;
 
 public final class IncidentLayer extends AbstractLayer implements
 		IncidentListener {
@@ -43,6 +44,9 @@ public final class IncidentLayer extends AbstractLayer implements
 
 	/* the number of map units per mile */
 	private static final int MAP_UNITS_PER_MILE = 3218;
+	
+	private static final int[] RING_DEFAULTS = { 5, 10, 15 };
+	
 	private final TMSProxy proxy;
 
 	public IncidentLayer(){
@@ -105,10 +109,7 @@ public final class IncidentLayer extends AbstractLayer implements
 		}
 	}
 
-	public boolean mouseClick( int clickCount, Point2D p, Graphics2D g ){
-		if ( proxy == null ){
-			return false;
-		}
+	private boolean mouseClick( Point2D p, Graphics2D g ) {
 		boolean result;
 		java.util.List found = getPaths( p );
 		if ( found.isEmpty() ) {
@@ -132,17 +133,27 @@ public final class IncidentLayer extends AbstractLayer implements
 			}
 			g.setColor( Color.red );
 			g.setXORMode( Color.white );
-			DMSList dmsList = ( DMSList ) proxy.getDMSList().getList();
-			for ( int i = 0; i < 3; i++ ){
-				int diameter = 0;
-				try{
-					diameter = dmsList.getRingRadius( i ) * MAP_UNITS_PER_MILE;
-				} catch ( java.rmi.RemoteException ex ){
-					result = false;
+			int[] diameters = new int[ 3 ];
+			if ( proxy == null ){
+				for ( int i = 0; i < 3; i++ ){
+					diameters[ i ] = RING_DEFAULTS[ i ] * MAP_UNITS_PER_MILE;
 				}
-				g.draw( new Ellipse2D.Double( ( xCoord - ( diameter / 2 ) ),
-					( yCoord - ( diameter / 2 ) ), diameter, diameter ) );
+			} else {
+				DMSList dmsList = ( DMSList ) proxy.getDMSList().getList();
+				for ( int i = 0; i < 3; i++ ){
+					try {
+						diameters[ i ] = dmsList.getRingRadius( i ) *
+							MAP_UNITS_PER_MILE;
+					} catch ( java.rmi.RemoteException ex ){
+						result = false;
+					}
+				}
 			}
+			for ( int i = 0; i < 3; i++ ){
+				g.draw( new Ellipse2D.Double( ( xCoord - ( diameters[ i ] /
+					2 ) ), ( yCoord - ( diameters[ i ] / 2 ) ),
+					diameters[ i ], diameters[ i ] ) );
+			}	
 		}
 		return result;
 	}
@@ -186,7 +197,7 @@ public final class IncidentLayer extends AbstractLayer implements
 	}
 	
 	public Theme getTheme() {
-		Theme result = new Theme( this );
+		Theme result = new IncidentTheme( this );
 		result.setTip( new MapTip() {
 			public String getTip( Layer layer, int i ) {
 				String result = null;
@@ -197,5 +208,70 @@ public final class IncidentLayer extends AbstractLayer implements
 			}
 		});
 		return result;
+	}
+	
+	private class IncidentTheme extends Theme implements MapMouseListener {
+		
+		public IncidentTheme( Layer layer ) {
+			super( layer );
+		}
+		
+		public MapMouseListener getMapMouseListener() {
+			return this;
+		}
+		
+		public boolean mouseMoved( final java.awt.event.MouseEvent p1 ) {
+			return false;
+		}
+		
+		public java.lang.String[] getMouseModeServiceList() {
+			String[] result = { "Select" };
+			return result;
+		}
+		
+		public boolean listensToMouseMode( String modeName ) {
+			boolean result = false;
+			if ( modeName.equals( SelectMouseMode.MODE_ID ) ) {
+				result = true;
+			}
+			return result;
+		}
+		
+		public void mouseExited( final java.awt.event.MouseEvent event ) {
+		}
+		
+		public boolean mousePressed( final java.awt.event.MouseEvent event ) {
+			return false;
+		}
+		
+		public boolean mouseDragged( final java.awt.event.MouseEvent event ) {
+			return false;
+		}
+		
+		public void mouseMoved() {
+		}
+		
+		public void mouseEntered( final java.awt.event.MouseEvent event ) {
+		}
+		
+		public boolean mouseReleased( final java.awt.event.MouseEvent event ) {
+			return false;
+		}
+		
+		public boolean mouseClicked( final java.awt.event.MouseEvent event ) {
+			MapBean map = ( MapBean ) event.getSource();
+			AffineTransform at = null;
+			try {
+				at = map.getTransform().createInverse();
+			} catch ( NoninvertibleTransformException ex ){
+				return false;
+			}
+			Graphics2D g = ( Graphics2D ) map.getGraphics();
+			g.setTransform( map.getTransform() );
+			Point2D point = null;
+			point = at.transform( event.getPoint(), point );
+			IncidentLayer layer = ( IncidentLayer ) getLayer();
+			return layer.mouseClick( point, g );
+		}
 	}
 }

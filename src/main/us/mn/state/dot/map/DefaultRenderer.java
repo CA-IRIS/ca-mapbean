@@ -43,14 +43,6 @@ public final class DefaultRenderer extends ShapeRenderer {
 		setSymbol( s );
 	}
 
-	/*public final void setSymbol( Symbol s ){
-		symbol = s;
-	}
-
-	public final Symbol getSymbol(){
-		return symbol;
-	}*/
-
 	public Symbol render( int index ){
 		return symbol;
 	}

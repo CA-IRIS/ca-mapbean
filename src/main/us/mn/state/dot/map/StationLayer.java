@@ -18,10 +18,13 @@
  */
 package us.mn.state.dot.shape;
 
-import us.mn.state.dot.dds.client.*;
+
+import java.awt.*;
+import java.awt.geom.*;
 import java.io.*;
 import java.util.*;
-import java.awt.geom.*;
+import us.mn.state.dot.dds.client.*;
+import us.mn.state.dot.shape.event.*;
 
 /**
  * A StationLayer displays detector station data represented as a gpoly.shp file.
@@ -32,7 +35,8 @@ import java.awt.geom.*;
 public final class StationLayer extends ShapeLayer implements StationListener {
 	/**
 	 * Constructs a StationLayer.
-	 * @throws IOException Will throw an IOException if the gpoly.dbf or gpoly.shp files can not be found
+	 * @throws IOException Will throw an IOException if the gpoly.dbf or
+	 * gpoly.shp files can not be found
 	 */
 	public StationLayer() throws IOException {
 		super( "gpoly/gpoly", "gpoly" );
@@ -72,8 +76,85 @@ public final class StationLayer extends ShapeLayer implements StationListener {
 		ShapeRenderer renderer =  new OccupancyRenderer(
 		( NumericField ) getField( "occupancy" ),
 		new StationMapTip() );
-		Theme result = new Theme( this, renderer );
+		Theme result = new StationTheme( this, renderer );
 		result.setTip( new StationMapTip() );
 		return result;
+	}
+	
+	private class StationTheme extends Theme implements MapMouseListener {
+		
+		public StationTheme( Layer layer, LayerRenderer renderer ){
+			super( layer, renderer );
+		}
+		
+		public MapMouseListener getMapMouseListener() {
+			return this;
+		}
+		
+		public boolean mouseMoved( final java.awt.event.MouseEvent p1 ) {
+			return false;
+		}
+		
+		public java.lang.String[] getMouseModeServiceList() {
+			String[] result = { "Select" };
+			return result;
+		}
+		
+		public boolean listensToMouseMode( String modeName ) {
+			boolean result = false;
+			if ( modeName.equals( SelectMouseMode.MODE_ID ) ) {
+				result = true;
+			}
+			return result;
+		}
+		
+		public void mouseExited( final java.awt.event.MouseEvent event ) {
+		}
+		
+		public boolean mousePressed( final java.awt.event.MouseEvent event ) {
+			return false;
+		}
+		
+		public boolean mouseDragged( final java.awt.event.MouseEvent event ) {
+			return false;
+		}
+		
+		public void mouseMoved() {
+		}
+		
+		public void mouseEntered( final java.awt.event.MouseEvent event ) {
+		}
+		
+		public boolean mouseReleased( final java.awt.event.MouseEvent event ) {
+			return false;
+		}
+		
+		public boolean mouseClicked( final java.awt.event.MouseEvent event ) {
+			System.out.println("stationtheme mouseclicked");
+			boolean result = false;
+			MapBean map = ( MapBean ) event.getSource();
+			AffineTransform at = null;
+			try {
+				at = map.getTransform().createInverse();
+			} catch ( NoninvertibleTransformException ex ){
+				return false;
+			}
+			Graphics2D g = ( Graphics2D ) map.getGraphics();
+			g.setTransform( map.getTransform() );
+			Point2D point = null;
+			point = at.transform( event.getPoint(), point );
+			ShapeLayer layer = ( ShapeLayer ) getLayer();
+			int index = layer.search( new Rectangle2D.Double( point.getX(),
+				point.getY(), 0, 0 ) );
+			if ( index == -1 ) {
+				System.out.println("didnt find anything here");
+				return false;
+			} else {
+				int[] selections = { index };
+				System.out.println("found something lets paint it");
+				layer.paintSelections( g, new DefaultRenderer( new FillSymbol( Color.cyan ) ), selections );
+				return true;
+			}
+		}
 	}
 }

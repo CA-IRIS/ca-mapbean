@@ -69,8 +69,8 @@ public abstract class AbstractLayer implements Layer {
 	}
 
 	/**
-	 * Adds a LayerListener to the layer that is notified when the layer's data is
-	 * changed.
+	 * Adds a LayerListener to the layer that is notified when the layer's data
+	 * is changed.
 	 *
 	 * @param l LayerListener to be added to the layer
 	 */
@@ -88,20 +88,22 @@ public abstract class AbstractLayer implements Layer {
 		}
 	}
 
-	/** Is this layer static?
+	/** 
+	 * Is this layer static?
 	 * @return true if data is not dynamic
 	 */
 	public boolean isStatic() {
 		return ! dynamic;
 	}
 
-	/** if set to false layer is static and the data will not change.  Static layers
-	 * are painted behind non-static (dynamic) layers on a map.  If it is desired for
-	 * a static layer to be higher in the map it setStatic() must be set to true.
-	 * @param b true - layer is static and data will not be update; layer is painted behind any
-	 * non-static layers.
-	 * false - layer is dynamic and layer will change if the layer's data is changed;
-	 * will be painted in front of any static layers
+	/** if set to false layer is static and the data will not change.  Static
+	 * layers are painted behind non-static (dynamic) layers on a map.  If it is
+	 * desired for a static layer to be higher in the map it setStatic() must be
+	 * set to true.
+	 * @param b true - layer is static and data will not be update; layer is
+	 * painted behind any non-static layers.
+	 * false - layer is dynamic and layer will change if the layer's data is
+	 * changed; will be painted in front of any static layers
 	 */
 	public void setStatic( boolean b ) {
 		dynamic = ! b;
@@ -116,5 +118,6 @@ public abstract class AbstractLayer implements Layer {
 	public Theme getTheme() {
 		return new Theme( this );
 	}
-
+	public void paintSelections(Graphics2D g,LayerRenderer renderer,int[] selections) {
+	}
 }

@@ -19,7 +19,7 @@ public class SelectMouseMode extends MouseModeAdapter {
      * Mouse Mode identifier, which is "Select".
      * This is returned on getID()
      */
-    public final static transient String modeID = "Select".intern();
+    public final static transient String MODE_ID = "Select".intern();
 
     /**
 	 * Creates new SelectMouseMode 
@@ -36,7 +36,7 @@ public class SelectMouseMode extends MouseModeAdapter {
      * @param consumeEvents the consume mode setting.
      */
     public SelectMouseMode( boolean consumeEvents ){
-		super( modeID, consumeEvents );
+		super( MODE_ID, consumeEvents );
     }
 
     /**

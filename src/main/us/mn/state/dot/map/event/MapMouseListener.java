@@ -12,8 +12,8 @@
  * **********************************************************************
  * 
  * $Source: /home/lau1dou/cvsroot/MapBean/src/main/us/mn/state/dot/map/event/Attic/MapMouseListener.java,v $
- * $Revision: 1.1 $
- * $Date: 2000/07/05 22:37:06 $
+ * $Revision: 1.2 $
+ * $Date: 2000/07/06 22:16:52 $
  * $Author: engs1eri $
  * 
  * **********************************************************************
@@ -60,6 +60,12 @@ public interface MapMouseListener {
      * @see NullMouseMode#modeID
      */
     public String[] getMouseModeServiceList();
+	
+	/**
+	 * Should return true if the listener is interested in recieving mouse
+	 * events from the given mouse mode.
+	 */
+	public boolean listensToMouseMode( String mouseModeId );
 
     // Mouse Listener events
     ////////////////////////
