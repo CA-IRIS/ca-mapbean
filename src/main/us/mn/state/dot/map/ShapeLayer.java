@@ -87,7 +87,7 @@ public class ShapeLayer extends AbstractLayer {
 		createShapeLayer(file);
 	}
 
-	public void createShapeLayer(ShapeFile file){
+	private void createShapeLayer(ShapeFile file){
 		ArrayList list = file.getShapeList();
 		paths = new GeneralPath [ list.size() ];
 		for ( int i = 0; i < list.size(); i++ ) {
@@ -175,14 +175,14 @@ public class ShapeLayer extends AbstractLayer {
 			(p.getY() - 250), 500, 500);
 		for ( int i = 0; i < paths.length; i++ ) {
 			Rectangle2D r = paths[i].getBounds2D();
-			if ((r.getWidth() == 0) | (r.getHeight() == 0)) {
+			if ((r.getWidth() == 0) || (r.getHeight() == 0)) {
 				Point2D q = paths[i].getCurrentPoint();
 				if (searchZone.contains(q)) {
 					result = painter.getTip(this, i);
 					break;
 				}
 			} else {
-				if (searchZone.contains(r) | r.contains(searchZone) |
+				if (searchZone.contains(r) || r.contains(searchZone) ||
 						r.intersects(searchZone)) {
 					result = painter.getTip(this, i);
 					break;

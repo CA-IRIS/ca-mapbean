@@ -38,6 +38,10 @@ public class FillSymbol extends Symbol {
 		super(c, label);
 	}
 
+	public FillSymbol(Color c, String label, boolean outline){
+		super(c, label, outline);
+	}
+
 	/** Draw symbol on map */
 	public void draw(Graphics2D g, GeneralPath path){
 		g.setColor(this.getColor());

@@ -26,11 +26,16 @@ public abstract class Symbol implements LegendItem {
 	}
 
 	public Symbol(Color c){
-		this(c, "");
+		this(c, "", false);
 	}
 
-	public Symbol(Color color, String label){
+	public Symbol(Color c, String label){
+		this(c, label, false);
+	}
+
+	public Symbol(Color color, String label, boolean outline){
 		this.color = color;
+		this.outline = outline;
 		this.label = label;
 	}
 

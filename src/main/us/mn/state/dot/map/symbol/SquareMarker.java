@@ -20,6 +20,14 @@ public class SquareMarker extends PointSymbol {
 		super(c);
 	}
 
+	public SquareMarker(Color c, String label){
+		super(c, label);
+	}
+
+	public SquareMarker(Color c, String label, boolean outline){
+		super(c, label, outline);
+	}
+
 	protected Shape getShape(float x, float y){
 		return new Rectangle2D.Double((x - (getSize() / 2)), (y -
 			(getSize() / 2)), getSize(), getSize());

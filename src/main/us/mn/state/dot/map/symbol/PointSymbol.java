@@ -14,12 +14,20 @@ import java.awt.geom.*;
 public abstract class PointSymbol extends Symbol {
 
 	public PointSymbol() {
-		this(Color.black);
+		super(Color.black);
 	}
 
 	public PointSymbol(Color c) {
+		super(c);
 		this.setSize(500);
-		this.setColor(c);
+	}
+
+	public PointSymbol(Color c, String label){
+		super(c, label);
+	}
+
+	public PointSymbol(Color c, String label, boolean outline){
+		super(c, label, outline);
 	}
 
    abstract protected Shape getShape(float x, float y);
