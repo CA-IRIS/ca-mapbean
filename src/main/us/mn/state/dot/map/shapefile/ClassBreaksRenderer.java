@@ -16,7 +16,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-package us.mn.state.dot.shape;
+package us.mn.state.dot.shape.shapefile;
 
 import java.awt.Component;
 import java.awt.Graphics2D;
@@ -24,8 +24,8 @@ import java.awt.Shape;
 import java.awt.geom.Rectangle2D;
 import java.util.Iterator;
 import java.util.LinkedList;
-import us.mn.state.dot.shape.shapefile.ShapeObject;
-import us.mn.state.dot.shape.shapefile.ShapeRenderer;
+import us.mn.state.dot.shape.MapObject;
+import us.mn.state.dot.shape.Symbol;
 import us.mn.state.dot.shape.symbol.FillSymbol;
 
 /**
