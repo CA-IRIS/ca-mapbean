@@ -54,7 +54,8 @@ public final class StationLayer extends ShapeLayer implements StationListener {
 	 * @param occupancy an array containing the new occupancy values
 	 * @param status an array containing the new status values
 	 */
-	public final void update( int[] volume, int[] occupancy, int[] status ) {
+	public final synchronized void update( int[] volume, int[] occupancy,
+			int[] status ) {
 		IntegerField v = ( IntegerField ) super.getField( "VOLUME" );
 		IntegerField o = ( IntegerField ) super.getField( "OCCUPANCY" );
 		IntegerField s = ( IntegerField ) super.getField( "STATUS" );
@@ -69,8 +70,25 @@ public final class StationLayer extends ShapeLayer implements StationListener {
 				}
 			}
 		}
-		notifyLayerChangedListeners( new LayerChangedEvent( this,
+		//notifyLayerChangedListeners( new LayerChangedEvent( this,
+		//	LayerChangedEvent.DATA ) );
+		SwingUtilities.invokeLater( new NotifyThread( this,
 			LayerChangedEvent.DATA ) );
+	}
+	
+	private final class NotifyThread extends Thread {
+		private final StationLayer layer;
+		private final int reason;
+		
+		public NotifyThread( StationLayer layer, int reason ) {
+			this.layer = layer;
+			this.reason = reason;
+		}
+		
+		public void run() {
+			layer.notifyLayerChangedListeners( new LayerChangedEvent(
+				layer, reason ) );
+		}
 	}
 	
 	public final Theme getTheme() {

@@ -68,7 +68,7 @@ public final class IncidentLayer extends AbstractLayer implements
 		}
 	}
 
-	public void update( Incident[] incidents ){
+	public synchronized void update( Incident[] incidents ){
 		this.incidents = incidents;
 		if ( incidents.length > 0 ){
 			double maxX = incidents[ 0 ].getX();
@@ -89,8 +89,29 @@ public final class IncidentLayer extends AbstractLayer implements
 			}
 			extent = new Rectangle2D.Double( minX, minY, ( maxX - minX )
 				, ( maxY - minY ) );
-			notifyLayerChangedListeners( new LayerChangedEvent( this,
+			//notifyLayerChangedListeners( new LayerChangedEvent( this,
+			//	LayerChangedEvent.DATA ) );
+			SwingUtilities.invokeLater( new NotifyThread( this,
 				LayerChangedEvent.DATA ) );
+		}
+	}
+	
+	/**
+	 * Class for notifying gui of changes in the eventdispatch thread.
+	 */
+	private final class NotifyThread extends Thread {
+		
+		private final IncidentLayer layer;
+		private final int type;
+		
+		public NotifyThread( IncidentLayer layer, int type ) {
+			this.layer = layer;
+			this.type = type;
+		}
+		
+		public void run() {
+			layer.notifyLayerChangedListeners( new LayerChangedEvent( layer,
+				type ) );
 		}
 	}
 
