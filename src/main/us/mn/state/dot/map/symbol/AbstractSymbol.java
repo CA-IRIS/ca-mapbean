@@ -27,7 +27,7 @@ import javax.swing.*;
  * Base class for Symbol implementations.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.7 $ $Date: 2001/08/16 22:43:59 $ 
+ * @version $Revision: 1.8 $ $Date: 2001/08/16 22:59:44 $ 
  */
 public abstract class AbstractSymbol implements LegendItem, Symbol {
 
@@ -101,7 +101,7 @@ public abstract class AbstractSymbol implements LegendItem, Symbol {
 		JLabel label = new JLabel();
 		if ( ( getLabel() != null ) && ( ! getLabel().equals( "" ) ) ) {
 			label.setText( getLabel() );
-			ColorIcon icon = new ColorIcon( getColor() );
+			ColorIcon icon = new ColorIcon( this );
 			label.setIcon( icon );
 		}
 		return label;
@@ -129,39 +129,31 @@ public abstract class AbstractSymbol implements LegendItem, Symbol {
 	class ColorIcon implements Icon {
 		
 		/** Fill color of icon. */
-		private Color color;
 		private int width;
 		private int height;
+		private final Symbol symbol;
 
-		public ColorIcon(){
-			this( Color.gray, 25, 15 );
+		public ColorIcon( Symbol symbol ){
+			this( symbol, 25, 15 );
 		}
 
-		public ColorIcon( Color color ){
-			this( color, 25, 15 );
-		}
-
-		public ColorIcon( Color color, int width, int height ){
-			this.color = color;
+		public ColorIcon( Symbol symbol, int width, int height ){
+			this.symbol = symbol;
 			this.width = width;
 			this.height = height;
 		}
 
 		public void paintIcon( Component c, Graphics g, int x, int y ) {
-			g.setColor( Color.black );
-			g.drawRect( x, y, width - 1, height - 1 );
-			g.setColor( color );
-			g.fillRect( x + 1, y + 1, width - 2, height - 2 );
+			if ( symbol.isOutLined() ) {
+				g.setColor( symbol.getOutLineSymbol().getColor() );
+				g.drawRect( x, y, width - 1, height - 1 );
+			}
+			if ( symbol.isFilled() ) {
+				g.setColor( symbol.getColor() );
+				g.fillRect( x + 1, y + 1, width - 2, height - 2 );
+			}
 		}
 		
-		public Color getColor() {
-			return color;
-		}
-
-		public void setColor( Color color ){
-			this.color = color;
-		}
-
 		public int getIconWidth() {
 			return width;
 		}
