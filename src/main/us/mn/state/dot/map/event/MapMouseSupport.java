@@ -124,21 +124,21 @@ public class MapMouseSupport implements java.io.Serializable {
     /**
      * Get a reference to the listeners.
      */
-    protected List getTargets () {
+/*    protected List getTargets() {
 		synchronized (this) {
-			List result = new ArrayList();
+			List result = new ArrayList( listeners.size() );
 			Collections.copy( result, listeners );
 			return result;
 		}
-    }
+    }*/
 
     /**
      * Handle a mousePressed MouseListener event.
      * @param evt MouseEvent to be handled
      */
     public boolean fireMapMousePressed (java.awt.event.MouseEvent evt) {
-		List targets = getTargets();
-		if (targets == null) return false;
+		List targets = listeners;//getTargets();
+		//if (targets == null) return false;
 		for (int i = 0; i < targets.size(); i++) {
 			MapMouseListener target = 
 			(MapMouseListener)targets.get(i);
@@ -165,8 +165,8 @@ public class MapMouseSupport implements java.io.Serializable {
 				priorityListener = null;
 			return true;
 		}
-		List targets = getTargets();
-		if (targets == null) return false;
+		List targets = listeners;//getTargets();
+//		if (targets == null) return false;
 
 		for (int i = 0; i < targets.size(); i++) {
 			MapMouseListener target = 
@@ -194,8 +194,8 @@ public class MapMouseSupport implements java.io.Serializable {
 
 		priorityListener = null;
 
-		List targets = getTargets();
-		if (targets == null) return false;
+		List targets = listeners;//getTargets();
+		//if (targets == null) return false;
 
 		for (int i = 0; i < targets.size(); i++) {
 			MapMouseListener target = 
@@ -213,8 +213,8 @@ public class MapMouseSupport implements java.io.Serializable {
      * @param evt MouseEvent to be handled
      */
     public boolean fireMapMouseEntered (java.awt.event.MouseEvent evt) {
-		List targets = getTargets();
-		if (targets == null) return false;
+		List targets = listeners;//getTargets();
+//		if (targets == null) return false;
 
 		for (int i = 0; i < targets.size(); i++) {
 			MapMouseListener target = 
@@ -231,8 +231,8 @@ public class MapMouseSupport implements java.io.Serializable {
      */
     public boolean fireMapMouseExited (java.awt.event.MouseEvent evt) {
 
-		List targets = getTargets();
-		if (targets == null) return false;
+		List targets = listeners;//getTargets();
+//		if (targets == null) return false;
 
 		for (int i = 0; i < targets.size(); i++) {
 			MapMouseListener target = 
@@ -255,8 +255,8 @@ public class MapMouseSupport implements java.io.Serializable {
 			return true;
 		}
 
-		List targets = getTargets();
-		if (targets == null) return false;
+		List targets = listeners;//getTargets();
+//		if (targets == null) return false;
 
 		for (int i = 0; i < targets.size(); i++) {
 			MapMouseListener target = 
@@ -279,8 +279,8 @@ public class MapMouseSupport implements java.io.Serializable {
     public boolean fireMapMouseMoved (java.awt.event.MouseEvent evt) {
 		boolean movedConsumed = false;
 
-		List targets = getTargets();
-		if (targets == null) return false;
+		List targets = listeners;//getTargets();
+//		if (targets == null) return false;
 
 		for (int i = 0; i < targets.size(); i++) {
 			MapMouseListener target = 
