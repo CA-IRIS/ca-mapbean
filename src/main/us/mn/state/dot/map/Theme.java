@@ -31,7 +31,9 @@ import us.mn.state.dot.shape.event.ThemeChangedEvent;
 import us.mn.state.dot.shape.event.ThemeChangedListener;
 
 /**
- * Base class for all themes.
+ * A theme is associated with one layer and one active layer renderer.
+ * It can be made invisible and can listen for mouse actions.
+ *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
  */
 public class Theme implements LayerChangedListener {
