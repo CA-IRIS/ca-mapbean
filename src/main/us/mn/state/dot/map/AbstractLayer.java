@@ -27,7 +27,7 @@ import us.mn.state.dot.shape.symbol.CircleMarker;
 import us.mn.state.dot.shape.event.LayerChangedEvent;
 import us.mn.state.dot.shape.event.LayerChangedListener;
 
-/** 
+/**
  * The AbstractLayer implements much of the functionality of the Layer
  * interface.
  *
