@@ -14,9 +14,13 @@ import java.awt.geom.*;
 import java.awt.*;
 import javax.swing.ListSelectionModel;
 
-public final class IncidentLayer extends AbstractLayer implements IncidentListener {
+public final class IncidentLayer extends AbstractLayer implements
+		IncidentListener {
 	private Incident [] incidents = null;
 	private ListSelectionModel selectionModel = null;
+	private static final int ONE_MILE = 3218;
+	private static final int FIVE_MILES = 16090;
+	private static final int TEN_MILES = 32180;
 
 	public IncidentLayer() {
 		this(null);
@@ -69,16 +73,44 @@ public final class IncidentLayer extends AbstractLayer implements IncidentListen
 		}
 	}
 
-	public Vector hit(Point2D p){
+	public boolean select(Point2D p, Graphics2D g){
+		boolean result;
+		Vector found = hit(p);
+		if ( found.isEmpty()) {
+			result = false;
+		} else {
+			result = true;
+			ListIterator it = found.listIterator();
+			double xCoord = 0;
+			double yCoord = 0;
+			int index = -1;
+			while (it.hasNext()){
+				index = it.nextIndex();
+				Incident incident = (Incident) it.next();
+				xCoord = incident.getX();
+				yCoord = incident.getY();
+				break;
+			}
+			if (selectionModel != null) {
+				selectionModel.clearSelection();
+				selectionModel.addSelectionInterval(index,index);
+			}
+			g.setColor(Color.red);
+			g.setXORMode(Color.white);
+			g.draw(new Ellipse2D.Double((xCoord - (ONE_MILE / 2)),
+				(yCoord - (ONE_MILE / 2)), ONE_MILE, ONE_MILE));
+			g.draw(new Ellipse2D.Double((xCoord - (FIVE_MILES / 2)),
+				(yCoord - (FIVE_MILES / 2)), FIVE_MILES, FIVE_MILES));
+			g.draw(new Ellipse2D.Double((xCoord - (TEN_MILES / 2)),
+				(yCoord - TEN_MILES / 2), TEN_MILES, TEN_MILES));
+		}
+		return result;
+	}
+
+	private Vector hit(Point2D p){
 		double x = 0;
 		double y = 0;
 		Vector result = new Vector();
-		if (selectionModel != null) {
-			selectionModel.clearSelection();
-		} else {
-			System.out.println("Selection model is null");
-		}
-
 		if (incidents != null) {
 			for ( int i = 0; i < incidents.length; i++ ) {
 				x = incidents[i].getX();
@@ -87,9 +119,6 @@ public final class IncidentLayer extends AbstractLayer implements IncidentListen
 					(y - 500), 1000, 1000 );
 				if (r.contains(p)) {
 					result.add(incidents[i]);
-					if (selectionModel != null) {
-						selectionModel.addSelectionInterval(i,i);
-					}
 				}
 			}
 		}

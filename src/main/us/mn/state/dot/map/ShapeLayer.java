@@ -95,7 +95,18 @@ public class ShapeLayer extends AbstractLayer {
 		}
 	}
 
-	public Vector hit(Point2D p){
+	public boolean select(Point2D p, Graphics2D g){
+		boolean result;
+		Vector found = hit(p);
+		if ( !found.isEmpty()) {
+			result = false;
+		} else {
+			result = true;
+		}
+		return result;
+	}
+
+	private Vector hit(Point2D p){
 		Vector result = new Vector();
 		for ( int i = 0; i < paths.length; i++ ) {
 			Rectangle2D r = paths[i].getBounds2D();

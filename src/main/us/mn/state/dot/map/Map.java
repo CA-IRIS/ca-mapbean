@@ -22,9 +22,6 @@ public final class Map extends JViewport implements LayerListener {
 	public static final int SELECT = 1;
 	public static final int ZOOM = 2;
 	public static final int PAN = 3;
-	private static final int ONE_MILE = 3218;
-	private static final int FIVE_MILES = 16090;
-	private static final int TEN_MILES = 32180;
 
 	/** Map panel */
 	private MapPane map = new MapPane(this);
@@ -272,16 +269,19 @@ public final class Map extends JViewport implements LayerListener {
 					Point2D p1 = new Point2D.Double(pointX +
 					viewPosition.getX(), pointY + viewPosition.getY());
 					Point2D p = world.transform(p1, new Point(0, 0));
+					g.setTransform(t);
 					ArrayList layers = map.getLayers();
 					ListIterator it = layers.listIterator();
-					Vector found = null;
+					//Vector found = null;
+					boolean found = false;
 					while (it.hasNext()){
 						Layer l = (Layer) it.next();
-						found = l.hit(p);
-						if ( !found.isEmpty()) {
+						found = l.select(p, g);//l.hit(p);
+						if ( found ) {
 							break;
 						}
 					}
+					/*
 					it = found.listIterator();
 					Object o = null;
 					double xCoord = 0;
@@ -303,7 +303,7 @@ public final class Map extends JViewport implements LayerListener {
 					g.draw(new Ellipse2D.Double((xCoord - (FIVE_MILES / 2)),
 						(yCoord - (FIVE_MILES / 2)), FIVE_MILES, FIVE_MILES));
 					g.draw(new Ellipse2D.Double((xCoord - (TEN_MILES / 2)),
-						(yCoord - TEN_MILES / 2), TEN_MILES, TEN_MILES));
+						(yCoord - TEN_MILES / 2), TEN_MILES, TEN_MILES));   */
 				case ZOOM:
 					break;
 				case PAN:

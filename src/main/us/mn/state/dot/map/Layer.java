@@ -14,8 +14,8 @@ import java.awt.geom.*;
 
 public interface Layer {
     public Rectangle2D getExtent();
-    public void paint(Graphics2D g);
-    public Vector hit(Point2D p);
+	public void paint(Graphics2D g);
+	public boolean select(Point2D p, Graphics2D g);
     public String getTip(Point2D p);
     public boolean isVisible();
     public void setVisible(boolean b);

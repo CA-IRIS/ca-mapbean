@@ -23,18 +23,6 @@ public abstract class AbstractLayer implements Layer {
 		return extent;
 	}
 
-	/*public void paint(Graphics2D g) {
-		//TODO: implement this us.mn.state.dot.shape.Layer method;
-	}
-
-	public Vector hit(Point2D p) {
-		//TODO: implement this us.mn.state.dot.shape.Layer method;
-	}
-
-	public String getTip(Point2D p) {
-		//TODO: implement this us.mn.state.dot.shape.Layer method;
-	} */
-
 	private boolean visible = true;
 
 	public boolean isVisible() {
