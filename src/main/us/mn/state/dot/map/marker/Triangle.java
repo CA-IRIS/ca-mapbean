@@ -26,9 +26,9 @@ package us.mn.state.dot.map.marker;
 public class Triangle extends AbstractMarker {
 
 	/** Create a new triangle marker */
-	public Triangle(int s) {
+	public Triangle() {
 		super(4);
-		float length = s / 2;
+		float length = 0.5f;
 		float a = (float)(length * Math.tan(60));
 		float c = (float)Math.sqrt((a * a) + (length * length));
 		path.moveTo(-length, -a);

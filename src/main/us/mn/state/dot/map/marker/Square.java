@@ -28,7 +28,7 @@ import java.awt.geom.Rectangle2D;
 public class Square extends Rectangle2D.Float {
 
 	/** Create a new square marker */
-	public Square(int s) {
-		super(-s / 2, -s / 2, s, s);
+	public Square() {
+		super(-0.5f, -0.5f, 0.5f, 0.5f);
 	}
 }

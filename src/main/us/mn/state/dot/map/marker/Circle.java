@@ -28,7 +28,7 @@ import java.awt.geom.Ellipse2D;
 public class Circle extends Ellipse2D.Float {
 
 	/** Create a new circle marker */
-	public Circle(float r) {
-		super(-r / 2, -r / 2, r, r);
+	public Circle() {
+		super(-0.5f, -0.5f, 0.5f, 0.5f);
 	}
 }
