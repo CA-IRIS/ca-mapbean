@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000  Minnesota Department of Transportation
+ * Copyright (C) 2000-2004  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,7 +16,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package us.mn.state.dot.shape;
 
 import java.awt.Graphics2D;
@@ -25,7 +24,6 @@ import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
 import us.mn.state.dot.shape.event.LayerChangedEvent;
 import us.mn.state.dot.shape.event.LayerChangedListener;
 import us.mn.state.dot.shape.event.MapMouseListener;
@@ -35,11 +33,10 @@ import us.mn.state.dot.shape.event.ThemeChangedListener;
 /**
  * Base class for all themes.
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.20 $ $Date: 2004/08/04 14:30:52 $ 
  */
 public class Theme implements LayerChangedListener {
 	
-	/** The Layer that this theme controls.*/
+	/** The Layer that this theme controls */
 	protected Layer layer;
 	
 	/** The LayerRenderer used to paint this theme's layer */
@@ -51,18 +48,18 @@ public class Theme implements LayerChangedListener {
 	/** List of available renderers for theme */
 	protected java.util.List layerRenderers = new ArrayList();
 		
-	/** The name of this theme.*/
+	/** The name of this theme */
 	private String name;
 	
-	/** Currently selected shapes.*/
+	/** Currently selected shapes */
 	private MapObject[] selections = new MapObject[ 0 ];
 	
-	/** Visibility flag for this theme.*/
+	/** Visibility flag for this theme */
 	private boolean visible = true;
 	
 	protected MapPane map = null;
 	
-	/** ThemeChangedListeners that listen to this theme.*/
+	/** ThemeChangedListeners that listen to this theme */
 	private List listeners = new ArrayList();
 
 	/**
@@ -110,24 +107,18 @@ public class Theme implements LayerChangedListener {
 		this.map = map;
 	}
 	
-	/**
-	 * Adds a LayerRenderer to this themes list of available renderers.
-	 */
+	/** Add a LayerRenderer to this themes list of available renderers */
 	public void addLayerRenderer( LayerRenderer renderer ) {
 		layerRenderers.add( renderer );
 	}
 	
-	/** 
-	 * Returns a List containing all of the renderers that have beenadded to
-	 * the theme.
-	 */
+	/** Get a List containing all of the renderers that have been
+	 * added to the theme */
 	public java.util.List getLayerRenderers() {
 		return layerRenderers;
 	}
 	
-	/*
-	 * Sets the current LayerRenderer.
-	 */
+	/** Set the current LayerRenderer */
 	public void setCurrentLayerRenderer( LayerRenderer renderer ) {
 		this.renderer = renderer;
 		notifyThemeChangedListeners( new ThemeChangedEvent( this,
@@ -154,37 +145,26 @@ public class Theme implements LayerChangedListener {
 		return selections;
 	}
 	
-	/** 
-	 * Returns the extent of this theme.
-	 */
-	public Rectangle2D getExtent(){
+	/** Get the extent of this theme */
+	public Rectangle2D getExtent() {
 		return layer.getExtent();
 	}
 
-	/** 
-	 * Paint this layer.
-	 *
-	 * @param g Graphics2D object to paint on.
-	 */
-	public void paint( Graphics2D g ){
-		if ( visible ) {
-			layer.paint( g, renderer );
+	/** Paint the theme */
+	public void paint(Graphics2D g) {
+		if(visible) {
+			layer.paint(g, renderer);
 		}
 	}
 	
-	/**
-	 * Called by the map to paint this theme.
-	 * @param g Graphics2D object to paint to
-	 */
+	/** Called by the map to paint this theme */
 	public void paintSelections( Graphics2D g ){
 		if ( visible ) {
 			layer.paintSelections( g, selectionRenderer, selections );
 		}
 	}
 	
-	/**
-	 * Called by the map to get appropriate tool tip text
-	 */
+	/** Get the appropriate tool tip text for the specified point */
 	public String getTip( Point2D point ) {
 		String result = null;
 		if ( mapTip == null ) {
@@ -203,59 +183,39 @@ public class Theme implements LayerChangedListener {
 		mapTip = tip;
 	}
 	
-	/**
-	 * Gets the visibility flag
-	 */
+	/** Get the visibility flag */
 	public boolean isVisible() {
 		return visible;
 	}
 	
-	/**
-	 * Sets the visibility of the theme.
-	 * 
-	 * @param visible new value of the visible flag
-	 */
-	public void setVisible( boolean visible ){
+	/** Set the visibility of the theme */
+	public void setVisible(boolean visible) {
 		this.visible = visible;
 		notifyThemeChangedListeners( new ThemeChangedEvent( this,
 			ThemeChangedEvent.DATA ) );
 	}
 	
-	/**
-	 * Gets the name of the theme
-	 */
-	public String getName(){
+	/** Get the name of the theme */
+	public String getName() {
 		return name;
 	}
 	
-	/**
-	 * Add a ThemeChangedListener to the listeners of this theme.
-	 * 
-	 * @param listener to add.
-	 */
-	public void addThemeChangedListener( ThemeChangedListener listener ) {
+	/** Add a ThemeChangedListener to the listeners of this theme */
+	public void addThemeChangedListener(ThemeChangedListener listener) {
 		if ( ! listeners.contains( listener ) ) {
 			listeners.add( listener );
 		}
 	}
 	
-	/**
-	 * Remove a ThemeChangedListener from the listeners of this theme.
-	 *
-	 * @param listener to remove
-	 */
-	public void removeThemeChangedListener( ThemeChangedListener listener ) {
+	/** Remove a ThemeChangedListener from the listeners of this theme */
+	public void removeThemeChangedListener(ThemeChangedListener listener) {
 		if ( listeners.contains( listener ) ) {
 			listeners.remove( listener );
 		}
 	}
 	
-	/**
-	 * Notify all listeners that this theme has changed.
-	 *
-	 * @param event ThemeChangedEvent that occured.
-	 */
-	protected void notifyThemeChangedListeners( ThemeChangedEvent event ){
+	/** Notify all listeners that this theme has changed */
+	protected void notifyThemeChangedListeners(ThemeChangedEvent event) {
 		ThemeChangedListener listener;
 		for ( Iterator it = listeners.iterator(); it.hasNext(); ) {
 			listener = ( ThemeChangedListener ) it.next();
@@ -263,17 +223,13 @@ public class Theme implements LayerChangedListener {
 		}
 	}
 	
-	/**
-	 * Checks the static flag for this theme.
-	 */
+	/** Checks the static flag for this theme */
 	public boolean isStatic() {
 		return layer.isStatic();
 	}
 	
-	/**
-	 * Sets the static flag for this theme.
-	 */
-	public void setStatic( boolean b ){
+	/** Sets the static flag for this theme */
+	public void setStatic(boolean b) {
 		layer.setStatic( b );
 	}
 	
