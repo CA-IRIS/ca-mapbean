@@ -35,10 +35,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
-
 import javax.swing.JComponent;
 import javax.swing.JToolTip;
-
+import us.mn.state.dot.shape.event.MapChangedListener;
 import us.mn.state.dot.shape.event.MapMouseListener;
 import us.mn.state.dot.shape.event.MapMouseMode;
 import us.mn.state.dot.shape.event.SelectMouseMode;

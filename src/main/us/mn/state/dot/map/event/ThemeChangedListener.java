@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000  Minnesota Department of Transportation
+ * Copyright (C) 2000-2004  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,18 +16,16 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
-package us.mn.state.dot.shape;
+package us.mn.state.dot.shape.event;
 
 /**
- * Theme changed listeners can be registered with a Theme to recieve 
+ * Theme changed listeners can be registered with a Theme to recieve
  * ThemeChangedEvents when ever a Themes data changes.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.3 $ $Date: 2001/07/09 21:10:19 $ 
  */
 public interface ThemeChangedListener extends java.util.EventListener {
-	
-	void themeChanged( ThemeChangedEvent event );
 
+	/** Called whenever the theme data changes */
+	void themeChanged(ThemeChangedEvent event);
 }

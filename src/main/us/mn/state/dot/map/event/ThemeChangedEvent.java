@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000  Minnesota Department of Transportation
+ * Copyright (C) 2000-2004  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,8 +16,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
-package us.mn.state.dot.shape;
+package us.mn.state.dot.shape.event;
 
 import java.util.EventObject;
 
@@ -26,35 +25,38 @@ import java.util.EventObject;
  * is changed.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.4 $ $Date: 2003/05/06 20:58:15 $ 
  */
 public class ThemeChangedEvent extends EventObject {
 
-	private int reason;
-	public final static int GEOGRAPHY = 1,
-							DATA = 2,
-							SHADE = 4,
-							HIGHLIGHT = 8,
-							ANIMATION = 16,
-							SELECTION = 32;
-	
-    /**
-	 * Creates new ThemeChangedEvent 
-	 */   
-	public ThemeChangedEvent( Object source, int why ){
-        super( source );
-        reason = why;
-    }
-	
-	/**
-	 * Get the reason the Theme changed.
-	 */
-	public int getReason(){
-        return reason;
-    }
-    
-    public boolean testReason( int test ){
-        return ( test & reason ) > 0;
-    }
+	/** Reason code for a geography theme change event */
+	static public final int GEOGRAPHY = 1 << 0;
 
+	/** Reason code for a data theme change event */
+	static public final int DATA = 1 << 1;
+
+	/** Reason code for a shade theme change event */
+	static public final int SHADE = 1 << 2;
+
+	/** Reason code for a highlight theme change event */
+	static public final int HIGHLIGHT = 1 << 3;
+
+	/** Reason code for an animation theme change event */
+	static public final int ANIMATION = 1 << 4;
+
+	/** Reason code for a selection theme change event */
+	static public final int SELECTION = 1 << 5;
+
+	/** Reason code for theme change */
+	private int reason;
+
+	/** Create a new ThemeChangedEvent */
+	public ThemeChangedEvent(Object source, int why) {
+		super(source);
+		reason = why;
+	}
+
+	/** Get the reason the Theme changed */
+	public int getReason() {
+		return reason;
+	}
 }

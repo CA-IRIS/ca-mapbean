@@ -15,8 +15,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
- * Created on October 24, 2000, 2:02 PM
  */
 package us.mn.state.dot.shape;
 
@@ -30,6 +28,9 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
+import us.mn.state.dot.shape.event.MapChangedListener;
+import us.mn.state.dot.shape.event.ThemeChangedEvent;
+import us.mn.state.dot.shape.event.ThemeChangedListener;
 
 /**
  * This class can be used to generate map graphics when access to the graphics
@@ -37,7 +38,7 @@ import java.util.ListIterator;
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
  */
-public final class MapPane implements ThemeChangedListener {
+public class MapPane implements ThemeChangedListener {
 
 	/** buffer for map */
 	private transient BufferedImage screenBuffer;

@@ -34,7 +34,7 @@ import java.util.List;
  * listener to successfully process it.  Otherwise the event is
  * propagated to all listeners.  The default is to consume events.
  */
-public class MapMouseSupport implements java.io.Serializable {
+public class MapMouseSupport /*implements java.io.Serializable*/ {
 
     /**
      * The flag that dictates whether the events should be passed to
@@ -292,7 +292,7 @@ public class MapMouseSupport implements java.io.Serializable {
 		}
 		return movedConsumed;
     }
-
+/*
 
     private void writeObject(ObjectOutputStream s) throws IOException {
         s.defaultWriteObject();
@@ -321,5 +321,5 @@ public class MapMouseSupport implements java.io.Serializable {
 		while(null != (listenerOrNull = s.readObject())) {
 			addMapMouseListener((MapMouseListener)listenerOrNull);
 		}
-    }
+    }*/
 }

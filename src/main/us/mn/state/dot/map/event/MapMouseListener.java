@@ -48,7 +48,7 @@ public interface MapMouseListener {
      * <code>
      * @return String[] of modeID's
      */
-    public String[] getMouseModeServiceList();
+//    public String[] getMouseModeServiceList();
 	
 	/**
 	 * Should return true if the listener is interested in recieving mouse
