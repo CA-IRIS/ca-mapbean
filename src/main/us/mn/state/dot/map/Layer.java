@@ -53,19 +53,7 @@ public interface Layer {
 	/** Notify all LayerChangedListeners that the layer has changed */
 	public void notifyLayerChangedListeners(LayerChangedEvent event);
 
-	/**
-	 * Return an int representing the index of the first path found that
-	 * is contained by, intersects, or contains the Rectangle2D searchArea.
-	 * @param searchArea Rectangle2D representing the area to search.
-	 * @return the index of the first found path, or -1 if nothing found.
-	 */
-	public MapObject search(Rectangle2D searchArea, LayerRenderer renderer);
-
-	/**
-	 * Return an int representing the index of the first path found that
-	 * is contained by, intersects, or contains the Point2D searchArea.
-	 * @param p Point2D representing the point to search.
-	 * @return the index of the first found path, or -1 if nothing found.
-	 */
+	/** Search the layer for a MapObject which is located at or near the
+	 * specified point */
 	public MapObject search(Point2D p, LayerRenderer renderer);
 }

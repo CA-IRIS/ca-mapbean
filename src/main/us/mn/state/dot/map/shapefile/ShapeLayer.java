@@ -102,27 +102,6 @@ public class ShapeLayer extends AbstractLayer {
 		return shapes;
 	}
 
-	public MapObject search(Rectangle2D searchArea, LayerRenderer renderer)
-	{
-		MapObject result = null;
-		for ( int i = ( shapes.length - 1 ); i >= 0; i-- ) {
-			MapObject object = shapes[ i ];
-			Shape target = null;
-			if ( renderer == null ) {
-				target = object.getShape();
-			} else {
-				target = renderer.getShape( object );
-			}
-			if ( target.intersects( searchArea ) ||
-					target.contains( searchArea )  ||
-					searchArea.contains( target.getBounds2D() ) ) {
-				result = object;
-				break;
-			}
-		}
-		return result;
-	}
-
 	public MapObject search(Point2D p, LayerRenderer renderer) {
 		MapObject result = null;
 		for ( int i = ( shapes.length - 1 ); i >= 0; i-- ) {
