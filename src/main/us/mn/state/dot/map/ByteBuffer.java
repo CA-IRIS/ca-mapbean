@@ -16,11 +16,16 @@ public final class ByteBuffer {
 
 	/** Read a byte buffer from an InputStream */
 	public ByteBuffer( InputStream i, int size ) throws IOException {
-		if (size <= 0){
-			System.out.println("size < 0: " + size);
-		}
 		buffer = new byte [ size ];
-		if( i.read( buffer ) < 0 ) throw new EOFException();
+		int offset = 0;
+		while (offset < buffer.length) {
+			int bytesRead = 0;
+			bytesRead = i.read(buffer, offset, size - offset);
+			if (bytesRead == -1) {
+				throw new EOFException();
+			}
+			offset += bytesRead;
+		}
 	}
 
 	/** Get a String from the buffer */

@@ -3,6 +3,7 @@ package us.mn.state.dot.shape;
 import java.io.*;
 import java.util.*;
 import java.net.*;
+import java.util.jar.*;
 
 /**
   * ShapeFile is an ESRI shape file reader.  It reads the file and creates an
@@ -70,16 +71,7 @@ public final class ShapeFile {
 		try {
 			while( true ) {
 				rhead = new ByteBuffer( i, 8 );
-				int test = rhead.getInt(4);
-				if (test < 0) {
-					System.out.println("rhead was less than 0: " + rhead);
-				}
-				//System.out.println("test = " + test);
-				size = 2 * test;//rhead.getInt( 4 );
-				if (size < 0 ) {
-					i.close();
-					return;
-				}
+				size = 2 * rhead.getInt(4);
 				record = new ByteBuffer( i, size );
 				shapes.add( types.createShape( record ) );
 			}

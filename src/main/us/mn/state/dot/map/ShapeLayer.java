@@ -59,20 +59,32 @@ public class ShapeLayer extends AbstractLayer {
 
 	public ShapeLayer(String fileName, String layerName) throws IOException {
 		setName(layerName);
+		String jarFileName = "/SignClient.jar";
+		JarFile file = new JarFile(ShapeLayer.class.getResource(
+				jarFileName).getFile());
+		dbFile = new DbaseReader(file.getInputStream(file.getEntry(
+				fileName + ".dbf")));
+		ShapeFile shapeFile = new ShapeFile(file.getInputStream(
+				file.getEntry(fileName + ".shp")));
+		createShapeLayer(shapeFile);
+	}
+
+	/*public ShapeLayer(String fileName, String layerName) throws IOException {
+		setName(layerName);
 		URL url = ShapeLayer.class.getResource(fileName + ".dbf");
 		if (url == null) {
 			System.out.println("File " + fileName + ".dbf was not found");
 		}
 		dbFile = new DbaseReader( url );
 		url = ShapeLayer.class.getResource(fileName + ".shp" );
-        if (url == null) {
+		if (url == null) {
 			System.out.println("File " + fileName + ".shp was not found");
 		} else {
 			System.out.println("Reading " + fileName + ".shp ............");
 		}
 		ShapeFile file = new ShapeFile( url );
 		createShapeLayer(file);
-	}
+	}*/
 
    /*	public ShapeLayer(String fileName, String layerName) throws IOException {
 		setName(layerName);
