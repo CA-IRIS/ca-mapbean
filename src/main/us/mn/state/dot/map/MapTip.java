@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000  Minnesota Department of Transportation
+ * Copyright (C) 2000-2004  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,20 +16,15 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package us.mn.state.dot.shape;
 
 /**
  * Interface for popup tips displayed by a Theme.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.7 $ $Date: 2001/08/09 20:43:43 $ 
  */
 public interface MapTip {
 
-	/** 
-	 * Get the tip for the object in the given Layer at the given index.
-	 */
-    public String getTip( MapObject object );
-
+	/** Get the tip text for the specified map object */
+	public String getTip(MapObject object);
 } 
