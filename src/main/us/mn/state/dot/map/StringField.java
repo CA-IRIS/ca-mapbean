@@ -23,7 +23,7 @@ package us.mn.state.dot.shape;
  * Field for storing strings.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.6 $ $Date: 2001/04/19 16:49:31 $
+ * @version $Revision: 1.7 $ $Date: 2001/05/12 00:10:40 $
  */
 public class StringField extends Field {
 
@@ -31,8 +31,8 @@ public class StringField extends Field {
 	private String [] data;
 	
 	/** Create a new dBase field */
-	public StringField( String name, int size, int offset, int length ){
-    		super( Field.STRING_FIELD, name, offset, length );
+	public StringField( String name, int size, int length ){
+    		super( Field.STRING_FIELD, name, length );
 	    	data = new String[ size ];
 	}
 

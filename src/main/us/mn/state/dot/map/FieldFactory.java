@@ -17,41 +17,52 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-//Title:        FieldFactory
-//Version:      1.0
-//Copyright:    Copyright (c) 1999
-//Author:       Erik Engstrom
-//Company:      MnDOT
-//Description:  Creates fields from inputstream of dbasereader.
-
 package us.mn.state.dot.shape;
 
 import java.io.*;
 
+/**
+  * 
+  *
+  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
+  * @version $Revision: 1.5 $ $Date: 2001/05/12 00:10:40 $
+  */
 public final class FieldFactory {
 
-	static Field createField( InputStream i, int o, int records ) throws
-			IOException {
-		ByteBuffer buffer = new ByteBuffer( i, 32 );
-		String name = (buffer.getString( 0, 11 )).trim();
-		char type = buffer.getString( 11, 1 ).charAt( 0 );
-		int offset = o;
-		int length = buffer.getByte( 16 );
-		int decimal = buffer.getByte( 17 );
+/**
+  *	dBase field descriptor 32 bytes
+  *
+  *	Position	Field			Value		Type				Size
+  *
+  *     0       name						byte				11
+  *		11		type		   C,N,L,D 		byte				1
+  *		12		adress						byte				4
+  *		16		length						byte				1
+  *		17		decimal						byte				1
+  *		18		Reserved										14
+  */
+	static Field createField( ShapeFileInputStream in, int records ) 
+			throws IOException {
+		String name = in.readString( 11 ).trim();
+		char type = in.readString( 1 ).charAt( 0 );
+		in.skipBytes( 4 );
+		int length = in.readByte();
+		int decimal = in.readByte();
+		in.skipBytes( 14 );
 		Field result = null;
 		switch ( type ) {
 		case 'C': case 'D':
-			result = new StringField( name, records, offset, length );
+			result = new StringField( name, records, length );
 			break;
 		case 'N':
 			if ( decimal == 0 ) {
-				result = new IntegerField( name, records, offset, length );
+				result = new IntegerField( name, records, length );
 			} else {
-				result = new DoubleField( name, records, offset, length );
+				result = new DoubleField( name, records, length );
 			}
 			break;
 		case 'L':
-			result = new BooleanField( name, records, offset, length );
+			result = new BooleanField( name, records, length );
 			break;
 		}
 		return result;

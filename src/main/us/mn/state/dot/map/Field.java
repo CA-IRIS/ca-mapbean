@@ -17,22 +17,21 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-//Title:        Field
-//Version:      1.0
-//Copyright:    Copyright (c) 1999
-//Author:       Erik Engstrom
-//Company:      MnDOT
-//Description:  The Field class is the parent class for all field information for the dbase table part of a shape file.
-
 package us.mn.state.dot.shape;
 
 import java.io.*;
 
+/**
+  * The Field class is the parent class for all field information for the dbase
+  * table part of a shape file.
+  *
+  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
+  * @version $Revision: 1.6 $ $Date: 2001/05/12 00:10:40 $
+  */
 public abstract class Field {
 	private final int type;
 	private final String name;
-	final int offset;
-	final int length;
+	protected final int length;
 
 	/** Constants for field type */
 	public static final int INTEGER_FIELD = 3;
@@ -43,22 +42,20 @@ public abstract class Field {
 	public static final int LINE_FIELD = 22;
 	public static final int POLYGON_FIELD = 23;
 
-	public Field(int type, String name, int offset, int length){
+	public Field( int type, String name, int length ){
 		this.type = type;
 		this.name = name;
-		this.offset = offset;
 		this.length = length;
-	   //	System.out.println ("Field " + name + " is type - " + type);
 	}
 
-	public void loadData(int index, ByteBuffer record){
-		String temp = record.getString(offset, length).trim();
-		setValue(index, temp);
+	public void loadData( int index, ShapeFileInputStream in ) 
+			throws IOException {
+		setValue( index, in.readString( length ) );
 	}
+	
+	abstract void setValue( int index, String value );
 
-	abstract void setValue(int index, String value);
-
-	public abstract String getStringValue(int index);
+	public abstract String getStringValue( int index );
 
 	public final String getName(){
 		return name;

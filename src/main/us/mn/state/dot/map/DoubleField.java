@@ -17,25 +17,24 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-//Title:        DoubleField
-//Version:      1.0
-//Copyright:    Copyright (c) 1999
-//Author:       Erik Engstrom
-//Company:      MnDOT
-//Description:  Double field for dbase files.
-
 package us.mn.state.dot.shape;
 
 import java.io.*;
 
+/**
+  * Double field for dbase files.
+  *
+  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
+  * @version $Revision: 1.7 $ $Date: 2001/05/12 00:10:40 $
+  */
 public final class DoubleField extends NumericField {
 
 	/** Field properties */
 	private final double [] data;
 
 	/** Create a new dBase field */
-	public DoubleField( String name, int size, int offset, int length ){
-		super( Field.DOUBLE_FIELD, name, offset, length );
+	public DoubleField( String name, int size, int length ){
+		super( Field.DOUBLE_FIELD, name, length );
 		data = new double[ size ];
 	}
 

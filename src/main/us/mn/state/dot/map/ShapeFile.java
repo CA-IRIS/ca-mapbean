@@ -29,7 +29,7 @@ import java.util.jar.*;
   *
   * @author Douglas Lau
   * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
-  * @version $Revision: 0.5 $ $Date: 2001/04/19 16:49:31 $
+  * @version $Revision: 0.6 $ $Date: 2001/05/12 00:10:40 $
   */
 public final class ShapeFile {
 
@@ -56,15 +56,19 @@ public final class ShapeFile {
   *		84		Mmin				0.0		double (little)	8
   *		92		Mmax				0.0		double (little)	8
   */
-	private final ByteBuffer header;
-
+	private final int shapeType;
+	private final int version;
+	private final double minX;
+	private final double maxX;
+	private final double minY;
+	private final double maxY;
+	
 	/** List of shapes in the ShapeFile */
 	private final ArrayList shapes = new ArrayList();
-	public ArrayList getShapeList() { return shapes; }
-
+	
 	/** Constructor */
 	public ShapeFile( String name ) throws IOException {
-		this( new FileInputStream( name ));
+		this( new FileInputStream( name ) );
 	}
 
 	public ShapeFile( URL url ) throws IOException {
@@ -72,78 +76,56 @@ public final class ShapeFile {
 	}
 
 	/** Constructor */
-	public ShapeFile(InputStream i) throws IOException {
-		ShapeTypes types = new ShapeTypes();
-		header = new ByteBuffer( i, 100 );
-		header.reverseBytes4( 28 );
-		header.reverseBytes4( 32 );
-		header.reverseBytes8( 36 );
-		header.reverseBytes8( 44 );
-		header.reverseBytes8( 52 );
-		header.reverseBytes8( 60 );
-		header.reverseBytes8( 68 );
-		header.reverseBytes8( 76 );
-		header.reverseBytes8( 84 );
-		header.reverseBytes8( 92 );
-		ByteBuffer rhead;
-		ByteBuffer record;
-		int size;
+	public ShapeFile( InputStream i ) throws IOException {
+		ShapeFileInputStream in = new ShapeFileInputStream( i );
+		in.skipBytes( 28 ); //start of header unused
+		version = in.readLittleInt();
+		shapeType = in.readLittleInt();
+		minX = in.readLittleDouble();
+		minY = in.readLittleDouble();
+		maxX = in.readLittleDouble();
+		maxY = in.readLittleDouble();
+		in.skipBytes( 32 ); //end of header unused
 		try {
 			while( true ) {
-				rhead = new ByteBuffer( i, 8 );
-				size = 2 * rhead.getInt(4);
-				record = new ByteBuffer( i, size );
-				shapes.add( types.createShape( record ) );
+				shapes.add( ShapeFactory.readShape( in ) );
 			}
 		}
 		catch( EOFException e ) {}
 		i.close();
 	}
 
-	/** Get the file code */
-	public int getFileCode() {
-		return header.getInt( 0 );
+	public ArrayList getShapeList() {
+		return shapes; 
 	}
-
-
-	/** Get the file length (16-bit words) */
-	public int getFileLength() {
-		return header.getInt( 24 );
-	}
-
 
 	/** Get the version number */
 	public int getVersion() {
-		return header.getInt( 28 );
+		return version;
 	}
-
 
 	/** Get the shape type */
 	public int getShapeType() {
-		return header.getInt( 32 );
+		return shapeType;
 	}
-
 
 	/** Get the X minimum value */
 	public double getXmin() {
-		return header.getDouble( 36 );
+		return minX;
 	}
-
 
 	/** Get the Y minimum value */
 	public double getYmin() {
-		return header.getDouble( 44 );
+		return minY;
 	}
-
 
 	/** Get the X maximum value */
 	public double getXmax() {
-		return header.getDouble( 52 );
+		return maxX;
 	}
-
 
 	/** Get the Y maximum value */
 	public double getYmax() {
-		return header.getDouble( 60 );
+		return maxY;
 	}
 }

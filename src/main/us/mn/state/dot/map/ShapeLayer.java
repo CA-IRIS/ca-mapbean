@@ -32,7 +32,7 @@ import us.mn.state.dot.shape.DbaseReader.*;
   *
   * @author Douglas Lau
   * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
-  * @version $Revision: 1.33 $ $Date: 2001/03/12 23:38:52 $
+  * @version $Revision: 1.34 $ $Date: 2001/05/12 00:10:40 $
   */
 public class ShapeLayer extends AbstractLayer {
 
@@ -118,19 +118,18 @@ public class ShapeLayer extends AbstractLayer {
 			path.append( ( PathIterator )list.get( i ), false );
 			paths[ i ] = path;
 		}
-		//painter = new DefaultRenderer();
 		extent = new Rectangle2D.Double( file.getXmin(), file.getYmin(),
 			( file.getXmax() - file.getXmin() ),
 			( file.getYmax() - file.getYmin() ) );
 		shapeType = file.getShapeType();
 		switch( shapeType ) {
-		case ShapeTypes.POINT:
+		case ShapeFactory.POINT:
 			setSymbol( new CircleMarker() );
 			break;
-		case ShapeTypes.POLYLINE:
+		case ShapeFactory.POLYLINE:
 			setSymbol( new SolidLine() );
 			break;
-		case ShapeTypes.POLYGON:
+		case ShapeFactory.POLYGON:
 			setSymbol( new FillSymbol() );
 			break;
 		}
@@ -195,7 +194,7 @@ public class ShapeLayer extends AbstractLayer {
 	public int search( Point2D p ) {
 		int result = -1;
 		switch( shapeType ) {
-		/*case ShapeTypes.POINT:
+		/*case ShapeFactory.POINT:
 			Symbol symbol = painter.getSymbol();
 			if ( symbol == null ) {
 				return result;
@@ -210,7 +209,7 @@ public class ShapeLayer extends AbstractLayer {
 				}
 			}
 			break;*/
-		case ShapeTypes.POLYLINE: case ShapeTypes.POLYGON:
+		case ShapeFactory.POLYLINE: case ShapeFactory.POLYGON:
 			//Rectangle2D r = null;
 			for ( int i = ( paths.length - 1 ); i >= 0; i-- ) {
 				if ( paths[ i ].contains( p ) ) {
@@ -227,7 +226,7 @@ public class ShapeLayer extends AbstractLayer {
 	public final java.util.List getPaths( Point2D p ){
 		java.util.List result = new ArrayList();
 		switch( shapeType ) {
-		/*case ShapeTypes.POINT:
+		/*case ShapeFactory.POINT:
 			Symbol symbol = painter.getSymbol();
 			if ( symbol == null ) {
 				return result;
@@ -242,7 +241,7 @@ public class ShapeLayer extends AbstractLayer {
 				}
 			}
 			break;*/
-		case ShapeTypes.POLYLINE: case ShapeTypes.POLYGON:
+		case ShapeFactory.POLYLINE: case ShapeFactory.POLYGON:
 			//Rectangle2D r = null;
 			for ( int i = ( paths.length - 1 ); i >= 0; i-- ) {
 				if ( paths[ i ].contains( p ) ) {

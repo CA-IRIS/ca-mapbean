@@ -17,25 +17,24 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-//Title:        IntegerField
-//Version:      1.0
-//Copyright:    Copyright (c) 1999
-//Author:       Erik Engstrom
-//Company:      MnDOT
-//Description:  Integer field for dbase files.
-
 package us.mn.state.dot.shape;
 
 import java.io.*;
 
+/**
+  * Integer field for dbase files.
+  *
+  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
+  * @version $Revision: 1.12 $ $Date: 2001/05/12 00:10:40 $
+  */
 public final class IntegerField extends NumericField {
 
     /** Field properties */
 	private final int [] data;
 
     /** Create a new dBase field */
-	public IntegerField( String name, int size, int offset, int length ){
-		super( Field.INTEGER_FIELD, name, offset, length );
+	public IntegerField( String name, int size, int length ){
+		super( Field.INTEGER_FIELD, name, length );
 		data = new int[ size ];
 	}
 

@@ -22,14 +22,14 @@ package us.mn.state.dot.shape;
 /**
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.3 $ $Date: 2001/04/19 16:49:31 $ 
+ * @version $Revision: 1.4 $ $Date: 2001/05/12 00:10:40 $ 
  */
 public abstract class NumericField extends Field {
 
-	public NumericField(int type, String name, int offset, int length){
-		super(type, name, offset, length);
+	public NumericField(int type, String name, int length){
+		super(type, name, length);
 	}
 
-	public abstract int getRenderingClass(int index, double[] classBreaks );
+	public abstract int getRenderingClass( int index, double[] classBreaks );
 
 } 

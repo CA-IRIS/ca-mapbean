@@ -25,7 +25,7 @@ import java.io.*;
  * Boolean field for Dbase files.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.5 $ $Date: 2001/04/19 16:49:31 $ 
+ * @version $Revision: 1.6 $ $Date: 2001/05/12 00:10:40 $ 
  */
 public final class BooleanField extends Field {
 
@@ -33,8 +33,8 @@ public final class BooleanField extends Field {
 	private final boolean [] data;
 
 	/** Create a new dBase field */
-	public BooleanField( String name, int size, int offset, int length ){
-		super( Field.BOOLEAN_FIELD, name, offset, length );
+	public BooleanField( String name, int size, int length ){
+		super( Field.BOOLEAN_FIELD, name, length );
 		data = new boolean[ size ];
 	}
 
