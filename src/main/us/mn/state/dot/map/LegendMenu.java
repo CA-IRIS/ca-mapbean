@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000  Minnesota Department of Transportation
+ * Copyright (C) 2000-2004  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,31 +19,29 @@
 package us.mn.state.dot.shape;
 
 import javax.swing.BorderFactory;
+import javax.swing.JMenu;
 
-/** 
+/**
  * JMenu for displaying the Legend for a LayerRenderer.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.4 $ $Date: 2003/05/06 20:58:15 $
  */
-public class LegendMenu extends javax.swing.JMenu {
+public class LegendMenu extends JMenu {
 
-  	/** Creates new LegendMenu */
- 	public LegendMenu( LayerRenderer r ) {
-		super( "Legend:" );
-		setMapRenderer( r );
-		this.setBorder( BorderFactory.createEtchedBorder() );
-		this.setBorderPainted( true );
+  	/** Create a new LegendMenu */
+ 	public LegendMenu(LayerRenderer r) {
+		super("Legend:");
+		setMapRenderer(r);
+		setBorder(BorderFactory.createEtchedBorder());
+		setBorderPainted(true);
 	}
-	
-	/**
-	 * Set the LayerRenderer that this menu displays.
-	 */
-	public void setMapRenderer( LayerRenderer r ) {
+
+	/** Set the LayerRenderer that this menu displays */
+	public void setMapRenderer(LayerRenderer r) {
 		this.removeAll();
 		Symbol[] symbols = r.getSymbols();
-		for ( int i = 0; i < symbols.length; i++ ){
-			add( symbols[ i ].getLegend() );
-		} 
+		for(int i = 0; i < symbols.length; i++) {
+			add(symbols[i].getLegend());
+		}
 	}
 }
