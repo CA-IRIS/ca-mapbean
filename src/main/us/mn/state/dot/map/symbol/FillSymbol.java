@@ -23,46 +23,36 @@ import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Shape;
-import javax.swing.Icon;
 import javax.swing.JLabel;
 
 /**
- * A FillSymbol is used to paint a polygon on a Map only SOLID_FILL is implemented.
+ * A FillSymbol is used to paint a filled polygon on a map
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
  */
 public class FillSymbol extends AbstractSymbol {
 
-	/** fill constants */
-	public static final int SOLID_FILL = 0;
-	//public static final int TRANSPARENT_FILL = 1;
-	//public static final int HORIZONTAL_FILL = 2;
-	//public static final int VERTICAL_FILL = 3;
-	//public static final int UPWARD_DIAGONAL_FILL = 4;
-	//public static final int DOWNWARD_DIAGONAL_FILL = 5;
-	//public static final int CROSS_FILL = 6;
-	//public static final int DIAGONAL_CROSS_FILL = 7;
-	//public static final int LIGHT_GRAY_FILL = 8;
-	//public static final int GRAY_FILL = 9;
-	//public static final int DARK_GRAY_FILL = 10;
-
+	/** Create a new fill symbol */
 	public FillSymbol() {
 		super();
 	}
 
-	public FillSymbol( Color c ){
-		super( c );
+	/** Create a new fill symbol of the given color */
+	public FillSymbol(Color c) {
+		super(c);
 	}
 
-	public FillSymbol( Color c, String label ){
-		super( c, label );
+	/** Create a new fill symbol with the given color and label */
+	public FillSymbol(Color c, String label) {
+		super(c, label);
 	}
 
-	public FillSymbol( Color c, String label, boolean outlined ){
-		super( c, label, outlined );
+	/** Create a new fill symbol with the given color, label, and outline */
+	public FillSymbol(Color c, String label, boolean outlined) {
+		super(c, label, outlined);
 	}
 
-	/** Draw symbol on map */
+	/** Draw a shape on map with the fill symbol */
 	public void draw(Graphics2D g, Shape shape) {
 		if(isFilled()) {
 			g.setColor(color);
@@ -73,52 +63,46 @@ public class FillSymbol extends AbstractSymbol {
 		}
 	}
 
-	/** Get the legend component for this symbol */
+	/** Get the legend component for the fill symbol */
 	public Component getLegend() {
 		String l = getLabel();
 		JLabel label = new JLabel();
 		if(l != null && (!l.equals(""))) {
 			label.setText(l);
-			FillSymbolIcon icon = new FillSymbolIcon(this);
-			label.setIcon(icon);
+			label.setIcon(new Icon());
 		}
 		return label;
 	}
 
-	class FillSymbolIcon implements Icon {
+	/** Inner class for icon displayed on the legend */
+	protected class Icon implements javax.swing.Icon {
 
-		private final FillSymbol symbol;
-		private int width;
-		private int height;
+		/** Width of icon */
+		static public final int WIDTH = 25;
 
-		public FillSymbolIcon(FillSymbol symbol) {
-			this(symbol, 25, 15);
-		}
+		/** Height of icon */
+		static public final int HEIGHT = 15;
 
-		public FillSymbolIcon(FillSymbol symbol, int width, int height){
-			this.symbol = symbol;
-			this.width = width;
-			this.height = height;
-		}
-
-		public void paintIcon( Component c, Graphics g, int x, int y ) {
-			Graphics2D g2 = ( Graphics2D ) g;
-			if(symbol.isOutlined()) {
-				g2.setColor(symbol.getOutlineColor());
-				g2.drawRect(x, y, width - 1, height - 1);
+		/** Paint the icon onto the given component */
+		public void paintIcon(Component c, Graphics g, int x, int y) {
+			if(isFilled()) {
+				g.setColor(getColor());
+				g.fillRect(x + 1, y + 1, WIDTH - 2, HEIGHT - 2);
 			}
-			if(symbol.isFilled()) {
-				g.setColor(symbol.getColor());
-				g.fillRect(x + 1, y + 1, width - 2, height - 2);
+			if(isOutlined()) {
+				g.setColor(getOutlineColor());
+				g.drawRect(x, y, WIDTH - 1, HEIGHT - 1);
 			}
 		}
 
+		/** Get the icon width */
 		public int getIconWidth() {
-			return width;
+			return WIDTH;
 		}
 
-		public int getIconHeight(){
-			return height;
+		/** Get the icon height */
+		public int getIconHeight() {
+			return HEIGHT;
 		}
 	}
 }
