@@ -11,7 +11,7 @@ package us.mn.state.dot.shape;
 import java.awt.*;
 import java.awt.geom.*;
 
-public class SquareMarker extends PointSymbol {
+public final class SquareMarker extends PointSymbol {
 
 	private final Rectangle2D.Double shape = new Rectangle2D.Double();
 
@@ -31,9 +31,9 @@ public class SquareMarker extends PointSymbol {
 		super( c, label, outline );
 	}
 
-	protected Shape getShape( double x, double y ){
-		shape.setRect(( x - ( getSize() / 2 )), ( y -
-			( getSize() / 2 )), getSize(), getSize() );
+	protected final Shape getShape( double x, double y ){
+		shape.setRect(( x - ( size / 2 )), ( y -
+			( size / 2 )), size, size );
 		return shape;
 	}
 } 

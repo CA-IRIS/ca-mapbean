@@ -5,6 +5,7 @@
 //Author:       Erik Engstrom
 //Company:      MnDOT
 //Description:  Your description
+
 package us.mn.state.dot.shape;
 
 import javax.swing.*;
@@ -17,7 +18,7 @@ import javax.swing.plaf.*;
 import javax.swing.plaf.basic.BasicToolTipUI;
 import javax.swing.text.*;
 
-class MultiLineToolTipUI extends BasicToolTipUI {
+final class MultiLineToolTipUI extends BasicToolTipUI {
     static MultiLineToolTipUI sharedInstance = new MultiLineToolTipUI();
     Font smallFont;
     static JToolTip tip;

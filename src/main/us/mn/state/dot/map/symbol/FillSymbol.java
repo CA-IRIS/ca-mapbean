@@ -11,7 +11,7 @@ package us.mn.state.dot.shape;
 import java.awt.*;
 import java.awt.geom.*;
 
-public class FillSymbol extends Symbol {
+public final class FillSymbol extends Symbol {
 
 	/** fill constants */
 	public static final int SOLID_FILL = 0;
@@ -44,30 +44,10 @@ public class FillSymbol extends Symbol {
 
 	/** Draw symbol on map */
 	public void draw( Graphics2D g, GeneralPath path ){
-		g.setColor( this.getColor() );
+		g.setColor( color );
 		g.fill( path );
-		/*case TRANSPARENT_FILL:
-			break;
-		case HORIZONTAL_FILL:
-			break;
-		case VERTICAL_FILL:
-			break;
-		case UPWARD_DIAGONAL_FILL:
-			break;
-		case DOWNWARD_DIAGONAL_FILL:
-			break;
-		case CROSS_FILL:
-			break;
-		case DIAGONAL_CROSS_FILL:
-			break;
-		case LIGHT_GRAY_FILL:
-			break;
-		case GRAY_FILL:
-			break;
-		case DARK_GRAY_FILL:
-			break;*/
 		if ( getOutLine() ){
-			g.setColor( getOutLineColor() );
+			g.setColor( outlineColor );
 			g.draw( path );
 		}
 	}

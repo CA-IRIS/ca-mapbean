@@ -14,10 +14,10 @@ import javax.swing.*;
 
 public abstract class Symbol implements LegendItem {
 
-	private Color color = Color.black;
-	private Color outlineColor = Color.black;
-	private int size;
-	private boolean outline = false;
+	protected Color color = Color.black;
+	protected Color outlineColor = Color.black;
+	protected int size;
+	protected boolean outline = false;
 	private String label = "";
 
 	public abstract void draw( Graphics2D g, GeneralPath path );
@@ -40,7 +40,7 @@ public abstract class Symbol implements LegendItem {
 		this.label = label;
 	}
 
-	public void setColor ( Color color ){
+	public final void setColor ( Color color ){
 		this.color = color;
 	}
 

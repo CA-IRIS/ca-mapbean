@@ -10,7 +10,7 @@ package us.mn.state.dot.shape;
 
 import java.awt.*;
 
-public class SolidLine extends LineSymbol {
+public final class SolidLine extends LineSymbol {
 
 	public SolidLine() {
 		this( Color.black );
@@ -20,7 +20,7 @@ public class SolidLine extends LineSymbol {
 		super( c );
 	}
 
-	protected void createStroke(){
-		stroke = new BasicStroke( getSize() );
+	protected final void createStroke(){
+		stroke = new BasicStroke( size );
     }
 }

@@ -32,7 +32,7 @@ public class ClassBreaksRenderer extends ShapeRenderer {
 	}
 
 	/** overrides Object.toString() */
-	public String toString(){
+	public final String toString(){
 		String result = null;
 		if ( name == null ) {
 			result = super.toString();
@@ -42,47 +42,47 @@ public class ClassBreaksRenderer extends ShapeRenderer {
 		return result;
 	}
 
-	public void setBreak( int index, double value ){
+	public final void setBreak( int index, double value ){
 		classBreaks[ index ] = value;
 	}
 
-	public double getBreak( int index ){
+	public final double getBreak( int index ){
 		return classBreaks[ index ];
 	}
 
-	public void setBreaks( double[] values ){
+	public final void setBreaks( double[] values ){
 		classBreaks = values;
 	}
 
-	public int getBreakCount(){
+	public final int getBreakCount(){
 		return classBreaks.length;
 	}
 
-	public void setSymbol( int index, Symbol s ){
+	public final void setSymbol( int index, Symbol s ){
 		symbols[ index ] = s;
 	}
 
-	public Symbol getSymbol( int index ){
+	public final Symbol getSymbol( int index ){
 		return symbols[ index ];
 	}
 
-	public Symbol[] getSymbols(){
+	public final Symbol[] getSymbols(){
 		return symbols;
 	}
 
 	/** Paints a shape. */
-	public void paint( Graphics2D g, GeneralPath path, int index ){
+	public final void paint( Graphics2D g, GeneralPath path, int index ){
 		int classBreak = field.getRenderingClass( index, classBreaks );
 		if (( classBreak > -1 ) && ( symbols[ classBreak ] != null )){
 			symbols[ classBreak ].draw( g, path );
 		}
 	}
 
-	public void setField( NumericField f ){
+	public final void setField( NumericField f ){
 		field = f;
 	}
 
-	public NumericField getField(){
+	public final NumericField getField(){
 		return field;
 	}
 }

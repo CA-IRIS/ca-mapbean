@@ -29,16 +29,15 @@ public abstract class LineSymbol extends Symbol {
 		createStroke();
 	}
 
-	public BasicStroke getStroke(){
+	public final BasicStroke getStroke(){
 		return stroke;
 	}
 
 	protected abstract void createStroke();
 
 	/** Draw symbol on map */
-	public void draw( Graphics2D g, GeneralPath path ){
-		g.setColor( getColor() );
-		//AffineTransform at = g.getTransform();
+	public final void draw( Graphics2D g, GeneralPath path ){
+		g.setColor( color );
 		g.setStroke( stroke );
 		g.draw( path );
 	}

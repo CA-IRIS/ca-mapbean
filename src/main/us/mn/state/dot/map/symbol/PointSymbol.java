@@ -33,16 +33,12 @@ public abstract class PointSymbol extends Symbol {
    abstract protected Shape getShape( double x, double y );
 
 	/** Draw symbol on map */
-	public void draw( Graphics2D g, GeneralPath path ){
-		g.setColor( this.getColor() );
+	public final void draw( Graphics2D g, GeneralPath path ){
+		g.setColor( color );
 		Point2D pt = path.getCurrentPoint();
-		//float X = ( float ) pt.getX();
-		//float Y = ( float ) pt.getY();
-		//float radius = this.getSize() / 2;
-		//Shape shape = getShape( pt.getX(), pt.getY() );
 		g.fill( getShape( pt.getX(), pt.getY() ) );
-		if ( this.getOutLine() ){
-			g.setColor( this.getOutLineColor() );
+		if ( outline ){
+			g.setColor( outlineColor );
 			g.draw( getShape( pt.getX(), pt.getY() ) );
 		}
 	}

@@ -10,36 +10,30 @@ package us.mn.state.dot.shape;
 
 import java.io.*;
 
-public class FieldFactory {
+public final class FieldFactory {
 
-	static Field createField(InputStream i, int o, int records) throws
+	static Field createField( InputStream i, int o, int records ) throws
 			IOException {
-    	ByteBuffer buffer = new ByteBuffer( i, 32 );
-    	String name = (buffer.getString( 0, 11 )).trim();
-    	char type = buffer.getString( 11, 1 ).charAt( 0 );
-    	int offset = o;
-    	int length = buffer.getByte( 16 );
-    	int decimal = buffer.getByte( 17 );
+		ByteBuffer buffer = new ByteBuffer( i, 32 );
+		String name = (buffer.getString( 0, 11 )).trim();
+		char type = buffer.getString( 11, 1 ).charAt( 0 );
+		int offset = o;
+		int length = buffer.getByte( 16 );
+		int decimal = buffer.getByte( 17 );
 		Field result = null;
-		//Character c = new Character(type);
-		//System.out.println("Field type = " + c.toString());
-		switch (type) {
+		switch ( type ) {
 		case 'C': case 'D':
-		  //	System.out.println("making string field");
-			result = new StringField(name, records, offset, length);
+			result = new StringField( name, records, offset, length );
 			break;
 		case 'N':
-			if (decimal == 0 ) {
-			//	System.out.println("making integer field");
-				result = new IntegerField(name, records, offset, length);
+			if ( decimal == 0 ) {
+				result = new IntegerField( name, records, offset, length );
 			} else {
-			  //	System.out.println("making double field");
-				result = new DoubleField(name, records, offset, length);
+				result = new DoubleField( name, records, offset, length );
 			}
 			break;
 		case 'L':
-			//System.out.println("making boolean field");
-			result = new BooleanField(name, records, offset, length);
+			result = new BooleanField( name, records, offset, length );
 			break;
 		}
 		return result;

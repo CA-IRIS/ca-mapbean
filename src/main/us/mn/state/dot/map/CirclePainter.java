@@ -12,11 +12,9 @@ import java.awt.geom.*;
   */
 public final class CirclePainter implements ShapePainter {
 
-
 	private final double coords[] = new double[ 6 ];
 	private final Ellipse2D.Double circle =
 		new Ellipse2D.Double( 0, 0, 600.0, 600.0 );
-
 
 	/** Get paint for a specified station */
 	public void paint( Graphics2D g, GeneralPath path, int s ) {

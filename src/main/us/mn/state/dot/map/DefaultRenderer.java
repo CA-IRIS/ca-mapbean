@@ -24,11 +24,11 @@ public final class DefaultRenderer extends ShapeRenderer {
 		setSymbol( s );
 	}
 
-	public void setSymbol( Symbol s ){
+	public final void setSymbol( Symbol s ){
 		symbol = s;
 	}
 
-	public Symbol getSymbol(){
+	public final Symbol getSymbol(){
 		return symbol;
 	}
 

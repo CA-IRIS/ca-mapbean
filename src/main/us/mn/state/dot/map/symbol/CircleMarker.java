@@ -10,7 +10,7 @@ package us.mn.state.dot.shape;
 import java.awt.*;
 import java.awt.geom.*;
 
-public class CircleMarker extends PointSymbol {
+public final class CircleMarker extends PointSymbol {
 
 	private final Ellipse2D shape = new Ellipse2D.Double();
 
@@ -22,10 +22,9 @@ public class CircleMarker extends PointSymbol {
 		super( c );
 	}
 
-	protected Shape getShape(double x, double y){
-		shape.setFrame(( x - ( getSize() / 2 )), ( y - ( getSize() / 2 )),
-			getSize(), getSize() );
+	protected final Shape getShape( double x, double y ){
+		shape.setFrame(( x - ( size / 2 )), ( y - ( size / 2 )),
+			size, size );
 		return shape;
 	}
-
 }

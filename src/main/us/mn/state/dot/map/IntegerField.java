@@ -13,53 +13,53 @@ import java.io.*;
 public final class IntegerField extends NumericField {
 
     /** Field properties */
-    private int [] data;
+	private final int [] data;
 
     /** Create a new dBase field */
-    public IntegerField(String name, int size, int offset, int length){
-    	super(Field.INTEGER_FIELD, name, offset, length);
-     	data = new int[size];
+	public IntegerField( String name, int size, int offset, int length ){
+		super( Field.INTEGER_FIELD, name, offset, length );
+		data = new int[ size ];
 	}
-	
+
 	public int getLength(){
 		return data.length;
 	}
 
-    /** Get the field's value from a given record */
-    public int getValue( int record ) {
-    	return data[record];
-    }
-
-    public void setValue( int record, int value ){
-		data[record] = value;
+	/** Get the field's value from a given record */
+	public int getValue( int record ) {
+		return data[ record ];
 	}
 
-	void setValue(int index, String value){
-		data[index] = Integer.parseInt(value);
+	public void setValue( int record, int value ){
+		data[ record ] = value;
 	}
 
-	public String getStringValue(int record){
-		return new Integer(data[record]).toString();
+	void setValue( int index, String value ){
+		data[ index ] = Integer.parseInt( value );
 	}
 
-	public void setData(int[] data){
+	public String getStringValue( int record ){
+		return new Integer( data[ record ] ).toString();
+	}
+
+	/*public void setData( int[] data ){
 		this.data = data;
-	}
+	} */
 
-	public int[] getData(){
+	public final int[] getData(){
 		return this.data;
 	}
 
-	public int getRenderingClass(int index, double[] classBreaks){
+	public final int getRenderingClass( int index, double[] classBreaks ){
 		int result = -1;
 
 		for (int i = 0; i < classBreaks.length ; i++) {
-			if ( getValue(index) <= classBreaks[i] ) {
+			if ( data[ index ] <= classBreaks[ i ] ) {
 				result = i;
 				break;
 			}
 		}
-		if (getValue(index) > classBreaks[classBreaks.length - 1]){
+		if ( data[ index ] > classBreaks[ classBreaks.length - 1 ]){
 			result = classBreaks.length;
 		}
 		return result;

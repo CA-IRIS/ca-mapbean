@@ -8,8 +8,7 @@
 
 package us.mn.state.dot.shape;
 
-import java.util.Vector;
-import java.util.ListIterator;
+import java.util.*;
 import java.awt.geom.*;
 import java.awt.*;
 
@@ -18,7 +17,7 @@ public abstract class AbstractLayer implements Layer {
 	/** extent of layer */
 	Rectangle2D.Double extent = null;
 
-	/** get the extent of the layer */
+    /** get the extent of the layer */
 	public Rectangle2D getExtent() {
 		return extent;
 	}
@@ -46,7 +45,7 @@ public abstract class AbstractLayer implements Layer {
 		name = s;
 	}
 
-	private Vector layerListeners = new Vector();
+	private java.util.List layerListeners = new ArrayList();
 
 	public void addLayerListener( LayerListener l ) {
 		if ( ! layerListeners.contains( l ) ) {

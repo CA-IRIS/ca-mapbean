@@ -13,7 +13,6 @@ import java.util.*;
 import java.io.*;
 import java.util.jar.*;
 import java.net.*;
-
 import us.mn.state.dot.shape.DbaseReader.*;
 
 public class ShapeLayer extends AbstractLayer {
@@ -22,7 +21,7 @@ public class ShapeLayer extends AbstractLayer {
 	private Field [] fields;
 
 	/** Set symbol to paint layer with */
-	public void setSymbol( Symbol s ){
+	public final void setSymbol( Symbol s ){
 		painter.setSymbol( s );
 	}
 
@@ -30,33 +29,30 @@ public class ShapeLayer extends AbstractLayer {
 	private ShapeRenderer painter = null;
 
 	/** Set the Renderer for the layer */
-	public void setRenderer( ShapeRenderer p ) {
+	public final void setRenderer( ShapeRenderer p ) {
 		painter = p;
 		updateLayer();
 	}
 
 	/** Get the Renderer for the layer */
-	public ShapeRenderer getRenderer(){
+	public final ShapeRenderer getRenderer(){
 		return painter;
 	}
 
 	/** Array to hold all shape information */
 	protected GeneralPath [] paths;
 
-	public Field [] getFields(){
-		return fields;//dbFile.getFields();
+	public final Field [] getFields(){
+		return fields;
 	}
 
-	public Field getField( String name ){
-		//Field [] fields = dbFile.getFields();
-		Field result = null;
+	public final Field getField( String name ){
 		for ( int i = 0; i < fields.length; i++ ) {
 			if ( ( fields[ i ].getName()).equalsIgnoreCase( name ) ) {
-				result = fields[ i ];
-				break;
+				return fields[ i ];
 			}
 		}
-		return result;
+		return null;
 	}
 
 	public ShapeLayer( String fileName, String layerName, String jarFileName )
@@ -90,7 +86,7 @@ public class ShapeLayer extends AbstractLayer {
 		createShapeLayer( file );
 	}
 
-	private void createShapeLayer( ShapeFile file ){
+	private final void createShapeLayer( ShapeFile file ){
 		ArrayList list = file.getShapeList();
 		paths = new GeneralPath [ list.size() ];
 		for ( int i = 0; i < list.size(); i++ ) {
@@ -121,25 +117,27 @@ public class ShapeLayer extends AbstractLayer {
 	}
 
 	/** Paint this Layer */
-	public void paint( Graphics2D g ) {
+	public final void paint( Graphics2D g ) {
 		if ( isVisible() ) {
-			for ( int i = 0; i < paths.length; i++ ) {
+			//for ( int i = 0; i < paths.length; i++ ) {
+			for ( int i = paths.length - 1; i >= 0; i--){
 				painter.paint( g, paths[ i ], i );
 			}
 		}
 	}
 
-	public boolean mouseClick( int clickCount, Point2D p, Graphics2D g ){
+	public final boolean mouseClick( int clickCount, Point2D p, Graphics2D g ){
 		boolean result;
-		Vector found = hit( p );
+		java.util.List found = hit( p );
 		result = ! found.isEmpty();
 		return result;
 	}
 
-	private Vector hit( Point2D p ){
-		Vector result = new Vector();
+	private final java.util.List hit( Point2D p ){
+		java.util.List result = new ArrayList();
+		Rectangle2D r = null;
 		for ( int i = 0; i < paths.length; i++ ) {
-			Rectangle2D r = paths[ i ].getBounds2D();
+			r = paths[ i ].getBounds2D();
 			if ( r.contains( p ) ) {
 				result.add( paths[ i ] );
 			}
@@ -172,14 +170,16 @@ public class ShapeLayer extends AbstractLayer {
 		return true;
 	}
 
-	public String getTip( Point2D p ){
+	public final String getTip( Point2D p ){
 		String result = null;
 		Rectangle2D searchZone = new Rectangle2D.Double( ( p.getX() - 250 ),
 			( p.getY() - 250 ), 500, 500 );
+		Rectangle2D r = null;
+		Point2D q = null;
 		for ( int i = 0; i < paths.length; i++ ) {
-			Rectangle2D r = paths[ i ].getBounds2D();
+			r = paths[ i ].getBounds2D();
 			if ( ( r.getWidth() == 0) || ( r.getHeight() == 0 ) ) {
-				Point2D q = paths[ i ].getCurrentPoint();
+				q = paths[ i ].getCurrentPoint();
 				if ( searchZone.contains( q ) ) {
 					result = painter.getTip( this, i );
 					break;

@@ -10,7 +10,7 @@ package us.mn.state.dot.shape;
 
 import java.awt.*;
 
-public class DashDotLine extends LineSymbol {
+public final class DashDotLine extends LineSymbol {
 
 	public DashDotLine() {
 		this( Color.black );
