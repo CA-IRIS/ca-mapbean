@@ -13,7 +13,7 @@ import java.awt.geom.*;
 
 public abstract class Symbol {
     protected int symbolType;
-    private Color color = Color.black;
+	private Color color = Color.black;
     private Color outlineColor = Color.black;
     private int size;
     private boolean outline = false;

@@ -267,15 +267,15 @@ public final class Map extends JViewport implements LayerListener {
 					double pointY = e.getPoint().getY();
 					Point2D viewPosition = viewport.getViewPosition();
 					Point2D p1 = new Point2D.Double(pointX +
-					viewPosition.getX(), pointY + viewPosition.getY());
+						viewPosition.getX(), pointY + viewPosition.getY());
 					Point2D p = world.transform(p1, new Point(0, 0));
-					g.setTransform(t);
 					ArrayList layers = map.getLayers();
 					ListIterator it = layers.listIterator();
+					g.setTransform(t);
 					boolean found = false;
 					while (it.hasNext()){
 						Layer l = (Layer) it.next();
-						found = l.select(p, g);
+						found = l.mouseClick(e.getClickCount(), p, g);
 						if ( found ) {
 							break;
 						}

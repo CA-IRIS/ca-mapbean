@@ -95,15 +95,16 @@ public class ShapeLayer extends AbstractLayer {
 		}
 	}
 
-	public boolean select(Point2D p, Graphics2D g){
-		boolean result;
+	public boolean mouseClick(int clickCount, Point2D p, Graphics2D g){
+		/*boolean result;
 		Vector found = hit(p);
 		if ( !found.isEmpty()) {
 			result = false;
 		} else {
 			result = true;
 		}
-		return result;
+		*/
+		return false;
 	}
 
 	private Vector hit(Point2D p){

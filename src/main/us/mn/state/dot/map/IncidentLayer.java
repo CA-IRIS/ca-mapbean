@@ -41,7 +41,6 @@ public final class IncidentLayer extends AbstractLayer implements
 
 	public void update(Incident[] incidents){
 		this.incidents = incidents;
-		/* Set Extent */
 		double maxX = incidents[0].getX();
 		double maxY = incidents[0].getY();
 		double minX = maxX;
@@ -73,7 +72,7 @@ public final class IncidentLayer extends AbstractLayer implements
 		}
 	}
 
-	public boolean select(Point2D p, Graphics2D g){
+	public boolean mouseClick(int clickCount, Point2D p, Graphics2D g){
 		boolean result;
 		Vector found = hit(p);
 		if ( found.isEmpty()) {
