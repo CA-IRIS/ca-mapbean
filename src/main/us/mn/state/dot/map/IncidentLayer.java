@@ -44,7 +44,7 @@ import us.mn.state.dot.shape.event.SelectMouseMode;
  * Displays incidents as icons on map.
  *
  * @author erik.engstrom@dot.state.mn.us
- * @version $Revision: 1.43 $ $Date: 2003/09/25 14:34:46 $
+ * @version $Revision: 1.44 $ $Date: 2003/09/29 22:33:37 $
  */
 public class IncidentLayer extends AbstractLayer implements
 		IncidentListener, DdsListener {
@@ -78,36 +78,36 @@ public class IncidentLayer extends AbstractLayer implements
      * there are no incidents (to clear the layer).
      */
 	public synchronized void update( Incident[] newIncidents ){
-		incidents.clear();
-		if ( newIncidents.length > 0 ){
-            dirty = true;
-			double maxX = newIncidents[ 0 ].getX();
-			double maxY = newIncidents[ 0 ].getY();
-			double minX = maxX;
-			double minY = maxY;
-			for ( int i = 0; i < newIncidents.length; i++ ) {
-				Incident incident = newIncidents[i];
-				incidents.add( new IncidentWrapper( incident ) );
-				if ( incident.getX() < minX ) {
-					minX = incident.getX();
-				} else if ( incident.getX() > maxX ) {
-					maxX = incident.getX();
+		synchronized ( incidents ) {
+			incidents.clear();
+			if ( newIncidents.length > 0 ){
+            	dirty = true;
+				double maxX = newIncidents[ 0 ].getX();
+				double maxY = newIncidents[ 0 ].getY();
+				double minX = maxX;
+				double minY = maxY;
+				for ( int i = 0; i < newIncidents.length; i++ ) {
+					Incident incident = newIncidents[i];
+					incidents.add( new IncidentWrapper( incident ) );
+					if ( incident.getX() < minX ) {
+						minX = incident.getX();
+					} else if ( incident.getX() > maxX ) {
+						maxX = incident.getX();
+					}
+					if ( incident.getY() < minY ) {
+						minY = incident.getY();
+					} else if ( incident.getY() > maxY ) {
+						maxY = incident.getY();
+					}
 				}
-				if ( incident.getY() < minY ) {
-					minY = incident.getY();
-				} else if ( incident.getY() > maxY ) {
-					maxY = incident.getY();
-				}
-			}
-			extent = new Rectangle2D.Double( minX, minY, ( maxX - minX ),
-				( maxY - minY ) );
-            notifyLayerChangedListeners( new LayerChangedEvent( this,
-				LayerChangedEvent.DATA ) );
-		} else if ( dirty ) { //clear layer
-            notifyLayerChangedListeners( new LayerChangedEvent( this,
-				LayerChangedEvent.DATA ) );
-            dirty = false;
-        }
+				extent = new Rectangle2D.Double( minX, minY, ( maxX - minX ),
+					( maxY - minY ) );		
+			} else if ( dirty ) { //clear layer
+               	dirty = false;
+        	}
+		}
+		notifyLayerChangedListeners( new LayerChangedEvent( this,
+						LayerChangedEvent.DATA ) );
 	}
 
 	/**
@@ -138,9 +138,11 @@ public class IncidentLayer extends AbstractLayer implements
 
 
 	public void paint( Graphics2D g, LayerRenderer renderer ){
-		for ( Iterator it = incidents.iterator(); it.hasNext();){
-			IncidentWrapper incident = (IncidentWrapper) it.next();
-			renderer.render( g, incident );
+		synchronized( incidents ) {
+			for ( Iterator it = incidents.iterator(); it.hasNext();){
+				IncidentWrapper incident = (IncidentWrapper) it.next();
+				renderer.render( g, incident );
+			}
 		}
 	}
 
@@ -355,40 +357,42 @@ public class IncidentLayer extends AbstractLayer implements
 			}
 		}
 	}
+	
 	/* (non-Javadoc)
 	 * @see us.mn.state.dot.dds.client.DdsListener#update(java.util.List)
 	 */
 	public void update(List newIncidents) {
-		if ( newIncidents.size() > 0 ){
-			dirty = true;
-			Incident first = (Incident)newIncidents.get(0);
-			double maxX = first.getX();
-			double maxY = first.getY();
-			double minX = maxX;
-			double minY = maxY;
-			for ( Iterator it = newIncidents.iterator(); it.hasNext();){
-				Incident incident = (Incident)it.next();
-				incidents.add( new IncidentWrapper(incident) );
-				if ( incident.getX() < minX ) {
-					minX = incident.getX();
-				} else if ( incident.getX() > maxX ) {
-					maxX = incident.getX();
+		synchronized(incidents) {
+			incidents.clear();
+			if ( newIncidents.size() > 0 ){
+				dirty = true;
+				Incident first = (Incident)newIncidents.get(0);
+				double maxX = first.getX();
+				double maxY = first.getY();
+				double minX = maxX;
+				double minY = maxY;
+				for ( Iterator it = newIncidents.iterator(); it.hasNext();){
+					Incident incident = (Incident)it.next();
+					incidents.add( new IncidentWrapper(incident) );
+					if ( incident.getX() < minX ) {
+						minX = incident.getX();
+					} else if ( incident.getX() > maxX ) {
+						maxX = incident.getX();
+					}
+					if ( incident.getY() < minY ) {
+						minY = incident.getY();
+					} else if ( incident.getY() > maxY ) {
+						maxY = incident.getY();
+					}
 				}
-				if ( incident.getY() < minY ) {
-					minY = incident.getY();
-				} else if ( incident.getY() > maxY ) {
-					maxY = incident.getY();
-				}
+				extent = new Rectangle2D.Double( minX, minY, ( maxX - minX ),
+						( maxY - minY ) );
+			} else if ( dirty ) { //clear layer
+				dirty = false;
 			}
-			extent = new Rectangle2D.Double( minX, minY, ( maxX - minX ),
-				( maxY - minY ) );
-			notifyLayerChangedListeners( new LayerChangedEvent( this,
-				LayerChangedEvent.DATA ) );
-		} else if ( dirty ) { //clear layer
-			notifyLayerChangedListeners( new LayerChangedEvent( this,
-				LayerChangedEvent.DATA ) );
-			dirty = false;
 		}
+		notifyLayerChangedListeners( new LayerChangedEvent( this,
+						LayerChangedEvent.DATA ) );
 	}
 
 }
