@@ -45,6 +45,9 @@ public class Theme implements LayerChangedListener {
 	/** The LayerRenderer used to paint selected objects in the layer */
 	protected LayerRenderer selectionRenderer;
 	
+	/** List of available renderers for theme */
+	protected java.util.List layerRenderers = new ArrayList();
+		
 	/** The name of this theme.*/
 	private String name;
 	
@@ -94,13 +97,31 @@ public class Theme implements LayerChangedListener {
 		selectionRenderer = renderer;
 	}
 	
-	public void setLayerRenderer( LayerRenderer renderer ) {
+	/**
+	 * Adds a LayerRenderer to this themes list of available renderers.
+	 */
+	public void addLayerRenderer( LayerRenderer renderer ) {
+		layerRenderers.add( renderer );
+	}
+	
+	/** 
+	 * Returns a List containing all of the renderers that have beenadded to
+	 * the theme.
+	 */
+	public java.util.List getLayerRenderers() {
+		return layerRenderers;
+	}
+	
+	/*
+	 * Sets the current LayerRenderer.
+	 */
+	public void setCurrentLayerRenderer( LayerRenderer renderer ) {
 		this.renderer = renderer;
 		notifyThemeChangedListeners( new ThemeChangedEvent( this,
 			ThemeChangedEvent.SHADE ) ); 
 	}
 	
-	public LayerRenderer getRenderer() {
+	public LayerRenderer getCurrentLayerRenderer() {
 		return renderer;
 	}
 	

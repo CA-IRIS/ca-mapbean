@@ -54,12 +54,12 @@ public final class StationLayer extends ShapeLayer implements StationListener {
 	 * @param occupancy an array containing the new occupancy values
 	 * @param status an array containing the new status values
 	 */
-	public void update( int[] volume, int[] occupancy, int[] status ) {
+	public final void update( int[] volume, int[] occupancy, int[] status ) {
 		IntegerField v = ( IntegerField ) super.getField( "VOLUME" );
 		IntegerField o = ( IntegerField ) super.getField( "OCCUPANCY" );
 		IntegerField s = ( IntegerField ) super.getField( "STATUS" );
-		int [] station = (( IntegerField ) super.getField( "STATION2"
-		) ).getData();
+		int [] station = ( ( IntegerField ) super.getField( "STATION2"
+			) ).getData();
 		for ( int i = ( station.length - 1 ); i >= 0; i-- ){
 			if ( station[ i ] > 0 ) {
 				if ( station[ i ] - 1 < volume.length ) {
@@ -72,17 +72,17 @@ public final class StationLayer extends ShapeLayer implements StationListener {
 		notifyLayerChangedListeners( new LayerChangedEvent( this,
 			LayerChangedEvent.DATA ) );
 	}
-
-	public Theme getTheme() {
-		ShapeRenderer renderer =  new OccupancyRenderer(
-		( NumericField ) getField( "occupancy" ),
-		new StationMapTip() );
+	
+	public final Theme getTheme() {
+		ShapeRenderer renderer = new OccupancyRenderer(
+			( NumericField ) getField( "occupancy" ),
+			new StationMapTip() );
 		Theme result = new StationTheme( this, renderer );
 		result.setTip( new StationMapTip() );
 		return result;
 	}
 	
-	private class StationTheme extends Theme implements MapMouseListener {
+	private final class StationTheme extends Theme implements MapMouseListener {
 		
 		private final JMenu rightClickMenu = new JMenu();
 		private final JMenu statusMenu = new JMenu( "Status" );
