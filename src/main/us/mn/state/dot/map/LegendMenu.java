@@ -26,12 +26,13 @@ import javax.swing.JMenu;
  * JMenu for displaying the Legend for a LayerRenderer.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
+ * @author Douglas Lau
  */
 public class LegendMenu extends JMenu {
 
   	/** Create a new LegendMenu */
  	public LegendMenu(LayerRenderer r) {
-		super("Legend:");
+		super("Legend");
 		setBorder(BorderFactory.createEtchedBorder());
 		setBorderPainted(true);
 		setMapRenderer(r);

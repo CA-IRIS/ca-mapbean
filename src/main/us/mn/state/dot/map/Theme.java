@@ -35,6 +35,7 @@ import us.mn.state.dot.map.event.ThemeChangedListener;
  * It can be made invisible and can listen for mouse actions.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
+ * @author Douglas Lau
  */
 public class Theme implements LayerChangedListener {
 

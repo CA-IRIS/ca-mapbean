@@ -24,19 +24,20 @@ import java.awt.event.ActionListener;
 import java.util.Iterator;
 import java.util.List;
 import javax.swing.BorderFactory;
-import javax.swing.JCheckBox;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 
 /**
  * Menu for displaying a list of themes.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
+ * @author Douglas Lau
  */
 public class ThemeMenu extends JMenu {
 
   	/** Create a new theme menu */
   	public ThemeMenu(List themes) {
-		super("Themes:");
+		super("Themes");
 		setMargin(new Insets(0, 0, 0, 0));
 		setBorder(BorderFactory.createEtchedBorder());
 		Iterator it = themes.iterator();
@@ -48,12 +49,12 @@ public class ThemeMenu extends JMenu {
 	/** MenuItem for displaying a theme.  When a check box is selected the
 	 * Theme is made visible.  If it is deselected then the Theme is made
 	 * invisible. */
-	protected class ThemeMenuItem extends JCheckBox {
+	protected class ThemeMenuItem extends JCheckBoxMenuItem {
 
 		protected final Theme theme;
 
 		public ThemeMenuItem(Theme t) {
-			super(t.layer.getName());
+			super(t.getLayer().getName());
 			theme = t;
 			setSelected(theme.isVisible());
 			addActionListener(new ActionListener() {
