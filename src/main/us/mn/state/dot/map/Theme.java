@@ -145,7 +145,8 @@ public class Theme implements LayerChangedListener {
 			if ( symbol != null ) {
 				double size = symbol.getSize();
 				searchArea = new Rectangle2D.Double( ( point.getX() -
-					( size / 2 ) ),	( point.getY() - ( size / 2 ) ), size, size );
+					( size / 2 ) ),	( point.getY() - ( size / 2 ) ), size,
+					size );
 			} else {
 				searchArea = new Rectangle2D.Double( point.getX(),
 					point.getY(), 1, 1 );

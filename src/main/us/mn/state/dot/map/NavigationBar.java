@@ -30,25 +30,18 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import java.net.*;
+import us.mn.state.dot.shape.event.*;
 
 public class NavigationBar extends JToolBar {
 
-	private final Cursor selectCursor;
-	private final Cursor zoomCursor;
-	private final Cursor panCursor;
-	private final Map map;
+	private final MapMouseMode zoomMode = new ZoomMouseMode();
+	private final MapMouseMode panMode = new PanMouseMode();
+	private final MapMouseMode selectMode = new SelectMouseMode();
+	private final MapBean map;
 
-	public NavigationBar( Map m ) {
+	public NavigationBar( MapBean m ) {
 		super();
 		map = m;
-		//Create custom cursors
-		selectCursor = new Cursor( Cursor.DEFAULT_CURSOR );
-		zoomCursor = Toolkit.getDefaultToolkit().createCustomCursor(
-			getImage( "images/zoomMod.gif" ).getImage(), new Point( 0, 0 ),
-			"Zoom" );
-		panCursor = Toolkit.getDefaultToolkit().createCustomCursor(
-			getImage( "images/PanMod.gif" ).getImage(),
-			new Point( 0, 0 ), "Pan" );
 		putClientProperty( "JToolBar.isRollover", Boolean.TRUE );
 		ButtonGroup bgToolbar = new ButtonGroup();
 		addSeparator();
@@ -73,8 +66,7 @@ public class NavigationBar extends JToolBar {
 		sizeButton( btnSelect );
 		btnSelect.addActionListener( new ActionListener(){
 			public void actionPerformed( ActionEvent e ) {
-				map.setMouseAction( us.mn.state.dot.shape.MouseDelegator.SELECT );
-				map.setCursor( selectCursor );
+				map.setMouseMode( selectMode );
 			}
 		});
 		bgToolbar.add( btnSelect );
@@ -88,8 +80,7 @@ public class NavigationBar extends JToolBar {
 		sizeButton( btnZoom );
 		btnZoom.addActionListener( new ActionListener(){
 			public void actionPerformed( ActionEvent e ) {
-				map.setMouseAction( us.mn.state.dot.shape.MouseDelegator.ZOOM );
-				map.setCursor( zoomCursor );
+				map.setMouseMode( zoomMode );
 			}
 		});
 		bgToolbar.add( btnZoom );
@@ -103,8 +94,7 @@ public class NavigationBar extends JToolBar {
 		sizeButton( btnPan );
 		btnPan.addActionListener( new ActionListener(){
 			public void actionPerformed( ActionEvent e ) {
-				map.setMouseAction( us.mn.state.dot.shape.MouseDelegator.PAN );
-				map.setCursor( panCursor );
+				map.setMouseMode( panMode );
 			}
 		});
 		bgToolbar.add( btnPan );
