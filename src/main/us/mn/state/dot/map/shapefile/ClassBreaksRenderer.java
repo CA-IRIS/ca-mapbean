@@ -14,22 +14,23 @@ import us.mn.state.dot.shape.DbaseReader.*;
 
 public class ClassBreaksRenderer extends ShapeRenderer {
 
-    private double [] classBreaks;
-    private Symbol [] symbols;
-    private Field field;
-    private String name = null;
+	private double [] classBreaks;
+	private Symbol [] symbols;
+	private Field field;
+	private String name = null;
 
-    public ClassBreaksRenderer(Field field, int breakCount) {
-    	this.field = field;
-    	classBreaks = new double[breakCount];
+	public ClassBreaksRenderer(Field field, int breakCount) {
+		this.field = field;
+		classBreaks = new double[breakCount];
 		symbols = new Symbol[breakCount + 1];
-    }
-
-    public ClassBreaksRenderer(Field field, int breakCount, String name){
-    	this(field, breakCount);
-        this.name = name;
 	}
 
+	public ClassBreaksRenderer(Field field, int breakCount, String name){
+		this(field, breakCount);
+		this.name = name;
+	}
+
+	/** overrides Object.toString() */
 	public String toString(){
 		String result = null;
 		if (name == null) {

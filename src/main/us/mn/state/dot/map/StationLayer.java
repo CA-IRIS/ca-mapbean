@@ -20,22 +20,10 @@ public final class StationLayer extends ShapeLayer implements StationListener {
     }
 
     public void update(int[] volume, int[] occupancy, int[] status){
-		Field [] fields = super.getFields();
-        IntegerField v = null;
-        IntegerField o = null;
-        IntegerField s = null;
-		int [] station = null;
-		for (int i = 0; i < fields.length; i++) {
-			if ((fields[i].getName()).equals("VOLUME")) {
-				v = ((IntegerField) fields[i]);
-			} else if ((fields[i].getName()).equals("OCCUPANCY")) {
-				o = ((IntegerField) fields[i]);
-			} else if ((fields[i].getName()).equals("STATUS")) {
-				s = ((IntegerField) fields[i]);
-			} else if ((fields[i].getName()).equals("STATION2")) {
-				station = ((IntegerField) fields[i]).getData();
-			}
-		}
+		IntegerField v = (IntegerField) super.getField("VOLUME");
+		IntegerField o = (IntegerField) super.getField("OCCUPANCY");
+		IntegerField s = (IntegerField) super.getField("STATUS");
+		int [] station = ((IntegerField) super.getField("STATION2")).getData();
 		for (int i = 0; i < station.length; i++){
 			if (station[i] > 0) {
 				v.setValue(i, volume[station[i] - 1]);

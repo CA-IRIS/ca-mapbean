@@ -11,7 +11,6 @@ import us.mn.state.dot.shape.*;
   */
 public final class DbaseReader {
 
-
 /**
   *	dBase header (32 bytes without field descriptors)
   *

@@ -14,21 +14,22 @@ import java.awt.*;
 
 public abstract class AbstractLayer implements Layer {
 
-	public AbstractLayer() {
-	}
-
+	/** extent of layer */
 	Rectangle2D.Double extent = null;
 
+	/** get the extent of the layer */
 	public Rectangle2D getExtent() {
 		return extent;
 	}
 
 	private boolean visible = true;
 
+	/** returns true if the layer is visible */
 	public boolean isVisible() {
 		return visible;
 	}
 
+	/** Shows or hides this layer depending on the value of parameter b */
 	public void setVisible(boolean b) {
 		visible = b;
 		repaintLayer(this);
