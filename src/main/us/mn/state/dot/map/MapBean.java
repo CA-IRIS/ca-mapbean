@@ -222,7 +222,6 @@ public final class MapBean extends JComponent implements ThemeChangedListener {
 	 */
 	public void home() {
 		setExtent( extentHome );
-		resized();
 	}
 		
 	public String getToolTipText( MouseEvent e ) {
@@ -264,7 +263,6 @@ public final class MapBean extends JComponent implements ThemeChangedListener {
 		extent.setFrame( x, y, width, height );
 		extentHome.setFrame( x, y, width, height );
 		resized();
-		repaint();
 	}
 
 	private Theme findTheme( String name, java.util.List layerList ) {
@@ -294,7 +292,7 @@ public final class MapBean extends JComponent implements ThemeChangedListener {
 		g.drawImage( panBuffer, 0, 0, this );
 	}
 	
-	public void zoomOut( Point center ) { //CHANGE SO THAT IT CENTERS THE VIEW AT THE POINT OF CLICK
+	public void zoomOut( Point center ) { // FIXME CHANGE SO THAT IT CENTERS THE VIEW AT THE POINT OF CLICK
 		extent.setFrame( extent.getX() - extent.getWidth() / 2, 
 			extent.getY() - extent.getHeight() / 2, extent.getWidth() * 2,
 			extent.getHeight() * 2 );
@@ -353,16 +351,19 @@ public final class MapBean extends JComponent implements ThemeChangedListener {
 		if ( h == 0 || w == 0 || extent == null ) {
 			return;
 		}
-		double scaleX = ( double ) w / extent.getWidth();
-		double scaleY = ( double ) h / extent.getHeight();
-		double scale = scaleX;
+		double scaleX = w / extent.getWidth();
+		double scaleY = h / extent.getHeight();
+		double scale = 0;
 		double shiftX = 0;
-		double shiftY = ( h - ( extent.getHeight() * scale ) ) / 2;
-		if ( scale > scaleY ) {
+		double shiftY = 0; 
+		if ( scaleX > scaleY ) {
 			scale = scaleY;
-			shiftY = 0;
 			shiftX = ( w - ( extent.getWidth() * scale ) ) / 2;
+		} else {
+			scale = scaleX;
+			shiftY = ( h - ( extent.getHeight() * scale ) ) / 2;
 		}
+		
 		screenTransform.setToTranslation(  - ( extent.getMinX() * scale )
 			+ shiftX, ( extent.getMaxY() * scale ) + shiftY );
 		screenTransform.scale( scale, -scale );
