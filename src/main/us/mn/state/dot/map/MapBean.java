@@ -118,7 +118,7 @@ public class MapBean extends JComponent implements MapChangedListener {
 
 	/**
 	 * Add a List of themes to the Map
-	 * @param themes List of themes to be added to the map
+	 * @param themes List of themes (or layers) to be added to the map
 	 */
 	public void addThemes(List themes) {
 		Iterator it = themes.iterator();
@@ -171,21 +171,6 @@ public class MapBean extends JComponent implements MapChangedListener {
 			{
 				m.removeMapMouseListener(l);
 			}
-		}
-	}
-
-	public void addLayers(List layers) {
-		for ( ListIterator li = layers.listIterator(); li.hasNext(); ){
-			Object ob = li.next();
-			Theme theme;
-			if ( ob instanceof Layer ) {
-				theme = ( ( Layer ) ob ).getTheme();
-			} else if ( ob instanceof Theme ) {
-				theme = ( Theme ) ob;
-			} else {
-				throw new IllegalArgumentException( "Must be Layer or Theme" );
-			}
-			addTheme( theme );
 		}
 	}
 
