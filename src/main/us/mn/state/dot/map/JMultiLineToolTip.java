@@ -17,6 +17,7 @@ import javax.swing.*;
 
 
 public class JMultiLineToolTip extends JToolTip {
+
     private static final String uiClassID = "ToolTipUI";
 
     String tipText;

@@ -16,16 +16,16 @@ public class ClassBreaksRenderer extends ShapeRenderer {
 
 	private double [] classBreaks;
 	private Symbol [] symbols;
-	private Field field;
+	private NumericField field;
 	private String name = null;
 
-	public ClassBreaksRenderer(Field field, int breakCount) {
+	public ClassBreaksRenderer(NumericField field, int breakCount) {
 		this.field = field;
 		classBreaks = new double[breakCount];
 		symbols = new Symbol[breakCount + 1];
 	}
 
-	public ClassBreaksRenderer(Field field, int breakCount, String name){
+	public ClassBreaksRenderer(NumericField field, int breakCount, String name){
 		this(field, breakCount);
 		this.name = name;
 	}
@@ -45,12 +45,17 @@ public class ClassBreaksRenderer extends ShapeRenderer {
 		classBreaks[index] = value;
 	}
 
+	public void setBreaks(double[] values){
+		classBreaks = values;
+	}
+
 	public void setSymbol(int index, Symbol s){
 		symbols[index] = s;
 	}
 
+	/** Paints a shape. */
 	public void paint(Graphics2D g, GeneralPath path, int index){
-		switch(field.getType()){
+		/*switch(field.getType()){
 		case Field.DOUBLE_FIELD:
 			double dValue = ((DoubleField)field).getValue(index);
 			for (int i = 0; i < classBreaks.length ; i++){
@@ -76,14 +81,18 @@ public class ClassBreaksRenderer extends ShapeRenderer {
 					&& (symbols[symbols.length - 1] != null)) {
 				symbols[symbols.length - 1].draw(g, path);
 			}
+		} */
+		int classBreak = field.getRenderingClass(index, classBreaks);
+		if ((classBreak > -1) && (symbols[classBreak] != null)){
+			symbols[classBreak].draw(g, path);
 		}
 	}
 
-	public void setField(Field f){
+	public void setField(NumericField f){
 		field = f;
 	}
 
-	public Field getField(){
+	public NumericField getField(){
 		return field;
 	}
 }

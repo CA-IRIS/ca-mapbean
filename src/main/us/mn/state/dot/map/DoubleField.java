@@ -10,7 +10,7 @@ package us.mn.state.dot.shape;
 
 import java.io.*;
 
-public class DoubleField extends Field {
+public class DoubleField extends NumericField {
 
     /** Field properties */
     private double [] data;
@@ -40,5 +40,16 @@ public class DoubleField extends Field {
 
     public String getStringValue(int record){
     	return new Double(data[record]).toString();
-    }
+	}
+
+	public int getRenderingClass(int index, double[] classBreaks){
+		int result = -1;
+		for (int i = 0; i < classBreaks.length ; i++){
+			if ( getValue(index) <= classBreaks[i] ) {
+				result = i;
+				break;
+			}
+		}
+		return result;
+	}
 }

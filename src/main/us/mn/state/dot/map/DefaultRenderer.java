@@ -14,13 +14,13 @@ import java.awt.*;
 public final class DefaultRenderer extends ShapeRenderer {
 
     private Symbol symbol;
-    private Field field = null;
-    private String name = null;
+	private NumericField field = null;
+	private String name = null;
 
-    public DefaultRenderer() {
-    }
+	public DefaultRenderer() {
+	}
 
-    public DefaultRenderer(Symbol s){
+	public DefaultRenderer(Symbol s){
 		setSymbol(s);
 	}
 
@@ -36,11 +36,11 @@ public final class DefaultRenderer extends ShapeRenderer {
 		symbol.draw(g, path);
 	}
 
-	public void setField(Field f){
+	public void setField(NumericField f){
 		field = f;
 	}
 
-	public Field getField(){
+	public NumericField getField(){
 		return field;
 	}
 }

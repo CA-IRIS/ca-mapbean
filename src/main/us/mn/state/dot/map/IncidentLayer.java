@@ -16,6 +16,7 @@ import javax.swing.ListSelectionModel;
 
 public final class IncidentLayer extends AbstractLayer implements
 		IncidentListener {
+
 	private Incident [] incidents = null;
 	private ListSelectionModel selectionModel = null;
 	private static final int ONE_MILE = 3218;

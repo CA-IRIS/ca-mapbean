@@ -49,4 +49,15 @@ public class IntegerField extends Field {
 	public int[] getData(){
 		return this.data;
 	}
+
+	public int getRenderingClass(int index, double[] classBreaks){
+		int result = -1;
+		for (int i = 0; i < classBreaks.length ; i++) {
+			if ( getValue(index) <= classBreaks[i] ) {
+				result = i;
+				break;
+			}
+		}
+		return result;
+	}
 }
