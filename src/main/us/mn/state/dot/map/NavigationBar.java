@@ -26,9 +26,10 @@ import javax.swing.*;
 import us.mn.state.dot.shape.event.*;
 
 /**
+ * ToolBar that supplies Navigation buttons for map.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.12 $ $Date: 2001/04/19 16:49:31 $ 
+ * @version $Revision: 1.13 $ $Date: 2001/07/09 21:10:19 $ 
  */
 public class NavigationBar extends JToolBar {
 
@@ -37,6 +38,9 @@ public class NavigationBar extends JToolBar {
 	private final MapMouseMode selectMode = new SelectMouseMode();
 	private final MapBean map;
 
+	/**
+	 * Create a new NavigationBar.
+	 */
 	public NavigationBar( MapBean m ) {
 		super();
 		map = m;

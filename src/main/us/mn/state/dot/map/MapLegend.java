@@ -23,18 +23,25 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
+ * A Legend for a given renderer.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.7 $ $Date: 2001/04/19 16:49:31 $ 
+ * @version $Revision: 1.8 $ $Date: 2001/07/09 21:10:19 $ 
  */
 public final class MapLegend extends JPanel {
 
 	public final LegendCellRenderer cellMaker = new LegendCellRenderer();
 
+	/**
+	 * Create a new MapLegend.
+	 */
 	public MapLegend( ClassBreaksRenderer renderer ) {
 		setMapRenderer( renderer );
 	}
-
+	
+	/**
+	 * Set the renderer this legend uses.
+	 */
 	public void setMapRenderer( ClassBreaksRenderer renderer ){
 		this.removeAll();
 		for ( int i = 0; i < renderer.getBreakCount(); i++ ){

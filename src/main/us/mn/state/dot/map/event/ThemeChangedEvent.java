@@ -19,14 +19,15 @@
 
 package us.mn.state.dot.shape;
 
-/**
- *
- * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.2 $ $Date: 2001/04/19 16:49:31 $ 
- */
-
 import java.util.*;
 
+/**
+ * Theme changed events are sent to ThemeChangedListeners whenever a themes data
+ * is changed.
+ *
+ * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
+ * @version $Revision: 1.3 $ $Date: 2001/07/09 21:10:19 $ 
+ */
 public class ThemeChangedEvent extends EventObject {
 
 	private int reason;
@@ -37,12 +38,17 @@ public class ThemeChangedEvent extends EventObject {
 							ANIMATION = 16,
 							SELECTION = 32;
 	
-    /** Creates new ThemeChangedEvent */
-    public ThemeChangedEvent( Object source, int why ){
+    /**
+	 * Creates new ThemeChangedEvent 
+	 */   
+	public ThemeChangedEvent( Object source, int why ){
         super( source );
         reason = why;
     }
 	
+	/**
+	 * Get the reason the Theme changed.
+	 */
 	public int getReason(){
         return reason;
     }

@@ -26,9 +26,10 @@ import java.util.*;
 import us.mn.state.dot.shape.*;
 
 /** 
+ * Menu for displaying a list of themes.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.2 $ $Date: 2001/04/19 16:49:31 $ 
+ * @version $Revision: 1.3 $ $Date: 2001/07/09 21:10:19 $ 
  */
 public class ThemeMenu extends JMenu {
 
@@ -43,6 +44,11 @@ public class ThemeMenu extends JMenu {
 		}
   	}
 	
+	/**
+	 * MenuItem for displaying a theme.  When a check box is selected the
+	 * Theme is made visible.  If it is deselected then the Theme is made 
+	 * invisible.
+	 */
 	class ThemeMenuItem extends JCheckBox {
 		
 		private final Theme theme;

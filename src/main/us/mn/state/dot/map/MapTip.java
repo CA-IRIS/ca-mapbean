@@ -20,12 +20,16 @@
 package us.mn.state.dot.shape;
 
 /**
+ * Interface for popup tips displayed by a Theme.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.5 $ $Date: 2001/04/19 16:49:31 $ 
+ * @version $Revision: 1.6 $ $Date: 2001/07/09 21:10:19 $ 
  */
 public interface MapTip {
 
+	/** 
+	 * Get the tip for the object in the given Layer at the given index.
+	 */
     public String getTip( Layer layer, int index );
 
 } 

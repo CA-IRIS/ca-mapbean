@@ -22,9 +22,10 @@ import javax.swing.*;
 import java.awt.*;
 
 /** 
+ * JMenu for displaying the Legend for a LayerRenderer.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.2 $ $Date: 2001/05/07 22:16:24 $
+ * @version $Revision: 1.3 $ $Date: 2001/07/09 21:10:19 $
  */
 public class LegendMenu extends javax.swing.JMenu {
 
@@ -36,6 +37,9 @@ public class LegendMenu extends javax.swing.JMenu {
 		this.setBorderPainted( true );
 	}
 	
+	/**
+	 * Set the LayerRenderer that this menu displays.
+	 */
 	public void setMapRenderer( LayerRenderer r ) {
 		this.removeAll();
 		Symbol[] symbols = r.getSymbols();

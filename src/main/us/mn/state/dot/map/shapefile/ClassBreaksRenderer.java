@@ -24,9 +24,10 @@ import java.awt.geom.*;
 import us.mn.state.dot.shape.DbaseReader.*;
 
 /**
+ * A renderer that renders objects base on a numeric field and a set of class breaks.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.15 $ $Date: 2001/04/19 16:49:31 $ 
+ * @version $Revision: 1.16 $ $Date: 2001/07/09 21:10:19 $ 
  */
 public class ClassBreaksRenderer extends ShapeRenderer {
 

@@ -22,11 +22,22 @@ package us.mn.state.dot.shape;
 import java.awt.geom.*;
 import java.awt.*;
 
+/**
+ * A default implementation of a ShapeRenderer.  Shapes are all rendered with the
+ * same symbol.
+ *
+ * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
+ * @version $Revision: 1.14 $ $Date: 2001/07/09 21:10:19 $ 
+ */
 public final class DefaultRenderer extends ShapeRenderer {
 
 	private NumericField field = null;
 	private String name = null;
 
+	/**
+	 * Create a new DefaultRenderer.
+	 * @param s, symbol that all shapes will be painted with.
+	 */
 	public DefaultRenderer( Symbol s ){
 		setSymbol( s );
 	}

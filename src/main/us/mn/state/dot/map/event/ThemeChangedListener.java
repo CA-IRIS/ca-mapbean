@@ -20,9 +20,11 @@
 package us.mn.state.dot.shape;
 
 /**
+ * Theme changed listeners can be registered with a Theme to recieve 
+ * ThemeChangedEvents when ever a Themes data changes.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.2 $ $Date: 2001/04/19 16:49:31 $ 
+ * @version $Revision: 1.3 $ $Date: 2001/07/09 21:10:19 $ 
  */
 public interface ThemeChangedListener extends java.util.EventListener {
 	

@@ -20,11 +20,17 @@
 package us.mn.state.dot.shape;
 
 /**
+ * MapChangedListeners that are registered with a MapBean are notified whenever
+ * any of the layers change.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.2 $ $Date: 2001/04/19 16:49:31 $ 
+ * @version $Revision: 1.3 $ $Date: 2001/07/09 21:10:19 $ 
  */
 public interface MapChangedListener {
+	
+	/**
+	 * Called by the MapBean when any layers are called.
+	 */
 	public void mapChanged();
 }
 

@@ -22,9 +22,10 @@ package us.mn.state.dot.shape;
 import us.mn.state.dot.shape.*;
 
 /**
+ * Displays a stations status.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.6 $ $Date: 2001/04/19 16:49:31 $ 
+ * @version $Revision: 1.7 $ $Date: 2001/07/09 21:10:19 $ 
  */
 public final class StationMapTip implements MapTip {
 

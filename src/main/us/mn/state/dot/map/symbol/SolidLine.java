@@ -22,20 +22,33 @@ package us.mn.state.dot.shape;
 import java.awt.*;
 
 /**
+ * A LineSymbol that renders a solid line.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.7 $ $Date: 2001/04/19 16:49:31 $ 
+ * @version $Revision: 1.8 $ $Date: 2001/07/09 21:10:19 $ 
  */
 public final class SolidLine extends LineSymbol {
 
+	/**
+	 * Create a new SolidLine.
+	 */
 	public SolidLine() {
 		this( Color.black );
 	}
 
+	/**
+	 * Create a new SolidLine using the given color.
+	 * @param c, color to use.
+	 */
 	public SolidLine( Color c ){
 		super( c );
 	}
 	
+	/**
+	 * Create a new SolidLine using the given color of the given size.
+	 * @param c, color to use.
+	 * @param size, width of the line created.
+	 */
 	public SolidLine( Color c, int size ) {
 		super( c, size );
 	}

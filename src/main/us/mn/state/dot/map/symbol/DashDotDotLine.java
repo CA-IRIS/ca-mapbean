@@ -22,16 +22,24 @@ package us.mn.state.dot.shape;
 import java.awt.*;
 
 /**
+ * A LineSymbol that renders a _.._.._ type of line.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.6 $ $Date: 2001/04/19 16:49:31 $ 
+ * @version $Revision: 1.7 $ $Date: 2001/07/09 21:10:19 $ 
  */
 public final class DashDotDotLine extends LineSymbol {
-
+	
+	/**
+	 * Create a new DashDotDotLine.
+	 */
 	public DashDotDotLine() {
 		this( Color.black );
 	}
 
+	/**
+	 * Create a new DashDotDotLine with the given color.
+	 * @param c, color to use.
+	 */
 	public DashDotDotLine( Color c ){
 		super( c );
 	}

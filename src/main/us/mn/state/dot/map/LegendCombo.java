@@ -17,20 +17,22 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-//Title:        SignClient
-//Version:      
-//Copyright:    Copyright (c) 1999
-//Author:       Erik Engstrom
-//Company:      MnDOT
-//Description:  Your description
-
 package us.mn.state.dot.shape;
 
 import java.awt.*;
 import javax.swing.*;
 
+/**
+ * A combobox for displaying the legend for a ClassBreaksRenderer.
+ *
+ * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
+ * @version $Revision: 1.7 $ $Date: 2001/07/09 21:10:19 $
+ */
 public final class LegendCombo extends JComboBox {
 
+	/**
+	 * Create a new LegendCombo.
+	 */
 	public LegendCombo( ClassBreaksRenderer r ) {
 		super();
 		setRenderer( new LegendCellRenderer() );
@@ -38,6 +40,9 @@ public final class LegendCombo extends JComboBox {
 		this.setMaximumRowCount( 12 );
 	}
 
+	/**
+	 * Set the renderer that this LegendCombo displays.
+	 */
 	public void setMapRenderer( ClassBreaksRenderer r ){
 		this.removeAllItems();
 		addItem( new LegendItem(){

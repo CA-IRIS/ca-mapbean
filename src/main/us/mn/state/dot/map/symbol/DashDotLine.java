@@ -17,23 +17,29 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-//Title:        SignClient
-//Version:      
-//Copyright:    Copyright (c) 1999
-//Author:       Erik Engstrom
-//Company:      MnDOT
-//Description:  Your description
-
 package us.mn.state.dot.shape;
 
 import java.awt.*;
 
+/**
+ * A line symbol that renders a _._ line.
+ *
+ * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
+ * @version $Revision: 1.6 $ $Date: 2001/07/09 21:10:19 $ 
+ */
 public final class DashDotLine extends LineSymbol {
 
+	/**
+	 * Create a new DashDotLine.
+	 */
 	public DashDotLine() {
 		this( Color.black );
 	}
 
+	/** 
+	 * Create a new DashDotLine of the given color.
+	 * @param c, color of the new line.
+	 */
 	public DashDotLine( Color c ){
 		super( c );
 	}

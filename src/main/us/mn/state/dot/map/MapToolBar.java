@@ -26,14 +26,18 @@ import javax.swing.*;
 import javax.swing.event.*;
 
 /**
+ * Toolbar used for MapBean.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.4 $ $Date: 2001/05/07 22:16:24 $ 
+ * @version $Revision: 1.5 $ $Date: 2001/07/09 21:10:19 $ 
  */
 public final class MapToolBar extends NavigationBar {
 
 	private final us.mn.state.dot.shape.MapBean map;
 
+	/**
+	 * Create a new MapToolBar.
+	 */
 	public MapToolBar( us.mn.state.dot.shape.MapBean m, String themeName ) {
 		super( m );
 		map = m;

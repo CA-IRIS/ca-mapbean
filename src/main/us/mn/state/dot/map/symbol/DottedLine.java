@@ -17,25 +17,31 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-//Title:        SignClient
-//Version:      
-//Copyright:    Copyright (c) 1999
-//Author:       Erik Engstrom
-//Company:      MnDOT
-//Description:  Your description
-
 package us.mn.state.dot.shape;
 
 import java.awt.*;
 
+/**
+ * A LineSymbol that paints a dotted line _ _ _ _ _ .
+ *
+ * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
+ * @version $Revision: 1.5 $ $Date: 2001/07/09 21:10:19 $ 
+ */
 public class DottedLine extends LineSymbol {
 
 	private BasicStroke stroke;
 
+	/**
+	 * Create a new DottedLine. With the default color.
+	 */
 	public DottedLine() {
 		this( Color.black );
 	}
 
+	/**
+	 * Create a new DottedLine using the given color.
+	 * @param c, the color to use.
+	 */
 	public DottedLine( Color c ){
 		super( c );
 	}

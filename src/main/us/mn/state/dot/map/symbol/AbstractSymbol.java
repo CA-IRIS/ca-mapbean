@@ -24,9 +24,10 @@ import java.awt.geom.*;
 import javax.swing.*;
 
 /**
+ * Base class for Symbol implementations.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.3 $ $Date: 2001/06/07 22:57:05 $ 
+ * @version $Revision: 1.4 $ $Date: 2001/07/09 21:10:19 $ 
  */
 public abstract class AbstractSymbol implements LegendItem, Symbol {
 

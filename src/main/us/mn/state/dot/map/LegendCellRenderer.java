@@ -17,18 +17,17 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-//Title:        SignClient
-//Version:
-//Copyright:    Copyright (c) 1999
-//Author:       Erik Engstrom
-//Company:      MnDOT
-//Description:  Your description
-
 package us.mn.state.dot.shape;
 
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * ListCellRenderer for rendering LegendItems.
+ *
+ * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
+ * @version $Revision: 1.6 $ $Date: 2001/07/09 21:10:19 $
+ */
 public final class LegendCellRenderer implements ListCellRenderer {
 
 	public Component getListCellRendererComponent( JList list, Object value,

@@ -17,23 +17,19 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-//Title:        SignClient
-//Version:
-//Copyright:    Copyright (c) 1999
-//Author:       Erik Engstrom
-//Company:      MnDOT
 //Description:  Stolen from http://www.codeguru.com/java/articles/122.shtml
 
 package us.mn.state.dot.shape;
 
-// JMultiLineToolTip.java
 import javax.swing.*;
 
 /**
+ * A ToolTip that allows multiple lines.
+ *
  * @author Zafir Anjum
+ * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
+ * @version $Revision: 1.5 $ $Date: 2001/07/09 21:10:19 $ 
  */
-
-
 public final class JMultiLineToolTip extends JToolTip {
 
     private static final String uiClassID = "ToolTipUI";

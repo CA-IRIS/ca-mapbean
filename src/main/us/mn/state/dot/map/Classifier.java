@@ -20,18 +20,25 @@
 package us.mn.state.dot.shape;
 
 /**
+ * A classifier is used to classify a double value into a range of values.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.2 $ $Date: 2001/04/19 16:49:31 $ 
+ * @version $Revision: 1.3 $ $Date: 2001/07/09 21:10:19 $ 
  */
 public class Classifier {
 
 	private Range[] bins;
-
+	
+	/**
+	 * Create a new Classifier.
+	 */
 	public Classifier( int size ) {
 		bins = new Range[ size ];
 	}
 
+	/** 
+	 * Set the bin at the given index to the given Range.
+	 */
 	public void setBin( int index, Range bin ) {
 		if ( index < 0 || index >= bins.length ) {
 			throw new IllegalArgumentException();
@@ -39,6 +46,9 @@ public class Classifier {
 		bins[ index ] = bin;
 	}
 
+	/** 
+	 * Get the class break for the given value.
+	 */
 	public int getClassBreak( double value ) {
 		int result = -1;
 		for ( int i = 0; i < bins.length; i++ ) {

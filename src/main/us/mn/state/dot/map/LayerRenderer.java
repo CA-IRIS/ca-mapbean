@@ -17,22 +17,37 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-//Title:        LayerRenderer
-//Version:      1.0
-//Copyright:    Copyright (c) 1999
-//Author:       Erik Engstrom
-//Company:      MnDOT
-//Description:  Interface all layer renderers must implement.
-
 package us.mn.state.dot.shape;
 
 import java.awt.*;
 import java.awt.geom.*;
 
+/**
+ * A LayerRenderer determines how a Layers data is rendered on the map.
+ *
+ * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
+ * @version $Revision: 1.3 $ $Date: 2001/07/09 21:10:19 $ 
+ */
 public interface LayerRenderer {
-    //public void paint( Graphics2D g, GeneralPath path, int index );
-	public Symbol render( int index );
+	
+	/** 
+	 * Called by the Theme to render a layers data.
+	 * @param index, the index of the object to render.
+	 */
+    public Symbol render( int index );
+	
+	/**
+	 * Set the field used by this renderer to render the data.
+	 */
     public void setField( Field f );
+	
+	/** 
+	 * Get the field used by this renderer to render the data.
+	 */
     public Field getField();
+	
+	/**
+	 * Get they symbols used by this renderer.
+	 */
 	public Symbol[] getSymbols();
 }

@@ -23,26 +23,45 @@ import java.awt.*;
 import java.awt.geom.*;
 
 /**
+ * A PointSymbol that renders a square.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.8 $ $Date: 2001/06/27 16:36:37 $ 
+ * @version $Revision: 1.9 $ $Date: 2001/07/09 21:10:19 $ 
  */
 public final class SquareMarker extends PointSymbol {
 
 	private final Rectangle2D.Double shape = new Rectangle2D.Double();
 
+	/**
+	 * Create a new SquareMarker.
+	 */
 	public SquareMarker() {
 		super();
 	}
 
+	/**
+	 * Create a new SquareMarker with the given color.
+	 * @param c, the color to use.
+	 */
 	public SquareMarker( Color c ) {
 		super( c );
 	}
 
+	/**
+	 * Create a new SquareMarker with the given color and the given legend lable.
+	 * @param c, color to use.
+	 * @param label, the label to use in this symbols legend.
+	 */
 	public SquareMarker( Color c, String label ){
 		super( c, label );
 	}
 
+	/**
+	 * Create a new SquareMarker with the given color, and label.
+	 * @param c, color to use.
+	 * @param lable, the label to use in this symbols legind.
+	 * @param outlined, the symbol is outlined if true.
+	 */
 	public SquareMarker( Color c, String label, boolean outlined ){
 		super( c, label, outline );
 	}

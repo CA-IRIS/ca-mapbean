@@ -23,31 +23,61 @@ import java.awt.*;
 import java.awt.geom.*;
 
 /**
+ * Base class for all renderers used for shape files.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.10 $ $Date: 2001/04/19 16:49:31 $ 
+ * @version $Revision: 1.11 $ $Date: 2001/07/09 21:10:19 $ 
  */
 public abstract class ShapeRenderer implements LayerRenderer {
-    MapTip mapTip = null;
-    Symbol symbol = null;
+    
+	/** MapTip to display. */
+	MapTip mapTip = null;
+	/** Symbol to paint with */
+	Symbol symbol = null;
+	/** Name of renderer */
 	private String name = "";
-
-    public abstract Symbol render( int index );
+	
+	/** 
+	 * Render the object at the given index.
+	 */
+	public abstract Symbol render( int index );
+	
+	/**
+	 * Set the field for this renderer.
+	 */
     public abstract void setField( Field f );
+	
+	/**
+	 * Get the field used by this renderer.
+	 */
     public abstract Field getField();
 	
+	/**
+	 * Set the MapTip used by this renderer.
+	 */
     public void setTip( MapTip m ) {
         mapTip = m;
     }
 
+	/**
+	 * Get the symbol used by this renderer.
+	 */
     public Symbol getSymbol(){
         return symbol;
     }
 
+	/**
+	 * Set the symbol used by this renderer.
+	 */
     public void setSymbol( Symbol s ){
         symbol = s;
     }
 
+	/**
+	 * Get the Tip for the given map object.
+	 * @param layer, Layer that contains the map object.
+	 * @param i, index of the object.
+	 */
     public String getTip( ShapeLayer layer, int i ){
         String result = null;
         if (mapTip != null){
@@ -56,16 +86,24 @@ public abstract class ShapeRenderer implements LayerRenderer {
     	return result;
     }
 	
+	/**
+	 * Get the Symbols used by this renderer.
+	 */
 	public Symbol[] getSymbols() {
 		Symbol[] result = { symbol };
 		return result;
 	}
 	
+	/**
+	 * Set the name of this renderer.
+	 */
 	public void setName( String s ) {
 		name = s;
 	}
 	
-	/** overrides Object.toString() */
+	/** 
+	 * Overrides Object.toString() 
+	 */
 	public final String toString(){
 		String result = null;
 		if ( name == null ) {

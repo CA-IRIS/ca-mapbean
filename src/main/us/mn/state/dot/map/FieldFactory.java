@@ -22,10 +22,10 @@ package us.mn.state.dot.shape;
 import java.io.*;
 
 /**
-  * 
+  * Used by the ShapFile to create new Fields.
   *
   * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
-  * @version $Revision: 1.5 $ $Date: 2001/05/12 00:10:40 $
+  * @version $Revision: 1.6 $ $Date: 2001/07/09 21:10:19 $
   */
 public final class FieldFactory {
 

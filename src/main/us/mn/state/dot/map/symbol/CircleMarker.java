@@ -23,9 +23,10 @@ import java.awt.*;
 import java.awt.geom.*;
 
 /**
+ * A PointSymbol that renders a circle.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.7 $ $Date: 2001/04/19 16:49:31 $ 
+ * @version $Revision: 1.8 $ $Date: 2001/07/09 21:10:19 $ 
  */
 public final class CircleMarker extends PointSymbol {
 

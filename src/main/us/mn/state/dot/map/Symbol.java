@@ -22,9 +22,10 @@ package us.mn.state.dot.shape;
 import java.awt.*;
 
 /**
+ * Interface for symbols used by themes to draw layer data.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.15 $ $Date: 2001/04/19 16:49:31 $ 
+ * @version $Revision: 1.16 $ $Date: 2001/07/09 21:10:19 $ 
  */
 public interface Symbol {
 	

@@ -17,17 +17,20 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-//Title:        SignClient
-//Version:      
-//Copyright:    Copyright (c) 1999
-//Author:       Erik Engstrom
-//Company:      MnDOT
-//Description:  Your description
-
 package us.mn.state.dot.shape;
 
+/**
+ * A LayerChangedListener can be registered with a Layer to recieve notifications
+ * when the layer's data changes.
+ *
+ * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
+ * @version $Revision: 1.2 $ $Date: 2001/07/09 21:10:19 $ 
+ */
 public interface LayerChangedListener extends java.util.EventListener {
-	void layerChanged( LayerChangedEvent event );
-	//public void updateLayer( Layer layer );
-	//public void refresh( Layer layer );
+	
+	/**
+	 * Called by the Layer when the layers data is changed.
+	 */
+	public void layerChanged( LayerChangedEvent event );
+
 }

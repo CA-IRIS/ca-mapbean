@@ -23,19 +23,68 @@ import java.awt.*;
 import java.util.*;
 import java.awt.geom.*;
 
+/**
+ * This interface should be used to add data to a MapBean object. 
+ *
+ * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
+ * @version $Revision: 0.19 $ $Date: 2001/07/09 21:10:19 $ 
+ */
 public interface Layer {
 	
+	/**
+	 * Get the extent of this layer.
+	 */
     public Rectangle2D getExtent();
+	
+	/**
+	 * Paint this layer.
+	 */
 	public void paint( Graphics2D g, LayerRenderer r );
+	
+	/**
+	 * Paint selected objects on this layer.
+	 */
 	public void paintSelections( Graphics2D g, LayerRenderer renderer,
 		int[] selections );
+	
+	/**
+	 * Get the name of this layer.
+	 */
 	public String getName();
+	
+	/**
+	 * Register a LayerChangedListener with this layer.
+	 */
 	public void addLayerChangedListener( LayerChangedListener listener );
+	
+	/**
+	 * Remove a layerChangedListener from this layer.
+	 */
 	public void removeLayerChangedListener( LayerChangedListener listener );
-	public void notifyLayerChangedListeners( LayerChangedEvent event );
+	
+	/**
+	 * Notify all LayerChangedListeners that this layer has changed.
+	 */
+	protected void notifyLayerChangedListeners( LayerChangedEvent event );
+	
+	/**
+	 * Is this a static layer?
+	 */
 	public boolean isStatic();
+	
+	/**
+	 * Set this layer as a static layer. 
+	 */
 	public void setStatic( boolean b );
+	
+	/**
+	 * Get the fields available for this layer.
+	 */
 	public Field [] getFields();
+	
+	/**
+	 * Get a field by its name.
+	 */
 	public Field getField( String name );
 	
 	/*
@@ -54,5 +103,8 @@ public interface Layer {
 	 */
 	public int search( Rectangle2D searchArea );
 	
+	/**
+	 * Get the theme for this layer.
+	 */
 	public Theme getTheme();
 }

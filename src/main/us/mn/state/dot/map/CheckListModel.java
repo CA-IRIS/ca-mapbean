@@ -24,9 +24,10 @@ import java.util.*;
 import java.awt.event.*;
 
 /**
+ * ListModel that contains check boxes instead of labels. 
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.2 $ $Date: 2001/04/19 16:49:31 $ 
+ * @version $Revision: 1.3 $ $Date: 2001/07/09 21:10:19 $ 
  */
 public abstract class CheckListModel extends AbstractListModel implements
 		ActionListener {
