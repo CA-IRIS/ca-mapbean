@@ -26,20 +26,17 @@ import java.awt.Graphics2D;
  * Interface for symbols used by themes to draw layer data.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
+ * @author Douglas Lau
  */
 public interface Symbol {
 
 	public String getLabel();
 
-	public void draw(Graphics2D g, MapObject o);
-
-	public void setColor(Color color);
-
 	public Color getColor();
-
-	public void setOutlineColor(Color color);
 
 	public Color getOutlineColor();
 
 	public Component getLegend();
+
+	public void draw(Graphics2D g, MapObject o);
 }
