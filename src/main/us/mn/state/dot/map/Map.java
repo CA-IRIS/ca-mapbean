@@ -133,6 +133,56 @@ public final class Map extends JViewport implements LayerListener {
 		this.setViewPosition(scrollTo);
 	}
 
+	public String getToolTipText(MouseEvent e) {
+		String strings = null;
+		AffineTransform t = map.getTransform();
+		AffineTransform world = null;
+		try {
+			world = t.createInverse();
+		} catch (NoninvertibleTransformException ex) {
+			ex.printStackTrace();
+		}
+		double xCoord = e.getPoint().getX();
+		double yCoord = e.getPoint().getY();
+		Point2D viewPosition = this.getViewPosition();
+		Point2D p1 = new Point2D.Double(xCoord + viewPosition.getX(),
+			yCoord + viewPosition.getY());
+		Point2D p = world.transform(p1, new Point(0, 0));
+		ArrayList layers = map.getLayers();
+		ListIterator it = layers.listIterator();
+		while (it.hasNext()){
+			Layer l = (Layer) it.next();
+			strings = l.getTip(p);
+			if (strings != null) {
+				break;
+			}
+		}
+		return strings;
+	}
+
+	public JToolTip createToolTip(){
+		return new JMultiLineToolTip();
+	}
+
+	/** Mouse helper class */
+	private final MouseHelper mouse = new MouseHelper((JViewport) this);
+
+	public void updateLayer(Layer l) {
+		//if (this.isShowing()) {
+			map.refreshLayer(l);
+		//}
+	}
+
+	public void repaintLayer(Layer l) {
+		//if (this.isShowing()){
+			map.refresh();
+		//}
+	}
+
+	public void setExtent(Rectangle2D r){
+		map.setExtent(r);
+	}
+
 	/** Inner class to take care of mouse events */
 	private class MouseHelper extends MouseAdapter implements MouseMotionListener {
 		boolean box = false;
@@ -337,53 +387,5 @@ public final class Map extends JViewport implements LayerListener {
 				box = false;
 			}
 		}
-	}
-
-	public String getToolTipText(MouseEvent e) {
-		String strings = null;
-		AffineTransform t = map.getTransform();
-		AffineTransform world = null;
-		try {
-			world = t.createInverse();
-		} catch (NoninvertibleTransformException ex) {
-			ex.printStackTrace();
-		}
-		double xCoord = e.getPoint().getX();
-		double yCoord = e.getPoint().getY();
-		Point2D viewPosition = this.getViewPosition();
-		Point2D p1 = new Point2D.Double(xCoord + viewPosition.getX(),
-			yCoord + viewPosition.getY());
-		Point2D p = world.transform(p1, new Point(0, 0));
-		ArrayList layers = map.getLayers();
-		ListIterator it = layers.listIterator();
-		while (it.hasNext()){
-			Layer l = (Layer) it.next();
-			strings = l.getTip(p);
-			if (strings != null) {
-				break;
-			}
-		}
-		return strings;
-	}
-
-	public JToolTip createToolTip(){
-		return new JMultiLineToolTip();
-	}
-
-	/** Mouse helper class */
-	private final MouseHelper mouse = new MouseHelper((JViewport) this);
-
-	public void updateLayer(Layer l) {
-		if (this.isShowing()) {
-			map.refreshLayer(l);
-		}
-	}
-
-	public void repaintLayer(Layer l) {
-		map.refresh();
-	}
-
-	public void setExtent(Rectangle2D r){
-		map.setExtent(r);
 	}
 }

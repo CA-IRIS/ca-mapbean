@@ -16,6 +16,7 @@ public class ClassBreaksRenderer extends ShapeRenderer {
 
 	private double [] classBreaks;
 	private Symbol [] symbols;
+	private String [] labels;
 	private NumericField field;
 	private String name = null;
 
@@ -23,6 +24,7 @@ public class ClassBreaksRenderer extends ShapeRenderer {
 		this.field = field;
 		classBreaks = new double[breakCount];
 		symbols = new Symbol[breakCount + 1];
+		labels = new String[breakCount + 1];
 	}
 
 	public ClassBreaksRenderer(NumericField field, int breakCount, String name){
@@ -45,12 +47,33 @@ public class ClassBreaksRenderer extends ShapeRenderer {
 		classBreaks[index] = value;
 	}
 
+	public double getBreak(int index){
+		return classBreaks[index];
+	}
+
 	public void setBreaks(double[] values){
 		classBreaks = values;
 	}
 
+	public int getBreakCount(){
+		return classBreaks.length;
+	}
+
 	public void setSymbol(int index, Symbol s){
 		symbols[index] = s;
+	}
+
+	public void setSymbol(int index, Symbol s, String label){
+		symbols[index] = s;
+		labels[index] = label;
+	}
+
+	public String getLabel(int index){
+		return labels[index];
+	}
+
+	public Symbol getSymbol(int index){
+		return symbols[index];
 	}
 
 	/** Paints a shape. */

@@ -142,32 +142,38 @@ public final class MapPane extends JPanel {
 	}
 
 	public void refreshLayer(int index){
-		Graphics2D g = (Graphics2D) this.getGraphics();
-		if (g == null) {
-			return;
-		}
-		g.transform( at );
-		ListIterator it = layers.listIterator(index + 1);
-		while (it.hasPrevious()){
-			((Layer) it.previous()).paint(g);
+		if (this.isShowing()){
+			Graphics2D g = (Graphics2D) this.getGraphics();
+			if (g == null) {
+				return;
+			}
+			g.transform( at );
+			ListIterator it = layers.listIterator(index + 1);
+			while (it.hasPrevious()){
+				((Layer) it.previous()).paint(g);
+			}
 		}
 	}
 
 	public void refreshLayer(Layer l){
-		Graphics2D g = (Graphics2D) this.getGraphics();
-		g.transform( at );
-		ListIterator it = layers.listIterator(layers.lastIndexOf((Object) l));
-		if (it.hasNext ()) {
-			it.next();
-		}
-		while (it.hasPrevious()){
-			((Layer) it.previous()).paint(g);
+		if (this.isShowing()){
+			Graphics2D g = (Graphics2D) this.getGraphics();
+			g.transform( at );
+			ListIterator it = layers.listIterator(layers.lastIndexOf((Object) l));
+			if (it.hasNext ()) {
+				it.next();
+			}
+			while (it.hasPrevious()){
+				((Layer) it.previous()).paint(g);
+			}
 		}
 	}
 
 	public void refresh(){
-		Graphics g = this.getGraphics();
-		paint(g);
+		if (this.isShowing()){
+			Graphics g = this.getGraphics();
+			paint(g);
+		}
 	}
 
 
