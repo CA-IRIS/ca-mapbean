@@ -58,23 +58,24 @@ public class ShapeLayer extends AbstractLayer {
 			layerName);
 	}
 
-	public ShapeLayer( URL fileLocation, String layerName ) throws IOException {
-		setName( layerName );
+	public ShapeLayer(URL fileLocation, String layerName)
+		throws IOException
+	{
+		setName(layerName);
 		String url = fileLocation.toExternalForm();
-		if ( !url.endsWith( ".shp" ) ) {
-			throw new IOException( "fileLocation must be a '.shp' file" );
-		}
+		if(!url.endsWith(".shp")) throw new IOException(
+			"fileLocation must be a '.shp' file");
 		ShapeFile shapeFile = new ShapeFile( fileLocation );
 		this.extent = shapeFile.getExtent();
 		List shapeList = shapeFile.getShapeList();
 		shapeType = shapeFile.getShapeType();
-		shapes = ( ShapeObject[] ) shapeList.toArray(
-			new ShapeObject[ shapeList.size() ] );
+		shapes = (ShapeObject[]) shapeList.toArray(
+			new ShapeObject[shapeList.size()]);
 	}
 
 	public Theme getTheme() {
 		Symbol symbol = null;
-		switch( shapeType ) {
+		switch(shapeType) {
 			case ShapeFactory.POINT:
 				symbol = new CircleMarker();
 				break;
@@ -87,10 +88,10 @@ public class ShapeLayer extends AbstractLayer {
 			default:
 			    symbol = null;
 		}
-		return new Theme( this, new DefaultRenderer( symbol ) );
+		return new Theme(this, new DefaultRenderer(symbol));
 	}
 
-	/** Paint this Layer */
+	/** Paint the layer */
 	public void paint(Graphics2D g, LayerRenderer renderer) {
 		for(int i = (shapes.length - 1); i >= 0; i--) {
 			renderer.render(g, shapes[i]);
