@@ -263,14 +263,13 @@ public class MapBean extends JComponent implements MapChangedListener{
 		}
 		Point p1 = new Point();
 		Point2D p = world.transform( e.getPoint(), p1 );
-		for ( ListIterator it = mapPane.getThemes().listIterator(
-				mapPane.getThemes().size() ); it.hasPrevious(); ) {
-			Theme l = ( Theme ) it.previous();
-			if ( l.isVisible() ) {
-				result = l.getTip( p );
-				if ( result != null ) {
-					break;
-				}
+		ListIterator it = mapPane.getThemes().listIterator(
+			mapPane.getThemes().size());
+		while(it.hasPrevious()) {
+			Theme t = (Theme)it.previous();
+			if(t.isVisible()) {
+				result = t.getTip(p);
+				if(result != null) break;
 			}
 		}
 		return result;

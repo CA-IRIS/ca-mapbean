@@ -53,7 +53,8 @@ public class MapToolBar extends NavigationBar {
 	{
 		final JComboBox paintCombo = new JComboBox();
 		paintCombo.setLightWeightPopupEnabled(false);
-		ListIterator li = map.getTheme(theme).getLayerRenderers().listIterator();
+		ListIterator li = map.getTheme(
+			theme).getLayerRenderers().listIterator();
 		while(li.hasNext()) {
 			paintCombo.addItem(li.next());
 		}
