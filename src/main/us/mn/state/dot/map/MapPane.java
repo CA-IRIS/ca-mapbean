@@ -26,8 +26,8 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 import us.mn.state.dot.shape.event.MapChangedListener;
 import us.mn.state.dot.shape.event.ThemeChangedEvent;
 import us.mn.state.dot.shape.event.ThemeChangedListener;
@@ -89,17 +89,19 @@ public class MapPane implements ThemeChangedListener {
 	 * @param themes a list of themes to be used in the map
 	 */
 	public MapPane( java.util.List themes ) {
-		for ( ListIterator li = themes.listIterator(); li.hasNext(); ){
-			Object ob = li.next();
+		Iterator it = themes.iterator();
+		while(it.hasNext()) {
+			Object ob = it.next();
 			Theme theme;
-			if ( ob instanceof Layer ) {
-				theme = ( ( Layer ) ob ).getTheme();
-			} else if ( ob instanceof Theme ) {
-				theme = ( Theme ) ob;
+			if(ob instanceof Layer) {
+				theme = ((Layer)ob).getTheme();
+			} else if(ob instanceof Theme) {
+				theme = (Theme)ob;
 			} else {
-				throw new IllegalArgumentException( "Must be Layer or Theme" );
+				throw new IllegalArgumentException(
+					"Must be Layer or Theme");
 			}
-			addTheme( theme );
+			addTheme(theme);
 		}
 	}
 
@@ -273,9 +275,9 @@ public class MapPane implements ThemeChangedListener {
 				staticBuffer.getHeight() );
 			g.transform( screenTransform );
 			staticBufferDirty = false;
-			ListIterator li = staticThemes.listIterator();
-			while ( li.hasNext() ) {
-				( ( Theme ) li.next() ).paint( g );
+			Iterator it = staticThemes.iterator();
+			while(it.hasNext()) {
+				((Theme)it.next()).paint(g);
 			}
 			g.dispose();
 		}
@@ -296,9 +298,9 @@ public class MapPane implements ThemeChangedListener {
 			g.drawImage( staticBuffer, 0, 0, null );
 			g.transform( screenTransform );
 			bufferDirty = false;
-			ListIterator li = themes.listIterator();
-			while ( li.hasNext() ) {
-				( ( Theme ) li.next() ).paint( g );
+			Iterator it = themes.iterator();
+			while(it.hasNext()) {
+				((Theme)it.next()).paint(g);
 			}
 			g.dispose();
 		}
@@ -337,8 +339,8 @@ public class MapPane implements ThemeChangedListener {
 	public Theme getTheme(String name) {
 		Iterator it = themes.iterator();
 		while(it.hasNext()) {
-			Theme t = (Theme)li.next();
-			if(name.equals(t.getName())) return t;
+			Theme t = (Theme)it.next();
+			if(name.equals(t.layer.getName())) return t;
 		}
 		return null;
 	}
@@ -347,11 +349,11 @@ public class MapPane implements ThemeChangedListener {
 	 * Notify all registered MapChangedListeners that the map image has
 	 * changed.
 	 */
-	private void notifyMapChangedListeners(){
-		ListIterator it = listeners.listIterator();
-		while ( it.hasNext() ) {
-			MapChangedListener listener = ( MapChangedListener ) it.next();
-			listener.mapChanged();
+	private void notifyMapChangedListeners() {
+		Iterator it = listeners.iterator();
+		while(it.hasNext()) {
+			MapChangedListener l = (MapChangedListener)it.next();
+			l.mapChanged();
 		}
 	}
 

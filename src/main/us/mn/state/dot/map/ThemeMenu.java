@@ -53,7 +53,7 @@ public class ThemeMenu extends JMenu {
 		protected final Theme theme;
 
 		public ThemeMenuItem(Theme t) {
-			super(t.getName());
+			super(t.layer.getName());
 			theme = t;
 			setSelected(theme.isVisible());
 			addActionListener(new ActionListener() {

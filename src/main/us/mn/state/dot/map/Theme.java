@@ -36,8 +36,8 @@ import us.mn.state.dot.shape.event.ThemeChangedListener;
  */
 public class Theme implements LayerChangedListener {
 
-	/** The Layer that this theme controls */
-	protected Layer layer;
+	/** Layer controlled by the theme */
+	public final Layer layer;
 
 	/** The LayerRenderer used to paint this theme's layer */
 	protected LayerRenderer renderer;
@@ -47,9 +47,6 @@ public class Theme implements LayerChangedListener {
 
 	/** List of available renderers for theme */
 	protected java.util.List layerRenderers = new ArrayList();
-
-	/** The name of this theme */
-	private String name;
 
 	/** Currently selected shapes */
 	private MapObject[] selections = new MapObject[ 0 ];
@@ -93,7 +90,6 @@ public class Theme implements LayerChangedListener {
 	public Theme(Layer layer, LayerRenderer renderer, boolean visible) {
 		this.layer = layer;
 		this.renderer = renderer;
-		this.name = layer.getName();
 		this.visible = visible;
 		selectionRenderer = renderer;
 	}
@@ -193,11 +189,6 @@ public class Theme implements LayerChangedListener {
 		visible = v;
 		notifyThemeChangedListeners(new ThemeChangedEvent(this,
 			ThemeChangedEvent.DATA));
-	}
-
-	/** Get the name of the theme */
-	public String getName() {
-		return name;
 	}
 
 	/** Add a ThemeChangedListener to the listeners of this theme */
