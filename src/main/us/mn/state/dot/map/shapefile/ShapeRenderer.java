@@ -31,7 +31,7 @@ import us.mn.state.dot.shape.MapObject;
  * Base class for all renderers used for shape files.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.2 $ $Date: 2001/08/09 21:03:34 $ 
+ * @version $Revision: 1.3 $ $Date: 2001/08/15 16:08:51 $ 
  */
 public abstract class ShapeRenderer implements LayerRenderer {
     
@@ -119,4 +119,5 @@ public abstract class ShapeRenderer implements LayerRenderer {
 	public boolean isVisible( int index ) {
 		return true;
 	}
+	
 }

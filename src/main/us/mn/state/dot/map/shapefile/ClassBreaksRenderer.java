@@ -28,7 +28,7 @@ import us.mn.state.dot.shape.shapefile.ShapeObject;
  * A renderer that renders objects base on a numeric field and a set of class breaks.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.21 $ $Date: 2001/08/13 16:23:54 $ 
+ * @version $Revision: 1.22 $ $Date: 2001/08/15 16:08:51 $ 
  */
 public class ClassBreaksRenderer extends ShapeRenderer {
 
@@ -80,17 +80,7 @@ public class ClassBreaksRenderer extends ShapeRenderer {
 	 * Draw the object.
 	 */
 	public final void render( Graphics2D g, MapObject object ) {
-		ShapeObject shapeObject = ( ShapeObject ) object;
-		Number number = ( Number ) shapeObject.getValue( field );
-		if ( number == null ) {
-			return;
-		}
-		double value = number.doubleValue();
-		int classBreak = getRenderingClass( value );
-		Symbol symbol = null;
-		if ( ( classBreak > -1 ) && ( symbols[ classBreak ] != null ) ){
-			symbol = symbols[ classBreak ];
-		} 
+		Symbol symbol = getSymbol( object );
 		if ( symbol != null ) {
 			symbol.draw( g, object.getShape() );
 		}
@@ -99,23 +89,41 @@ public class ClassBreaksRenderer extends ShapeRenderer {
 	/**
 	 * Determine which class the value falls into.
 	 */
-	private int getRenderingClass( double value ) {
+	private Symbol getSymbol( MapObject object ) {
+		ShapeObject shapeObject = ( ShapeObject ) object;
+		Number number = ( Number ) shapeObject.getValue( field );
+		if ( number == null ) {
+			return null;
+		}
+		double value = number.doubleValue();
 		for ( int i = 0; i < classBreaks.length; i++ ) {
 			if ( value <= classBreaks[ i ] ) {
-				return i;
+				return symbols[ i ];
 			}
 		}
 		if ( value >= classBreaks[ classBreaks.length - 1 ] ) {
-			return classBreaks.length;
+			return symbols[ classBreaks.length ];
 		}
-		return -1;
+		return null;
 	}
 	
 	/**
 	 * Gets the shape that would be used to render this object.
 	 */
 	public Shape getShape( MapObject object ) {
-		return object.getShape();
+		Symbol symbol = getSymbol( object );
+		if ( symbol != null ) {
+			return symbol.getShape( object );
+		}
+		return null;
+	}
+	
+	public Rectangle2D getBounds( MapObject object ) {
+		Symbol symbol = getSymbol( object );
+		if ( symbol != null ) {
+			return symbol.getBounds( object );
+		}
+		return null;
 	}
 
 	public final void setField( String field ){

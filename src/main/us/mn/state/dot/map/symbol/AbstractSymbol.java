@@ -27,7 +27,7 @@ import javax.swing.*;
  * Base class for Symbol implementations.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.5 $ $Date: 2001/08/14 22:37:04 $ 
+ * @version $Revision: 1.6 $ $Date: 2001/08/15 16:08:51 $ 
  */
 public abstract class AbstractSymbol implements LegendItem, Symbol {
 
@@ -128,6 +128,16 @@ public abstract class AbstractSymbol implements LegendItem, Symbol {
 		} else {
 			return object.getShape().getBounds2D();
 		}
+	}
+	
+	public Shape getShape( MapObject object ) {
+		GeneralPath path = new GeneralPath();
+		if ( isOutLined() ) {
+			path.append( outlineSymbol.getStroke().createStrokedShape( 
+				object.getShape() ), true );
+		}
+		path.append( object.getShape(), true );
+		return path;
 	}
 	
 	class ColorIcon implements Icon {

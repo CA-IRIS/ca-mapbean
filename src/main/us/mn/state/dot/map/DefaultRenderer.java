@@ -21,13 +21,14 @@ package us.mn.state.dot.shape;
 
 import java.awt.Shape;
 import java.awt.Graphics2D;
+import java.awt.geom.Rectangle2D;
 
 /**
  * A default implementation of a ShapeRenderer.  Shapes are all rendered with the
  * same symbol.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.16 $ $Date: 2001/08/09 21:03:34 $ 
+ * @version $Revision: 1.17 $ $Date: 2001/08/15 16:08:51 $ 
  */
 public final class DefaultRenderer implements LayerRenderer {
 
@@ -61,7 +62,7 @@ public final class DefaultRenderer implements LayerRenderer {
 	 * Gets the shape that would be used to render this object.
 	 */
 	public Shape getShape( MapObject object ) {
-		return object.getShape();
+		return symbol.getShape( object );
 	}
 	
 	/**
@@ -97,6 +98,13 @@ public final class DefaultRenderer implements LayerRenderer {
 			result = name;
 		}
 		return result;
+	}
+	
+	/**
+	 * Get the bounds of the rendered MapObject.
+	 */
+	public Rectangle2D getBounds( MapObject object ) {
+		return symbol.getBounds( object );
 	}
 	
 }

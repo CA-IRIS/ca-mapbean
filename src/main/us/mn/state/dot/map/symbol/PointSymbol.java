@@ -26,7 +26,7 @@ import java.awt.geom.*;
  * Symbol object used to render point shapes on map.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.12 $ $Date: 2001/08/14 22:37:04 $ 
+ * @version $Revision: 1.13 $ $Date: 2001/08/15 16:08:51 $ 
  */
 public abstract class PointSymbol extends AbstractSymbol {
 
@@ -63,4 +63,19 @@ public abstract class PointSymbol extends AbstractSymbol {
 		}
 	}
 	
+	public Rectangle2D getBounds( MapObject object ) {
+		return getShape( object ).getBounds();
+	}
+	
+	public Shape getShape( MapObject object ) {
+		Rectangle2D bounds = object.getShape().getBounds();
+		Shape renderedShape = getShape( bounds.getX(), bounds.getY() );
+		GeneralPath path = new GeneralPath();
+		if ( isOutLined() ) {
+			path.append( outlineSymbol.getStroke().createStrokedShape( 
+				renderedShape ), true );
+		}
+		path.append( renderedShape, true );
+		return path;
+	}
 }

@@ -29,7 +29,7 @@ import java.awt.geom.Rectangle2D;
  * Interface for symbols used by themes to draw layer data.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.18 $ $Date: 2001/08/14 22:37:04 $ 
+ * @version $Revision: 1.19 $ $Date: 2001/08/15 16:08:51 $ 
  */
 public interface Symbol {
 	
@@ -62,4 +62,6 @@ public interface Symbol {
 	public Component getLegend();
 	
 	public Rectangle2D getBounds( MapObject object );
+	
+	public Shape getShape( MapObject object );
 }
