@@ -34,7 +34,7 @@ import java.util.List;
  * listener to successfully process it.  Otherwise the event is
  * propagated to all listeners.  The default is to consume events.
  */
-public class MapMouseSupport /*implements java.io.Serializable*/ {
+public class MapMouseSupport {
 
     /**
      * The flag that dictates whether the events should be passed to
@@ -122,23 +122,11 @@ public class MapMouseSupport /*implements java.io.Serializable*/ {
 	}
 
     /**
-     * Get a reference to the listeners.
-     */
-/*    protected List getTargets() {
-		synchronized (this) {
-			List result = new ArrayList( listeners.size() );
-			Collections.copy( result, listeners );
-			return result;
-		}
-    }*/
-
-    /**
      * Handle a mousePressed MouseListener event.
      * @param evt MouseEvent to be handled
      */
     public boolean fireMapMousePressed (java.awt.event.MouseEvent evt) {
-		List targets = listeners;//getTargets();
-		//if (targets == null) return false;
+		List targets = listeners;
 		for (int i = 0; i < targets.size(); i++) {
 			MapMouseListener target = 
 			(MapMouseListener)targets.get(i);
@@ -165,8 +153,7 @@ public class MapMouseSupport /*implements java.io.Serializable*/ {
 				priorityListener = null;
 			return true;
 		}
-		List targets = listeners;//getTargets();
-//		if (targets == null) return false;
+		List targets = listeners;
 
 		for (int i = 0; i < targets.size(); i++) {
 			MapMouseListener target = 
@@ -194,8 +181,7 @@ public class MapMouseSupport /*implements java.io.Serializable*/ {
 
 		priorityListener = null;
 
-		List targets = listeners;//getTargets();
-		//if (targets == null) return false;
+		List targets = listeners;
 
 		for (int i = 0; i < targets.size(); i++) {
 			MapMouseListener target = 
@@ -213,8 +199,7 @@ public class MapMouseSupport /*implements java.io.Serializable*/ {
      * @param evt MouseEvent to be handled
      */
     public boolean fireMapMouseEntered (java.awt.event.MouseEvent evt) {
-		List targets = listeners;//getTargets();
-//		if (targets == null) return false;
+		List targets = listeners;
 
 		for (int i = 0; i < targets.size(); i++) {
 			MapMouseListener target = 
@@ -231,8 +216,7 @@ public class MapMouseSupport /*implements java.io.Serializable*/ {
      */
     public boolean fireMapMouseExited (java.awt.event.MouseEvent evt) {
 
-		List targets = listeners;//getTargets();
-//		if (targets == null) return false;
+		List targets = listeners;
 
 		for (int i = 0; i < targets.size(); i++) {
 			MapMouseListener target = 
@@ -255,8 +239,7 @@ public class MapMouseSupport /*implements java.io.Serializable*/ {
 			return true;
 		}
 
-		List targets = listeners;//getTargets();
-//		if (targets == null) return false;
+		List targets = listeners;
 
 		for (int i = 0; i < targets.size(); i++) {
 			MapMouseListener target = 
@@ -279,8 +262,7 @@ public class MapMouseSupport /*implements java.io.Serializable*/ {
     public boolean fireMapMouseMoved (java.awt.event.MouseEvent evt) {
 		boolean movedConsumed = false;
 
-		List targets = listeners;//getTargets();
-//		if (targets == null) return false;
+		List targets = listeners;
 
 		for (int i = 0; i < targets.size(); i++) {
 			MapMouseListener target = 
@@ -292,34 +274,4 @@ public class MapMouseSupport /*implements java.io.Serializable*/ {
 		}
 		return movedConsumed;
     }
-/*
-
-    private void writeObject(ObjectOutputStream s) throws IOException {
-        s.defaultWriteObject();
-		List v = new ArrayList();
-		synchronized (this) {
-			if (listeners != null) {
-				Collections.copy( v, listeners);
-			}
-		}
-		if (v != null) {
-			for(int i = 0; i < v.size(); i++) {
-				MapMouseListener l = (MapMouseListener)v.get(i);
-				if (l instanceof Serializable) {
-					s.writeObject(l);
-				}
-				}
-			}
-			s.writeObject(null);
-    }
-
-
-    private void readObject(ObjectInputStream s) 
-			throws ClassNotFoundException, IOException {
-		s.defaultReadObject();
-		Object listenerOrNull;
-		while(null != (listenerOrNull = s.readObject())) {
-			addMapMouseListener((MapMouseListener)listenerOrNull);
-		}
-    }*/
 }
