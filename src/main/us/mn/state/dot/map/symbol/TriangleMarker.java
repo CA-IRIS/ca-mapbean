@@ -29,39 +29,24 @@ import java.awt.geom.GeneralPath;
  */
 public class TriangleMarker extends PointSymbol {
 
-	/** Create a new TriangleMarker */
-	public TriangleMarker(int size) {
-		this(size, Color.BLACK);
+	/** Create a new triangle marker */
+	public TriangleMarker(int s) {
+		this(s, Color.BLACK);
 	}
 
-	/**
-	 * Constructs a TriangleMarker with the color set to c.
-	 * @param c The color of the TriangleMarker.
-	 */
-	public TriangleMarker(int size, Color c) {
-		this(size, c, "");
+	/** Create a new triangle marker */
+	public TriangleMarker(int s, Color c) {
+		this(s, c, "");
 	}
 
-	/**
-	 * Create a new TriangleMarker with the given color and the given legend
-	 * lable.
-	 * @param c, color to use.
-	 * @param label, the label to use in this symbols legend.
-	 */
-	public TriangleMarker(int size, Color c, String label) {
-		this(size, c, label, false);
+	/** Create a new triangle marker */
+	public TriangleMarker(int s, Color c, String l) {
+		this(s, c, l, null);
 	}
 
-	/**
-	 * Create a new TriangleMarker with the given color, and label.
-	 * @param c, color to use.
-	 * @param lable, the label to use in this symbols legend.
-	 * @param outlined, the symbol is outlined if true.
-	 */
-	public TriangleMarker(int size, Color c, String label,
-		boolean outlined)
-	{
-		super(size, c, label, outlined);
+	/** Create a new triangle marker */
+	public TriangleMarker(int s, Color c, String l, Color o) {
+		super(s, c, l, o);
 	}
 
 	protected Shape getShape( double x, double y ) {

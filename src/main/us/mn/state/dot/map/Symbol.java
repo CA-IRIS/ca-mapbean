@@ -39,17 +39,9 @@ public interface Symbol {
 
 	public Color getColor();
 
-	public boolean isFilled();
-
-	public void setFilled(boolean f);
-
 	public void setOutlineColor(Color color);
 
 	public Color getOutlineColor();
-
-	public void setOutlined(boolean outlined);
-
-	public boolean isOutlined();
 
 	public Shape getShape(MapObject object);
 

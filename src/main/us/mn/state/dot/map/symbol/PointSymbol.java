@@ -33,8 +33,8 @@ import us.mn.state.dot.map.MapObject;
 public abstract class PointSymbol extends AbstractSymbol {
 
 	/** Create a new point symbol */
-	public PointSymbol(int size, Color c, String label, boolean outlined) {
-		super(size, c, label, outlined);
+	public PointSymbol(int s, Color c, String l, Color o) {
+		super(s, c, l, o);
 	}
 
 	/** Get a shape transformed to the given coordinates */
@@ -44,12 +44,12 @@ public abstract class PointSymbol extends AbstractSymbol {
 	public void draw(Graphics2D g, Shape shape) {
 		Rectangle2D pt = shape.getBounds();
 		Shape s = getShape(pt.getX(), pt.getY());
-		if(isFilled()) {
+		if(color != null) {
 			g.setColor(color);
 			g.fill(s);
 		}
-		if(isOutlined()) {
-			outlineSymbol.draw(g, s);
+		if(getOutlineColor() != null) {
+			outline.draw(g, s);
 		}
 	}
 
@@ -57,8 +57,8 @@ public abstract class PointSymbol extends AbstractSymbol {
 		Rectangle2D bounds = object.getShape().getBounds();
 		Shape renderedShape = getShape(bounds.getX(), bounds.getY());
 		GeneralPath path = new GeneralPath();
-		if(isOutlined()) {
-			path.append(outlineSymbol.getStroke().createStrokedShape(
+		if(getOutlineColor() != null) {
+			path.append(outline.getStroke().createStrokedShape(
 				renderedShape), true);
 		}
 		path.append(renderedShape, true);

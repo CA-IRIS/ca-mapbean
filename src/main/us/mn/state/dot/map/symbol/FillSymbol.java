@@ -44,22 +44,22 @@ public class FillSymbol extends AbstractSymbol {
 
 	/** Create a new fill symbol with the given color and label */
 	public FillSymbol(Color c, String label) {
-		this(c, label, false);
+		this(c, label, null);
 	}
 
 	/** Create a new fill symbol with the given color, label, and outline */
-	public FillSymbol(Color c, String label, boolean outlined) {
-		super(1, c, label, outlined);
+	public FillSymbol(Color c, String label, Color o) {
+		super(1, c, label, o);
 	}
 
 	/** Draw a shape on map with the fill symbol */
 	public void draw(Graphics2D g, Shape shape) {
-		if(isFilled()) {
+		if(color != null) {
 			g.setColor(color);
 			g.fill(shape);
 		}
-		if(isOutlined()) {
-			outlineSymbol.draw(g, shape);
+		if(getOutlineColor() != null) {
+			outline.draw(g, shape);
 		}
 	}
 }

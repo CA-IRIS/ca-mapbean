@@ -31,39 +31,24 @@ public class SquareMarker extends PointSymbol {
 
 	private final Rectangle2D.Double shape = new Rectangle2D.Double();
 
-	/** Create a new SquareMarker */
-	public SquareMarker(int size) {
-		this(size, Color.BLACK);
+	/** Create a new square marker */
+	public SquareMarker(int s) {
+		this(s, Color.BLACK);
 	}
 
-	/**
-	 * Create a new SquareMarker with the given color.
-	 * @param c, the color to use.
-	 */
-	public SquareMarker(int size, Color c) {
-		this(size, c, "");
+	/** Create a new square marker */
+	public SquareMarker(int s, Color c) {
+		this(s, c, "");
 	}
 
-	/**
-	 * Create a new SquareMarker with the given color and the given legend 
-	 * lable.
-	 *
-	 * @param c, color to use.
-	 * @param label, the label to use in this symbols legend.
-	 */
-	public SquareMarker(int size, Color c, String label) {
-		this(size, c, label, false);
+	/** Create a new square marker */
+	public SquareMarker(int s, Color c, String l) {
+		this(s, c, l, null);
 	}
 
-	/**
-	 * Create a new SquareMarker with the given color, and label.
-	 *
-	 * @param c, color to use.
-	 * @param lable, the label to use in this symbols legend.
-	 * @param outlined, the symbol is outlined if true.
-	 */
-	public SquareMarker(int size, Color c, String label, boolean outlined) {
-		super(size, c, label, outlined);
+	/** Create a new square marker */
+	public SquareMarker(int s, Color c, String l, Color o) {
+		super(s, c, l, o);
 	}
 
 	protected Shape getShape(double x, double y) {

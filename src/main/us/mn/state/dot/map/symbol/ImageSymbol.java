@@ -72,13 +72,6 @@ public class ImageSymbol implements Symbol {
 		return icon;
 	}
 
-	public void setOutlined(boolean outlined) {
-	}
-
-	public boolean isOutlined() {
-		return false;
-	}
-
 	public void setSize(Dimension size) {
 		this.size = size;
 	}
@@ -158,12 +151,5 @@ public class ImageSymbol implements Symbol {
 
 	public Component getLegend() {
 		return new JLabel( icon );
-	}
-
-	public boolean isFilled() {
-		return true;
-	}
-
-	public void setFilled( boolean f ) {
 	}
 }

@@ -35,60 +35,52 @@ import us.mn.state.dot.map.Symbol;
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
  */
-public abstract class AbstractSymbol implements Symbol {
+abstract public class AbstractSymbol implements Symbol {
 
+	/** Size of the symbol */
 	protected final int size;
-	protected Color color = Color.BLACK;
-	protected boolean filled = true;
-	protected boolean outlined = false;
-	protected LineSymbol outlineSymbol = new SolidLine(Color.BLACK, 20);
+
+	/** Fill color */
+	protected Color color;
+
+	/** Outline symbol */
+	protected LineSymbol outline = new SolidLine(Color.BLACK, 20);
+
+	/** Label */
 	protected final String label;
 
 	public abstract void draw(Graphics2D g, Shape shape);
 
-	public AbstractSymbol(int size, Color color, String label,
-		boolean outlined)
-	{
-		this.size = size;
-		this.color = color;
-		this.outlined = outlined;
-		this.label = label;
+	/** Create a new abstract symbol */
+	public AbstractSymbol(int s, Color c, String l, Color o) {
+		size = s;
+		color = c;
+		label = l;
+		outline.setColor(o);
 	}
 
 	public int getSize() {
 		return size;
 	}
 
-	public void setColor(Color color) {
-		this.color = color;
+	/** Set the fill color (null means not filled) */
+	public void setColor(Color c) {
+		color = c;
 	}
 
+	/** Get the fill color (null means not filled) */
 	public Color getColor() {
 		return color;
 	}
 
-	public boolean isFilled() {
-		return filled;
+	/** Set the outline color (null means not outlined) */
+	public void setOutlineColor(Color c) {
+		outline.setColor(c);
 	}
 
-	public void setFilled(boolean f) {
-		filled = f;
-	}
-
-	public void setOutlineColor(Color color) {
-		outlineSymbol.setColor(color);
-	}
-
+	/** Get the outline color (null means not outlined) */
 	public Color getOutlineColor() {
-		return outlineSymbol.getColor();
-	}
-
-	public void setOutlined(boolean outlined) {
-		this.outlined = outlined;
-	}
-
-	public boolean isOutlined() {
-		return outlined;
+		return outline.getColor();
 	}
 
 	public String getLabel() {
@@ -96,8 +88,8 @@ public abstract class AbstractSymbol implements Symbol {
 	}
 
 	public Rectangle2D getBounds(MapObject object) {
-		if(isOutlined()) {
-			return outlineSymbol.getBounds(object);
+		if(getOutlineColor() != null) {
+			return outline.getBounds(object);
 		} else {
 			return object.getShape().getBounds2D();
 		}
@@ -105,8 +97,8 @@ public abstract class AbstractSymbol implements Symbol {
 
 	public Shape getShape(MapObject object) {
 		GeneralPath path = new GeneralPath();
-		if(isOutlined()) {
-			path.append(outlineSymbol.getStroke().createStrokedShape(
+		if(getOutlineColor() != null) {
+			path.append(outline.getStroke().createStrokedShape(
 				object.getShape()), true);
 		}
 		path.append(object.getShape(), true);
@@ -134,11 +126,11 @@ public abstract class AbstractSymbol implements Symbol {
 
 		/** Paint the icon onto the given component */
 		public void paintIcon(Component c, Graphics g, int x, int y) {
-			if(isFilled()) {
+			if(color != null) {
 				g.setColor(getColor());
 				g.fillRect(x + 1, y + 1, WIDTH - 2, HEIGHT - 2);
 			}
-			if(isOutlined()) {
+			if(getOutlineColor() != null) {
 				g.setColor(getOutlineColor());
 				g.drawRect(x, y, WIDTH - 1, HEIGHT - 1);
 			}

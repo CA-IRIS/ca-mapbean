@@ -35,34 +35,24 @@ public class CircleMarker extends PointSymbol {
 	/** Radius of the circle */
 	protected final int radius;
 
-	/** Create a new CircleMarker */
+	/** Create a new circle marker */
 	public CircleMarker(int size) {
 		this(size, Color.BLACK);
 	}
 
-	/** Create a CircleMarker of the given color */
+	/** Create a new circle marker */
 	public CircleMarker(int size, Color c) {
 		this(size, c, "");
 	}
 
-	/**
-	 * Create a new CircleMarker with the given color and the given legend
-	 * lable.
-	 * @param c, color to use.
-	 * @param label, the label to use in this symbols legend.
-	 */
-	public CircleMarker(int size, Color c, String label) {
-		this(size, c, label, false);
+	/** Create a new circle marker */
+	public CircleMarker(int s, Color c, String l) {
+		this(s, c, l, null);
 	}
 
-	/**
-	 * Create a new CircleMarker with the given color, and label.
-	 * @param c, color to use.
-	 * @param lable, the label to use in this symbols legend.
-	 * @param outlined, the symbol is outlined if true.
-	 */
-	public CircleMarker(int size, Color c, String label, boolean outlined) {
-		super(size, c, label, outlined);
+	/** Create a new circle marker */
+	public CircleMarker(int s, Color c, String l, Color o) {
+		super(s, c, l, o);
 		radius = size / 2;
 	}
 

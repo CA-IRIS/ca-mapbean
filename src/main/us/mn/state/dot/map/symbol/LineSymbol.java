@@ -76,13 +76,6 @@ public abstract class LineSymbol implements Symbol {
 		return color;
 	}
 
-	public boolean isFilled() {
-		return true;
-	}
-
-	public void setFilled( boolean f ) {
-	}
-
 	public void setSize ( int size ){
 		if ( size < 0 ) {
 			throw new IllegalArgumentException( "Size can't be less than 0: " +
@@ -93,15 +86,8 @@ public abstract class LineSymbol implements Symbol {
 		}
 	}
 
-	public int getSize(){
+	public int getSize() {
 		return size;
-	}
-
-	public void setOutlined(boolean outlined) {
-	}
-
-	public boolean isOutlined() {
-		return true;
 	}
 
 	/** Set the color to paint the line */
