@@ -66,4 +66,9 @@ public class DefaultRenderer implements LayerRenderer {
 	public Rectangle2D getBounds(MapObject object) {
 		return symbol.getBounds(object);
 	}
+
+	/** Get tooltip text for the given map object */
+	public String getTip(MapObject o) {
+		return o.toString();
+	}
 }

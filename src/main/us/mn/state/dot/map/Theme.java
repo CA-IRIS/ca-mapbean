@@ -57,9 +57,6 @@ public class Theme implements LayerChangedListener {
 	/** ThemeChangedListeners that listen to this theme */
 	protected List listeners = new LinkedList();
 
-	/** Map tooltips */
-	protected MapTip mapTip;
-
 	/**
 	 * Create a new theme based on the layer parameter. It will have
 	 * no name and all shapes will be painted grey.
@@ -159,15 +156,9 @@ public class Theme implements LayerChangedListener {
 
 	/** Get the appropriate tool tip text for the specified point */
 	public String getTip(Point2D point) {
-		MapTip tip = mapTip;
-		if(tip == null) return null;
 		MapObject o = layer.search(point, renderer);
 		if(o == null) return null;
-		else return tip.getTip(o);
-	}
-
-	public void setTip(MapTip tip) {
-		mapTip = tip;
+		else return renderer.getTip(o);
 	}
 
 	/** Get the visibility flag */

@@ -41,4 +41,7 @@ public interface LayerRenderer {
 
 	/** Get the legend for this renderer */
 	public Component[] getLegend();
+
+	/** Get tooltip text for the given map object */
+	public String getTip(MapObject o);
 }

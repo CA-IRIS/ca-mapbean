@@ -34,7 +34,7 @@ import us.mn.state.dot.shape.symbol.FillSymbol;
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
  */
-public class ClassBreaksRenderer extends ShapeRenderer {
+abstract public class ClassBreaksRenderer extends ShapeRenderer {
 
 	/** A field value and symbol together make up a class break */
 	class ClassBreak {

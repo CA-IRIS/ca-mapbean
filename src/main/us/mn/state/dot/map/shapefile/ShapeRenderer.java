@@ -20,7 +20,6 @@ package us.mn.state.dot.shape.shapefile;
 
 import us.mn.state.dot.shape.LayerRenderer;
 import us.mn.state.dot.shape.MapObject;
-import us.mn.state.dot.shape.MapTip;
 import us.mn.state.dot.shape.Symbol;
 
 /**
@@ -33,23 +32,9 @@ abstract public class ShapeRenderer implements LayerRenderer {
 	/** Name of renderer */
 	protected final String name;
 
-	/** MapTip to display */
-	protected MapTip mapTip = null;
-
 	/** Create a new shape renderer */
 	public ShapeRenderer(String n) {
 		name = n;
-	}
-
-	/** Set the MapTip used by this renderer */
-	public void setTip(MapTip m) {
-		mapTip = m;
-	}
-
-	/** Get the tip for the given map object */
-	public String getTip(MapObject object) {
-		if(mapTip != null) return mapTip.getTip(object);
-		return null;
 	}
 
 	/** Get a string representation of the renderer */
