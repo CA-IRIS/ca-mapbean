@@ -15,7 +15,7 @@ import java.awt.*;
 public abstract class AbstractLayer implements Layer {
 
 	/** extent of layer */
-	protected Rectangle2D.Double extent = null;
+	protected Rectangle2D.Double extent = new Rectangle2D.Double();
 
     /** get the extent of the layer */
 	public Rectangle2D getExtent() {
