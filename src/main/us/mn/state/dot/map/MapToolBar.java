@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000-2004  Minnesota Department of Transportation
+ * Copyright (C) 2000-2005  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,44 +29,44 @@ import javax.swing.JToolBar;
  * Toolbar used for MapBean.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
+ * @author Douglas Lau
  */
 public class MapToolBar extends NavigationBar {
 
 	/** Create a new MapToolBar */
 	public MapToolBar(MapBean m, Theme theme) {
 		super(m);
+		JMenuBar b = new JMenuBar();
+		b.setBorderPainted(false);
+		b.setAlignmentY(.5f);
+		b.add(new ThemeMenu(map.getThemes()));
 		LayerRenderer r = theme.getCurrentLayerRenderer();
 		LegendMenu legend = new LegendMenu(r);
-		add(getPaintCombo(theme.layer.getName(), legend), 0);
-		JMenuBar menuBar = new JMenuBar();
-		menuBar.add(legend);
-		menuBar.add(new JToolBar.Separator());
-		menuBar.setBorderPainted(false);
-		menuBar.setAlignmentY(.5f);
-		menuBar.add(new ThemeMenu(map.getThemes()));
-		add(menuBar, 1);
+		JComboBox combo = createRendererCombo(theme, legend);
+		if(combo != null) b.add(combo);
+		b.add(legend);
+		b.add(new JToolBar.Separator());
+		add(b, 0);
 	}
 
 	/** Get the renderer selector combo box */
-	protected JComboBox getPaintCombo(final String theme,
+	protected JComboBox createRendererCombo(final Theme theme,
 		final LegendMenu legend)
 	{
-		final JComboBox paintCombo = new JComboBox();
-		paintCombo.setLightWeightPopupEnabled(false);
-		Iterator it = map.getTheme(
-			theme).getLayerRenderers().iterator();
+		final JComboBox combo = new JComboBox();
+		Iterator it = theme.getLayerRenderers().iterator();
 		while(it.hasNext()) {
-			paintCombo.addItem(it.next());
+			combo.addItem(it.next());
 		}
-		paintCombo.addActionListener(new ActionListener() {
+		if(combo.getItemCount() < 2) return null;
+		combo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Theme temp = map.getTheme(theme);
-				LayerRenderer renderer = (LayerRenderer)
-					paintCombo.getSelectedItem();
-				temp.setCurrentLayerRenderer(renderer);
-				legend.setMapRenderer(renderer);
+				LayerRenderer r =
+					(LayerRenderer)combo.getSelectedItem();
+				theme.setCurrentLayerRenderer(r);
+				legend.setMapRenderer(r);
 			}
 		});
-		return paintCombo;
+		return combo;
 	}
 }

@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000-2004  Minnesota Department of Transportation
+ * Copyright (C) 2000-2005  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,6 +28,7 @@ import us.mn.state.dot.map.MapBean;
 /**
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
+ * @author Douglas Lau
  */
 public class PanMouseMode extends MouseModeAdapter {
 
@@ -56,10 +57,10 @@ public class PanMouseMode extends MouseModeAdapter {
 	 */
 	public PanMouseMode(boolean consumeEvents) {
 		super(modeID, consumeEvents);
+		ImageIcon icon = new ImageIcon(getClass().getResource(
+			"/images/pan.png"));
 		cursor = Toolkit.getDefaultToolkit().createCustomCursor(
-			new ImageIcon(getClass().getResource(
-			"/images/PanMod.gif")).getImage(),
-			new Point(0, 0), "Pan");
+			icon.getImage(), new Point(6, 6), "Pan");
 	}
 
 	/** Fire the MapMouseSupport method */

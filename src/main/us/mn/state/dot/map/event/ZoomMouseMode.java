@@ -24,7 +24,6 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.MouseEvent;
-import java.net.URL;
 import javax.swing.ImageIcon;
 import javax.swing.SwingUtilities;
 import us.mn.state.dot.map.MapBean;
@@ -66,10 +65,10 @@ public class ZoomMouseMode extends MouseModeAdapter {
 	 */
 	public ZoomMouseMode(boolean consumeEvents) {
 		super(modeID, consumeEvents);
-		URL url = getClass().getResource("/images/zoomMod.gif");
-		ImageIcon img = new ImageIcon(url);
+		ImageIcon icon = new ImageIcon(getClass().getResource(
+			"/images/zoom.png"));
 		cursor = Toolkit.getDefaultToolkit().createCustomCursor(
-			img.getImage(), new Point(0, 0), "Zoom");
+			icon.getImage(), new Point(6, 6), "Zoom");
 	}
 
 	public void mouseClicked(MouseEvent e) {

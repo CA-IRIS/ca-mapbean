@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000-2004  Minnesota Department of Transportation
+ * Copyright (C) 2000-2005  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,6 +19,7 @@
 package us.mn.state.dot.map;
 
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -46,11 +47,12 @@ import us.mn.state.dot.map.event.MapMouseMode;
 import us.mn.state.dot.map.event.SelectMouseMode;
 
 /**
- * The Map class is a container for a MapPane which allows the pane to be
+ * The MapBean class is a container for a MapPane which allows the pane to be
  * scrolled and zoomed.  It has several convenience methods giving access to
  * the internal MapPane.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
+ * @author Douglas Lau
  * @see us.mn.state.dot.map.MapPane
  */
 public class MapBean extends JComponent implements MapChangedListener {
@@ -294,7 +296,6 @@ public class MapBean extends JComponent implements MapChangedListener {
 	 * Increase the size of this MapPane so that the mapSpace will fill the
 	 * viewerSpace
 	 * @param mapSpace seleted region to zoom to
-	 * @param viewerSpace current viewport size.
 	 */
 	public void zoom( Rectangle2D mapSpace ) {
 		Point2D upperLeft = new Point2D.Double( mapSpace.getMinX(),
@@ -355,7 +356,9 @@ public class MapBean extends JComponent implements MapChangedListener {
 	}
 
 	public void paintComponent(Graphics g) {
+		setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 		paint((Graphics2D)g);
+		setCursor(mouseMode.getCursor());
 	}
 
 	public void mapChanged() {

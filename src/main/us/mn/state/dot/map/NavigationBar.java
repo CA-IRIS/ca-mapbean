@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000-2004  Minnesota Department of Transportation
+ * Copyright (C) 2000-2005  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -38,6 +38,7 @@ import us.mn.state.dot.map.event.ZoomMouseMode;
  * ToolBar that supplies Navigation buttons for map.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
+ * @author Douglas Lau
  */
 public class NavigationBar extends JToolBar {
 
@@ -54,79 +55,71 @@ public class NavigationBar extends JToolBar {
 		putClientProperty("JToolBar.isRollover", Boolean.TRUE);
 		ButtonGroup bgToolbar = new ButtonGroup();
 		addSeparator();
-		add(getSelectButton(bgToolbar), null);
-		add(getZoomButton(bgToolbar), null);
-		add(getPanButton(bgToolbar), null);
+		addButton(getSelectButton(bgToolbar));
+		addButton(getZoomButton(bgToolbar));
+		addButton(getPanButton(bgToolbar));
 		addSeparator();
-		add(getHomeButton(), null);
 	}
 
-	private ImageIcon getImage( String path ){
+	protected ImageIcon getImage(String path) {
 		URL url = this.getClass().getResource( path );
 		ImageIcon img = new ImageIcon( url );
 		return img;
 	}
 
-	private JToggleButton getSelectButton( ButtonGroup bgToolbar ){
-		JToggleButton btnSelect
-			= new JToggleButton( "Select", getImage( "/images/arrow.gif" ) );
-		btnSelect.setSelected( true );
-		btnSelect.setToolTipText( "Select Map Item" );
-		sizeButton( btnSelect );
-		btnSelect.addActionListener( new ActionListener(){
+	protected JToggleButton getSelectButton(ButtonGroup bgToolbar) {
+		JToggleButton b = new JToggleButton("Select",
+			getImage("/images/arrow.png"));
+		b.setSelected(true);
+		b.setToolTipText("Select Map Item");
+		b.addActionListener(new ActionListener() {
 			public void actionPerformed( ActionEvent e ) {
 				map.setMouseMode( selectMode );
 			}
 		});
-		bgToolbar.add( btnSelect );
-		return btnSelect;
+		bgToolbar.add(b);
+		return b;
 	}
 
-	private JToggleButton getZoomButton( ButtonGroup bgToolbar ){
-		JToggleButton btnZoom = new JToggleButton( "Zoom",
-			getImage( "/images/zoom.gif" ));
-		btnZoom.setToolTipText( "Zoom Map" );
-		sizeButton( btnZoom );
-		btnZoom.addActionListener( new ActionListener(){
+	protected JToggleButton getZoomButton(ButtonGroup bgToolbar) {
+		JToggleButton b = new JToggleButton("Zoom",
+			getImage("/images/zoom.png"));
+		b.setToolTipText("Zoom Map");
+		b.addActionListener(new ActionListener() {
 			public void actionPerformed( ActionEvent e ) {
 				map.setMouseMode( zoomMode );
 			}
 		});
-		bgToolbar.add( btnZoom );
-		return btnZoom;
+		bgToolbar.add(b);
+		return b;
 	}
 
-	private JToggleButton getPanButton( ButtonGroup bgToolbar ){
-		JToggleButton btnPan = new JToggleButton( "Pan",
-			getImage( "/images/pan.gif" ));
-		btnPan.setToolTipText( "Pan Map" );
-		sizeButton( btnPan );
-		btnPan.addActionListener( new ActionListener(){
+	protected JToggleButton getPanButton(ButtonGroup bgToolbar) {
+		JToggleButton b = new JToggleButton("Pan",
+			getImage("/images/pan.png"));
+		b.setToolTipText("Pan Map");
+		b.addActionListener(new ActionListener() {
 			public void actionPerformed( ActionEvent e ) {
 				map.setMouseMode( panMode );
 			}
 		});
-		bgToolbar.add( btnPan );
-		return btnPan;
+		bgToolbar.add(b);
+		return b;
 	}
 
-	private JButton getHomeButton(){
-		JButton btnHome = new JButton( "Home", getImage( "/images/globe.gif" ));
-		sizeButton( btnHome );
-		btnHome.setToolTipText( "Zoom Out to Full Extent" );
-		btnHome.addActionListener( new ActionListener(){
-			public void actionPerformed( ActionEvent e ){
+	public JButton createHomeButton() {
+		JButton b = new JButton("Home", getImage("/images/globe.png"));
+		b.setToolTipText("Set view to home extent");
+		b.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
 				map.home();
 			}
 		});
-		return btnHome;
+		return b;
 	}
 
-	static protected void sizeButton(AbstractButton b) {
-		b.setMargin(new Insets(1, 1, 1, 1));
-		Dimension d = new Dimension(70, 25);
-		b.setPreferredSize(d);
-		b.setMaximumSize(d);
-		b.setMinimumSize(d);
+	/** Add a button to the toolbar */
+	public void addButton(AbstractButton b) {
+		add(b);
 	}
 }
