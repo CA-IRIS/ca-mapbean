@@ -26,6 +26,10 @@ public final class IncidentLayer extends AbstractLayer implements
 	private static final int MAP_UNITS_PER_MILE = 3218;
 	private final TMSProxy proxy;
 
+	public IncidentLayer(){
+		this(null, null);
+	}
+
 	public IncidentLayer(TMSProxy tms) {
 		this(null, tms);
 	}
@@ -74,6 +78,9 @@ public final class IncidentLayer extends AbstractLayer implements
 	}
 
 	public boolean mouseClick(int clickCount, Point2D p, Graphics2D g){
+		if (proxy == null){
+			return false;
+		}
 		boolean result;
 		Vector found = hit(p);
 		if ( found.isEmpty()) {
