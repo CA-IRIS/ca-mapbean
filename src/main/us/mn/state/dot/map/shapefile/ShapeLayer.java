@@ -50,6 +50,13 @@ public class ShapeLayer extends AbstractLayer {
 	/** The type of the shape file */
 	protected final int shapeType;
 
+	/** Create a new ShapeLayer from the specified filename */
+	public ShapeLayer(String f, String layerName)
+		throws IOException
+	{
+		this(ShapeLayer.class.getResource("/" + f + ".shp"), layerName);
+	}
+
 	/** Create a new shape layer */
 	public ShapeLayer(URL url, String layerName) throws IOException {
 		super(layerName);
