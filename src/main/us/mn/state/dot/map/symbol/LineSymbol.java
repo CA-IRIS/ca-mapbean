@@ -27,7 +27,7 @@ import javax.swing.*;
  * Abstract base class for shapes that render lines on a map.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.11 $ $Date: 2001/04/19 16:49:31 $ 
+ * @version $Revision: 1.12 $ $Date: 2001/04/19 17:39:03 $ 
  */
 public abstract class LineSymbol implements Symbol {
 

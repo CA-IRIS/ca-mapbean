@@ -2,7 +2,7 @@
 
 <!-- ======================================================================= -->
 <!-- MapBean build file 	                                             -->
-<!-- $Revision: 1.8 $ $Date: 2001/03/28 00:18:29 $                                                       -->
+<!-- $Revision: 1.9 $ $Date: 2001/04/19 17:39:03 $                                                       -->
 <!-- ======================================================================= -->
 
 <project name="MapBean" default="jar" basedir=".">
@@ -18,7 +18,7 @@
     <property name="build.javadocs" value="${build.dir}/javadocs" /> 
     <property name="build.shape" value="${build.dir}/gpoly" />
     <property name="MapBean.dist.dir" value="dist/MapBean" /> 
-    <property name="jar.location" value="..\jars\"/>
+    <property name="jar.location" value="${lib.dir}"/>
     <path id="classpath">
 	<fileset dir = "${jar.location}"
 		 includes="*.jar"

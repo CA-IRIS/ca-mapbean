@@ -30,7 +30,7 @@ import us.mn.state.dot.shape.event.*;
  * Displays incidents as icons on map.
  *
  * @author erik.engstrom@dot.state.mn.us
- * @version $Revision: 1.32 $ $Date: 2001/04/19 16:49:31 $
+ * @version $Revision: 1.33 $ $Date: 2001/04/19 17:39:03 $
  */
 public class IncidentLayer extends AbstractLayer implements
 		IncidentListener {
@@ -88,7 +88,7 @@ public class IncidentLayer extends AbstractLayer implements
 	/**
 	 * Class for notifying gui of changes in the eventdispatch thread.
 	 */
-	private final class NotifyThread extends Thread {
+	private final class NotifyThread implements Runnable {
 		
 		private final IncidentLayer layer;
 		private final int type;
@@ -108,26 +108,7 @@ public class IncidentLayer extends AbstractLayer implements
 			int[] selection ) {
 		selectionModel.clearSelection();
 		int[] diameters = new int[ 3 ];
-		//if ( proxy == null ){
-			diameters = getDefaultDiameters();
-		/*} else {
-			DMSList dmsList = ( DMSList ) proxy.getDMSList().getList();
-			for ( int i = 0; i < 3; i++ ){
-				try {
-					diameters[ i ] = dmsList.getRingRadius( i ) *
-						MAP_UNITS_PER_MILE;
-				} catch ( java.rmi.RemoteException ex ){
-					diameters = getDefaultDiameters();
-				}
-			}
-		//}
-		g.setColor( Color.red );
-		g.setXORMode( Color.white );
-		for ( int i = 0; i < selection.length; i++ ) {
-			selectionModel.addSelectionInterval( selection[ i ],
-				selection[ i ] );
-			drawEllipses( g, incidents[ selection[ i ] ], diameters );	
-		}*/
+		diameters = getDefaultDiameters();
 	}
 	
 	private int[] getDefaultDiameters(){
