@@ -29,7 +29,7 @@ import java.io.*;
   *
   * @author Douglas Lau
   * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
-  * @version $Revision: 1.1 $ $Date: 2001/05/12 00:10:40 $ 
+  * @version $Revision: 1.2 $ $Date: 2001/07/18 16:20:28 $ 
   */
 public final class ShapeFactory {
 	
@@ -41,6 +41,8 @@ public final class ShapeFactory {
 	public static final int POLYLINE = 3;
 	
 	public static final int POLYGON = 5;
+	
+	public static final int POINTZ = 11;
 
 	/** Create a Shape and return a PathIterator for it */
 	static public PathIterator readShape( ShapeFileInputStream in ) 
@@ -56,6 +58,8 @@ public final class ShapeFactory {
 				return new PolyLine( in );
 			case POLYGON:
 				return new Polygon( in );
+			case POINTZ:
+				return new PointZ( in );
 			default:
 				System.err.println( " Invalid shape type: " + type );
 				System.err.println( " " + skipped + " bytes were skipped." );
@@ -110,6 +114,62 @@ public final class ShapeFactory {
 		public Point( double x, double y ) {
 			X = x;
 			Y = y;
+		}
+		
+		public int currentSegment( double [] coords ) {
+			coords[ 0 ] = X;
+			coords[ 1 ] = Y;
+			return SEG_MOVETO;
+		}
+		
+		public int currentSegment( float [] coords ) {
+			coords[ 0 ] = ( float ) X;
+			coords[ 1 ] = ( float ) Y;
+			return SEG_MOVETO;
+		}
+		
+		public void next() {
+			done = true; 
+		}
+		
+		public final boolean isDone() {
+			return done; 
+		}
+		
+		public final int getWindingRule() {
+			return WIND_EVEN_ODD; 
+		}
+	}
+		
+	/**
+	  * Point shape structure
+	  *
+	  * Position	Field			Type				Size
+	  *	0			Shape Type	int (little)		4
+	  *	4			X				double (little)	8
+	  *	12			Y				double (little)	8
+	  * 20          z               double (little) 8
+	  */
+	static public final class PointZ implements PathIterator {
+		
+		private final double X;
+		private final double Y;
+		private final double Z;
+		private final double measure;
+		private boolean done = false;
+		
+		public PointZ( ShapeFileInputStream in ) throws IOException {
+			X = in.readLittleDouble();
+			Y = in.readLittleDouble();
+			Z = in.readLittleDouble();
+			measure = in.readLittleDouble();
+		}
+		
+		public PointZ( double x, double y, double z, double measure ) {
+			X = x;
+			Y = y;
+			Z = z;
+			this.measure = measure;
 		}
 		
 		public int currentSegment( double [] coords ) {

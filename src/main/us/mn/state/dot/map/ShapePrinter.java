@@ -20,18 +20,19 @@
 package us.mn.state.dot.shape;
 
 import java.io.*;
+import java.net.*;
 
 /**
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.4 $ $Date: 2001/04/19 16:49:31 $ 
+ * @version $Revision: 1.5 $ $Date: 2001/07/18 16:20:28 $ 
  */
 public class ShapePrinter {
 
 	public ShapePrinter() {
 		try{
-			ShapeLayer cameraLayer = new ShapeLayer("C:\\gpoly\\tvp", "cameras");
-			OutputStream out = new FileOutputStream("C:\\CameraShape.txt");
+			ShapeLayer cameraLayer = new ShapeLayer( new URL( "file:\\C:\\gpoly\\cms2.shp" ), "cms");
+			OutputStream out = new FileOutputStream( "C:\\CmsShape.txt" );
 			cameraLayer.printData( out );
 			out.flush();
 			out.close();
