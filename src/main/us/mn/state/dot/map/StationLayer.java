@@ -33,7 +33,7 @@ import us.mn.state.dot.shape.shapefile.ShapeRenderer;
  * A StationLayer displays detector station data represented as a gpoly.shp file.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.28 $ $Date: 2001/08/09 20:43:43 $ 
+ * @version $Revision: 1.29 $ $Date: 2001/08/09 21:03:34 $ 
  */
 public final class StationLayer extends ShapeLayer implements StationListener {
 	/**
@@ -184,17 +184,10 @@ public final class StationLayer extends ShapeLayer implements StationListener {
 					ShapeObject shapeObject = ( ShapeObject ) searchResult;
 					idMenuItem.setText( "Station " + shapeObject.getValue( 
 						"STATION2" ) + ": " + shapeObject.getValue( "NAME" ) );
-					//idMenuItem.setText( "Station " + layer.getField( "STATION2"
-					//	).getStringValue( index ) + ": " + layer.getField( "NAME"
-					//	).getStringValue( index ) );
-					//volumeMenuItem.setText( " Volume = " + layer.getField( "VOLUME"
-					//	).getStringValue( index ) );
 					volumeMenuItem.setText( " Volume = " + 
 						shapeObject.getValue( "VOLUME" ) );
 					occMenuItem.setText( " Occupancy = " + 
 						shapeObject.getValue( "OCCUPANCY" ) );
-					//occMenuItem.setText( " Occupancy = " +
-					//	layer.getField( "OCCUPANCY" ).getStringValue( index ) );
 					JPopupMenu menu = rightClickMenu.getPopupMenu();
 					menu.show( event.getComponent(), event.getX(),
 						event.getY() );

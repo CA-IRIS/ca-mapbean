@@ -27,9 +27,10 @@ import us.mn.state.dot.shape.event.MapMouseListener;
 /**
  * Base class for all themes.
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.15 $ $Date: 2001/08/09 20:43:43 $ 
+ * @version $Revision: 1.16 $ $Date: 2001/08/09 21:03:34 $ 
  */
 public class Theme implements LayerChangedListener {
+	
 	/** The Layer that this theme controls.*/
 	protected Layer layer;
 	
@@ -76,7 +77,7 @@ public class Theme implements LayerChangedListener {
 		this( layer, renderer, true );
 	}
 	
-		/**
+	/**
 	 * Constructs a new theme based on the layer parameter.  The LayerRenderer
 	 * referenced in the renderer parameter will be used to paint the theme.
 	 *
@@ -86,7 +87,6 @@ public class Theme implements LayerChangedListener {
 	 */
 	public Theme( Layer layer, LayerRenderer renderer, boolean visible ) {
 		this.layer = layer;
-		//this.layer.addLayerChangedListener( this );
 		this.renderer = renderer;
 		this.name = layer.getName();
 		this.visible = visible;
@@ -195,7 +195,6 @@ public class Theme implements LayerChangedListener {
 			searchArea = new Rectangle2D.Double( point.getX(),
 				point.getY(), 1, 1 );
 		}
-		//int index = layer.search( searchArea, renderer );
 		MapObject object = layer.search( searchArea, renderer );
 		if ( mapTip != null && object != null ) {
 			result = mapTip.getTip( object );
@@ -287,14 +286,6 @@ public class Theme implements LayerChangedListener {
 		notifyThemeChangedListeners( new ThemeChangedEvent( this,
 			e.getReason() ) );
 	}
-	
-	/*public Field [] getFields(){
-		return layer.getFields();
-	}
-	
-	public Field getField( String name ) {
-		return layer.getField( name );
-	}*/
 	
 	public Layer getLayer() {
 		return layer;

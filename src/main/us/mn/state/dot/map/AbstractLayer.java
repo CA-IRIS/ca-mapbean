@@ -27,7 +27,7 @@ import java.awt.*;
  * interface.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.23 $ $Date: 2001/08/09 20:43:43 $ 
+ * @version $Revision: 1.24 $ $Date: 2001/08/09 21:03:34 $ 
  * @since 1.0
  */
 public abstract class AbstractLayer implements Layer {
@@ -117,13 +117,7 @@ public abstract class AbstractLayer implements Layer {
 	public void setStatic( boolean b ) {
 		dynamic = ! b;
 	}
-	/*public Field[] getFields() {
-		return null;
-	}
-	public Field getField( String name ) {
-		return null;
-	}*/
-	
+
 	public Theme getTheme() {
 		return new Theme( this, new DefaultRenderer( new CircleMarker () ) );
 	}

@@ -27,7 +27,7 @@ import java.awt.Graphics2D;
  * same symbol.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.15 $ $Date: 2001/08/09 20:43:43 $ 
+ * @version $Revision: 1.16 $ $Date: 2001/08/09 21:03:34 $ 
  */
 public final class DefaultRenderer implements LayerRenderer {
 
@@ -43,10 +43,16 @@ public final class DefaultRenderer implements LayerRenderer {
 		setSymbol( s );
 	}
 
-	public boolean isVisible( int index ) {
+	/**
+	 * Is this object visible?
+	 */
+	public boolean isVisible( MapObject object ) {
 		return true;
 	}
 	
+	/** 
+	 * Set the symbol used by the renderer.
+	 */
 	public void setSymbol( Symbol s ) {
 		symbol = s;
 	}

@@ -32,16 +32,19 @@ import us.mn.state.dot.shape.shapefile.ShapeObject;
  * This layer is used for displaying highway markers on the map.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.8 $ $Date: 2001/08/09 20:43:43 $
+ * @version $Revision: 1.9 $ $Date: 2001/08/09 21:03:34 $
  */
 public final class HighwayMarkerLayer extends ShapeLayer {
 	
 	/** Location of the shape file */
 	private static final String FILE_LOCATION = "gpoly/markers";
+	
 	/** Name of the layer */
 	private static final String LAYER_NAME = "markers";
+	
 	/** Field that contains the name of the highway. */
 	private static final String LOOKUP_FIELD = "highway";
+	
 	/** Location of the image files.*/
 	private static final String IMAGE_LOCATION = "/images/HighWayMarkers/";
 	

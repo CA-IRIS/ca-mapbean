@@ -30,7 +30,7 @@ import java.util.jar.*;
   *
   * @author Douglas Lau
   * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
-  * @version $Revision: 1.1 $ $Date: 2001/08/09 20:43:43 $
+  * @version $Revision: 1.2 $ $Date: 2001/08/09 21:03:34 $
   */
 public final class ShapeFile {
 
@@ -78,31 +78,10 @@ public final class ShapeFile {
 	
 	/** Constructor */
 	public ShapeFile( String name ) throws IOException {
-		//this( new FileInputStream( name + ".shp" ) );
 		ShapeDataInputStream in = new ShapeDataInputStream( 
 			new FileInputStream( name + ".shp" ) );
 		DbaseInputStream dbaseStream = new DbaseInputStream( name + ".dbf" );
 		readData( in, dbaseStream );
-		//ShapeFileInputStream in = new ShapeFileInputStream( i );
-		/*in.skipBytes( 28 ); //start of header unused
-		version = in.readLittleInt();
-		shapeType = in.readLittleInt();
-		minX = in.readLittleDouble();
-		minY = in.readLittleDouble();
-		maxX = in.readLittleDouble();
-		maxY = in.readLittleDouble();
-		in.skipBytes( 32 ); //end of header unused
-		try {
-			while( dbaseStream.hasNext() ) {
-				shapes.add( new ShapeObject( ShapeFactory.readShape( in ), 
-					dbaseStream.nextRecord() ) );
-			}
-		} catch( EOFException e ) {
-			throw new IOException( "Shape file and Dbase file have different " +
-				" numbers of records." );
-		}
-		dbaseStream.close();
-		in.close();*/
 	}
 	
 	public void readData( ShapeDataInputStream shapeIn,
@@ -137,30 +116,6 @@ public final class ShapeFile {
 		return new Rectangle2D.Double( minX, minY, width, height );
 	}
 	
-	//public ShapeFile( URL url ) throws IOException {
-	//	this( url.openStream() );
-	//}
-
-	/** Constructor */
-	/*public ShapeFile( InputStream i ) throws IOException {
-		ShapeFileInputStream in = new ShapeFileInputStream( i );
-		in.skipBytes( 28 ); //start of header unused
-		version = in.readLittleInt();
-		shapeType = in.readLittleInt();
-		minX = in.readLittleDouble();
-		minY = in.readLittleDouble();
-		maxX = in.readLittleDouble();
-		maxY = in.readLittleDouble();
-		in.skipBytes( 32 ); //end of header unused
-		try {
-			while( true ) {
-				shapes.add( ShapeFactory.readShape( in ) );
-			}
-		}
-		catch( EOFException e ) {}
-		i.close();
-	}*/
-
 	public ArrayList getShapeList() {
 		return shapes; 
 	}

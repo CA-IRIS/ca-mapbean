@@ -27,13 +27,12 @@ import us.mn.state.dot.shape.shapefile.ShapeRenderer;
  * A renderer that renders objects base on a numeric field and a set of class breaks.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.17 $ $Date: 2001/08/09 20:43:43 $ 
+ * @version $Revision: 1.18 $ $Date: 2001/08/09 21:03:34 $ 
  */
 public class ClassBreaksRenderer extends ShapeRenderer {
 
 	private double [] classBreaks;
 	private Symbol [] symbols;
-	//private NumericField field;
 	private String field;
 	
 	public ClassBreaksRenderer( String field, int breakCount ) {
@@ -75,14 +74,6 @@ public class ClassBreaksRenderer extends ShapeRenderer {
 	public final Symbol[] getSymbols(){
 		return symbols;
 	}
-
-	/** Paints a shape. */
-	/*public final void paint( Graphics2D g, GeneralPath path, int index ){
-		int classBreak = field.getRenderingClass( index, classBreaks );
-		if (( classBreak > -1 ) && ( symbols[ classBreak ] != null )){
-			symbols[ classBreak ].draw( g, path );
-		}
-	}*/
 	
 	public final void render( Graphics2D g, MapObject object ) {
 		//int classBreak = field.getRenderingClass( index, classBreaks );
@@ -107,6 +98,5 @@ public class ClassBreaksRenderer extends ShapeRenderer {
 	public final String getField(){
 		return field;
 	}
-	
 	
 }

@@ -32,7 +32,7 @@ import us.mn.state.dot.shape.*;
   *
   * @author Douglas Lau
   * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
-  * @version $Revision: 1.1 $ $Date: 2001/08/09 20:43:43 $
+  * @version $Revision: 1.2 $ $Date: 2001/08/09 21:03:34 $
   */
 public class ShapeLayer extends AbstractLayer {
 
@@ -41,47 +41,11 @@ public class ShapeLayer extends AbstractLayer {
 	
 	/** The type of the shape file. */
 	private int shapeType;
-
-	/*public ShapeLayer( String fileName, String layerName, String jarFileName )
-			 throws IOException {
-		setName( layerName );
-		JarFile file = new JarFile( ShapeLayer.class.getResource(
-			jarFileName ).getFile() );
-		DbaseReader dbFile = new DbaseReader( file.getInputStream(
-			file.getEntry( fileName + ".dbf" ) ) );
-		ShapeFile shapeFile = new ShapeFile( file.getInputStream(
-			file.getEntry( fileName + ".shp" ) ) );
-		createShapeLayer( shapeFile );
-	}*/
-	
-	/*public ShapeLayer( String fileName, String layerName ) throws IOException {
-		setName( layerName );
-		URL url = ShapeLayer.class.getResource( "/" + fileName + ".dbf" );
-		//URL url = new URL("file:\\" + fileName + ".dbf");
-		if ( url == null ) {
-			System.err.println( "File " + fileName + ".dbf was not found" );
-		}
-		DbaseReader dbFile = new DbaseReader( url );
-		url = ShapeLayer.class.getResource( "/" + fileName + ".shp" );
-		//url = new URL("file:\\" + fileName + ".shp");
-		if ( url == null ) {
-			System.err.println( "File " + fileName + ".shp was not found" );
-		}
-		ShapeFile file = new ShapeFile( url );
-		//fields = dbFile.getFields();
-		createShapeLayer( file );
-	}*/
 	
 	/**
 	 * Create a new ShapeLayer from the specified filename.
 	 */
 	public ShapeLayer( String fileName, String layerName ) throws IOException {
-		/*setName( layerName );
-		ShapeFile file = new ShapeFile( fileName );
-		this.extent = file.getExtent();
-		List shapeList = file.getShapeList();
-		shapes = ( ShapeObject[] ) shapeList.toArray( 
-			new ShapeObject[ shapeList.size() ] );*/
 		this( ShapeLayer.class.getResource( "/" + fileName + ".shp" ),
 			layerName);
 	}
@@ -202,16 +166,14 @@ public class ShapeLayer extends AbstractLayer {
 	}
 
 	public void printData( OutputStream out ){   //only works for point shapes
-		//FIXME
-		/*Field fields [] = this.getFields();
 		PrintWriter writer = new PrintWriter( out );
 		writer.write( "XCoord\tYCoord\t" );
-		String[] fields = shapes[0].getFields(); 
+		String[] fields = shapes[0].getFields();
 		for ( int i = 0; i < fields.length; i++ ) {
 			writer.write( fields[ i ] + "\t" );
 		}
 		writer.write( "\r\n" );
-		for ( int i = 0; i < shapes[ 0 ].getLength(); i++ ){
+		for ( int i = 0; i < shapes.length; i++ ){
 			ShapeObject shapeObject = shapes[ i ];
 			Shape shape = shapeObject.getShape();
 			writer.write( shape.getBounds2D().getX() + "\t" +
@@ -222,6 +184,6 @@ public class ShapeLayer extends AbstractLayer {
 			}
 			writer.write( "\r\n" );
 		}
-		writer.flush();*/
+		writer.flush();
 	}
 }

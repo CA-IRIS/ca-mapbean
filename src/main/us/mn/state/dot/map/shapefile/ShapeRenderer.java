@@ -31,14 +31,16 @@ import us.mn.state.dot.shape.MapObject;
  * Base class for all renderers used for shape files.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.1 $ $Date: 2001/08/09 20:43:43 $ 
+ * @version $Revision: 1.2 $ $Date: 2001/08/09 21:03:34 $ 
  */
 public abstract class ShapeRenderer implements LayerRenderer {
     
 	/** MapTip to display. */
 	MapTip mapTip = null;
+	
 	/** Symbol to paint with */
 	Symbol symbol = null;
+	
 	/** Name of renderer */
 	private String name = "";
 	
