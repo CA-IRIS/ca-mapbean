@@ -39,12 +39,14 @@ import us.mn.state.dot.shape.shapefile.ShapeObject;
 import us.mn.state.dot.shape.shapefile.ShapeRenderer;
 
 /**
- * A StationLayer displays detector station data represented as a gpoly.shp file.
+ * A StationLayer displays detector station data represented as a gpoly.shp
+ * file.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.31 $ $Date: 2003/05/06 20:58:15 $ 
+ * @version $Revision: 1.32 $ $Date: 2003/05/07 15:28:57 $ 
  */
-public final class StationLayer extends ShapeLayer implements StationListener {
+public final class StationLayer extends ShapeLayer implements
+		StationListener {
 	/**
 	 * Constructs a StationLayer.
 	 * @throws IOException Will throw an IOException if the gpoly.dbf or
@@ -121,7 +123,8 @@ public final class StationLayer extends ShapeLayer implements StationListener {
 		}
 	}
 	
-	private final class StationTheme extends Theme implements MapMouseListener {
+	private final class StationTheme extends Theme implements 
+			MapMouseListener {
 		
 		private final JMenu rightClickMenu = new JMenu();
 		private final JMenu statusMenu = new JMenu( "Status" );

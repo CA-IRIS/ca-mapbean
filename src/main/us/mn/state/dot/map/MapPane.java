@@ -36,7 +36,7 @@ import java.util.ListIterator;
  * subsystem is not available.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.48 $ $Date: 2003/05/06 20:58:15 $
+ * @version $Revision: 1.49 $ $Date: 2003/05/07 15:28:57 $
  */
 public final class MapPane implements ThemeChangedListener {
 	
@@ -113,7 +113,7 @@ public final class MapPane implements ThemeChangedListener {
 	
 	/**
 	 * Gets the list of themes contained in the MapPane.
-	 * @returns the list of themes contained by the MapPane
+	 * @return the list of themes contained by the MapPane
 	 */
 	public ArrayList getThemes() {
 		ArrayList result = new ArrayList( staticThemes );

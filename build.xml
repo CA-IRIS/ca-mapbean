@@ -2,27 +2,35 @@
 
 <!-- ======================================================================= -->
 <!-- MapBean build file 	                                             -->
-<!-- $Revision: 1.12 $ $Date: 2001/08/09 20:43:43 $                          -->
+<!-- $Revision: 1.13 $ $Date: 2003/05/07 15:28:57 $                          -->
 <!-- ======================================================================= -->
 
 <project name="MapBean" default="jar" basedir=".">
+
+    <!--
+      Give user a chance to override without editing this file
+	  (and without typing -D each time he compiles it)
+	-->
+	<property file=".ant.properties"/>
+	<property file="${user.home}/.ant.properties"/>
+	<property file="${basedir}/default.properties"/>
+
     <property name="name" value="MapBean"/>
     <property name="version" value="1.22" /> 
     <property name="src.images.dir" value="src/images" />
     <property name="src.dir" value="src/main" /> 
     <property name="lib.dir" value="lib" /> 
     <property name="docs.dir" value="docs" /> 
-    <property name="shape.dir" value="../gpoly"/>
     <property name="build.dir" value="build/MapBean" /> 
     <property name="build.classes" value="${build.dir}/classes" /> 
     <property name="build.javadocs" value="${build.dir}/javadocs" /> 
-    <property name="build.shape" value="${build.dir}/gpoly" />
     <property name="MapBean.dist.dir" value="dist/MapBean" /> 
     <property name="jar.location" value="${lib.dir}"/>
     <path id="classpath">
-	<fileset dir = "${jar.location}"
-		 includes="*.jar"
-		 excludes="MapBean.jar"/>
+	  <fileset dir = "${jar.location}"
+               includes="*.jar"
+               excludes="MapBean.jar"/>
+	  <pathelement location="${dds.jar}"/>
 	</path>
     <property name="packages" value="us.mn.state.dot.shape.*" /> 
     <property name="manifest" value="src/etc/manifest" /> 
@@ -33,15 +41,7 @@
     <!--  ================================================================== --> 
     <target name="prepare"
             description="Creates the build directory for this project.">
-        <mkdir dir="${build.dir}" /> 
-	<mkdir dir="${build.shape}" />
-	<copy todir="${build.shape}">
-            <fileset dir="${shape.dir}" >
-		<include name="gpoly.shp"/>
-		<include name="gpoly.dbf"/>
-		<include name="markers.*"/>
-	    </fileset>
-        </copy>
+      <mkdir dir="${build.dir}" /> 
     </target>
 
     <!-- =================================================================== -->
@@ -50,24 +50,24 @@
     <target name="compile"
             depends="prepare"
             description="Compiles all of the source code for this project.">
-        <mkdir dir="${build.classes}"/>
-        <javac srcdir="${src.dir}"
-               destdir="${build.classes}"
-               debug="on"
-               deprecation="off"
-               optimize="on">
-            <classpath refid="classpath"/>
-        </javac>
+      <mkdir dir="${build.classes}"/>
+      <javac srcdir="${src.dir}"
+             destdir="${build.classes}"
+             debug="on"
+             deprecation="off"
+             optimize="on">
+        <classpath refid="classpath"/>
+      </javac>
  
-        <copy todir="${build.classes}">
-            <fileset dir="${src.dir}">
-                <include name="**/manifest.mf" />
-                <include name="**/*.properties" />
-            </fileset>
-        </copy>
-        <copy todir="${build.classes}/images">
-            <fileset dir="${src.images.dir}" />
-        </copy>
+      <copy todir="${build.classes}">
+        <fileset dir="${src.dir}">
+          <include name="**/manifest.mf" />
+          <include name="**/*.properties" />
+        </fileset>
+      </copy>
+      <copy todir="${build.classes}/images">
+        <fileset dir="${src.images.dir}" />
+      </copy>
     </target>
 
     <!-- =================================================================== -->
@@ -76,13 +76,13 @@
     <target name="jar"
             depends="compile"
             description="Creates the jar file for this project.">
-        <mkdir dir="${lib.dir}"/>
-        <jar jarfile="${lib.dir}/${name}.jar" manifest="${manifest}">
-             <fileset dir="${build.classes}" includes="**/*.*"/>
-	     <fileset dir="${build.dir}">
-		<include name="gpoly/**.*"/>
-	     </fileset>
-        </jar>
+      <mkdir dir="${lib.dir}"/>
+      <jar jarfile="${lib.dir}/${name}.jar" manifest="${manifest}">
+        <fileset dir="${build.classes}" includes="**/*.*"/>
+	    <fileset dir="${build.dir}">
+	      <include name="gpoly/**.*"/>
+	    </fileset>
+      </jar>
     </target>
 
     <!-- =================================================================== -->
@@ -91,50 +91,49 @@
     <target name="javadocs"
             depends="prepare"
             description="Creates the javadocs for this project.">
-        <mkdir dir="${build.javadocs}"/>
-        <javadoc packagenames="${packages}"
-                 sourcepath="${basedir}/${src.dir}"
-                 destdir="${build.javadocs}"
-                 author="true"
-                 version="true"
-                 windowtitle="${name} API"
-                 doctitle="${name}"
-                 bottom="Copyright &#169; Minnesota Department of
-                         Transportation. All Rights Reserved.">
-            <classpath refid="classpath"/>
-        </javadoc>
+      <mkdir dir="${build.javadocs}"/>
+      <javadoc packagenames="${packages}"
+               sourcepath="${basedir}/${src.dir}"
+               destdir="${build.javadocs}"
+               author="true"
+               version="true"
+               windowtitle="${name} API"
+               doctitle="${name}"
+               bottom="Copyright &#169; Minnesota Department of
+                       Transportation. All Rights Reserved.">
+        <classpath refid="classpath"/>
+      </javadoc>
     </target>
 
     <!-- =================================================================== -->
     <!-- Creates the distribution without javadocs.                          -->
     <!-- =================================================================== -->
     <target name="dist-lite"
-             depends="jar"
-             description="Creates the distribution directory and copies all
-                          files except javadocs.">
-        <mkdir dir="${MapBean.dist.dir}"/>
-        <mkdir dir="${MapBean.dist.dir}/bin"/>
-        <mkdir dir="${MapBean.dist.dir}/lib"/>
-        <mkdir dir="${MapBean.dist.dir}/docs"/>
-        <mkdir dir="${MapBean.dist.dir}/docs/api"/>
-        <mkdir dir="${MapBean.dist.dir}/src"/>
-        <copy todir="${MapBean.dist.dir}/src">
-            <fileset dir="${src.dir}">
-		<include name = "**/*.jar" />
+            depends="jar"
+            description="Creates the distribution directory and copies all
+                         files except javadocs.">
+      <mkdir dir="${MapBean.dist.dir}"/>
+      <mkdir dir="${MapBean.dist.dir}/bin"/>
+      <mkdir dir="${MapBean.dist.dir}/lib"/>
+      <mkdir dir="${MapBean.dist.dir}/docs"/>
+      <mkdir dir="${MapBean.dist.dir}/docs/api"/>
+      <mkdir dir="${MapBean.dist.dir}/src"/>
+      <copy todir="${MapBean.dist.dir}/src">
+        <fileset dir="${src.dir}">
+	      <include name = "**/*.jar" />
 	    </fileset>
-        </copy>
-        <copy todir="${MapBean.dist.dir}/lib">
-            <fileset dir="${lib.dir}" />
-        </copy>
-        <copy file="build.xml" tofile="${MapBean.dist.dir}/lib/build.xml"/>
-        <copy todir="${MapBean.dist.dir}/bin">
-            <fileset dir="src/bin" />
-        </copy>
-        <copy todir="${MapBean.dist.dir}/docs">
-            <fileset dir="${docs.dir}" />
-        </copy>
-        <copy file="README" tofile="${MapBean.dist.dir}/README"/>
-        <copy file="LICENSE" tofile="${MapBean.dist.dir}/LICENSE"/>
+      </copy>
+      <copy todir="${MapBean.dist.dir}/lib">
+        <fileset dir="${lib.dir}" />
+      </copy>
+      <copy todir="${MapBean.dist.dir}/bin">
+        <fileset dir="src/bin" />
+      </copy>
+      <copy todir="${MapBean.dist.dir}/docs">
+        <fileset dir="${docs.dir}" />
+      </copy>
+      <copy file="README.txt" tofile="${MapBean.dist.dir}/README"/>
+      <copy file="LICENSE.txt" tofile="${MapBean.dist.dir}/LICENSE"/>
     </target>
              
     <!-- =================================================================== -->
@@ -144,9 +143,9 @@
             depends="dist-lite, javadocs"
             description="Creates the distribution directory and copies all
                          necessary files.">
-        <copy todir="${MapBean.dist.dir}/docs/api">
-            <fileset dir="${build.javadocs}" />
-        </copy>
+      <copy todir="${MapBean.dist.dir}/docs/api">
+        <fileset dir="${build.javadocs}" />
+      </copy>
     </target>
 
     <!-- =================================================================== -->
@@ -154,10 +153,10 @@
     <!-- =================================================================== -->
     <target name="clean"
             description="Deletes the build and distribution directories.">
-        <delete dir="${build.dir}"
-                verbose="true"/>
-        <delete dir="${MapBean.dist.dir}"
-                verbose="true"/>
+      <delete dir="${build.dir}"
+              verbose="true"/>
+      <delete dir="${MapBean.dist.dir}"
+              verbose="true"/>
     </target>
 
     <!-- =================================================================== -->
@@ -166,7 +165,7 @@
     <target name="clean-all"
             depends="clean"
             description="Deletes the jar file for this project.">
-        <delete file="${lib.dir}/${name}.jar"
-                verbose="true"/>
+      <delete file="${lib.dir}/${name}.jar"
+              verbose="true"/>
     </target>
 </project>

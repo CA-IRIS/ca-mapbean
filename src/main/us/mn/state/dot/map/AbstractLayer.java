@@ -28,11 +28,11 @@ import java.util.ListIterator;
  * interface.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.28 $ $Date: 2003/05/06 20:58:15 $ 
+ * @version $Revision: 1.29 $ $Date: 2003/05/07 15:28:57 $ 
  * @since 1.0
  */
 public abstract class AbstractLayer implements Layer {
-	
+
 	/** extent of layer */
 	protected Rectangle2D extent = new Rectangle2D.Double();
 
@@ -49,12 +49,12 @@ public abstract class AbstractLayer implements Layer {
 	 * @param g the Graphics object to draw on.
 	 */
 	public void paintSelections( Graphics2D g, LayerRenderer renderer,
-			MapObject[] selections ) {
-		if ( selections != null ) {
-			for ( int i = 0; i < selections.length; i++ ) {
-				MapObject object = selections[ i ];
-				if ( object != null ) {
-					renderer.render( g, object );
+			MapObject[] selections) {
+		if (selections != null) {
+			for (int i = 0; i < selections.length; i++) {
+				MapObject object = selections[i];
+				if (object != null) {
+					renderer.render(g, object);
 				}
 			}
 		}
@@ -83,7 +83,7 @@ public abstract class AbstractLayer implements Layer {
 	 *
 	 * @param s String containing the name of the layer
 	 */
-	public void setName( String s ) {
+	public void setName(String s) {
 		name = s;
 	}
 
@@ -93,23 +93,23 @@ public abstract class AbstractLayer implements Layer {
 	 *
 	 * @param l LayerListener to be added to the layer
 	 */
-	public void addLayerChangedListener( LayerChangedListener l) {
-		if ( ! layerChangedListeners.contains( l ) ) {
-			layerChangedListeners.add( l );
+	public void addLayerChangedListener(LayerChangedListener l) {
+		if (!layerChangedListeners.contains(l)) {
+			layerChangedListeners.add(l);
 		}
 	}
-	
+
 	/**
 	 * Remove a LayerListener from the layer.
 	 */
-	public void removeLayerChangedListener( LayerChangedListener l ) {
-		layerChangedListeners.remove( l );
+	public void removeLayerChangedListener(LayerChangedListener l) {
+		layerChangedListeners.remove(l);
 	}
-	
-	public void notifyLayerChangedListeners( LayerChangedEvent event ) {
+
+	public void notifyLayerChangedListeners(LayerChangedEvent event) {
 		ListIterator it = layerChangedListeners.listIterator();
-		while ( it.hasNext() ){
-			( ( LayerChangedListener ) it.next() ).layerChanged( event );
+		while (it.hasNext()) {
+			((LayerChangedListener) it.next()).layerChanged(event);
 		}
 	}
 
@@ -118,7 +118,7 @@ public abstract class AbstractLayer implements Layer {
 	 * @return true if data is not dynamic
 	 */
 	public boolean isStatic() {
-		return ! dynamic;
+		return !dynamic;
 	}
 
 	/** 
@@ -131,12 +131,12 @@ public abstract class AbstractLayer implements Layer {
 	 * false - layer is dynamic and layer will change if the layer's data is
 	 * changed; will be painted in front of any static layers
 	 */
-	public void setStatic( boolean b ) {
-		dynamic = ! b;
+	public void setStatic(boolean b) {
+		dynamic = !b;
 	}
 
 	public Theme getTheme() {
-		return new Theme( this, new DefaultRenderer( new CircleMarker () ) );
+		return new Theme(this, new DefaultRenderer(new CircleMarker()));
 	}
-	
+
 }

@@ -27,7 +27,7 @@ import java.awt.geom.Rectangle2D;
  * This interface should be used to add data to a MapBean object. 
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 0.22 $ $Date: 2003/05/06 20:58:15 $ 
+ * @version $Revision: 0.23 $ $Date: 2003/05/07 15:28:57 $ 
  */
 public interface Layer {
 	
@@ -77,27 +77,27 @@ public interface Layer {
 	 */
 	public void setStatic( boolean b );
 	
-	/*
+	/**
 	 * Gets all of the paths present at the Point2D p in this layer.
 	 * @param p The Point2D at which to search.
-	 * @returns a java.util.List containing all of the paths found.
+	 * @return a java.util.List containing all of the paths found.
 	 */
 	public java.util.List getPaths( Point2D p, LayerRenderer renderer );
 	
-	/*
+	/**
 	 * Returns an int representing the index of the first path found that
 	 * is contained by, intersects, or contains the Rectangle2D searchArea.
 	 * @param searchArea Rectangle2D representing the area to search.
-	 * @returns an int representing the index of the first found path, returns
+	 * @return an int representing the index of the first found path, returns
 	 * -1 if nothing found.
 	 */
 	public MapObject search( Rectangle2D searchArea, LayerRenderer renderer );
 	
-	/*
+	/**
 	 * Returns an int representing the index of the first path found that
 	 * is contained by, intersects, or contains the Point2D searchArea.
 	 * @param p Point2D representing the point to search.
-	 * @returns an int representing the index of the first found path, returns
+	 * @return an int representing the index of the first found path, returns
 	 * -1 if nothing found.
 	 */
 	public MapObject search( Point2D p, LayerRenderer renderer );

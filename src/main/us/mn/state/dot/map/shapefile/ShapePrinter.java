@@ -27,14 +27,14 @@ import java.net.URL;
 /**
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.2 $ $Date: 2003/05/06 20:58:15 $ 
+ * @version $Revision: 1.3 $ $Date: 2003/05/07 15:28:57 $ 
  */
 public class ShapePrinter {
 
-	public ShapePrinter() {
+	public ShapePrinter( String source, String dest ) {
 		try{
-			ShapeLayer cameraLayer = new ShapeLayer( new URL( "file:\\C:\\gpoly\\cms2.shp" ), "cms");
-			OutputStream out = new FileOutputStream( "C:\\CmsShape.txt" );
+			ShapeLayer cameraLayer = new ShapeLayer( new URL( source ), "cms");
+			OutputStream out = new FileOutputStream( dest );
 			cameraLayer.printData( out );
 			out.flush();
 			out.close();
@@ -45,8 +45,6 @@ public class ShapePrinter {
 	}
 
 	public static void main(String[] args) {
-		ShapePrinter shapePrinter = new ShapePrinter();
-		shapePrinter.invokedStandalone = true;
+		ShapePrinter shapePrinter = new ShapePrinter( args[0], args[1] );
 	}
-	private boolean invokedStandalone = false;
 } 

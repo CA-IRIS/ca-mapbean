@@ -37,7 +37,7 @@ import us.mn.state.dot.shape.shapefile.ShapeLayer;
 /**
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.3 $ $Date: 2003/05/06 20:58:15 $ 
+ * @version $Revision: 1.4 $ $Date: 2003/05/07 15:28:57 $ 
  */
 public class Viewer extends JFrame {
 
@@ -51,11 +51,6 @@ public class Viewer extends JFrame {
 		this.getContentPane().add( map, BorderLayout.CENTER );
 		NavigationBar toolbar = new NavigationBar( map );
 		this.getContentPane().add( toolbar, BorderLayout.NORTH );
-		try {
-			map.addTheme( loadLayer( "" ).getTheme() );
-		} catch ( IOException ioe ) {
-			ioe.printStackTrace();
-		}
     }
 	
 	private JMenuBar buildMenus() {
@@ -108,7 +103,6 @@ public class Viewer extends JFrame {
 	
 	private void addLayer( File file ) {
 		try {
-
 			Layer layer = new ShapeLayer( file.toURL(), getName( file ) );
 			map.addTheme( layer.getTheme() );
 		} catch ( IOException ioe ) {
@@ -126,9 +120,5 @@ public class Viewer extends JFrame {
 		Viewer viewer = new Viewer();
 		viewer.setSize( 100, 100 );
 		viewer.setVisible( true );
-	}
-	
-	private Layer loadLayer( String name ) throws IOException {
-		return new ShapeLayer( "gpoly/gpoly", "gpoly" );
-	}
+	}	
 }
