@@ -46,25 +46,27 @@ public final class IncidentLayer extends AbstractLayer implements
 
 	public void update(Incident[] incidents){
 		this.incidents = incidents;
-		double maxX = incidents[0].getX();
-		double maxY = incidents[0].getY();
-		double minX = maxX;
-		double minY = maxY;
-		for (int i = 1; i < incidents.length; i++) {
-			if (incidents[i].getX() < minX) {
-				minX = incidents[i].getX();
-			} else if (incidents[i].getX() > maxX) {
-				maxX = incidents[i].getX();
+		if (incidents.length > 0){
+			double maxX = incidents[0].getX();
+			double maxY = incidents[0].getY();
+			double minX = maxX;
+			double minY = maxY;
+			for (int i = 1; i < incidents.length; i++) {
+				if (incidents[i].getX() < minX) {
+					minX = incidents[i].getX();
+				} else if (incidents[i].getX() > maxX) {
+					maxX = incidents[i].getX();
+				}
+				if (incidents[i].getY() < minY) {
+					minY = incidents[i].getY();
+				} else if (incidents[i].getY() > maxY) {
+					maxY = incidents[i].getY();
+				}
 			}
-			if (incidents[i].getY() < minY) {
-				minY = incidents[i].getY();
-			} else if (incidents[i].getY() > maxY) {
-				maxY = incidents[i].getY();
-			}
+			extent = new Rectangle2D.Double(minX, minY, (maxX - minX)
+				, (maxY - minY));
+			updateLayer(this);
 		}
-		extent = new Rectangle2D.Double(minX, minY, (maxX - minX)
-			, (maxY - minY));
-		updateLayer(this);
 	}
 
 	public void paint(Graphics2D g){

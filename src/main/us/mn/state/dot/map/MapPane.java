@@ -158,13 +158,15 @@ public final class MapPane extends JPanel {
 	public void refreshLayer(Layer l){
 		if (this.isShowing()){
 			Graphics2D g = (Graphics2D) this.getGraphics();
-			g.transform( at );
-			ListIterator it = layers.listIterator(layers.lastIndexOf((Object) l));
-			if (it.hasNext ()) {
-				it.next();
-			}
-			while (it.hasPrevious()){
-				((Layer) it.previous()).paint(g);
+			if (g != null){
+				g.transform( at );
+				ListIterator it = layers.listIterator(layers.lastIndexOf((Object) l));
+				if (it.hasNext ()) {
+					it.next();
+				}
+				while (it.hasPrevious()){
+					((Layer) it.previous()).paint(g);
+				}
 			}
 		}
 	}
