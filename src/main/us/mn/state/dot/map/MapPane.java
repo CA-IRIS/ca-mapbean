@@ -13,6 +13,7 @@ import java.awt.event.*;
 import java.awt.geom.*;
 import java.util.*;
 import javax.swing.*;
+import java.awt.image.*;
 
 public final class MapPane extends JPanel {
 
@@ -37,7 +38,7 @@ public final class MapPane extends JPanel {
 	private Map viewport;
 
 	/** Bounding box */
-	private Rectangle2D extent;
+	private Rectangle2D extent = new Rectangle2D.Double();
 
 	/** Scale factor */
 	private double scale;
@@ -105,12 +106,20 @@ public final class MapPane extends JPanel {
 	/** Called when the ShapePane is resized */
 	public void resized() {
 		if (!layers.isEmpty()) {
-			final int w = getWidth();
+			int w = getWidth();
+			int h = getHeight();
+			if (! this.isShowing()) {
+				h = 1000;
+				w = 1000;
+			}
+
+			if ( h == 0 ) {
+				return;
+			}
 			if ( w == 0 ) {
 				return;
 			}
-			final int h = getHeight();
-			if ( h == 0 ) {
+			if (extent == null) {
 				return;
 			}
 			double scaleX = (double) w / extent.getWidth();
@@ -162,10 +171,7 @@ public final class MapPane extends JPanel {
 				g.transform( at );
 				ListIterator it = layers.listIterator(layers.lastIndexOf((Object) l));
 				if (it.hasNext ()) {
-					it.next();
-				}
-				while (it.hasPrevious()){
-					((Layer) it.previous()).paint(g);
+					((Layer) it.next()).paint(g);
 				}
 			}
 		}
@@ -178,13 +184,20 @@ public final class MapPane extends JPanel {
 		}
 	}
 
-
 	/** Paint the shapes */
 	public void paint ( Graphics g) {
 		Graphics2D g2D = (Graphics2D)g;
-		final int w = getWidth();
-		final int h = getHeight();
-		g2D.clearRect( 0, 0, w, h );
+		int w = getWidth();
+		int h = getHeight();
+		//g2D.clearRect( 0, 0, w, h );
+		if(w == 0 & h == 0){
+			w = 1000;
+			h = 1000;
+		}
+		g2D.setColor(Color.lightGray);
+		g2D.fillRect(0, 0, w, h);
+		g2D.setColor(Color.black);
+		g2D.drawRect(0, 0, w, h);
 		g2D.transform( at );
 		for ( int i = (layers.size() - 1); i >= 0; i-- ) {
 			Layer layer = (Layer)layers.get( i );
@@ -193,4 +206,6 @@ public final class MapPane extends JPanel {
 			}
 		}
 	}
+
+
 }

@@ -168,15 +168,11 @@ public final class Map extends JViewport implements LayerListener {
 	private final MouseHelper mouse = new MouseHelper((JViewport) this);
 
 	public void updateLayer(Layer l) {
-		//if (this.isShowing()) {
-			map.refreshLayer(l);
-		//}
+		map.refreshLayer(l);
 	}
 
 	public void repaintLayer(Layer l) {
-		//if (this.isShowing()){
-			map.refresh();
-		//}
+		map.refresh();
 	}
 
 	public void setExtent(Rectangle2D r){
