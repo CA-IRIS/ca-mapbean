@@ -39,27 +39,23 @@ public class Theme implements LayerChangedListener {
 	/** Layer controlled by the theme */
 	public final Layer layer;
 
+	/** List of available renderers for theme */
+	protected final List layerRenderers = new ArrayList();
+
 	/** The LayerRenderer used to paint this theme's layer */
 	protected LayerRenderer renderer;
 
 	/** The LayerRenderer used to paint selected objects in the layer */
 	protected LayerRenderer selectionRenderer;
 
-	/** List of available renderers for theme */
-	protected List layerRenderers = new ArrayList();
-
 	/** Currently selected shapes */
-	private MapObject[] selections = new MapObject[ 0 ];
+	protected MapObject[] selections = new MapObject[0];
 
 	/** Visibility flag for this theme */
-	private boolean visible = true;
-
-	protected MapPane map = null;
+	protected boolean visible = true;
 
 	/** ThemeChangedListeners that listen to this theme */
-	private List listeners = new ArrayList();
-
-	protected boolean dynamic = false;
+	protected List listeners = new ArrayList();
 
 	/**
 	 * Create a new theme based on the layer parameter. It will have
@@ -96,18 +92,17 @@ public class Theme implements LayerChangedListener {
 		selectionRenderer = renderer;
 	}
 
-	public void setMap( MapPane map ) {
-		if ( map != null ) {
-			layer.addLayerChangedListener( this );
+	public void setMap(MapPane map) {
+		if(map != null) {
+			layer.addLayerChangedListener(this);
 		} else {
-			layer.removeLayerChangedListener( this );
+			layer.removeLayerChangedListener(this);
 		}
-		this.map = map;
 	}
 
 	/** Add a LayerRenderer to this themes list of available renderers */
-	public void addLayerRenderer( LayerRenderer renderer ) {
-		layerRenderers.add( renderer );
+	public void addLayerRenderer(LayerRenderer renderer) {
+		layerRenderers.add(renderer);
 	}
 
 	/** Get a List containing all of the renderers that have been
@@ -126,16 +121,16 @@ public class Theme implements LayerChangedListener {
 		return renderer;
 	}
 
-	public void setSelectionRenderer( LayerRenderer renderer ) {
+	public void setSelectionRenderer(LayerRenderer renderer) {
 		selectionRenderer = renderer;
 	}
 
-	public void clearSelections() {
-		setSelections( new MapObject[ 0 ] );
+	public void setSelections(MapObject[] newSelections) {
+		selections = newSelections;
 	}
 
-	public void setSelections( MapObject[] newSelections ) {
-		selections = newSelections;
+	public void clearSelections() {
+		setSelections(new MapObject[0]);
 	}
 
 	public MapObject[] getSelections() {
@@ -154,10 +149,16 @@ public class Theme implements LayerChangedListener {
 		}
 	}
 
-	/** Called by the map to paint this theme */
-	public void paintSelections( Graphics2D g ){
-		if ( visible ) {
-			layer.paintSelections( g, selectionRenderer, selections );
+	/** Paint the selections for the theme */
+	public void paintSelections(Graphics2D g) {
+		MapObject[] s = selections;
+		if(visible && s != null) {
+			for(int i = 0; i < s.length; i++) {
+				MapObject object = s[i];
+				if(object != null) {
+					selectionRenderer.render(g, object);
+				}
+			}
 		}
 	}
 

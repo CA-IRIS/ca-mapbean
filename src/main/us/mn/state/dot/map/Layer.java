@@ -44,10 +44,6 @@ public interface Layer {
 	/** Paint the layer */
 	public void paint(Graphics2D g, LayerRenderer r);
 
-	/** Paint selected objects on the layer */
-	public void paintSelections(Graphics2D g, LayerRenderer renderer,
-		MapObject[] selections);
-
 	/** Register a LayerChangedListener with the layer */
 	public void addLayerChangedListener(LayerChangedListener listener);
 

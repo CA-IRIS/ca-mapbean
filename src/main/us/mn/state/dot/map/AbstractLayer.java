@@ -33,28 +33,14 @@ import us.mn.state.dot.shape.event.LayerChangedListener;
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
  */
-public abstract class AbstractLayer implements Layer {
+abstract public class AbstractLayer implements Layer {
 
-	/** extent of layer */
+	/** Extent of layer */
 	protected Rectangle2D extent = new Rectangle2D.Double();
 
 	private String name;
 
 	private final List layerChangedListeners = new LinkedList();
-
-	/** Paint the selected Map objects */
-	public void paintSelections(Graphics2D g, LayerRenderer renderer,
-		MapObject[] selections)
-	{
-		if(selections != null) {
-			for(int i = 0; i < selections.length; i++) {
-				MapObject object = selections[i];
-				if(object != null) {
-					renderer.render(g, object);
-				}
-			}
-		}
-	}
 
 	/** Get the extent of the layer */
 	public Rectangle2D getExtent() {
