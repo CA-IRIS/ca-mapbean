@@ -19,19 +19,23 @@
 
 package us.mn.state.dot.shape;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Graphics2D;
+import java.awt.Shape;
+import java.awt.geom.Rectangle2D;
 
 /**
  * Interface for symbols used by themes to draw layer data.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.17 $ $Date: 2001/08/09 20:43:43 $ 
+ * @version $Revision: 1.18 $ $Date: 2001/08/14 22:37:04 $ 
  */
 public interface Symbol {
 	
 	public void draw( Graphics2D g, Shape shape );
 
-	public void setColor ( Color color );
+	public void setColor( Color color );
 	
 	public Color getColor();
 	
@@ -39,7 +43,7 @@ public interface Symbol {
 	
 	public void setFilled( boolean f );
 
-	public void setSize ( int size );
+	public void setSize( int size );
 	
 	public int getSize();
 	
@@ -56,4 +60,6 @@ public interface Symbol {
 	public void setLabel( String l );
 
 	public Component getLegend();
+	
+	public Rectangle2D getBounds( MapObject object );
 }

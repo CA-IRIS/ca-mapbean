@@ -27,7 +27,7 @@ import javax.swing.*;
  * Abstract base class for shapes that render lines on a map.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.12 $ $Date: 2001/04/19 17:39:03 $ 
+ * @version $Revision: 1.13 $ $Date: 2001/08/14 22:37:04 $ 
  */
 public abstract class LineSymbol implements Symbol {
 
@@ -142,6 +142,10 @@ public abstract class LineSymbol implements Symbol {
 		return label;
 	}
 
+	public Rectangle2D getBounds( MapObject object ) {
+		return stroke.createStrokedShape( object.getShape() ).getBounds2D();
+	}
+	
 	class ColorIcon implements Icon {
 		private Color color;
 		private int w, h;
