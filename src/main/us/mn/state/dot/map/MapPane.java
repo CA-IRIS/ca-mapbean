@@ -77,8 +77,6 @@ public class MapPane implements ThemeChangedListener {
 
 	private boolean transparent = false;
 
-	private GraphicsConfiguration graphicsConfiguration = null;
-
 	/** Create a new MapPane without any themes */
 	public MapPane() {
 		this(new ArrayList());
@@ -152,33 +150,29 @@ public class MapPane implements ThemeChangedListener {
 		if ( width == 0 ) {
 			width = 1;
 		}
-		screenBuffer = createImage( width, height );
-		staticBuffer = createImage( width, height );
+		screenBuffer = createImage(width, height);
+		staticBuffer = createImage(width, height);
 		rescale();
 	}
 
-    private BufferedImage createImage( int width, int height ) {
-        if ( transparent ) {
-            return new BufferedImage( width, height,
-                BufferedImage.TYPE_4BYTE_ABGR );
-        } else {
-            if ( graphicsConfiguration != null ) {
-                return graphicsConfiguration.createCompatibleImage(
-					width, height );
-            } else {
-                return new BufferedImage( width, height,
-                    BufferedImage.TYPE_INT_RGB );
-            }
-       }
-    }
+	/** Create a buffered image of the specified size */
+	protected BufferedImage createImage(int width, int height) {
+		if(transparent) {
+			return new BufferedImage(width, height,
+				BufferedImage.TYPE_4BYTE_ABGR);
+		} else {
+			return new BufferedImage(width, height,
+				BufferedImage.TYPE_INT_RGB);
+		}
+	}
 
 	/** Get the size of the map */
 	public Dimension getSize() {
-		if ( screenBuffer == null ) {
+		if(screenBuffer == null) {
 			return null;
 		} else {
-			return new Dimension( screenBuffer.getWidth(),
-			screenBuffer.getHeight() );
+			return new Dimension(screenBuffer.getWidth(),
+				screenBuffer.getHeight());
 		}
 	}
 
