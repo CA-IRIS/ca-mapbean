@@ -17,44 +17,43 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-//Title:        StringField
-//Version:      1.0
-//Copyright:    Copyright (c) 1999
-//Author:       Erik Engstrom
-//Company:      MnDOT
-//Description:  String field for dbase files.
 
 package us.mn.state.dot.shape;
 
-import java.io.*;
-
+/** 
+ * Field for storing strings.
+ *
+ * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
+ * @version $Revision: 1.5 $ $Date: 2001/03/12 23:38:52 $
+ */
 public class StringField extends Field {
-    /** Field properties */
-    private String [] data;
 
-    /** Create a new dBase field */
-    public StringField(String name, int size, int offset, int length ){
-    	super(Field.STRING_FIELD, name, offset, length);
-    	data = new String[size];
+	/** Field properties */
+	private String [] data;
+	
+	/** Create a new dBase field */
+	public StringField( String name, int size, int offset, int length ){
+    		super( Field.STRING_FIELD, name, offset, length );
+	    	data = new String[ size ];
 	}
 
 	public int getLength(){
 		return data.length;
 	}
 
-    /** Get the field's value from a given record */
+	/** Get the field's value from a given record */
 	public String getValue( int record ) {
 		if ( record >= data.length ) {
-			return "fuck " + record + " " + this.getName();
+			return record + " " + this.getName();
 		}
-		return data[record];
+		return data[ record ];
 	}
 
 	public void setValue( int record, String value ){
-		data[record] = value;
+		data[ record ] = value;
 	}
 
-	public String getStringValue(int record){
-   		return getValue(record);
-    }
+	public String getStringValue( int record ){
+		return getValue( record );
+	}
 }

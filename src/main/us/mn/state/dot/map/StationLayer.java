@@ -43,7 +43,7 @@ public final class StationLayer extends ShapeLayer implements StationListener {
 		this.setStatic( false );
 	}
 
-	public StationLayer( StationClient stationClient ) throws IOException{
+	public StationLayer( StationClient stationClient ) throws IOException {
 		this();
 		stationClient.addStationListener( this );
 	}
@@ -70,8 +70,6 @@ public final class StationLayer extends ShapeLayer implements StationListener {
 				}
 			}
 		}
-		//notifyLayerChangedListeners( new LayerChangedEvent( this,
-		//	LayerChangedEvent.DATA ) );
 		SwingUtilities.invokeLater( new NotifyThread( this,
 			LayerChangedEvent.DATA ) );
 	}

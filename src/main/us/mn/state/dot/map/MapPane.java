@@ -139,8 +139,6 @@ public final class MapPane implements ThemeChangedListener {
 			BufferedImage.TYPE_INT_RGB );
 		staticBuffer = new BufferedImage( width, height,
 			BufferedImage.TYPE_INT_RGB );
-		//selectionBuffer = new BufferedImage( width, height,
-//		BufferedImage.TYPE_INT_RGB );
 		rescale();
 	}
 	
@@ -209,11 +207,8 @@ public final class MapPane implements ThemeChangedListener {
 		screenTransform.setToTranslation( - ( extent.getMinX() * scale )
 			+ shiftX, ( extent.getMaxY() * scale ) + shiftY );
 		screenTransform.scale( scale, -scale );
-		//updateStaticBuffer();
-		//updateScreenBuffer();
 		this.bufferDirty = true;
 		this.staticBufferDirty = true;
-		//updateSelectionBuffer();
 	}
 	
 	/**
@@ -258,23 +253,8 @@ public final class MapPane implements ThemeChangedListener {
 			( ( Theme ) li.next() ).paint( g );
 		}
 		g.dispose();
-		notifyMapChangedListeners();
+		//notifyMapChangedListeners();
 	}
-	
-	/**
-	 * updates the selectionBuffer.
-	 */
-	/*private void updateSelectionBuffer() {
-		if ( selectionBuffer == null ) return;
-		Graphics2D g = selectionBuffer.createGraphics();
-		g.drawImage( screenBuffer, 0, 0, null );
-		g.transform( screenTransform );
-		ListIterator li = themes.listIterator();
-		while ( li.hasNext() ) {
-			( ( Theme ) li.next() ).paintSelections( g );
-		}
-	}*/
-	
 	
 	public BufferedImage getImage() {
 		if ( bufferDirty || staticBufferDirty ) {
@@ -290,14 +270,11 @@ public final class MapPane implements ThemeChangedListener {
 				if ( theme.isStatic() ) {
 					updateStaticBuffer();
 					updateScreenBuffer();
-					//updateSelectionBuffer();
 				} else {
 					updateScreenBuffer();
-					//updateSelectionBuffer();
 				}
 				break;
 			case ThemeChangedEvent.SELECTION:
-				//updateSelectionBuffer();
 				break;
 				default:
 					break;

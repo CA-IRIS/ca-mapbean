@@ -17,12 +17,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-/**
-  * ShapeLayer is a class for drawing ESRI shape files.
-  *
-  * @author Douglas Lau
-  */
-
 package us.mn.state.dot.shape;
 
 import java.awt.*;
@@ -33,6 +27,13 @@ import java.util.jar.*;
 import java.net.*;
 import us.mn.state.dot.shape.DbaseReader.*;
 
+/**
+  * ShapeLayer is a class for drawing ESRI shape files.
+  *
+  * @author Douglas Lau
+  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
+  * @version $Revision: 1.33 $ $Date: 2001/03/12 23:38:52 $
+  */
 public class ShapeLayer extends AbstractLayer {
 
 	//private DbaseReader dbFile;

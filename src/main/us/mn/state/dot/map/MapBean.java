@@ -343,17 +343,9 @@ public final class MapBean extends JComponent implements MapChangedListener,
 		return mapPane.getTransform();
 	}
 
-	/**
-	 * Overridden to prevent flashing
-	 * @param g Graphics object to paint on
-	 */
-	/*public void update( Graphics g ) {
-		paint( g );
-	}*/
-
 	public void paintComponent( Graphics g ) {
 		super.paintComponent( g );
-		BufferedImage image = mapPane.getImage();
+		Image image = mapPane.getImage();
 		Graphics2D g2d = ( Graphics2D ) g;
 		g2d.drawImage( image, 0, 0, this );
 		g2d.transform( mapPane.getTransform() );
@@ -374,7 +366,7 @@ public final class MapBean extends JComponent implements MapChangedListener,
 		}
 	}
 	
-	public BufferedImage getImage() {
+	public Image getImage() {
 		return mapPane.getImage();
 	}
 }
