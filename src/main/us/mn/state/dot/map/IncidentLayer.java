@@ -93,17 +93,17 @@ public final class IncidentLayer extends AbstractLayer implements
 			}
 			if (selectionModel != null) {
 				selectionModel.clearSelection();
-				selectionModel.addSelectionInterval(index,index);
+				selectionModel.addSelectionInterval(index, index);
 			}
 			g.setColor(Color.red);
 			g.setXORMode(Color.white);
 			DMSList dmsList = (DMSList) proxy.getDMSList().getList();
 			for (int i = 0; i < 3; i++){
-				int diameter;
+				int diameter = 0;
 				try{
 					diameter = dmsList.getRingRadius(i) * MAP_UNITS_PER_MILE;
 				} catch (java.rmi.RemoteException ex){
-					return false;
+					result = false;
 				}
 				g.draw(new Ellipse2D.Double((xCoord - (diameter / 2)),
 					(yCoord - (diameter / 2)), diameter, diameter));

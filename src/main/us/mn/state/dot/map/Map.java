@@ -47,7 +47,7 @@ public final class Map extends JViewport implements LayerListener {
 		this.setToolTipText("");
 		ListIterator li = layers.listIterator();
 		while (li.hasNext()) {
-			map.addLayer((Layer) li.next());
+			addLayer((Layer) li.next());
 		}
 		setMouseAction(SELECT);
 	}
@@ -376,9 +376,6 @@ public final class Map extends JViewport implements LayerListener {
 	public void updateLayer(Layer l) {
 		if (this.isShowing()) {
 			map.refreshLayer(l);
-			System.out.println("Layer " + l.getName() + " is showing");
-		} else {
-			System.out.println("Layer " + l.getName() + " is not showing");
 		}
 	}
 
