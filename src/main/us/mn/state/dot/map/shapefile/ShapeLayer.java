@@ -31,8 +31,8 @@ import us.mn.state.dot.map.LayerRenderer;
 import us.mn.state.dot.map.MapObject;
 import us.mn.state.dot.map.Symbol;
 import us.mn.state.dot.map.Theme;
-import us.mn.state.dot.map.symbol.CircleMarker;
 import us.mn.state.dot.map.symbol.FillSymbol;
+import us.mn.state.dot.map.symbol.PointSymbol;
 import us.mn.state.dot.map.symbol.SolidLine;
 
 /**
@@ -75,7 +75,7 @@ public class ShapeLayer extends AbstractLayer {
 	protected Symbol getSymbol() {
 		switch(shapeType) {
 			case ShapeFactory.POINT:
-				return new CircleMarker(500);
+				return new PointSymbol(500);
 			case ShapeFactory.POLYLINE:
 				return new SolidLine();
 			case ShapeFactory.POLYGON:
@@ -99,11 +99,11 @@ public class ShapeLayer extends AbstractLayer {
 	}
 
 	/** Search for a shape which contains the specified point */
-	public MapObject search(Point2D p, LayerRenderer renderer) {
+	public MapObject search(Point2D p) {
 		Iterator it = shapes.iterator();
 		while(it.hasNext()) {
 			MapObject o = (MapObject)it.next();
-			Shape s = renderer.getShape(o);
+			Shape s = o.getShape();
 			if(s != null && s.contains(p)) return o;
 		}
 		return null;

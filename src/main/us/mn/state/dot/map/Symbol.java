@@ -21,8 +21,6 @@ package us.mn.state.dot.map;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics2D;
-import java.awt.Shape;
-import java.awt.geom.Rectangle2D;
 
 /**
  * Interface for symbols used by themes to draw layer data.
@@ -33,7 +31,7 @@ public interface Symbol {
 
 	public String getLabel();
 
-	public void draw(Graphics2D g, Shape shape);
+	public void draw(Graphics2D g, MapObject o);
 
 	public void setColor(Color color);
 
@@ -42,10 +40,6 @@ public interface Symbol {
 	public void setOutlineColor(Color color);
 
 	public Color getOutlineColor();
-
-	public Shape getShape(MapObject object);
-
-	public Rectangle2D getBounds(MapObject object);
 
 	public Component getLegend();
 }

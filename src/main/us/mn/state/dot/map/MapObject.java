@@ -19,6 +19,7 @@
 package us.mn.state.dot.map;
 
 import java.awt.Shape;
+import java.awt.geom.AffineTransform;
 
 /**
  * Interface for objects painted on a MapBean.
@@ -26,6 +27,10 @@ import java.awt.Shape;
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
  */
 public interface MapObject {
-	
+
+	/** Get the map object shape */
 	public Shape getShape();
+
+	/** Get the map object transform */
+	public AffineTransform getTransform();
 }

@@ -24,7 +24,6 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.Stroke;
-import java.awt.geom.Rectangle2D;
 import javax.swing.Icon;
 import javax.swing.JLabel;
 import us.mn.state.dot.map.MapObject;
@@ -35,7 +34,7 @@ import us.mn.state.dot.map.Symbol;
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
  */
-public abstract class LineSymbol implements Symbol {
+abstract public class LineSymbol implements Symbol {
 
 	/** Default line width */
 	static public final int DEFAULT_SIZE = 10;
@@ -110,10 +109,11 @@ public abstract class LineSymbol implements Symbol {
 
 	protected abstract Stroke createStroke();
 
-	public void draw(Graphics2D g, Shape shape) {
+	public void draw(Graphics2D g, MapObject o) {
+		Shape s = o.getShape();
 		g.setColor(color);
 		g.setStroke(stroke);
-		g.draw(shape);
+		g.draw(s);
 	}
 
 	public Component getLegend() {
@@ -124,14 +124,6 @@ public abstract class LineSymbol implements Symbol {
 			l.setIcon(icon);
 		}
 		return l;
-	}
-
-	public Shape getShape(MapObject object) {
-		return stroke.createStrokedShape(object.getShape());
-	}
-
-	public Rectangle2D getBounds(MapObject object) {
-		return getShape(object).getBounds2D();
 	}
 
 	class ColorIcon implements Icon {

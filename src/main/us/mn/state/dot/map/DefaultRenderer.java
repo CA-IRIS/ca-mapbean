@@ -18,6 +18,8 @@
  */
 package us.mn.state.dot.map;
 
+import java.awt.Component;
+
 /**
  * The default implementation of LayerRenderer.
  * Shapes are all rendered with the same symbol.
@@ -33,6 +35,11 @@ public class DefaultRenderer extends AbstractRenderer {
 	public DefaultRenderer(Symbol s) {
 		super(s.getLabel());
 		symbol = s;
+	}
+
+	/** Get components to display the legend */
+	public Component[] getLegend() {
+		return null;
 	}
 
 	/** Get the symbol for the specified map object */

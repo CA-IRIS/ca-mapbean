@@ -19,11 +19,9 @@
 package us.mn.state.dot.map.symbol;
 
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Shape;
-import javax.swing.JLabel;
+import us.mn.state.dot.map.MapObject;
 
 /**
  * A FillSymbol is used to paint a filled polygon on a map
@@ -53,13 +51,14 @@ public class FillSymbol extends AbstractSymbol {
 	}
 
 	/** Draw a shape on map with the fill symbol */
-	public void draw(Graphics2D g, Shape shape) {
+	public void draw(Graphics2D g, MapObject o) {
+		Shape shape = o.getShape();
 		if(color != null) {
 			g.setColor(color);
 			g.fill(shape);
 		}
 		if(getOutlineColor() != null) {
-			outline.draw(g, shape);
+			outline.draw(g, o);
 		}
 	}
 }

@@ -55,5 +55,5 @@ public interface Layer {
 
 	/** Search the layer for a MapObject which is located at or near the
 	 * specified point */
-	public MapObject search(Point2D p, LayerRenderer renderer);
+	public MapObject search(Point2D p);
 }

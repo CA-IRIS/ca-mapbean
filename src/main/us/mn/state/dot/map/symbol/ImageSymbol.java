@@ -90,21 +90,6 @@ public class ImageSymbol implements Symbol {
 		return null;
 	}
 
-	public Shape getShape(MapObject object) {
-		return getBounds(object);
-	}
-
-	public Rectangle2D getBounds(MapObject object) {
-		Shape shape = object.getShape();
-		Rectangle2D rect = shape.getBounds2D();
-		double xCoord = rect.getX();
-		double yCoord = rect.getY();
-		int width = (int)size.getWidth();
-		int height = (int)size.getHeight();
-		return new Rectangle2D.Double((xCoord - width / 2),
-			(yCoord - height / 2), width, height);
-	}
-
 	public String getLabel() {
 		return label;
 	}
@@ -113,7 +98,8 @@ public class ImageSymbol implements Symbol {
 	 * Draw the ImageSymbol.
 	 * If size == null then the image is drawn at full size.
 	 */
-	public void draw( Graphics2D g, Shape shape ) {
+	public void draw(Graphics2D g, MapObject o) {
+		Shape shape = o.getShape();
 		Rectangle2D rect = shape.getBounds2D();
 		double xCoord = rect.getX();
 		double yCoord = rect.getY();

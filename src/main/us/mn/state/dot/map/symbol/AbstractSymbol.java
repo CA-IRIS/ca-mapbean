@@ -23,8 +23,6 @@ import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Shape;
-import java.awt.geom.GeneralPath;
-import java.awt.geom.Rectangle2D;
 import javax.swing.Icon;
 import javax.swing.JLabel;
 import us.mn.state.dot.map.MapObject;
@@ -34,6 +32,7 @@ import us.mn.state.dot.map.Symbol;
  * Base class for Symbol implementations.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
+ * @author Douglas Lau
  */
 abstract public class AbstractSymbol implements Symbol {
 
@@ -49,7 +48,8 @@ abstract public class AbstractSymbol implements Symbol {
 	/** Label */
 	protected final String label;
 
-	public abstract void draw(Graphics2D g, Shape shape);
+	/** Draw a map object with this symbol */
+	abstract public void draw(Graphics2D g, MapObject o);
 
 	/** Create a new abstract symbol */
 	public AbstractSymbol(int s, Color c, String l, Color o) {
@@ -85,24 +85,6 @@ abstract public class AbstractSymbol implements Symbol {
 
 	public String getLabel() {
 		return label;
-	}
-
-	public Rectangle2D getBounds(MapObject object) {
-		if(getOutlineColor() != null) {
-			return outline.getBounds(object);
-		} else {
-			return object.getShape().getBounds2D();
-		}
-	}
-
-	public Shape getShape(MapObject object) {
-		GeneralPath path = new GeneralPath();
-		if(getOutlineColor() != null) {
-			path.append(outline.getStroke().createStrokedShape(
-				object.getShape()), true);
-		}
-		path.append(object.getShape(), true);
-		return path;
 	}
 
 	/** Get the legend component for the symbol */

@@ -19,6 +19,7 @@
 package us.mn.state.dot.map.shapefile;
 
 import java.awt.Shape;
+import java.awt.geom.AffineTransform;
 import java.util.Map;
 import us.mn.state.dot.map.MapObject;
 
@@ -44,6 +45,11 @@ public class ShapeObject implements MapObject {
 	/** Get the shape to draw this object */
 	public Shape getShape() {
 		return shape;
+	}
+
+	/** Get the coordinate transform */
+	public AffineTransform getTransform() {
+		return null;
 	}
 
 	/** Add a field to this ShapeObject */

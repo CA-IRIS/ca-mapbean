@@ -18,7 +18,6 @@
  */
 package us.mn.state.dot.map;
 
-import java.awt.Component;
 import java.awt.Graphics2D;
 import java.awt.Shape;
 import us.mn.state.dot.map.MapObject;
@@ -51,19 +50,7 @@ abstract public class AbstractRenderer implements LayerRenderer {
 	/** Render a map object on the map */
 	public void render(Graphics2D g, MapObject o) {
 		Symbol s = getSymbol(o);
-		if(s != null) s.draw(g, o.getShape());
-	}
-
-	/** Get the shape of the specified map object */
-	public Shape getShape(MapObject o) {
-		Symbol s = getSymbol(o);
-		if(s == null) return null;
-		else return s.getShape(o);
-	}
-
-	/** Get components to display the legend */
-	public Component[] getLegend() {
-		return null;
+		if(s != null) s.draw(g, o);
 	}
 
 	/** Get tooltip text for the specified map object */
