@@ -45,10 +45,13 @@ import us.mn.state.dot.shape.event.*;
 public final class MapBean extends JComponent implements ThemeChangedListener {
 	
 	/** buffer for map */
-	private BufferedImage screenBuffer;
+	private transient BufferedImage screenBuffer;
 
 	/** buffer for static themes in map */
-	private BufferedImage staticBuffer;
+	private transient BufferedImage staticBuffer;
+	
+	/** buffer used to pan the map. */
+	private transient Image panBuffer = null;
 
 	/** List of dynamic themes */
 	private final ArrayList themes = new ArrayList();
@@ -56,7 +59,7 @@ public final class MapBean extends JComponent implements ThemeChangedListener {
 	/** List of static themes */
 	private final ArrayList staticThemes = new ArrayList();
 
-	/** Transformation to draw shapes in the ShapePane */
+	/** Transformation to draw shapes on the map */
 	private final AffineTransform screenTransform = new AffineTransform();
 
 	/** Bounding box */
@@ -67,9 +70,9 @@ public final class MapBean extends JComponent implements ThemeChangedListener {
 
 	/** does the buffer need to be updated? */
 	private boolean bufferDirty = true;
-
-	/** Transformation to draw shapes in the ShapePane */
-	private final AffineTransform at = new AffineTransform();
+	
+	/** does the static buffer need to be updated? */
+	private boolean staticBufferDirty = false;
 
 	/** current mouse mode */
 	private MapMouseMode activeMouseMode = null;
@@ -89,6 +92,12 @@ public final class MapBean extends JComponent implements ThemeChangedListener {
 	public MapBean( java.util.List themes ) {
 		this.setDoubleBuffered( true );
 		this.setToolTipText( " " );
+		addComponentListener( new ComponentAdapter() {
+			public void componentResized( ComponentEvent e ) {
+				rescale();
+			}
+		});
+		setMouseMode( new SelectMouseMode() );
 		for ( ListIterator li = themes.listIterator(); li.hasNext(); ){
 			Object ob = li.next();
 			Theme theme;
@@ -101,14 +110,6 @@ public final class MapBean extends JComponent implements ThemeChangedListener {
 			}
 			addTheme( theme );
 		}
-		staticBuffer = new BufferedImage( 1405, 1728,
-			BufferedImage.TYPE_INT_RGB );
-		addComponentListener( new ComponentAdapter() {
-			public void componentResized( ComponentEvent e ) {
-				resized();
-			}
-		});
-		setMouseMode( new SelectMouseMode() );
 	}
 	
 	/**
@@ -263,9 +264,14 @@ public final class MapBean extends JComponent implements ThemeChangedListener {
 	}
 	
 	public void setExtent( double x, double y, double width, double height ) {
-		extent.setFrame( x, y, width, height );
+		setExtentFrame( x, y, width, height );
 		extentHome.setFrame( x, y, width, height );
-		resized();
+	}
+	
+	private void setExtentFrame( double x, double y, double width,
+			double height ) {
+		extent.setFrame( x, y, width, height );
+		rescale();
 	}
 
 	private Theme findTheme( String name, java.util.List layerList ) {
@@ -280,9 +286,6 @@ public final class MapBean extends JComponent implements ThemeChangedListener {
 		return result;
 	}
 
-	/** buffer used to pan the map. */
-	private transient Image panBuffer = null;
-	
 	/**
 	 * pan the map.
 	 * @param distanceX, number of pixels to move in the X coordinate.
@@ -301,13 +304,6 @@ public final class MapBean extends JComponent implements ThemeChangedListener {
 		g.drawImage( panBuffer, 0, 0, this );
 	}
 	
-	public void zoomOut( Point center ) { // FIXME CHANGE SO THAT IT CENTERS THE VIEW AT THE POINT OF CLICK
-		extent.setFrame( extent.getX() - extent.getWidth() / 2, 
-			extent.getY() - extent.getHeight() / 2, extent.getWidth() * 2,
-			extent.getHeight() * 2 );
-		resized();
-	}
-	
 	public void finishPan( Point2D start, Point2D end ) {
 		try {
 			screenTransform.inverseTransform( start, start );
@@ -317,11 +313,16 @@ public final class MapBean extends JComponent implements ThemeChangedListener {
 		}
 		double newX = start.getX() - end.getX();
 		double newY = start.getY() - end.getY();
-		extent.setFrame( extent.getX() + newX, extent.getY() + newY, 
+		setExtentFrame( extent.getX() + newX, extent.getY() + newY, 
 			extent.getWidth(), extent.getHeight() );
-		resized();	
 	}
-		
+	
+	public void zoomOut( Point center ) { // FIXME CHANGE SO THAT IT CENTERS THE VIEW AT THE POINT OF CLICK
+		setExtentFrame( extent.getX() - extent.getWidth() / 2, 
+			extent.getY() - extent.getHeight() / 2, extent.getWidth() * 2,
+			extent.getHeight() * 2 );
+	}
+	
 	/**
 	 * Increase the size of this MapPane so that the mapSpace will fill the
 	 * viewerSpace
@@ -343,14 +344,13 @@ public final class MapBean extends JComponent implements ThemeChangedListener {
 		double y = Math.min( upperLeft.getY(), lowerRight.getY() );
 		double width = Math.abs( upperLeft.getX() - lowerRight.getX() );
 		double height = Math.abs( upperLeft.getY() - lowerRight.getY() );
-		extent.setFrame( x, y, width, height );
-		resized();
+		setExtentFrame( x, y, width, height );
 	}
 
 	/**
-	 * Called when the ShapePane is resized
+	 * Called when the MapBean is resized or the extent is changed.
 	 */
-	private void resized() {
+	private synchronized void rescale() {
 		int w = getWidth();
 		int h = getHeight();
 		if ( ! this.isDisplayable() ) {
@@ -360,19 +360,18 @@ public final class MapBean extends JComponent implements ThemeChangedListener {
 		if ( h == 0 || w == 0 || extent == null ) {
 			return;
 		}
-		double scaleX = w / extent.getWidth();
-		double scaleY = h / extent.getHeight();
 		double scale = 0;
 		double shiftX = 0;
 		double shiftY = 0; 
+		double scaleX = w / extent.getWidth();
+		double scaleY = h / extent.getHeight();
 		if ( scaleX > scaleY ) {
 			scale = scaleY;
 			shiftX = ( w - ( extent.getWidth() * scale ) ) / 2;
 		} else {
 			scale = scaleX;
 			shiftY = ( h - ( extent.getHeight() * scale ) ) / 2;
-		}
-		
+		}	
 		screenTransform.setToTranslation(  - ( extent.getMinX() * scale )
 			+ shiftX, ( extent.getMaxY() * scale ) + shiftY );
 		screenTransform.scale( scale, -scale );
@@ -401,6 +400,10 @@ public final class MapBean extends JComponent implements ThemeChangedListener {
 		repaint();
 	}
 
+	/** 
+	 * Creates a buffer for this map.
+	 *
+	 */
 	private BufferedImage createBuffer() {
 		int h = 0;
 		int w = 0;
@@ -411,7 +414,7 @@ public final class MapBean extends JComponent implements ThemeChangedListener {
 			h = 600;
 			w = 600;
 		}
-		return new BufferedImage( w, h, BufferedImage.TYPE_INT_RGB );
+		return new BufferedImage( w, h,	BufferedImage.TYPE_INT_RGB );
 	}
 
 	/**
@@ -429,19 +432,13 @@ public final class MapBean extends JComponent implements ThemeChangedListener {
 		while ( li.hasPrevious() ) {
 			( ( Theme ) li.previous() ).paint( g2D );
 		}
-		/*for ( int i = ( staticThemes.size() - 1 ); i >= 0; i-- ) {
-			Theme theme = ( Theme ) staticThemes.get( i );
-			theme.paint( g2D );
-		}*/
 		staticBufferDirty = false;
 	}
-	
+		
 	public void setBufferDirty( boolean b ) {
 		bufferDirty = b;
 	}
 	
-	private boolean staticBufferDirty = false;
-
 	/**
 	 * Updates screenBuffer.
 	 */
@@ -453,22 +450,12 @@ public final class MapBean extends JComponent implements ThemeChangedListener {
 			updateStaticBuffer();
 		}
 		Graphics2D g2D = screenBuffer.createGraphics();
-		//int w = screenBuffer.getWidth( null );
-		//int h = screenBuffer.getHeight( null );
 		g2D.drawImage( staticBuffer, 0, 0, this );
 		g2D.transform( screenTransform );
 		ListIterator li = themes.listIterator( themes.size() );
 		while ( li.hasPrevious() ) {
 			( ( Theme ) li.previous() ).paint( g2D );
 		}
-		/*for ( int i = ( themes.size() - 1 ); i >= 0; i-- ) {
-			Theme theme = ( Theme ) themes.get( i );
-			if ( theme.isVisible() ){
-				theme.paint( g2D );
-			}
-		}*/
-		//g2D.setColor( Color.black );
-		//g2D.drawRect( 0, 0, w, h );
 		bufferDirty = false;
 	}
 
@@ -476,7 +463,7 @@ public final class MapBean extends JComponent implements ThemeChangedListener {
 		if ( screenBuffer == null ) {
 			screenBuffer = createBuffer();
 			updateScreenBuffer();
-		} else if ( bufferDirty ) {
+		} else if ( bufferDirty || staticBufferDirty ) {
 			updateScreenBuffer();
 		}
 		g.drawImage( screenBuffer, 0, 0, this );
@@ -486,12 +473,6 @@ public final class MapBean extends JComponent implements ThemeChangedListener {
 		while ( li.hasPrevious() ) {
 			( ( Theme ) li.previous() ).paintSelections( g2D );
 		}
-		/*for ( int i = ( themes.size() - 1 ); i >= 0; i-- ) {
-			Theme theme = ( Theme ) themes.get( i );
-			if ( theme.isVisible() ){
-				theme.paintSelections( g2D );
-			}
-		}*/
 	}
 	
 	public void themeChanged( ThemeChangedEvent event ) {
