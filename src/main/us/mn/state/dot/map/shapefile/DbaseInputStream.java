@@ -86,13 +86,6 @@ public final class DbaseInputStream {
 			fields.add( new ShapeField( in ) );
 		}
 		in.skipBytes( 1 );
-		/*for ( int i = 0; i < records; i++ ) {
-			in.skipBytes( 1 );
-			for ( int j = 0; j < field.length; j++ ){
-				field[ j ].loadData( i, in );
-			}
-		}*/
-		//in.close();
 	}
 	
 	/**
@@ -107,10 +100,11 @@ public final class DbaseInputStream {
 	 */
 	public Map nextRecord( ) throws IOException {
 		HashMap map = new HashMap();
+		in.skipBytes( 1 );
 		Iterator it = fields.iterator();
 		while ( it.hasNext() ) {
 			ShapeField field = ( ShapeField ) it.next();
-			map.put( field.getName(), in.readString( field.getLength() ) );
+			map.put( field.getName(), field.readData( in ) );
 		}
 		lastRecord++;
 		return map;
@@ -127,22 +121,71 @@ public final class DbaseInputStream {
 	
 	
 	/**
-	 * Class used for reading fields from database files.
-	 */
+	* Class used for reading fields from database files.
+	* 
+	*     dBase field descriptor 32 bytes
+	*
+    *     Position        Field       Value           Type              Size
+    *        0             name                       byte               11  
+	*       11             type      C,N,L,D,M,F      byte                1
+    *       12             adress                     byte                4
+    *       16             length                     byte                1
+    *       17             decimal                    byte                1
+    *       18             Reserved                                      14
+	*/
 	private class ShapeField {
 		
 		private String name = "";
 		
 		private int length = 0;
 		
+		private char type;
+		
+		private int decimal;
+		
+		
 		public ShapeField( ShapeDataInputStream in ) throws IOException {
-			String name = in.readString( 11 ).trim();
-			char type = in.readString( 1 ).charAt( 0 );
+			name = in.readString( 11 ).trim();
+			type = in.readString( 1 ).charAt( 0 );
 			in.skipBytes( 4 );
-			int length = in.readByte();
-			int decimal = in.readByte();
+			length = in.readByte();
+			decimal = in.readByte();
 			in.skipBytes( 14 );
 		}
+		
+		public Object readData( ShapeDataInputStream in ) throws IOException {
+			String value = in.readString( length );
+			Object result = null;
+			switch ( type ) {
+				case 'C': case 'D':
+					result = value;
+					break;
+				case 'N':
+					if ( decimal == 0 ) {
+						result = new Integer( value );
+					} else {
+						result = new Double( value );
+					}
+					break;
+				case 'L':
+					result = new Boolean( parseBoolean( value ) );
+					break;
+			}
+			return result;
+		}
+		
+		private boolean parseBoolean( String value ) {
+			boolean result = false;
+			char tempChar = value.charAt( 0 );
+			switch( tempChar ){
+				case 'Y': case 'y': case 'T': case 't':
+					result = true;
+				case 'N': case 'n': case 'F': case 'f':
+					result = false;
+			}
+			return result;		
+		}
+		
 		
 		public String getName() {
 			return name;

@@ -22,12 +22,13 @@ package us.mn.state.dot.shape;
 import java.awt.*;
 import java.awt.geom.*;
 import us.mn.state.dot.shape.shapefile.ShapeRenderer;
+import us.mn.state.dot.shape.shapefile.ShapeObject;
 
 /**
  * A renderer that renders objects base on a numeric field and a set of class breaks.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.18 $ $Date: 2001/08/09 21:03:34 $ 
+ * @version $Revision: 1.19 $ $Date: 2001/08/10 15:26:21 $ 
  */
 public class ClassBreaksRenderer extends ShapeRenderer {
 
@@ -75,13 +76,37 @@ public class ClassBreaksRenderer extends ShapeRenderer {
 		return symbols;
 	}
 	
+	/**
+	 * Draw the object.
+	 */
 	public final void render( Graphics2D g, MapObject object ) {
-		//int classBreak = field.getRenderingClass( index, classBreaks );
-		//if ( ( classBreak > -1 ) && ( symbols[ classBreak ] != null ) ){
-		//	return symbols[ classBreak ];
-		//} 
-		//return null;
-		//FIXME
+		ShapeObject shapeObject = ( ShapeObject ) object;
+		double value = ( ( Number ) shapeObject.getValue( field ) ).doubleValue();
+		int classBreak = getRenderingClass( value );
+		Symbol symbol = null;
+		if ( ( classBreak > -1 ) && ( symbols[ classBreak ] != null ) ){
+			symbol = symbols[ classBreak ];
+		} 
+		if ( symbol != null ) {
+			symbol.draw( g, object.getShape() );
+		}
+	}
+	
+	/**
+	 * Determine which class the value falls into.
+	 */
+	private int getRenderingClass( double value ) {
+		int result = -1;
+		for ( int i = 0; i < classBreaks.length; i++ ) {
+			if ( value <= classBreaks[ i ] ) {
+				result = i;
+				break;
+			}
+		}
+		if ( value > classBreaks[ classBreaks.length -1 ] ) {
+			result = classBreaks.length - 1;
+		}
+		return result;
 	}
 	
 	/**
