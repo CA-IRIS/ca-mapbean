@@ -18,12 +18,14 @@
  */
 package us.mn.state.dot.shape;
 
-import java.beans.*;
+import java.beans.EventSetDescriptor;
+import java.beans.PropertyDescriptor;
+import java.beans.SimpleBeanInfo;
 
 /**
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.1 $ $Date: 2001/04/19 16:52:59 $ 
+ * @version $Revision: 1.2 $ $Date: 2003/05/06 20:58:15 $ 
  */
 public class MapBeanInfo extends SimpleBeanInfo {
 

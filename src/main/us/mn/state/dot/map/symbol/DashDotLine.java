@@ -19,13 +19,15 @@
 
 package us.mn.state.dot.shape;
 
-import java.awt.*;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Stroke;
 
 /**
  * A line symbol that renders a _._ line.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.6 $ $Date: 2001/07/09 21:10:19 $ 
+ * @version $Revision: 1.7 $ $Date: 2003/05/06 20:58:15 $ 
  */
 public final class DashDotLine extends LineSymbol {
 

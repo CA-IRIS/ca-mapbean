@@ -20,14 +20,13 @@
 package us.mn.state.dot.shape.shapefile;
 
 import java.io.File;
-import java.util.HashSet;
-import java.util.Iterator;
-import javax.swing.filechooser.*;
+
+import javax.swing.filechooser.FileFilter;
 
 /**
  * A file filter for filtering for ESRI shape files.
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.1 $ $Date: 2001/08/09 20:43:43 $ 
+ * @version $Revision: 1.2 $ $Date: 2003/05/06 20:58:15 $ 
  */
 public class ShapeFileFilter extends FileFilter {	
 	

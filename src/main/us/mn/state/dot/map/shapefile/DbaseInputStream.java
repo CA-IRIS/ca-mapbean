@@ -18,11 +18,15 @@
  */
 package us.mn.state.dot.shape.shapefile;
 
-import java.io.*;
-import java.util.*;
-import java.net.*;
-import java.util.jar.*;
-import us.mn.state.dot.shape.*;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
   * dBase III PLUS table file reader

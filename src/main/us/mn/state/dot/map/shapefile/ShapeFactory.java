@@ -19,8 +19,9 @@
 package us.mn.state.dot.shape.shapefile;
 
 import java.awt.Shape;
-import java.awt.geom.*;
-import java.io.*;
+import java.awt.geom.GeneralPath;
+import java.awt.geom.PathIterator;
+import java.io.IOException;
 
 /**
   * ShapeFactory reads shape data from a ShapeFileInputStream and creates 
@@ -30,7 +31,7 @@ import java.io.*;
   *
   * @author Douglas Lau
   * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
-  * @version $Revision: 1.1 $ $Date: 2001/08/09 20:43:43 $ 
+  * @version $Revision: 1.2 $ $Date: 2003/05/06 20:58:15 $ 
   */
 public final class ShapeFactory {
 	

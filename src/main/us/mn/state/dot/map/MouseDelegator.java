@@ -19,13 +19,15 @@
 
 package us.mn.state.dot.shape;
 
-import java.awt.event.*;
-import us.mn.state.dot.shape.event.*;
+import java.awt.event.MouseAdapter;
+
+import us.mn.state.dot.shape.event.MapMouseMode;
+import us.mn.state.dot.shape.event.ZoomMouseMode;
 
 /**
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.6 $ $Date: 2001/04/19 16:49:31 $ 
+ * @version $Revision: 1.7 $ $Date: 2003/05/06 20:58:15 $ 
  */
 public class MouseDelegator extends MouseAdapter {
 

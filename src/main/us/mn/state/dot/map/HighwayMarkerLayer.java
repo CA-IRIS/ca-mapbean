@@ -19,12 +19,15 @@
 
 package us.mn.state.dot.shape;
 
-import java.awt.*;
-import java.awt.geom.*;
-import java.io.*;
-import java.net.*;
-import java.util.*;
-import javax.swing.*;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.RenderingHints;
+import java.io.IOException;
+import java.net.URL;
+import java.util.HashMap;
+
+import javax.swing.ImageIcon;
+
 import us.mn.state.dot.shape.shapefile.ShapeLayer;
 import us.mn.state.dot.shape.shapefile.ShapeObject;
 
@@ -32,7 +35,7 @@ import us.mn.state.dot.shape.shapefile.ShapeObject;
  * This layer is used for displaying highway markers on the map.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.10 $ $Date: 2002/01/28 17:59:36 $
+ * @version $Revision: 1.11 $ $Date: 2003/05/06 20:58:15 $
  */
 public final class HighwayMarkerLayer extends ShapeLayer {
 	

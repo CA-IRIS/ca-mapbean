@@ -19,10 +19,11 @@
 package us.mn.state.dot.shape.shapefile;
 
 import java.awt.geom.Rectangle2D;
-import java.io.*;
-import java.util.*;
-import java.net.*;
-import java.util.jar.*;
+import java.io.EOFException;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
 
 /**
   * ShapeFile is an ESRI shape file reader.  It reads the file and creates an
@@ -30,7 +31,7 @@ import java.util.jar.*;
   *
   * @author Douglas Lau
   * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
-  * @version $Revision: 1.3 $ $Date: 2001/08/10 15:47:44 $
+  * @version $Revision: 1.4 $ $Date: 2003/05/06 20:58:15 $
   */
 public final class ShapeFile {
 

@@ -19,18 +19,19 @@
 
 package us.mn.state.dot.shape;
 
-import java.awt.event.*;
-import javax.swing.JCheckBox;
-import us.mn.state.dot.shape.Theme;
-import java.util.*;
 import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.util.Iterator;
+import java.util.List;
+
+import javax.swing.JCheckBox;
 
 /**
  * ThemeListModel provides a way to display themes as a list of JCheckBoxs
  * that set the visible property.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.2 $ $Date: 2001/04/19 16:49:31 $ 
+ * @version $Revision: 1.3 $ $Date: 2003/05/06 20:58:15 $ 
  */
 public final class ThemeListModel extends CheckListModel {
 

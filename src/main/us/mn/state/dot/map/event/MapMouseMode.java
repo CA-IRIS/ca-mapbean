@@ -15,7 +15,6 @@
 package us.mn.state.dot.shape.event;
 
 import java.awt.Cursor;
-import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 

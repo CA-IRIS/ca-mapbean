@@ -14,10 +14,10 @@
 
 package us.mn.state.dot.shape.event;
 
-import java.io.Serializable;
-import java.io.ObjectOutputStream;
-import java.io.ObjectInputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 
 /**
  * This is a utility class that can be used by beans that need support

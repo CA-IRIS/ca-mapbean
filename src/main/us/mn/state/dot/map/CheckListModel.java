@@ -19,15 +19,16 @@
 
 package us.mn.state.dot.shape;
 
-import javax.swing.*;
-import java.util.*;
-import java.awt.event.*;
+import java.awt.event.ActionListener;
+import java.util.Vector;
+
+import javax.swing.AbstractListModel;
 
 /**
  * ListModel that contains check boxes instead of labels. 
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.3 $ $Date: 2001/07/09 21:10:19 $ 
+ * @version $Revision: 1.4 $ $Date: 2003/05/06 20:58:15 $ 
  */
 public abstract class CheckListModel extends AbstractListModel implements
 		ActionListener {

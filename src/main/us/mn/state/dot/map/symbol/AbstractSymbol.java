@@ -19,15 +19,22 @@
 
 package us.mn.state.dot.shape;
 
-import java.awt.*;
-import java.awt.geom.*;
-import javax.swing.*;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Shape;
+import java.awt.geom.GeneralPath;
+import java.awt.geom.Rectangle2D;
+
+import javax.swing.Icon;
+import javax.swing.JLabel;
 
 /**
  * Base class for Symbol implementations.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.8 $ $Date: 2001/08/16 22:59:44 $ 
+ * @version $Revision: 1.9 $ $Date: 2003/05/06 20:58:15 $ 
  */
 public abstract class AbstractSymbol implements LegendItem, Symbol {
 

@@ -20,19 +20,32 @@
 package us.mn.state.dot.shape.shapefile;
 
 import java.awt.Graphics2D;
-import java.awt.geom.*;
 import java.awt.Shape;
-import java.util.*;
-import java.io.*;
-import java.net.*;
-import us.mn.state.dot.shape.*;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+
+import us.mn.state.dot.shape.AbstractLayer;
+import us.mn.state.dot.shape.CircleMarker;
+import us.mn.state.dot.shape.DefaultRenderer;
+import us.mn.state.dot.shape.FillSymbol;
+import us.mn.state.dot.shape.LayerRenderer;
+import us.mn.state.dot.shape.MapObject;
+import us.mn.state.dot.shape.SolidLine;
+import us.mn.state.dot.shape.Symbol;
+import us.mn.state.dot.shape.Theme;
 
 /**
   * ShapeLayer is a class for drawing ESRI shape files.
   *
   * @author Douglas Lau
   * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
-  * @version $Revision: 1.5 $ $Date: 2002/01/28 17:59:36 $
+  * @version $Revision: 1.6 $ $Date: 2003/05/06 20:58:15 $
   */
 public class ShapeLayer extends AbstractLayer {
 

@@ -19,13 +19,15 @@
 
 package us.mn.state.dot.shape;
 
-import java.awt.*;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Stroke;
 
 /**
  * A LineSymbol that paints a dotted line _ _ _ _ _ .
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.5 $ $Date: 2001/07/09 21:10:19 $ 
+ * @version $Revision: 1.6 $ $Date: 2003/05/06 20:58:15 $ 
  */
 public class DottedLine extends LineSymbol {
 

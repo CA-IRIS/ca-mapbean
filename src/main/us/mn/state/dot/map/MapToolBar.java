@@ -19,17 +19,19 @@
 
 package us.mn.state.dot.shape;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ListIterator;
-import javax.swing.*;
-import javax.swing.event.*;
+
+import javax.swing.JComboBox;
+import javax.swing.JMenuBar;
+import javax.swing.JToolBar;
 
 /**
  * Toolbar used for MapBean.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.5 $ $Date: 2001/07/09 21:10:19 $ 
+ * @version $Revision: 1.6 $ $Date: 2003/05/06 20:58:15 $ 
  */
 public final class MapToolBar extends NavigationBar {
 

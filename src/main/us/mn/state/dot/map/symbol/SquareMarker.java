@@ -19,14 +19,15 @@
 
 package us.mn.state.dot.shape;
 
-import java.awt.*;
-import java.awt.geom.*;
+import java.awt.Color;
+import java.awt.Shape;
+import java.awt.geom.Rectangle2D;
 
 /**
  * A PointSymbol that renders a square.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.11 $ $Date: 2001/08/14 21:29:58 $ 
+ * @version $Revision: 1.12 $ $Date: 2003/05/06 20:58:15 $ 
  */
 public final class SquareMarker extends PointSymbol {
 

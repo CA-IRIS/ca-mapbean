@@ -19,14 +19,14 @@
 
 package us.mn.state.dot.shape;
 
-import java.util.*;
+import java.util.EventObject;
 
 /**
  * Theme changed events are sent to ThemeChangedListeners whenever a themes data
  * is changed.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.3 $ $Date: 2001/07/09 21:10:19 $ 
+ * @version $Revision: 1.4 $ $Date: 2003/05/06 20:58:15 $ 
  */
 public class ThemeChangedEvent extends EventObject {
 

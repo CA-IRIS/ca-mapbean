@@ -21,17 +21,22 @@
 
 package us.mn.state.dot.shape;
 
-import java.awt.*;
-import java.awt.geom.*;
-import java.awt.image.*;
-import java.util.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics2D;
+import java.awt.GraphicsConfiguration;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.ListIterator;
 
 /**
  * This class can be used to generate map graphics when access to the graphics
  * subsystem is not available.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.47 $ $Date: 2002/01/28 17:59:36 $
+ * @version $Revision: 1.48 $ $Date: 2003/05/06 20:58:15 $
  */
 public final class MapPane implements ThemeChangedListener {
 	

@@ -19,19 +19,17 @@
 
 package us.mn.state.dot.shape.shapefile;
 
-import java.awt.*;
-import java.awt.geom.*;
 import us.mn.state.dot.shape.LayerRenderer;
+import us.mn.state.dot.shape.MapObject;
 import us.mn.state.dot.shape.MapTip;
 import us.mn.state.dot.shape.Symbol;
-import us.mn.state.dot.shape.MapObject;
 
 
 /**
  * Base class for all renderers used for shape files.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.3 $ $Date: 2001/08/15 16:08:51 $ 
+ * @version $Revision: 1.4 $ $Date: 2003/05/06 20:58:15 $ 
  */
 public abstract class ShapeRenderer implements LayerRenderer {
     

@@ -24,12 +24,10 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Shape;
-import java.awt.MediaTracker;
-import java.awt.RenderingHints;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
@@ -37,7 +35,7 @@ import javax.swing.JLabel;
  * Symol for painting MapObjects as images.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.4 $ $Date: 2002/01/28 22:45:51 $
+ * @version $Revision: 1.5 $ $Date: 2003/05/06 20:58:15 $
  */
 public class ImageSymbol implements Symbol {
 

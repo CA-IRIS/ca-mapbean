@@ -18,16 +18,17 @@
  */
 package us.mn.state.dot.shape;
 
-import java.util.*;
-import java.awt.geom.*;
-import java.awt.*;
+import java.awt.Graphics2D;
+import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
+import java.util.ListIterator;
 
 /** 
  * The AbstractLayer implements much of the functionality of the Layer
  * interface.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.27 $ $Date: 2001/08/21 18:57:45 $ 
+ * @version $Revision: 1.28 $ $Date: 2003/05/06 20:58:15 $ 
  * @since 1.0
  */
 public abstract class AbstractLayer implements Layer {

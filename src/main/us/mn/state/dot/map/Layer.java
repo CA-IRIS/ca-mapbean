@@ -20,14 +20,14 @@
 package us.mn.state.dot.shape;
 
 import java.awt.Graphics2D;
-import java.util.List;
-import java.awt.geom.*;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 
 /**
  * This interface should be used to add data to a MapBean object. 
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 0.21 $ $Date: 2001/08/09 20:43:43 $ 
+ * @version $Revision: 0.22 $ $Date: 2003/05/06 20:58:15 $ 
  */
 public interface Layer {
 	

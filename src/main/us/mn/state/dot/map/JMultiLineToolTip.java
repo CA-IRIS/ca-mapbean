@@ -21,14 +21,15 @@
 
 package us.mn.state.dot.shape;
 
-import javax.swing.*;
+import javax.swing.JComponent;
+import javax.swing.JToolTip;
 
 /**
  * A ToolTip that allows multiple lines.
  *
  * @author Zafir Anjum
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.5 $ $Date: 2001/07/09 21:10:19 $ 
+ * @version $Revision: 1.6 $ $Date: 2003/05/06 20:58:15 $ 
  */
 public final class JMultiLineToolTip extends JToolTip {
 

@@ -19,20 +19,29 @@
 
 package us.mn.state.dot.shape;
 
-import java.awt.*;
-import java.awt.geom.*;
-import java.util.*;
-import javax.swing.*;
+import java.awt.Graphics2D;
+import java.awt.Shape;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.GeneralPath;
+import java.awt.geom.NoninvertibleTransformException;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
+
+import javax.swing.DefaultListSelectionModel;
+import javax.swing.ListSelectionModel;
+
 import us.mn.state.dot.dds.client.Incident;
-import us.mn.state.dot.dds.client.IncidentListener;
 import us.mn.state.dot.dds.client.IncidentDescription;
-import us.mn.state.dot.shape.event.*;
+import us.mn.state.dot.dds.client.IncidentListener;
+import us.mn.state.dot.shape.event.MapMouseListener;
+import us.mn.state.dot.shape.event.SelectMouseMode;
 
 /**
  * Displays incidents as icons on map.
  *
  * @author erik.engstrom@dot.state.mn.us
- * @version $Revision: 1.39 $ $Date: 2002/01/28 22:45:51 $
+ * @version $Revision: 1.40 $ $Date: 2003/05/06 20:58:15 $
  */
 public class IncidentLayer extends AbstractLayer implements
 		IncidentListener {

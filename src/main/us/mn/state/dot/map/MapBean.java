@@ -19,13 +19,29 @@
 
 package us.mn.state.dot.shape;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.awt.geom.*;
-import java.awt.image.*;
-import java.util.*;
-import javax.swing.*;
-import us.mn.state.dot.shape.event.*;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.Point;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.MouseEvent;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.NoninvertibleTransformException;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.ListIterator;
+
+import javax.swing.JComponent;
+import javax.swing.JToolTip;
+
+import us.mn.state.dot.shape.event.MapMouseListener;
+import us.mn.state.dot.shape.event.MapMouseMode;
+import us.mn.state.dot.shape.event.SelectMouseMode;
 
 /**
  * The Map class is a container for a MapPane which allows the pane to be
@@ -33,7 +49,7 @@ import us.mn.state.dot.shape.event.*;
  * the internal MapPane.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.23 $ $Date: 2001/08/15 21:24:44 $
+ * @version $Revision: 1.24 $ $Date: 2003/05/06 20:58:15 $
  * @see us.mn.state.dot.shape.MapPane
  */
 public final class MapBean extends JComponent implements MapChangedListener{

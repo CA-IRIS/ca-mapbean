@@ -19,14 +19,16 @@
 
 package us.mn.state.dot.shape;
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Component;
+
+import javax.swing.JList;
+import javax.swing.ListCellRenderer;
 
 /**
  * ListCellRenderer for rendering LegendItems.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.6 $ $Date: 2001/07/09 21:10:19 $
+ * @version $Revision: 1.7 $ $Date: 2003/05/06 20:58:15 $
  */
 public final class LegendCellRenderer implements ListCellRenderer {
 

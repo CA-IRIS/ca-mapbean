@@ -19,16 +19,25 @@
 
 package us.mn.state.dot.shape;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.io.*;
-import javax.swing.*;
-import us.mn.state.dot.shape.shapefile.*;
+import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
+
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+
+import us.mn.state.dot.shape.shapefile.ShapeFileFilter;
+import us.mn.state.dot.shape.shapefile.ShapeLayer;
 
 /**
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.2 $ $Date: 2001/08/09 20:43:43 $ 
+ * @version $Revision: 1.3 $ $Date: 2003/05/06 20:58:15 $ 
  */
 public class Viewer extends JFrame {
 

@@ -19,16 +19,23 @@
 
 package us.mn.state.dot.shape.event;
 
-import us.mn.state.dot.shape.MapBean;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.Toolkit;
 import java.awt.event.MouseEvent;
-import java.net.*;
-import javax.swing.*;
+import java.net.URL;
+
+import javax.swing.ImageIcon;
+import javax.swing.SwingUtilities;
+
+import us.mn.state.dot.shape.MapBean;
 
 /**
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.2 $ $Date: 2001/04/19 16:49:31 $
+ * @version $Revision: 1.3 $ $Date: 2003/05/06 20:58:15 $
  */
 public class ZoomMouseMode extends MouseModeAdapter {
 	

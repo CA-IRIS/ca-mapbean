@@ -19,16 +19,18 @@
 
 package us.mn.state.dot.shape;
 
-import java.awt.*;
-import java.awt.geom.*;
-import us.mn.state.dot.shape.shapefile.ShapeRenderer;
+import java.awt.Graphics2D;
+import java.awt.Shape;
+import java.awt.geom.Rectangle2D;
+
 import us.mn.state.dot.shape.shapefile.ShapeObject;
+import us.mn.state.dot.shape.shapefile.ShapeRenderer;
 
 /**
  * A renderer that renders objects base on a numeric field and a set of class breaks.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.23 $ $Date: 2002/01/28 17:59:36 $ 
+ * @version $Revision: 1.24 $ $Date: 2003/05/06 20:58:15 $ 
  */
 public class ClassBreaksRenderer extends ShapeRenderer {
 

@@ -19,21 +19,21 @@
 
 package us.mn.state.dot.shape;
 
-import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.geom.Rectangle2D;
 import java.net.URL;
 import java.util.HashMap;
+
 import javax.swing.ImageIcon;
-import us.mn.state.dot.shape.IncidentLayer.IncidentWrapper;
+
 import us.mn.state.dot.dds.client.Incident;
-import us.mn.state.dot.dds.client.IncidentDescription;
+import us.mn.state.dot.shape.IncidentLayer.IncidentWrapper;
 
 /**
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.2 $ $Date: 2002/01/28 22:45:58 $
+ * @version $Revision: 1.3 $ $Date: 2003/05/06 20:58:15 $
  */
 public class IncidentRenderer implements LayerRenderer {
 	

@@ -19,8 +19,8 @@
 
 package us.mn.state.dot.shape;
 
-import java.awt.Shape;
 import java.awt.Graphics2D;
+import java.awt.Shape;
 import java.awt.geom.Rectangle2D;
 
 /**
@@ -28,7 +28,7 @@ import java.awt.geom.Rectangle2D;
  * same symbol.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.17 $ $Date: 2001/08/15 16:08:51 $ 
+ * @version $Revision: 1.18 $ $Date: 2003/05/06 20:58:15 $ 
  */
 public final class DefaultRenderer implements LayerRenderer {
 

@@ -18,14 +18,13 @@
  */
 package us.mn.state.dot.shape;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.BorderFactory;
 
 /** 
  * JMenu for displaying the Legend for a LayerRenderer.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.3 $ $Date: 2001/07/09 21:10:19 $
+ * @version $Revision: 1.4 $ $Date: 2003/05/06 20:58:15 $
  */
 public class LegendMenu extends javax.swing.JMenu {
 

@@ -19,14 +19,16 @@
 
 package us.mn.state.dot.shape;
 
-import java.awt.*;
-import javax.swing.*;
+import java.awt.Component;
+
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
 
 /**
  * A combobox for displaying the legend for a ClassBreaksRenderer.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.7 $ $Date: 2001/07/09 21:10:19 $
+ * @version $Revision: 1.8 $ $Date: 2003/05/06 20:58:15 $
  */
 public final class LegendCombo extends JComboBox {
 

@@ -18,13 +18,22 @@
  */
 package us.mn.state.dot.shape;
 
-import java.awt.*;
-import java.awt.geom.*;
-import java.io.*;
-import java.util.*;
-import javax.swing.*;
-import us.mn.state.dot.dds.client.*;
-import us.mn.state.dot.shape.event.*;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.NoninvertibleTransformException;
+import java.awt.geom.Point2D;
+import java.io.IOException;
+
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
+import javax.swing.SwingUtilities;
+
+import us.mn.state.dot.dds.client.StationClient;
+import us.mn.state.dot.dds.client.StationListener;
+import us.mn.state.dot.shape.event.MapMouseListener;
+import us.mn.state.dot.shape.event.SelectMouseMode;
 import us.mn.state.dot.shape.shapefile.ShapeLayer;
 import us.mn.state.dot.shape.shapefile.ShapeObject;
 import us.mn.state.dot.shape.shapefile.ShapeRenderer;
@@ -33,7 +42,7 @@ import us.mn.state.dot.shape.shapefile.ShapeRenderer;
  * A StationLayer displays detector station data represented as a gpoly.shp file.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.30 $ $Date: 2001/08/15 21:24:44 $ 
+ * @version $Revision: 1.31 $ $Date: 2003/05/06 20:58:15 $ 
  */
 public final class StationLayer extends ShapeLayer implements StationListener {
 	/**

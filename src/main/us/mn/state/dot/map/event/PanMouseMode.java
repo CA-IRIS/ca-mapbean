@@ -19,15 +19,19 @@
 
 package us.mn.state.dot.shape.event;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
+import java.awt.Point;
+import java.awt.Toolkit;
+import java.awt.event.MouseEvent;
+
+import javax.swing.ImageIcon;
+import javax.swing.SwingUtilities;
+
 import us.mn.state.dot.shape.MapBean;
 
 /**
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.2 $ $Date: 2001/04/19 16:49:31 $
+ * @version $Revision: 1.3 $ $Date: 2003/05/06 20:58:15 $
  */
 public class PanMouseMode extends MouseModeAdapter {
 
