@@ -23,6 +23,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseEvent;
@@ -53,7 +54,7 @@ import us.mn.state.dot.shape.event.SelectMouseMode;
 public class MapBean extends JComponent implements MapChangedListener{
 
 	/** Buffer used to pan the map */
-	private transient Image panBuffer = null;
+	protected transient Image panBuffer = null;
 
 	/** Home extents */
 	protected final Rectangle2D extentHome = new Rectangle2D.Double();
@@ -274,17 +275,17 @@ public class MapBean extends JComponent implements MapChangedListener{
 	 * @param distanceX, number of pixels to move in the X coordinate.
 	 * @param distanceY, number of pixels to move in the Y coordinate.
 	 */
-	public void pan( int distanceX, int distanceY ) {
-		if ( panBuffer == null ) {
-			panBuffer = this.createImage( getBounds().width,
-				getBounds().height );
+	public void pan(int distanceX, int distanceY) {
+		Rectangle bounds = getBounds();
+		if(panBuffer == null) {
+			panBuffer = createImage(bounds.width, bounds.height);
 		}
 		Graphics pb = panBuffer.getGraphics();
-		pb.setColor( this.getBackground() );
-		pb.fillRect( 0, 0, getBounds().width, getBounds().height );
-		pb.drawImage( mapPane.getImage(), distanceX, distanceY, this );
-		Graphics g = this.getGraphics();
-		g.drawImage( panBuffer, 0, 0, this );
+		pb.setColor(getBackground());
+		pb.fillRect(0, 0, bounds.width, bounds.height);
+		pb.drawImage(mapPane.getImage(), distanceX, distanceY, this);
+		Graphics g = getGraphics();
+		g.drawImage(panBuffer, 0, 0, this);
 		pb.dispose();
 		g.dispose();
 	}
