@@ -17,6 +17,7 @@ public final class LegendCombo extends JComboBox {
 		super();
 		setRenderer( new LegendCellRenderer() );
 		setMapRenderer( r );
+		this.setMaximumRowCount(12);
 	}
 
 	public void setMapRenderer( ClassBreaksRenderer r ){

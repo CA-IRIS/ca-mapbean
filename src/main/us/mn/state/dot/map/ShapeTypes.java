@@ -106,11 +106,11 @@ public final class ShapeTypes {
 			}
 		}
 		protected final void fillCurrentSegment( double [] coords ) {
-			coords[ 0 ] = buffer.getDouble( points + point * 16 ); 
+			coords[ 0 ] = buffer.getDouble( points + point * 16 );
 			coords[ 1 ] = buffer.getDouble( 8 + points + point * 16 );
 		}
 		protected final void fillCurrentSegment( float [] coords ) {
-			coords[ 0 ] = (float)buffer.getDouble( points + point * 16 ); 
+			coords[ 0 ] = (float)buffer.getDouble( points + point * 16 );
 			coords[ 1 ] = (float)buffer.getDouble( 8 + points + point * 16 );
 		}
 		public final void next() { point++; }
