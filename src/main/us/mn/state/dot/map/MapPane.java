@@ -31,7 +31,7 @@ import java.util.*;
  * subsystem is not available.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.40 $ $Date: 2001/04/20 15:52:03 $
+ * @version $Revision: 1.41 $ $Date: 2001/04/20 17:17:54 $
  */
 public final class MapPane implements ThemeChangedListener {
 	
@@ -135,26 +135,24 @@ public final class MapPane implements ThemeChangedListener {
 		if ( width == 0 ) {
 			width = 1;
 		}
-		//screenBuffer = new BufferedImage( width, height,
-		//	BufferedImage.TYPE_4BYTE_ABGR );
-		//staticBuffer = new BufferedImage( width, height,
-		//	BufferedImage.TYPE_4BYTE_ABGR );
-        screenBuffer = createImage( width, height );
+		screenBuffer = createImage( width, height );
         staticBuffer = createImage( width, height );
 		rescale();
 	}
 	
     private BufferedImage createImage( int width, int height ) {
-        if ( tranparent ) {
+        if ( transparent ) {
             return new BufferedImage( width, height,
                 BufferedImage.TYPE_4BYTE_ABGR );
         } else {
-           // return new BufferedImage( width, height,
+			return new BufferedImage( width, height, 
+				BufferedImage.TYPE_3BYTE_BGR );
+		   // return new BufferedImage( width, height,
            //     BufferedImage.TYPE_INT_RGB );
-           GraphicsEnvironment.getLocalGraphicsEnvironment()
-                .getDefaultScreenDevice().getDefaultConfiguration()
-                .createCompatibleImage( width, height );
-           //FIXME
+           //return GraphicsEnvironment.getLocalGraphicsEnvironment()
+           //     .getDefaultScreenDevice().getDefaultConfiguration()
+           //     .createCompatibleImage( width, height );
+           //FIXME there has got to be a better way!
         }
         
     }

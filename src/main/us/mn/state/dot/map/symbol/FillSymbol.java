@@ -17,18 +17,17 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-//Title:        FillSymbol
-//Version:      1.0
-//Copyright:    Copyright (c) 1999
-//Author:       Erik Engstrom
-//Company:      MnDOT
-//Description:  A FillSymbol is used to paint a polygon on a Map only SOLID_FILL is implemented.
-
 package us.mn.state.dot.shape;
 
 import java.awt.*;
 import java.awt.geom.*;
 
+/**
+ * A FillSymbol is used to paint a polygon on a Map only SOLID_FILL is implemented.
+ *
+ * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
+ * @version $Revision: 1.10 $ $Date: 2001/04/20 17:17:54 $ 
+ */
 public final class FillSymbol extends AbstractSymbol {
 
 	/** fill constants */
