@@ -21,9 +21,9 @@ package us.mn.state.dot.shape;
 import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.LinkedList;
 import us.mn.state.dot.shape.event.LayerChangedEvent;
 import us.mn.state.dot.shape.event.LayerChangedListener;
 import us.mn.state.dot.shape.event.MapMouseListener;
@@ -40,7 +40,7 @@ public class Theme implements LayerChangedListener {
 	public final Layer layer;
 
 	/** List of available renderers for theme */
-	protected final List layerRenderers = new ArrayList();
+	protected final List layerRenderers = new LinkedList();
 
 	/** The LayerRenderer used to paint this theme's layer */
 	protected LayerRenderer renderer;
@@ -55,7 +55,7 @@ public class Theme implements LayerChangedListener {
 	protected boolean visible = true;
 
 	/** ThemeChangedListeners that listen to this theme */
-	protected List listeners = new ArrayList();
+	protected List listeners = new LinkedList();
 
 	/** Map tooltips */
 	protected MapTip mapTip;
@@ -198,9 +198,7 @@ public class Theme implements LayerChangedListener {
 
 	/** Remove a ThemeChangedListener from the listeners of this theme */
 	public void removeThemeChangedListener(ThemeChangedListener listener) {
-		if(listeners.contains(listener)) {
-			listeners.remove(listener);
-		}
+		listeners.remove(listener);
 	}
 
 	/** Notify all listeners that this theme has changed */
