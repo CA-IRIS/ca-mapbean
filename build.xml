@@ -2,7 +2,7 @@
 
 <!-- ================================================== -->
 <!-- MapBean build file 	                                             -->
-<!-- $Revision: 1.15 $ $Date: 2004/04/19 15:22:36 $                          -->
+<!-- $Revision: 1.16 $ $Date: 2004/08/03 18:07:26 $                          -->
 <!-- =================================================== -->
 
 <project name="MapBean" default="jar" basedir=".">
@@ -43,15 +43,12 @@
     <target name="prepare"
             description="Creates the build directory for this project.">
       <mkdir dir="${build.dir}" />
-      <available property="ddsclient"
-                 file="lib/ddsClient.jar"/>
     </target>
 
     <!-- ================================================ -->
     <!-- Compiles the source code                                            -->
     <!-- ================================================ -->
     <target name="compile"
-            depends="check_ddsclient,prepare"
             description="Compiles all of the source code for this project.">
       <mkdir dir="${build.classes}"/>
       <javac srcdir="${src.dir}"
@@ -71,15 +68,6 @@
       <copy todir="${build.classes}/images">
         <fileset dir="${src.images.dir}" />
       </copy>
-    </target>
-
-    <!-- ================================================ -->
-    <!-- Checks for existence of dependant jar                                   -->
-    <!-- ================================================ -->
-    <target name="check_ddsclient"
-            unless="ddsclient"
-            depends="prepare">
-      <fail message="Can't find lib/ddsclient.jar."/>
     </target>
 
     <!-- ================================================= -->
