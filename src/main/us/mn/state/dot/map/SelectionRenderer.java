@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000-2004  Minnesota Department of Transportation
+ * Copyright (C) 2004  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,24 +18,15 @@
  */
 package us.mn.state.dot.map;
 
-import java.awt.Component;
 import java.awt.Graphics2D;
-import java.awt.Shape;
 
 /**
- * A LayerRenderer determines how a Layers data is rendered on the map.
+ * A selection renderer paints the selection highlight on the map
  *
- * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
  * @author Douglas Lau
  */
-public interface LayerRenderer {
+public interface SelectionRenderer {
 
-	/** Render a MapObject on the graphics */
+	/** Render a selected map object */
 	public void render(Graphics2D g, MapObject o);
-
-	/** Get the legend for this renderer */
-	public Component[] getLegend();
-
-	/** Get tooltip text for the given map object */
-	public String getTip(MapObject o);
 }

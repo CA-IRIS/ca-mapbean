@@ -39,6 +39,9 @@ import us.mn.state.dot.map.event.ThemeChangedListener;
  */
 public class Theme implements LayerChangedListener {
 
+	/** Empty selection special case (for equality comparisons) */
+	static protected final MapObject[] NO_SELECTION = new MapObject[0];
+
 	/** Layer controlled by the theme */
 	public final Layer layer;
 
@@ -48,8 +51,8 @@ public class Theme implements LayerChangedListener {
 	/** The LayerRenderer used to paint this theme's layer */
 	protected LayerRenderer renderer;
 
-	/** The LayerRenderer used to paint selected objects in the layer */
-	protected LayerRenderer selectionRenderer;
+	/** Selection renderer which paints object selections for the theme */
+	protected SelectionRenderer selectionRenderer;
 
 	/** Currently selected shapes */
 	protected MapObject[] selections = new MapObject[0];
@@ -92,7 +95,7 @@ public class Theme implements LayerChangedListener {
 		this.layer = layer;
 		this.renderer = renderer;
 		this.visible = visible;
-		selectionRenderer = renderer;
+		selectionRenderer = null;
 	}
 
 	/** Add a LayerRenderer to this themes list of available renderers */
@@ -108,26 +111,36 @@ public class Theme implements LayerChangedListener {
 
 	/** Set the current LayerRenderer */
 	public void setCurrentLayerRenderer(LayerRenderer r) {
-		renderer = r;
-		notifyThemeChangedListeners(ThemeChangedEvent.SHADE);
+		if(r != renderer) {
+			renderer = r;
+			notifyThemeChangedListeners(ThemeChangedEvent.SHADE);
+		}
 	}
 
 	public LayerRenderer getCurrentLayerRenderer() {
 		return renderer;
 	}
 
-	public void setSelectionRenderer(LayerRenderer renderer) {
-		selectionRenderer = renderer;
+	/** Set the selection renderer */
+	public void setSelectionRenderer(SelectionRenderer r) {
+		selectionRenderer = r;
 	}
 
-	public void setSelections(MapObject[] newSelections) {
-		selections = newSelections;
+	/** Set the selected map objects */
+	public void setSelections(MapObject[] s) {
+		if(s != selections) {
+			selections = s;
+			notifyThemeChangedListeners(
+				ThemeChangedEvent.SELECTION);
+		}
 	}
 
+	/** Clear the selected map objects */
 	public void clearSelections() {
-		setSelections(new MapObject[0]);
+		setSelections(NO_SELECTION);
 	}
 
+	/** Get the selected map objects */
 	public MapObject[] getSelections() {
 		return selections;
 	}
@@ -147,7 +160,7 @@ public class Theme implements LayerChangedListener {
 	/** Paint the selections for the theme */
 	public void paintSelections(Graphics2D g) {
 		MapObject[] s = selections;
-		if(visible && s != null) {
+		if(visible && s != null && selectionRenderer != null) {
 			for(int i = 0; i < s.length; i++) {
 				selectionRenderer.render(g, s[i]);
 			}
@@ -170,8 +183,10 @@ public class Theme implements LayerChangedListener {
 
 	/** Set the visibility of the theme */
 	public void setVisible(boolean v) {
-		visible = v;
-		notifyThemeChangedListeners(ThemeChangedEvent.DATA);
+		if(v != visible) {
+			visible = v;
+			notifyThemeChangedListeners(ThemeChangedEvent.DATA);
+		}
 	}
 
 	/** Add a ThemeChangedListener to the listeners of this theme */

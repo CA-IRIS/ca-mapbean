@@ -35,6 +35,7 @@ import us.mn.state.dot.map.Symbol;
  * Symol for painting MapObjects as images.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
+ * @author Douglas Lau
  */
 public class ImageSymbol implements Symbol {
 
@@ -76,7 +77,7 @@ public class ImageSymbol implements Symbol {
 		this.size = size;
 	}
 
-	public void setColor(Color color) {
+/*	public void setColor(Color color) {
 	}
 
 	public Color getColor() {
@@ -88,7 +89,7 @@ public class ImageSymbol implements Symbol {
 
 	public Color getOutlineColor() {
 		return null;
-	}
+	} */
 
 	public String getLabel() {
 		return label;
@@ -102,32 +103,28 @@ public class ImageSymbol implements Symbol {
 /*		Shape shape = o.getShape();
 		Rectangle2D rect = shape.getBounds2D();
 		double xCoord = rect.getX();
-		double yCoord = rect.getY(); */
+		double yCoord = rect.getY();
+		int width = icon.getIconWidth();
+		int height = icon.getIconHeight(); */
 		AffineTransform t = o.getTransform();
 		g.drawImage(icon.getImage(), t, null);
-/*		int width = icon.getIconWidth();
-		int height = icon.getIconHeight();
-		if ( !drawFullSize ) {
-			width = ( int ) size.getWidth();
-			height = ( int ) size.getHeight();
-		} else { //draw image to full size.
-			width = icon.getIconWidth();
-			height = icon.getIconHeight();
+/*		if(!drawFullSize) {
+			width = (int)size.getWidth();
+			height = (int)size.getHeight();
+		} else {
 			try {
 				AffineTransform transform = g.getTransform();
-				Point2D pointStart = new Point2D.Double( 0, 0 );
-				Point2D pointEnd = new Point2D.Double( width, height );
-				pointStart = transform.inverseTransform( pointStart,
-					pointStart );
-				pointEnd = transform.inverseTransform( pointEnd, pointEnd );
-				width = ( int ) ( pointEnd.getX() - pointStart.getX() );
-				height = ( int ) ( pointEnd.getY() - pointStart.getY() );
-			} catch ( java.awt.geom.NoninvertibleTransformException nte ) {
-				nte.printStackTrace();
+				Point2D p1 = new Point2D.Double(0, 0);
+				Point2D p2 = new Point2D.Double(width, height);
+				p1 = transform.inverseTransform(p1, p1);
+				p2 = transform.inverseTransform(p2, p2);
+				width = (int)(p2.getX() - p1.getX());
+				height = (int)(p2.getY() - p1.getY());
+			} catch(NoninvertibleTransformException e) {
+				e.printStackTrace();
 				return;
 			}
 		}
-
 		g.drawImage( icon.getImage(), ( ( int ) xCoord - width / 2 ),
 			( ( int ) yCoord - height / 2 ), width, height,
 			icon.getImageObserver() ); */
