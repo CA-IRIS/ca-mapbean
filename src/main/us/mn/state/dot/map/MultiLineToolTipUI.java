@@ -59,40 +59,40 @@ class MultiLineToolTipUI extends BasicToolTipUI {
     	if (tipText == null) {
     	    return new Dimension(0, 0);
         }
-	textArea = new JTextArea(tipText);
-	rendererPane.removeAll();
-	rendererPane.add(textArea );
-	textArea.setWrapStyleWord(true);
-	int width = ((JMultiLineToolTip) c).getFixedWidth();
-	int columns = ((JMultiLineToolTip) c).getColumns();
+		textArea = new JTextArea(tipText);
+		rendererPane.removeAll();
+		rendererPane.add(textArea );
+		textArea.setWrapStyleWord(true);
+		int width = ((JMultiLineToolTip) c).getFixedWidth();
+		int columns = ((JMultiLineToolTip) c).getColumns();
 
-	if( columns > 0 ) {
-	    textArea.setColumns(columns);
-	    textArea.setSize(0, 0);
-	    textArea.setLineWrap(true);
-	    textArea.setSize( textArea.getPreferredSize() );
-        } else if ( width > 0 ) {
-	    textArea.setLineWrap(true);
-	    Dimension d = textArea.getPreferredSize();
-	    d.width = width;
-	    d.height++;
-	    textArea.setSize(d);
-        } else {
-            textArea.setLineWrap(false);
-        }
+		if ( columns > 0 ) {
+			textArea.setColumns(columns);
+			textArea.setSize(0, 0);
+			textArea.setLineWrap(true);
+			textArea.setSize( textArea.getPreferredSize() );
+		} else if ( width > 0 ) {
+			textArea.setLineWrap(true);
+			Dimension d = textArea.getPreferredSize();
+			d.width = width;
+			d.height++;
+			textArea.setSize(d);
+		} else {
+			textArea.setLineWrap(false);
+		}
 
-	Dimension dim = textArea.getPreferredSize();
-        dim.height += 3;
-	dim.width += 3;
-	return dim;
-    }
+		Dimension dim = textArea.getPreferredSize();
+		dim.height += 3;
+		dim.width += 3;
+		return dim;
+	}
 
-    public Dimension getMinimumSize(JComponent c) {
-        return getPreferredSize(c);
-    }
+	public Dimension getMinimumSize(JComponent c) {
+		return getPreferredSize(c);
+	}
 
-    public Dimension getMaximumSize(JComponent c) {
-        return getPreferredSize(c);
-    }
+	public Dimension getMaximumSize(JComponent c) {
+		return getPreferredSize(c);
+	}
 }
 

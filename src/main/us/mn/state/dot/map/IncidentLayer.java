@@ -92,8 +92,8 @@ public final class IncidentLayer implements Layer, IncidentListener {
 
 	public void paint(Graphics2D g){
 		if (visible) {
-			if(incidents != null) {
-				for(int i = 0; i < incidents.length; i++){
+			if (incidents != null) {
+				for (int i = 0; i < incidents.length; i++){
 					incidents[i].paint(g);
 				}
 			}
@@ -111,12 +111,12 @@ public final class IncidentLayer implements Layer, IncidentListener {
 		}
 
 		if (incidents != null) {
-			for( int i = 0; i < incidents.length; i++ ) {
+			for ( int i = 0; i < incidents.length; i++ ) {
 				x = incidents[i].getX();
 				y = incidents[i].getY();
 				Rectangle2D r = new Rectangle2D.Double((x - 500),
 					(y - 500), 1000, 1000 );
-				if(r.contains(p)) {
+				if (r.contains(p)) {
 					result.add(incidents[i]);
 					if (selectionModel != null) {
 						selectionModel.addSelectionInterval(i,i);

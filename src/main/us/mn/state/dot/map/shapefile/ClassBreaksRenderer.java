@@ -52,7 +52,7 @@ public class ClassBreaksRenderer extends ShapeRenderer {
 		switch(field.getType()){
 		case Field.DOUBLE_FIELD:
 			double dValue = ((DoubleField)field).getValue(index);
-			for(int i = 0; i < classBreaks.length ; i++){
+			for (int i = 0; i < classBreaks.length ; i++){
 				if (( dValue <= classBreaks[i] ) && ( symbols[i] != null )) {
 					symbols[i].draw(g, path);
 					break;
@@ -65,9 +65,9 @@ public class ClassBreaksRenderer extends ShapeRenderer {
 			break;
 		case Field.INTEGER_FIELD:
 			int iValue = ((IntegerField) field).getValue(index);
-			for(int i = 0; i < classBreaks.length ; i++) {
+			for (int i = 0; i < classBreaks.length ; i++) {
 				if (( iValue <= classBreaks[i] ) && ( symbols[i] != null )) {
-				symbols[i].draw(g, path);
+					symbols[i].draw(g, path);
 					break;
 				}
 			}

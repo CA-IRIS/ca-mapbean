@@ -17,7 +17,8 @@ public abstract class ShapeRenderer {
 
     public abstract void paint( Graphics2D g, GeneralPath path, int index);
     public abstract void setField(Field f);
-    public abstract Field getField();
+	public abstract Field getField();
+	
     public void setTip(MapTip m) {
         mapTip = m;
     }
