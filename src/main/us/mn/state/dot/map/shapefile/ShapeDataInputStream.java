@@ -30,7 +30,7 @@ import java.io.InputStream;
  */
 public class ShapeDataInputStream extends DataInputStream {
 
-	/** Create a new ShapeFileInputStream */
+	/** Create a new ShapeDataInputStream */
 	public ShapeDataInputStream(InputStream in) {
 		super(in);
 	}
