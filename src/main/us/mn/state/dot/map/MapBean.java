@@ -87,6 +87,7 @@ public final class MapBean extends JComponent implements ThemeChangedListener {
 	 * @param themes a list of themes to be used in the map
 	 */
 	public MapBean( java.util.List themes ) {
+		this.setDoubleBuffered( true );
 		this.setToolTipText( " " );
 		for ( ListIterator li = themes.listIterator(); li.hasNext(); ){
 			Object ob = li.next();
