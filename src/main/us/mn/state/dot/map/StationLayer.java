@@ -16,7 +16,7 @@ import java.awt.geom.*;
 public final class StationLayer extends ShapeLayer implements StationListener {
 
     public StationLayer() throws IOException {
-		super("gpoly/gpoly", "gpoly");//"C:\\gpoly\\gpoly", "gpoly");
+		super("gpoly/gpoly", "gpoly");
     }
 
     public void update(int[] volume, int[] occupancy, int[] status){

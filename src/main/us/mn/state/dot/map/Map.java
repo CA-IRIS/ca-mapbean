@@ -374,8 +374,11 @@ public final class Map extends JViewport implements LayerListener {
 	private final MouseHelper mouse = new MouseHelper((JViewport) this);
 
 	public void updateLayer(Layer l) {
-	   if (this.isShowing()) {
+		if (this.isShowing()) {
 			map.refreshLayer(l);
+			System.out.println("Layer " + l.getName() + " is showing");
+		} else {
+			System.out.println("Layer " + l.getName() + " is not showing");
 		}
 	}
 
