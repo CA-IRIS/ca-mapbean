@@ -21,7 +21,6 @@ package us.mn.state.dot.map;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
-import java.awt.GraphicsConfiguration;
 import java.awt.RenderingHints;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
@@ -29,6 +28,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 import us.mn.state.dot.map.event.MapChangedListener;
 import us.mn.state.dot.map.event.ThemeChangedEvent;
 import us.mn.state.dot.map.event.ThemeChangedListener;

@@ -19,9 +19,6 @@
 package us.mn.state.dot.map;
 
 import java.awt.Graphics2D;
-import java.awt.Shape;
-import us.mn.state.dot.map.MapObject;
-import us.mn.state.dot.map.Symbol;
 
 /**
  * Abstract layer renderer

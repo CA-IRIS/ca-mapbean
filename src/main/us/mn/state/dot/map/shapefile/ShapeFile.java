@@ -22,13 +22,11 @@ import java.awt.Shape;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.PathIterator;
 import java.awt.geom.Rectangle2D;
-import java.io.EOFException;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
-import java.util.List;
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  * ShapeFile is an ESRI shape file reader.  It reads the file and creates a

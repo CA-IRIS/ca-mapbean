@@ -19,11 +19,9 @@
 package us.mn.state.dot.map.shapefile;
 
 import java.awt.Component;
-import java.awt.Graphics2D;
-import java.awt.Shape;
-import java.awt.geom.Rectangle2D;
 import java.util.Iterator;
 import java.util.LinkedList;
+
 import us.mn.state.dot.map.AbstractRenderer;
 import us.mn.state.dot.map.MapObject;
 import us.mn.state.dot.map.Symbol;

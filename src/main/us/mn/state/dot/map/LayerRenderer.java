@@ -20,7 +20,6 @@ package us.mn.state.dot.map;
 
 import java.awt.Component;
 import java.awt.Graphics2D;
-import java.awt.Shape;
 
 /**
  * A LayerRenderer determines how a Layers data is rendered on the map.

@@ -21,7 +21,7 @@ package us.mn.state.dot.map;
 import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import java.util.List;
+
 import us.mn.state.dot.map.event.LayerChangedEvent;
 import us.mn.state.dot.map.event.LayerChangedListener;
 

@@ -22,9 +22,10 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Shape;
+
 import javax.swing.Icon;
 import javax.swing.JLabel;
+
 import us.mn.state.dot.map.MapObject;
 import us.mn.state.dot.map.Outline;
 import us.mn.state.dot.map.Symbol;
