@@ -101,7 +101,6 @@ public final class Map extends JPanel implements ThemeChangedListener {
 			addTheme( theme );
 		}
 		setMouseAction( MouseDelegator.SELECT );
-		//tDoubleBuffered( false );
 		staticBuffer = new BufferedImage( 1405, 1728,
 			BufferedImage.TYPE_INT_RGB );
 		addComponentListener( new ComponentAdapter() {
@@ -132,9 +131,9 @@ public final class Map extends JPanel implements ThemeChangedListener {
 	 * notifies the Map that the selection data has changed and the map
 	 * should be updated
 	 */
-	public void selectionChanged() {
+	/*public void selectionChanged() {
 		repaint();
-	}
+	}*/
 	
 	
 	AffineTransform getTransform() {
@@ -428,11 +427,14 @@ public final class Map extends JPanel implements ThemeChangedListener {
 			Theme theme = ( Theme ) staticThemes.get( i );
 			theme.paint( g2D );
 		}
+		staticBufferDirty = false;
 	}
 	
 	public void setBufferDirty( boolean b ) {
 		bufferDirty = b;
 	}
+	
+	private boolean staticBufferDirty = false;
 
 	/**
 	 * Updates screenBuffer.
@@ -440,6 +442,8 @@ public final class Map extends JPanel implements ThemeChangedListener {
 	public void updateScreenBuffer() {
 		if ( staticBuffer == null ) {
 			staticBuffer = createBuffer();
+			updateStaticBuffer();
+		} else if ( staticBufferDirty ) {
 			updateStaticBuffer();
 		}
 		Graphics2D g2D = ( Graphics2D ) screenBuffer.getGraphics();
@@ -477,6 +481,13 @@ public final class Map extends JPanel implements ThemeChangedListener {
 	}
 	
 	public void themeChanged( ThemeChangedEvent event ) {
+		Theme theme = ( Theme ) event.getSource();
+		if ( theme.isStatic() ) {
+			staticBufferDirty = true;
+			bufferDirty = true;
+		} else {
+			bufferDirty = true;
+		}
 		repaint();
 	}
 }

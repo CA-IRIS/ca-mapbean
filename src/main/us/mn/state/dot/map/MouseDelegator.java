@@ -144,7 +144,7 @@ public class MouseDelegator extends MouseAdapter implements
 				g.setTransform( t );
 				boolean found = false;
 				for ( ListIterator it = themes.listIterator();
-						it.hasNext();){
+						it.hasNext(); ){
 					Theme l = ( Theme ) it.next();
 					found = l.mouseClick( e.getClickCount(), p, g );
 					if ( found ) {

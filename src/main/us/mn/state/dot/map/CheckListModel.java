@@ -16,8 +16,9 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+
 //Title:        SignClient
-//Version:
+//Version:      
 //Copyright:    Copyright (c) 1999
 //Author:       Erik Engstrom
 //Company:      MnDOT
@@ -25,17 +26,21 @@
 
 package us.mn.state.dot.shape;
 
-import us.mn.state.dot.shape.*;
+import javax.swing.*;
+import java.util.*;
+import java.awt.event.*;
 
-public final class StationMapTip implements MapTip {
+public abstract class CheckListModel extends AbstractListModel implements
+		ActionListener {
 
-	public String getTip( Layer layer, int i ){
-		String result = null;
-		result = new String( "Station "	+
-			layer.getField( "STATION2" ).getStringValue( i ) + ": " +
-			layer.getField( "NAME" ).getStringValue( i ) + "\n Volume = " +
-			layer.getField( "VOLUME" ).getStringValue( i ) + "\n Occupancy = " +
-			layer.getField( "OCCUPANCY" ).getStringValue( i ));
-		return result;
+	protected Vector checks = new Vector();
+	protected Vector items = new Vector();
+
+	public int getSize(){
+		return checks.size();
 	}
-}
+
+	public Object getElementAt(int index){
+		return checks.get(index);
+	}
+} 

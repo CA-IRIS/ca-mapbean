@@ -181,6 +181,8 @@ public class Theme implements LayerChangedListener {
 	 */
 	public void setVisible( boolean visible ){
 		this.visible = visible;
+		notifyThemeChangedListeners( new ThemeChangedEvent( this,
+			ThemeChangedEvent.DATA ) );
 	}
 	
 	/**
