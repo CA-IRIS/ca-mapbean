@@ -24,12 +24,15 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 import java.io.IOException;
+import java.util.List;
 
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 
+import us.mn.state.dot.dds.client.DataListener;
+import us.mn.state.dot.dds.client.Station;
 import us.mn.state.dot.dds.client.StationClient;
 import us.mn.state.dot.dds.client.StationListener;
 import us.mn.state.dot.shape.event.MapMouseListener;
@@ -43,10 +46,10 @@ import us.mn.state.dot.shape.shapefile.ShapeRenderer;
  * file.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.32 $ $Date: 2003/05/07 15:28:57 $ 
+ * @version $Revision: 1.33 $ $Date: 2003/08/14 15:00:43 $ 
  */
 public final class StationLayer extends ShapeLayer implements
-		StationListener {
+		StationListener, DataListener {
 	/**
 	 * Constructs a StationLayer.
 	 * @throws IOException Will throw an IOException if the gpoly.dbf or
@@ -230,4 +233,27 @@ public final class StationLayer extends ShapeLayer implements
 			return false;
 		}
 	}
+	
+	/**
+	 * @see us.mn.state.dot.dds.client.DataListener#update(List)
+	 */
+	public void update( List stations ) {
+		for ( int i = shapes.length - 1; i >= 0; i-- ) {
+			ShapeObject shape = shapes[ i ];
+			int station = ( ( Integer ) 
+				shape.getValue( "STATION2" ) ).intValue() - 1;
+			if ( station > 0 ) {
+				Station stat = ( Station ) stations.get( station );
+				shape.addField( "VOLUME",
+					new Integer( (int) stat.getVolume() ) );
+				shape.addField( "OCCUPANCY",
+					new Integer( (int) stat.getOccupancy() ) );
+				shape.addField( "STATUS",
+					new Integer( stat.getStatus() ) );
+			}	
+		}
+		SwingUtilities.invokeLater( new NotifyThread( this,
+			LayerChangedEvent.DATA ) );
+	}
+
 }
