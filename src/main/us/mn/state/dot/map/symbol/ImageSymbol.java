@@ -16,7 +16,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-package us.mn.state.dot.shape.symbol;
+package us.mn.state.dot.map.symbol;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -28,8 +28,8 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
-import us.mn.state.dot.shape.MapObject;
-import us.mn.state.dot.shape.Symbol;
+import us.mn.state.dot.map.MapObject;
+import us.mn.state.dot.map.Symbol;
 
 /**
  * Symol for painting MapObjects as images.

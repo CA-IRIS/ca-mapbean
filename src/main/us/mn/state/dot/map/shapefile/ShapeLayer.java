@@ -16,7 +16,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-package us.mn.state.dot.shape.shapefile;
+package us.mn.state.dot.map.shapefile;
 
 import java.awt.Graphics2D;
 import java.awt.Shape;
@@ -25,15 +25,15 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
-import us.mn.state.dot.shape.AbstractLayer;
-import us.mn.state.dot.shape.DefaultRenderer;
-import us.mn.state.dot.shape.LayerRenderer;
-import us.mn.state.dot.shape.MapObject;
-import us.mn.state.dot.shape.Symbol;
-import us.mn.state.dot.shape.Theme;
-import us.mn.state.dot.shape.symbol.CircleMarker;
-import us.mn.state.dot.shape.symbol.FillSymbol;
-import us.mn.state.dot.shape.symbol.SolidLine;
+import us.mn.state.dot.map.AbstractLayer;
+import us.mn.state.dot.map.DefaultRenderer;
+import us.mn.state.dot.map.LayerRenderer;
+import us.mn.state.dot.map.MapObject;
+import us.mn.state.dot.map.Symbol;
+import us.mn.state.dot.map.Theme;
+import us.mn.state.dot.map.symbol.CircleMarker;
+import us.mn.state.dot.map.symbol.FillSymbol;
+import us.mn.state.dot.map.symbol.SolidLine;
 
 /**
  * ShapeLayer is a class for drawing ESRI shape files.

@@ -16,7 +16,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-package us.mn.state.dot.shape;
+package us.mn.state.dot.map;
 
 import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
@@ -24,11 +24,11 @@ import java.awt.geom.Rectangle2D;
 import java.util.Iterator;
 import java.util.List;
 import java.util.LinkedList;
-import us.mn.state.dot.shape.event.LayerChangedEvent;
-import us.mn.state.dot.shape.event.LayerChangedListener;
-import us.mn.state.dot.shape.event.MapMouseListener;
-import us.mn.state.dot.shape.event.ThemeChangedEvent;
-import us.mn.state.dot.shape.event.ThemeChangedListener;
+import us.mn.state.dot.map.event.LayerChangedEvent;
+import us.mn.state.dot.map.event.LayerChangedListener;
+import us.mn.state.dot.map.event.MapMouseListener;
+import us.mn.state.dot.map.event.ThemeChangedEvent;
+import us.mn.state.dot.map.event.ThemeChangedListener;
 
 /**
  * A theme is associated with one layer and one active layer renderer.

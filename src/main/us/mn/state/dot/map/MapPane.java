@@ -16,7 +16,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-package us.mn.state.dot.shape;
+package us.mn.state.dot.map;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -28,9 +28,9 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import us.mn.state.dot.shape.event.MapChangedListener;
-import us.mn.state.dot.shape.event.ThemeChangedEvent;
-import us.mn.state.dot.shape.event.ThemeChangedListener;
+import us.mn.state.dot.map.event.MapChangedListener;
+import us.mn.state.dot.map.event.ThemeChangedEvent;
+import us.mn.state.dot.map.event.ThemeChangedListener;
 
 /**
  * This class can be used to generate map graphics when access to the graphics

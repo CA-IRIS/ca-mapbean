@@ -17,7 +17,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-package us.mn.state.dot.shape;
+package us.mn.state.dot.map;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
@@ -31,13 +31,13 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
-import us.mn.state.dot.shape.shapefile.ShapeFileFilter;
-import us.mn.state.dot.shape.shapefile.ShapeLayer;
+import us.mn.state.dot.map.shapefile.ShapeFileFilter;
+import us.mn.state.dot.map.shapefile.ShapeLayer;
 
 /**
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.4 $ $Date: 2003/05/07 15:28:57 $ 
+ * @version $Revision: 1.5 $ $Date: 2004/08/19 15:53:41 $ 
  */
 public class Viewer extends JFrame {
 

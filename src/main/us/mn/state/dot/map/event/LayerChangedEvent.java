@@ -1,4 +1,4 @@
-package us.mn.state.dot.shape.event;
+package us.mn.state.dot.map.event;
 
 import java.util.EventObject;
 

@@ -16,14 +16,14 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-package us.mn.state.dot.shape.event;
+package us.mn.state.dot.map.event;
 
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.MouseEvent;
 import javax.swing.ImageIcon;
 import javax.swing.SwingUtilities;
-import us.mn.state.dot.shape.MapBean;
+import us.mn.state.dot.map.MapBean;
 
 /**
  *

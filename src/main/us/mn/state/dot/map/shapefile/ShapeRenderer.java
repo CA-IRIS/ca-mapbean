@@ -16,11 +16,11 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-package us.mn.state.dot.shape.shapefile;
+package us.mn.state.dot.map.shapefile;
 
-import us.mn.state.dot.shape.LayerRenderer;
-import us.mn.state.dot.shape.MapObject;
-import us.mn.state.dot.shape.Symbol;
+import us.mn.state.dot.map.LayerRenderer;
+import us.mn.state.dot.map.MapObject;
+import us.mn.state.dot.map.Symbol;
 
 /**
  * Base class for all renderers used for shape files.

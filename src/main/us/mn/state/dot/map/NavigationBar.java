@@ -16,7 +16,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-package us.mn.state.dot.shape;
+package us.mn.state.dot.map;
 
 import java.awt.Dimension;
 import java.awt.Insets;
@@ -29,10 +29,10 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
-import us.mn.state.dot.shape.event.MapMouseMode;
-import us.mn.state.dot.shape.event.PanMouseMode;
-import us.mn.state.dot.shape.event.SelectMouseMode;
-import us.mn.state.dot.shape.event.ZoomMouseMode;
+import us.mn.state.dot.map.event.MapMouseMode;
+import us.mn.state.dot.map.event.PanMouseMode;
+import us.mn.state.dot.map.event.SelectMouseMode;
+import us.mn.state.dot.map.event.ZoomMouseMode;
 
 /**
  * ToolBar that supplies Navigation buttons for map.

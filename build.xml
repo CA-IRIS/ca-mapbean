@@ -1,49 +1,45 @@
 <?xml version="1.0"?>
 
 <!-- ================================================== -->
-<!-- MapBean build file 	                                             -->
-<!-- $Revision: 1.16 $ $Date: 2004/08/03 18:07:26 $                          -->
-<!-- =================================================== -->
-
+<!-- MapBean build file 	                        -->
+<!-- ================================================== -->
 <project name="MapBean" default="jar" basedir=".">
 
-    <!--
-      Give user a chance to override without editing this file
-	  (and without typing -D each time he compiles it)
-	-->
+	<!-- Give user a chance to override without editing this file
+	     (and without typing -D each time he compiles it) -->
 	<property file=".ant.properties"/>
 	<property file="${user.home}/.ant.properties"/>
 	<property file="${basedir}/default.properties"/>
 
-    <property name="name" value="MapBean"/>
-    <property name="version" value="1.22" />
-    <property name="src.images.dir" value="src/images" />
-    <property name="src.dir" value="src/main" />
-    <property name="lib.dir" value="lib" />
-    <property name="docs.dir" value="docs" />
-    <property name="build.dir" value="build/MapBean" />
-    <property name="build.lib" value="build/lib" />
-    <property name="build.classes" value="${build.dir}/classes" />
-    <property name="build.javadocs" value="${build.dir}/javadocs" />
-    <property name="MapBean.dist.dir" value="dist/MapBean" />
-    <property name="jar.location" value="${lib.dir}"/>
-    <path id="classpath">
-	  <fileset dir = "${jar.location}"
-               includes="*.jar"
-               excludes="MapBean.jar"/>
-	  <pathelement location="${dds.jar}"/>
+	<property name="name" value="MapBean"/>
+	<property name="version" value="1.22" />
+	<property name="src.images.dir" value="src/images" />
+	<property name="src.dir" value="src/main" />
+	<property name="lib.dir" value="lib" />
+	<property name="docs.dir" value="docs" />
+	<property name="build.dir" value="build/MapBean" />
+	<property name="build.lib" value="build/lib" />
+	<property name="build.classes" value="${build.dir}/classes" />
+	<property name="build.javadocs" value="${build.dir}/javadocs" />
+	<property name="MapBean.dist.dir" value="dist/MapBean" />
+	<property name="jar.location" value="${lib.dir}"/>
+	<path id="classpath">
+		<fileset dir = "${jar.location}"
+		         includes="*.jar"
+		         excludes="MapBean.jar"/>
+		<pathelement location="${dds.jar}"/>
 	</path>
-    <property name="packages" value="us.mn.state.dot.shape.*" />
-    <property name="manifest" value="src/etc/manifest" />
-    <property name="build.compiler" value="modern" />
+	<property name="packages" value="us.mn.state.dot.map.*" />
+	<property name="manifest" value="src/etc/manifest.mf" />
+	<property name="build.compiler" value="modern" />
 
-    <!--  =============================================== -->
-    <!--  Prepares the build directory                                       -->
-    <!--  =============================================== -->
-    <target name="prepare"
-            description="Creates the build directory for this project.">
-      <mkdir dir="${build.dir}" />
-    </target>
+	<!--  =============================================== -->
+	<!--  Prepare the build directory                     -->
+	<!--  =============================================== -->
+	<target name="prepare"
+		description="Creates the build directory for this project.">
+		<mkdir dir="${build.dir}" />
+	</target>
 
     <!-- ================================================ -->
     <!-- Compiles the source code                                            -->
@@ -54,7 +50,7 @@
       <javac srcdir="${src.dir}"
              destdir="${build.classes}"
              debug="on"
-             deprecation="off"
+             deprecation="on"
              optimize="on">
         <classpath refid="classpath"/>
       </javac>

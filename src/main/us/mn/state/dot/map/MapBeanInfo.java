@@ -16,7 +16,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-package us.mn.state.dot.shape;
+package us.mn.state.dot.map;
 
 import java.beans.EventSetDescriptor;
 import java.beans.PropertyDescriptor;
@@ -25,7 +25,7 @@ import java.beans.SimpleBeanInfo;
 /**
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.3 $ $Date: 2003/05/19 21:23:41 $ 
+ * @version $Revision: 1.4 $ $Date: 2004/08/19 15:53:41 $ 
  */
 public class MapBeanInfo extends SimpleBeanInfo {
 

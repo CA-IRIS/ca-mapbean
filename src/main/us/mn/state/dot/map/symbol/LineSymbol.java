@@ -16,7 +16,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-package us.mn.state.dot.shape.symbol;
+package us.mn.state.dot.map.symbol;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -27,8 +27,8 @@ import java.awt.Stroke;
 import java.awt.geom.Rectangle2D;
 import javax.swing.Icon;
 import javax.swing.JLabel;
-import us.mn.state.dot.shape.MapObject;
-import us.mn.state.dot.shape.Symbol;
+import us.mn.state.dot.map.MapObject;
+import us.mn.state.dot.map.Symbol;
 
 /**
  * Abstract base class for shapes that render lines on a map.

@@ -12,7 +12,7 @@
  * **********************************************************************
  */
 
-package us.mn.state.dot.shape.event;
+package us.mn.state.dot.map.event;
 
 import java.awt.Cursor;
 import java.awt.event.MouseEvent;

@@ -16,7 +16,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-package us.mn.state.dot.shape.shapefile;
+package us.mn.state.dot.map.shapefile;
 
 import java.awt.Component;
 import java.awt.Graphics2D;
@@ -24,9 +24,9 @@ import java.awt.Shape;
 import java.awt.geom.Rectangle2D;
 import java.util.Iterator;
 import java.util.LinkedList;
-import us.mn.state.dot.shape.MapObject;
-import us.mn.state.dot.shape.Symbol;
-import us.mn.state.dot.shape.symbol.FillSymbol;
+import us.mn.state.dot.map.MapObject;
+import us.mn.state.dot.map.Symbol;
+import us.mn.state.dot.map.symbol.FillSymbol;
 
 /**
  * A renderer that renders objects base on a numeric field and a set of

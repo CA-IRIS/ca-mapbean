@@ -16,11 +16,11 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-package us.mn.state.dot.shape.shapefile;
+package us.mn.state.dot.map.shapefile;
 
 import java.awt.Shape;
 import java.util.Map;
-import us.mn.state.dot.shape.MapObject;
+import us.mn.state.dot.map.MapObject;
 
 /**
  * A ShapeObject represents a record from an ESRI shape file.

@@ -16,7 +16,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-package us.mn.state.dot.shape;
+package us.mn.state.dot.map;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -38,10 +38,10 @@ import java.util.List;
 import java.util.ListIterator;
 import javax.swing.JComponent;
 import javax.swing.JToolTip;
-import us.mn.state.dot.shape.event.MapChangedListener;
-import us.mn.state.dot.shape.event.MapMouseListener;
-import us.mn.state.dot.shape.event.MapMouseMode;
-import us.mn.state.dot.shape.event.SelectMouseMode;
+import us.mn.state.dot.map.event.MapChangedListener;
+import us.mn.state.dot.map.event.MapMouseListener;
+import us.mn.state.dot.map.event.MapMouseMode;
+import us.mn.state.dot.map.event.SelectMouseMode;
 
 /**
  * The Map class is a container for a MapPane which allows the pane to be
@@ -49,7 +49,7 @@ import us.mn.state.dot.shape.event.SelectMouseMode;
  * the internal MapPane.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @see us.mn.state.dot.shape.MapPane
+ * @see us.mn.state.dot.map.MapPane
  */
 public class MapBean extends JComponent implements MapChangedListener {
 
