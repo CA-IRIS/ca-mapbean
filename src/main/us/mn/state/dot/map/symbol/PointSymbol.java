@@ -23,6 +23,7 @@ import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Rectangle2D;
+import us.mn.state.dot.shape.MapObject;
 
 /**
  * Symbol object used to render point shapes on map.
@@ -74,24 +75,24 @@ public abstract class PointSymbol extends AbstractSymbol {
 			g.setColor(color);
 			g.fill(getShape(pt.getX(), pt.getY()));
 		}
-		if(isOutLined()) {
+		if(isOutlined()) {
 			outlineSymbol.draw(g, getShape(pt.getX(), pt.getY()));
 		}
 	}
 
-	public Rectangle2D getBounds( MapObject object ) {
-		return getShape( object ).getBounds();
-	}
-
-	public Shape getShape( MapObject object ) {
+	public Shape getShape(MapObject object) {
 		Rectangle2D bounds = object.getShape().getBounds();
-		Shape renderedShape = getShape( bounds.getX(), bounds.getY() );
+		Shape renderedShape = getShape(bounds.getX(), bounds.getY());
 		GeneralPath path = new GeneralPath();
-		if(isOutLined()) {
+		if(isOutlined()) {
 			path.append(outlineSymbol.getStroke().createStrokedShape(
 				renderedShape), true);
 		}
-		path.append( renderedShape, true );
+		path.append(renderedShape, true);
 		return path;
+	}
+
+	public Rectangle2D getBounds(MapObject object) {
+		return getShape(object).getBounds();
 	}
 }

@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000  Minnesota Department of Transportation
+ * Copyright (C) 2000-2004  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,7 +16,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package us.mn.state.dot.shape.shapefile;
 
 import java.awt.Graphics2D;
@@ -29,37 +28,35 @@ import java.io.PrintWriter;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-
 import us.mn.state.dot.shape.AbstractLayer;
-import us.mn.state.dot.shape.CircleMarker;
 import us.mn.state.dot.shape.DefaultRenderer;
-import us.mn.state.dot.shape.FillSymbol;
 import us.mn.state.dot.shape.LayerRenderer;
 import us.mn.state.dot.shape.MapObject;
-import us.mn.state.dot.shape.SolidLine;
 import us.mn.state.dot.shape.Symbol;
 import us.mn.state.dot.shape.Theme;
+import us.mn.state.dot.shape.symbol.CircleMarker;
+import us.mn.state.dot.shape.symbol.FillSymbol;
+import us.mn.state.dot.shape.symbol.SolidLine;
 
 /**
-  * ShapeLayer is a class for drawing ESRI shape files.
-  *
-  * @author Douglas Lau
-  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
-  * @version $Revision: 1.7 $ $Date: 2003/05/19 21:23:41 $
+ * ShapeLayer is a class for drawing ESRI shape files.
+ *
+ * @author Douglas Lau
+ * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
   */
 public class ShapeLayer extends AbstractLayer {
 
-	/** The records of the shapefile. */
-	protected ShapeObject [] shapes;
+	/** The records of the shapefile */
+	protected ShapeObject[] shapes;
 	
-	/** The type of the shape file. */
+	/** The type of the shape file */
 	private int shapeType;
 	
-	/**
-	 * Create a new ShapeLayer from the specified filename.
-	 */
-	public ShapeLayer( String fileName, String layerName ) throws IOException {
-		this( ShapeLayer.class.getResource( "/" + fileName + ".shp" ),
+	/** Create a new ShapeLayer from the specified filename */
+	public ShapeLayer(String fileName, String layerName)
+		throws IOException
+	{
+		this(ShapeLayer.class.getResource("/" + fileName + ".shp"),
 			layerName);
 	}
 	
@@ -96,14 +93,15 @@ public class ShapeLayer extends AbstractLayer {
 	}
 
 	/** Paint this Layer */
-	public void paint( Graphics2D g, LayerRenderer renderer ) {
-		for ( int i = ( shapes.length - 1 ) ; i >= 0; i-- ){
-			renderer.render( g, shapes[ i ] );
+	public void paint(Graphics2D g, LayerRenderer renderer) {
+		for(int i = (shapes.length - 1); i >= 0; i--) {
+			renderer.render(g, shapes[i]);
 		}
 	}
 	
-	public void paintSelections( Graphics2D g, LayerRenderer renderer,
-			MapObject[] selections ) {
+	public void paintSelections(Graphics2D g, LayerRenderer renderer,
+		MapObject[] selections)
+	{
 		if ( selections == null ) {
 			return;
 		}
@@ -148,10 +146,9 @@ public class ShapeLayer extends AbstractLayer {
 		}
 		return result;
 	}
-
 	
-	public final java.util.List getPaths( Point2D p, LayerRenderer renderer ){
-		java.util.List result = new ArrayList();
+	public List getPaths(Point2D p, LayerRenderer renderer) {
+		List result = new ArrayList();
 		for ( int i = ( shapes.length - 1 ); i >= 0; i-- ) {
 			MapObject object = shapes[ i ];
 			Shape target = renderer.getShape( object );
@@ -163,11 +160,9 @@ public class ShapeLayer extends AbstractLayer {
 		return result;
 	}
 		
-	/**
-	 * Get the ShapeObject at the given index.
-	 */
-	public ShapeObject getShapeObject( int index ) {
-		return shapes[ index ];
+	/** Get the ShapeObject at the given index */
+	public ShapeObject getShapeObject(int index) {
+		return shapes[index];
 	}
 
 	public void printData( OutputStream out ){   //only works for point shapes

@@ -28,6 +28,8 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import us.mn.state.dot.shape.MapObject;
+import us.mn.state.dot.shape.Symbol;
 
 /**
  * Symol for painting MapObjects as images.
@@ -70,34 +72,44 @@ public class ImageSymbol implements Symbol {
 		return icon;
 	}
 
-	public Rectangle2D getBounds( MapObject object ) {
-		Shape shape = object.getShape();
-		Rectangle2D rect = shape.getBounds2D();
-		double xCoord = rect.getX();
-		double yCoord = rect.getY();
-		int width = ( int ) size.getWidth();
-		int height = ( int ) size.getHeight();
-		return new Rectangle2D.Double( ( xCoord - width / 2 ),
-			( yCoord - height / 2 ), width, height );
+	public void setOutlined(boolean outlined) {
 	}
 
-	public void setOutLined( boolean outlined ) {
-	}
-
-	public boolean isOutLined() {
+	public boolean isOutlined() {
 		return false;
 	}
 
-	public void setSize( Dimension size ) {
+	public void setSize(Dimension size) {
 		this.size = size;
+	}
+
+	public void setColor(Color color) {
 	}
 
 	public Color getColor() {
 		return null;
 	}
 
-	public Shape getShape( MapObject object ) {
-		return getBounds( object );
+	public void setOutlineColor(Color color) {
+	}
+
+	public Color getOutlineColor() {
+		return null;
+	}
+
+	public Shape getShape(MapObject object) {
+		return getBounds(object);
+	}
+
+	public Rectangle2D getBounds(MapObject object) {
+		Shape shape = object.getShape();
+		Rectangle2D rect = shape.getBounds2D();
+		double xCoord = rect.getX();
+		double yCoord = rect.getY();
+		int width = (int)size.getWidth();
+		int height = (int)size.getHeight();
+		return new Rectangle2D.Double((xCoord - width / 2),
+			(yCoord - height / 2), width, height);
 	}
 
 	public String getLabel() {
@@ -160,9 +172,6 @@ public class ImageSymbol implements Symbol {
 	}
 
 	public void setFilled( boolean f ) {
-	}
-
-	public void setColor( Color color ) {
 	}
 
 	public void setLabel( String l ) {

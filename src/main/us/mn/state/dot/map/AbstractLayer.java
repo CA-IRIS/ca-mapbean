@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000  Minnesota Department of Transportation
+ * Copyright (C) 2000-2004  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,14 +22,13 @@ import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.ListIterator;
+import us.mn.state.dot.shape.symbol.CircleMarker;
 
 /** 
  * The AbstractLayer implements much of the functionality of the Layer
  * interface.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.30 $ $Date: 2003/05/19 21:23:41 $ 
- * @since 1.0
  */
 public abstract class AbstractLayer implements Layer {
 
@@ -58,11 +57,7 @@ public abstract class AbstractLayer implements Layer {
 		}
 	}
 
-	/** 
-	 * Gets the extent of the layer.
-	 *
-	 * @return the extent of the layer.
-	 */
+	/** Gets the extent of the layer */
 	public Rectangle2D getExtent() {
 		return extent;
 	}
@@ -136,5 +131,4 @@ public abstract class AbstractLayer implements Layer {
 	public Theme getTheme() {
 		return new Theme(this, new DefaultRenderer(new CircleMarker()));
 	}
-
 }

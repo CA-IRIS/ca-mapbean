@@ -27,6 +27,8 @@ import java.awt.Stroke;
 import java.awt.geom.Rectangle2D;
 import javax.swing.Icon;
 import javax.swing.JLabel;
+import us.mn.state.dot.shape.MapObject;
+import us.mn.state.dot.shape.Symbol;
 
 /**
  * Abstract base class for shapes that render lines on a map.
@@ -53,15 +55,15 @@ public abstract class LineSymbol implements Symbol {
 		this( Color.black );
 	}
 
-	public LineSymbol( Color c ){
-		this( c, DEFAULT_SIZE );
+	public LineSymbol(Color c) {
+		this(c, DEFAULT_SIZE);
 	}
 
-	public LineSymbol( Color c, int size ) {
+	public LineSymbol(Color c, int size) {
 		color = c;
-		setSize( size );
+		setSize(size);
 		stroke = createStroke();
-		this.setOutLineSymbol( this );
+		setOutlineSymbol(this);
 	}
 
 	/** Set the color to paint the line */
@@ -95,21 +97,31 @@ public abstract class LineSymbol implements Symbol {
 		return size;
 	}
 
-	public void setOutLined( boolean outlined ){
+	public void setOutlined(boolean outlined) {
 	}
 
-	public boolean isOutLined(){
+	public boolean isOutlined() {
 		return true;
 	}
 
-	public void setOutLineSymbol( LineSymbol symbol ){
+	/** Set the color to paint the line */
+	public void setOutlineColor(Color color) {
+		setColor(color);
 	}
 
-	public LineSymbol getOutLineSymbol(){
+	/** Get the color of this line */
+	public Color getOutlineColor() {
+		return getColor();
+	}
+
+	public void setOutlineSymbol(LineSymbol symbol) {
+	}
+
+	public LineSymbol getOutLineSymbol() {
 		return this;
 	}
 
-	public String getLabel(){
+	public String getLabel() {
 		return label;
 	}
 
@@ -129,7 +141,7 @@ public abstract class LineSymbol implements Symbol {
 		g.draw(shape);
 	}
 
-	public Component getLegend(){
+	public Component getLegend() {
 		JLabel label = new JLabel();
 		if ( ( getLabel() != null ) && ( ! getLabel().equals( "" ) ) ) {
 			label.setText( getLabel() );
@@ -139,12 +151,12 @@ public abstract class LineSymbol implements Symbol {
 		return label;
 	}
 
-	public Rectangle2D getBounds( MapObject object ) {
-		return stroke.createStrokedShape( object.getShape() ).getBounds2D();
+	public Shape getShape(MapObject object) {
+		return stroke.createStrokedShape(object.getShape());
 	}
 
-	public Shape getShape(MapObject object) {
-		return stroke.createStrokedShape( object.getShape() );
+	public Rectangle2D getBounds(MapObject object) {
+		return getShape(object).getBounds2D();
 	}
 
 	class ColorIcon implements Icon {

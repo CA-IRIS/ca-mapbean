@@ -16,7 +16,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-package us.mn.state.dot.shape.symbol;
+package us.mn.state.dot.shape;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -31,31 +31,31 @@ import java.awt.geom.Rectangle2D;
  */
 public interface Symbol {
 
-	public void draw( Graphics2D g, Shape shape );
+	public String getLabel();
 
-	public void setColor( Color color );
+	public void setLabel(String l);
+
+	public void draw(Graphics2D g, Shape shape);
+
+	public void setColor(Color color);
 
 	public Color getColor();
 
 	public boolean isFilled();
 
-	public void setFilled( boolean f );
+	public void setFilled(boolean f);
 
-	public void setOutLined( boolean outlined );
+	public void setOutlineColor(Color color);
 
-	public boolean isOutLined();
+	public Color getOutlineColor();
 
-	public void setOutLineSymbol( LineSymbol symbol );
+	public void setOutlined(boolean outlined);
 
-	public LineSymbol getOutLineSymbol();
-
-	public String getLabel();
-
-	public void setLabel( String l );
+	public boolean isOutlined();
 
 	public Component getLegend();
 
-	public Rectangle2D getBounds( MapObject object );
+	public Shape getShape(MapObject object);
 
-	public Shape getShape( MapObject object );
+	public Rectangle2D getBounds(MapObject object);
 }

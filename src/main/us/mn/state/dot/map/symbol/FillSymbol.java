@@ -16,7 +16,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-package us.mn.state.dot.shape;
+package us.mn.state.dot.shape.symbol;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -63,13 +63,13 @@ public class FillSymbol extends AbstractSymbol {
 	}
 
 	/** Draw symbol on map */
-	public void draw( Graphics2D g, Shape shape ){
-		if ( isFilled() ) {
-			g.setColor( color );
-			g.fill( shape );
+	public void draw(Graphics2D g, Shape shape) {
+		if(isFilled()) {
+			g.setColor(color);
+			g.fill(shape);
 		}
-		if ( isOutLined() ){
-			outlineSymbol.draw( g, shape );
+		if(isOutlined()) {
+			outlineSymbol.draw(g, shape);
 		}
 	}
 
@@ -89,11 +89,11 @@ public class FillSymbol extends AbstractSymbol {
 		private int width;
 		private int height;
 
-		public FillSymbolIcon( FillSymbol symbol ){
-			this( symbol, 25, 15 );
+		public FillSymbolIcon(FillSymbol symbol) {
+			this(symbol, 25, 15);
 		}
 
-		public FillSymbolIcon( FillSymbol symbol, int width, int height ){
+		public FillSymbolIcon(FillSymbol symbol, int width, int height){
 			this.symbol = symbol;
 			this.width = width;
 			this.height = height;
@@ -101,14 +101,13 @@ public class FillSymbol extends AbstractSymbol {
 
 		public void paintIcon( Component c, Graphics g, int x, int y ) {
 			Graphics2D g2 = ( Graphics2D ) g;
-			if ( symbol.isOutLined() ) {
-				//g2.setStroke(
-				g2.setColor( symbol.getOutLineSymbol().getColor() );
-				g2.drawRect( x, y, width - 1, height - 1 );
+			if(symbol.isOutlined()) {
+				g2.setColor(symbol.getOutlineColor());
+				g2.drawRect(x, y, width - 1, height - 1);
 			}
-			if ( symbol.isFilled() ) {
-				g.setColor( symbol.getColor() );
-				g.fillRect( x + 1, y + 1, width - 2, height - 2 );
+			if(symbol.isFilled()) {
+				g.setColor(symbol.getColor());
+				g.fillRect(x + 1, y + 1, width - 2, height - 2);
 			}
 		}
 
