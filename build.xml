@@ -2,7 +2,7 @@
 
 <!-- ======================================================================= -->
 <!-- MapBean build file 	                                             -->
-<!-- $Revision: 1.9 $ $Date: 2001/04/19 17:39:03 $                                                       -->
+<!-- $Revision: 1.10 $ $Date: 2001/05/07 22:16:24 $                                                       -->
 <!-- ======================================================================= -->
 
 <project name="MapBean" default="jar" basedir=".">
@@ -56,7 +56,7 @@
                debug="on"
                deprecation="off"
                optimize="on">
-			   <classpath refid="classpath"/>
+            <classpath refid="classpath"/>
         </javac>
  
         <copy todir="${build.classes}">
@@ -100,7 +100,9 @@
                  windowtitle="${name} API"
                  doctitle="${name}"
                  bottom="Copyright &#169; Minnesota Department of
-                         Transportation. All Rights Reserved."/>
+                         Transportation. All Rights Reserved.">
+            <classpath refid="classpath"/>
+        </javadoc>
     </target>
 
     <!-- =================================================================== -->
@@ -117,7 +119,9 @@
         <mkdir dir="${MapBean.dist.dir}/docs/api"/>
         <mkdir dir="${MapBean.dist.dir}/src"/>
         <copy todir="${MapBean.dist.dir}/src">
-            <fileset dir="${src.dir}" />
+            <fileset dir="${src.dir}">
+		<include name = "**/*.jar" />
+	    </fileset>
         </copy>
         <copy todir="${MapBean.dist.dir}/lib">
             <fileset dir="${lib.dir}" />

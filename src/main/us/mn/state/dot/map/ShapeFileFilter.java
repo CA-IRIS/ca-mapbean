@@ -27,7 +27,7 @@ import javax.swing.filechooser.*;
 /**
  * A file filter for filtering for ESRI shape files.
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.1 $ $Date: 2001/04/19 16:52:59 $ 
+ * @version $Revision: 1.2 $ $Date: 2001/05/07 22:16:24 $ 
  */
 public class ShapeFileFilter extends FileFilter {	
 	
@@ -68,12 +68,8 @@ public class ShapeFileFilter extends FileFilter {
 	}
 	
 	/**
-     * Returns the human readable description of this filter. For
-     * example: "JPEG and GIF Image Files (*.jpg, *.gif)"
+     * Returns the human readable description of this filter.
      *
-     * @see setDescription
-     * @see setExtensionListInDescription
-     * @see isExtensionListInDescription
      * @see FileFilter#getDescription
      */
     public String getDescription() {

@@ -33,8 +33,8 @@ import us.mn.state.dot.shape.event.*;
  * the internal MapPane.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.18 $ $Date: 2001/04/20 17:17:54 $
- * @see us.mn.state.dot.shap.MapPane
+ * @version $Revision: 1.19 $ $Date: 2001/05/07 22:16:24 $
+ * @see us.mn.state.dot.shape.MapPane
  */
 public final class MapBean extends JComponent implements MapChangedListener{
 	

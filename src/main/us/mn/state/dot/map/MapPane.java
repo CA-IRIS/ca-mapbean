@@ -31,7 +31,7 @@ import java.util.*;
  * subsystem is not available.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.43 $ $Date: 2001/05/07 21:15:03 $
+ * @version $Revision: 1.44 $ $Date: 2001/05/07 22:16:24 $
  */
 public final class MapPane implements ThemeChangedListener {
 	
@@ -120,9 +120,12 @@ public final class MapPane implements ThemeChangedListener {
 	 * Set whether or not the background should be transparent.
 	 */
 	public void setTransparent( boolean transparent ) {
-		this.transparent = transparent;
-	}
-	
+        if ( this.transparent != transparent ) {
+            this.transparent = transparent;
+            setSize( new Dimension( width, height ) );
+        }
+    }
+		
 	/**
 	 * Set the size of the MapImage.
 	 * @param d, the new dimension of the image.
@@ -168,13 +171,6 @@ public final class MapPane implements ThemeChangedListener {
         
     }
     
-    public void setTransparent( boolean transparent ) {
-        if ( this.transparent != transparent ) {
-            this.transparent = transparent;
-            setSize( new Dimension( width, height ) );
-        }
-    }
-
 	/**
 	 * Get the size of the MapImage.
 	 */

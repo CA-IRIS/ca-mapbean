@@ -21,17 +21,14 @@ package us.mn.state.dot.shape;
 
 import java.awt.*;
 import java.awt.event.*;
-import javax.swing.*;
 import java.util.ListIterator;
-import us.mn.state.dot.shape.*;
+import javax.swing.*;
 import javax.swing.event.*;
-import javax.help.*;
-import us.mn.state.dot.tms.toast.Icons;
 
 /**
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.3 $ $Date: 2001/04/19 16:49:31 $ 
+ * @version $Revision: 1.4 $ $Date: 2001/05/07 22:16:24 $ 
  */
 public final class MapToolBar extends NavigationBar {
 

@@ -10,13 +10,6 @@
  *  the United States and other countries.
  * 
  * **********************************************************************
- * 
- * $Source: /home/lau1dou/cvsroot/MapBean/src/main/us/mn/state/dot/map/event/Attic/MouseModeAdapter.java,v $
- * $Revision: 1.1 $
- * $Date: 2000/07/05 22:37:06 $
- * $Author: engs1eri $
- * 
- * **********************************************************************
  */
 
 package us.mn.state.dot.shape.event;

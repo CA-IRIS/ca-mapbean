@@ -10,13 +10,6 @@
  *  the United States and other countries.
  * 
  * **********************************************************************
- * 
- * $Source: /home/lau1dou/cvsroot/MapBean/src/main/us/mn/state/dot/map/event/Attic/MapMouseMode.java,v $
- * $Revision: 1.1 $
- * $Date: 2000/07/05 22:37:06 $
- * $Author: engs1eri $
- * 
- * **********************************************************************
  */
 
 package us.mn.state.dot.shape.event;
@@ -34,10 +27,7 @@ import java.awt.event.MouseMotionListener;
  * mouse events (click, drag-select) are interpreted as navigation
  * commands, (recenter, zoom-and-recenter).  There may be other modes
  * depending on how your application wants to interpret MouseEvents.
- * @see AbstractMouseMode
- * @see NavMouseMode
  * @see SelectMouseMode
- * @see NullMouseMode
  */
 public interface MapMouseMode extends MouseListener, MouseMotionListener {
 

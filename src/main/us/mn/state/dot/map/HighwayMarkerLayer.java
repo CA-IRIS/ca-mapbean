@@ -17,12 +17,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-/*
- * HighwayMarkerLayer.java
- *
- * Created on April 18, 2000, 5:25 PM
- */
-
 package us.mn.state.dot.shape;
 
 import java.awt.*;
@@ -31,20 +25,23 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 import javax.swing.*;
-//import us.mn.state.dot.tms.toast.Icons;
 
 /** 
+ * This layer is used for displaying highway markers on the map.
  *
- * @author  erik.engstrom@dot.state.mn.us
- * @version 
+ * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
+ * @version $Revision: 1.7 $ $Date: 2001/05/07 22:16:24 $
  */
 public final class HighwayMarkerLayer extends ShapeLayer {
 	
 	private final Field highways;
-	
+	/** Location of the shape file */
 	private static final String FILE_LOCATION = "gpoly/markers";
+	/** Name of the layer */
 	private static final String LAYER_NAME = "markers";
+	/** Field that contains the name of the highway. */
 	private static final String LOOKUP_FIELD = "highway";
+	/** Location of the image files.*/
 	private static final String IMAGE_LOCATION = "/images/HighWayMarkers/";
 	
   	/** Creates new HighwayMarkerLayer */
@@ -53,6 +50,7 @@ public final class HighwayMarkerLayer extends ShapeLayer {
 		highways = this.getField( LOOKUP_FIELD );
 	}
 	
+	/** Create a new Highway MarkerLayer */
 	public HighwayMarkerLayer( URL fileLocation ) throws IOException {
 		super( fileLocation, LAYER_NAME );
 		highways = this.getField( LOOKUP_FIELD );

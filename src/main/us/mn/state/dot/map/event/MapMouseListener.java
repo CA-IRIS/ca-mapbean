@@ -10,13 +10,6 @@
  *  the United States and other countries.
  * 
  * **********************************************************************
- * 
- * $Source: /home/lau1dou/cvsroot/MapBean/src/main/us/mn/state/dot/map/event/Attic/MapMouseListener.java,v $
- * $Revision: 1.2 $
- * $Date: 2000/07/06 22:16:52 $
- * $Author: engs1eri $
- * 
- * **********************************************************************
  */
 
 package us.mn.state.dot.shape.event;
@@ -36,7 +29,6 @@ import java.awt.event.MouseEvent;
  * MapMouseListener NEVER receiving events.
  *
  * @see SelectMouseMode
- * @see NavMouseMode 
  */
 public interface MapMouseListener {
 
@@ -55,9 +47,6 @@ public interface MapMouseListener {
      * </pre>
      * <code>
      * @return String[] of modeID's
-     * @see NavMouseMode#modeID
-     * @see SelectMouseMode#modeID
-     * @see NullMouseMode#modeID
      */
     public String[] getMouseModeServiceList();
 	
