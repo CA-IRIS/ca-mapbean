@@ -26,10 +26,12 @@ import java.awt.geom.*;
  * Symbol object used to render point shapes on map.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.13 $ $Date: 2001/08/15 16:08:51 $ 
+ * @version $Revision: 1.14 $ $Date: 2001/08/16 22:43:59 $ 
  */
 public abstract class PointSymbol extends AbstractSymbol {
-
+	
+	protected int size;
+	
 	public PointSymbol() {
 		super( Color.black );
 	}
@@ -48,12 +50,25 @@ public abstract class PointSymbol extends AbstractSymbol {
 		super( c, label, outlined );
 		this.setSize( 500 );
 	}
+	
+	public void setSize ( int size ){
+		if ( size < 0 ) {
+			throw new IllegalArgumentException( "Size can't be less than 0: " +
+				size );
+		} else {
+			this.size = size;
+		}
+	}
+	
+	public int getSize(){
+		return size;
+	}
 
 	abstract protected Shape getShape( double x, double y );
 
 	/** Draw symbol on map */
-	public final void draw( Graphics2D g, Shape path ){
-		Rectangle2D pt = path.getBounds();
+	public final void draw( Graphics2D g, Shape shape ){
+		Rectangle2D pt = shape.getBounds();
 		if ( isFilled() ) {
 			g.setColor( color );
 			g.fill( getShape( pt.getX(), pt.getY() ) );

@@ -23,29 +23,28 @@ import java.awt.*;
 import java.awt.geom.*;
 import java.util.*;
 import javax.swing.*;
-import us.mn.state.dot.dds.client.*;
+import us.mn.state.dot.dds.client.Incident;
+import us.mn.state.dot.dds.client.IncidentListener;
+import us.mn.state.dot.dds.client.IncidentDescription;
 import us.mn.state.dot.shape.event.*;
 
 /**
  * Displays incidents as icons on map.
  *
  * @author erik.engstrom@dot.state.mn.us
- * @version $Revision: 1.37 $ $Date: 2001/08/10 16:21:41 $
+ * @version $Revision: 1.38 $ $Date: 2001/08/16 22:43:59 $
  */
 public class IncidentLayer extends AbstractLayer implements
 		IncidentListener {
 
 	protected IncidentWrapper [] incidents = null;
+	
 	protected ListSelectionModel selectionModel =
 		new DefaultListSelectionModel();
-	private boolean directional = true;
+	
+	//private boolean directional = true;
 
     private boolean dirty = true;
-
-	/* the number of map units per mile */
-	private static final int MAP_UNITS_PER_MILE = 3218;
-	
-	private static final int[] RING_DEFAULTS = { 5, 10, 15 };
 
 	public IncidentLayer(){
 		setStatic( false );
@@ -119,37 +118,16 @@ public class IncidentLayer extends AbstractLayer implements
 
 	public void paintSelections( Graphics2D g, LayerRenderer renderer,
 			MapObject[] selection ) {
-		selectionModel.clearSelection();
-		int[] diameters = new int[ 3 ];
-		diameters = getDefaultDiameters();
-	}
-	
-	private int[] getDefaultDiameters(){
-		int[] result = new int[ 3 ];
-		for ( int i = 0; i < 3; i++ ){
-			result[ i ] = RING_DEFAULTS[ i ] * MAP_UNITS_PER_MILE;
-		}
-		return result;
-	}
-	
-	private void drawEllipses( Graphics2D g, Incident incident,
-		int[] diameters) {
-		for ( int i = 0; i < 3; i++ ){
-			g.draw( new Ellipse2D.Double( ( incident.getX() -
-				( diameters[ i ] / 2 ) ), ( incident.getY() -
-				( diameters[ i ] / 2 ) ), diameters[ i ],
-				diameters[ i ] ) );
+		for ( int i = 0; i < selection.length; i++ ) {
+			renderer.render( g, selection[ i ] );
 		}
 	}
+	
 	
 	public void paint( Graphics2D g, LayerRenderer renderer ){
 		if ( incidents != null ) {
 			for ( int i = ( incidents.length - 1 ); i >= 0; i-- ){
-				if ( directional ) {
-					incidents[ i ].getIncident().paintDirectionalIcon( g );
-				} else {
-					incidents[ i ].getIncident().paintIncidentIcon( g );
-				}
+				renderer.render( g, incidents[ i ] );
 			}
 		}
 	}
@@ -187,7 +165,8 @@ public class IncidentLayer extends AbstractLayer implements
 		return result;
 	}
 	
-	public final MapObject search( Rectangle2D searchArea, LayerRenderer renderer ) {
+	public final MapObject search( Rectangle2D searchArea,
+			LayerRenderer renderer ) {
 		MapObject result = null;
 		if ( incidents != null ) {
 			for ( int i = ( incidents.length - 1 ); i >= 0; i-- ) {
@@ -222,9 +201,9 @@ public class IncidentLayer extends AbstractLayer implements
 		return result;
 	}
 
-	public void setDirectional( boolean b ) {
+	/*public void setDirectional( boolean b ) {
 		directional = b;
-	}
+	}*/
 	
 	public Theme getTheme() {
 		Theme result = new IncidentTheme( this );
@@ -258,6 +237,10 @@ public class IncidentLayer extends AbstractLayer implements
 			return incident;
 		}
 		
+		public IncidentDescription getDescription() {
+			return incident.getDescription();
+		}
+		
 		public Shape getShape() {
 			return shape;
 		}
@@ -280,6 +263,9 @@ public class IncidentLayer extends AbstractLayer implements
 		
 		public IncidentTheme( Layer layer ) {
 			super( layer );
+			LayerRenderer renderer = new IncidentRenderer();
+			this.addLayerRenderer( renderer );
+			this.setCurrentLayerRenderer( renderer );
 		}
 		
 		public MapMouseListener getMapMouseListener() {

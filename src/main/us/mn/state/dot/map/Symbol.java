@@ -29,7 +29,7 @@ import java.awt.geom.Rectangle2D;
  * Interface for symbols used by themes to draw layer data.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.19 $ $Date: 2001/08/15 16:08:51 $ 
+ * @version $Revision: 1.20 $ $Date: 2001/08/16 22:43:59 $ 
  */
 public interface Symbol {
 	
@@ -43,10 +43,6 @@ public interface Symbol {
 	
 	public void setFilled( boolean f );
 
-	public void setSize( int size );
-	
-	public int getSize();
-	
 	public void setOutLined( boolean outlined );
 	
 	public boolean isOutLined();

@@ -27,7 +27,7 @@ import javax.swing.*;
  * A FillSymbol is used to paint a polygon on a Map only SOLID_FILL is implemented.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.11 $ $Date: 2001/06/07 22:57:05 $ 
+ * @version $Revision: 1.12 $ $Date: 2001/08/16 22:43:59 $ 
  */
 public final class FillSymbol extends AbstractSymbol {
 
@@ -61,13 +61,13 @@ public final class FillSymbol extends AbstractSymbol {
 	}
 
 	/** Draw symbol on map */
-	public void draw( Graphics2D g, Shape path ){
+	public void draw( Graphics2D g, Shape shape ){
 		if ( isFilled() ) { 
 			g.setColor( color );
-			g.fill( path );
+			g.fill( shape );
 		}
 		if ( isOutLined() ){
-			outlineSymbol.draw( g, path );
+			outlineSymbol.draw( g, shape );
 		}
 	}
 	

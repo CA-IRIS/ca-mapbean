@@ -27,13 +27,12 @@ import javax.swing.*;
  * Base class for Symbol implementations.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.6 $ $Date: 2001/08/15 16:08:51 $ 
+ * @version $Revision: 1.7 $ $Date: 2001/08/16 22:43:59 $ 
  */
 public abstract class AbstractSymbol implements LegendItem, Symbol {
 
 	protected Color color = Color.black;
 	protected LineSymbol outlineSymbol = new SolidLine();
-	protected int size;
 	protected boolean outlined = false;
 	protected boolean filled = true;
 	private String label = "";
@@ -72,19 +71,6 @@ public abstract class AbstractSymbol implements LegendItem, Symbol {
 
 	public void setFilled( boolean f ) {
 		filled = f;
-	}
-
-	public void setSize ( int size ){
-		if ( size < 0 ) {
-			throw new IllegalArgumentException( "Size can't be less than 0: " +
-				size );
-		} else {
-			this.size = size;
-		}
-	}
-
-	public int getSize(){
-		return size;
 	}
 
 	public void setOutLined( boolean outlined ){
