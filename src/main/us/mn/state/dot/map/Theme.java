@@ -191,15 +191,15 @@ public class Theme implements LayerChangedListener {
 
 	/** Add a ThemeChangedListener to the listeners of this theme */
 	public void addThemeChangedListener(ThemeChangedListener listener) {
-		if ( ! listeners.contains( listener ) ) {
-			listeners.add( listener );
+		if(!listeners.contains(listener)) {
+			listeners.add(listener);
 		}
 	}
 
 	/** Remove a ThemeChangedListener from the listeners of this theme */
 	public void removeThemeChangedListener(ThemeChangedListener listener) {
-		if ( listeners.contains( listener ) ) {
-			listeners.remove( listener );
+		if(listeners.contains(listener)) {
+			listeners.remove(listener);
 		}
 	}
 
