@@ -33,9 +33,10 @@ import javax.swing.*;
 public abstract class Symbol implements LegendItem {
 
 	protected Color color = Color.black;
-	protected Color outlineColor = Color.black;
+	//protected Color outlineColor = Color.black;
+	protected LineSymbol outlineSymbol = new SolidLine();
 	protected int size;
-	protected boolean outline = false;
+	protected boolean outlined = false;
 	protected boolean filled = true;
 	private String label = "";
 
@@ -53,9 +54,9 @@ public abstract class Symbol implements LegendItem {
 		this( c, label, false );
 	}
 
-	public Symbol( Color color, String label, boolean outline ){
+	public Symbol( Color color, String label, boolean outlined ){
 		this.color = color;
-		this.outline = outline;
+		this.outlined = outlined;
 		this.label = label;
 	}
 
@@ -88,20 +89,20 @@ public abstract class Symbol implements LegendItem {
 		return size;
 	}
 
-	public void setOutLine( boolean outline ){
-		this.outline = outline;
+	public void setOutLined( boolean outlined ){
+		this.outlined = outlined;
 	}
 
-	public boolean getOutLine(){
-		return outline;
+	public boolean isOutLined(){
+		return outlined;
 	}
 
-	public void setOutLineColor( Color c ){
-		outlineColor = c;
+	public void setOutLineSymbol( LineSymbol symbol ){
+		outlineSymbol = symbol;
 	}
 
-	public Color getOutLineColor(){
-		return outlineColor;
+	public LineSymbol getOutLineSymbol(){
+		return outlineSymbol;
 	}
 
 	public String getLabel(){
@@ -146,6 +147,7 @@ public abstract class Symbol implements LegendItem {
 			g.setColor( color );
 			g.fillRect( x + 1, y + 1, w - 2, h - 2 );
 		}
+		
 		public Color getColor() {
 			return color;
 		}

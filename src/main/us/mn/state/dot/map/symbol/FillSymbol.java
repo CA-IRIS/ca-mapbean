@@ -56,17 +56,18 @@ public final class FillSymbol extends Symbol {
 		super( c, label );
 	}
 
-	public FillSymbol( Color c, String label, boolean outline ){
-		super( c, label, outline );
+	public FillSymbol( Color c, String label, boolean outlined ){
+		super( c, label, outlined );
 	}
 
 	/** Draw symbol on map */
 	public void draw( Graphics2D g, GeneralPath path ){
-		g.setColor( color );
-		g.fill( path );
-		if ( getOutLine() ){
-			g.setColor( outlineColor );
-			g.draw( path );
+		if ( isFilled() ) { 
+			g.setColor( color );
+			g.fill( path );
+		}
+		if ( isOutLined() ){
+			outlineSymbol.draw( g, path );
 		}
 	}
 }

@@ -23,8 +23,10 @@ import java.awt.*;
 import java.awt.geom.*;
 import java.io.*;
 import java.util.*;
+import javax.swing.*;
 import us.mn.state.dot.dds.client.*;
 import us.mn.state.dot.shape.event.*;
+
 
 /**
  * A StationLayer displays detector station data represented as a gpoly.shp file.
@@ -69,7 +71,8 @@ public final class StationLayer extends ShapeLayer implements StationListener {
 				}
 			}
 		}
-		updateLayer();
+		notifyLayerChangedListeners( new LayerChangedEvent( this,
+			LayerChangedEvent.DATA ) );
 	}
 
 	public Theme getTheme() {
@@ -83,8 +86,20 @@ public final class StationLayer extends ShapeLayer implements StationListener {
 	
 	private class StationTheme extends Theme implements MapMouseListener {
 		
+		private final JMenu rightClickMenu = new JMenu();
+		private final JMenu statusMenu = new JMenu( "Status" );
+		private final JMenuItem idMenuItem = new JMenuItem( "ID" );
+		private final JMenuItem volumeMenuItem = new JMenuItem( "Volume" );
+		private final JMenuItem occMenuItem = new JMenuItem( "occ" );
+		
 		public StationTheme( Layer layer, LayerRenderer renderer ){
 			super( layer, renderer );
+			setSelectionRenderer( new DefaultRenderer( new FillSymbol(
+				Color.cyan ) ) );
+			rightClickMenu.add( statusMenu );
+			statusMenu.add( idMenuItem );
+			statusMenu.add( volumeMenuItem );
+			statusMenu.add( occMenuItem );
 		}
 		
 		public MapMouseListener getMapMouseListener() {
@@ -112,7 +127,18 @@ public final class StationLayer extends ShapeLayer implements StationListener {
 		}
 		
 		public boolean mousePressed( final java.awt.event.MouseEvent event ) {
-			return false;
+			boolean result = false;
+			int index = getIndex( event );
+			if ( index != -1 ) {
+				result = true;
+				idMenuItem.setText( "Station " + layer.getField( "STATION2" ).getStringValue( index ) + ": " + layer.getField( "NAME" ).getStringValue( index ) );
+				volumeMenuItem.setText( " Volume = " + layer.getField( "VOLUME" ).getStringValue( index ) );
+				occMenuItem.setText( " Occupancy = " + layer.getField( "OCCUPANCY" ).getStringValue( index ) );
+				JPopupMenu menu = rightClickMenu.getPopupMenu();
+				menu.show( event.getComponent(), event.getX(),
+					event.getY() );
+			}
+			return result;
 		}
 		
 		public boolean mouseDragged( final java.awt.event.MouseEvent event ) {
@@ -129,30 +155,32 @@ public final class StationLayer extends ShapeLayer implements StationListener {
 			return false;
 		}
 		
-		public boolean mouseClicked( final java.awt.event.MouseEvent event ) {
-			System.out.println("stationtheme mouseclicked");
-			boolean result = false;
+		private int getIndex( final java.awt.event.MouseEvent event ) {
 			MapBean map = ( MapBean ) event.getSource();
 			AffineTransform at = null;
 			try {
 				at = map.getTransform().createInverse();
 			} catch ( NoninvertibleTransformException ex ){
-				return false;
+				return -1;
 			}
 			Graphics2D g = ( Graphics2D ) map.getGraphics();
 			g.setTransform( map.getTransform() );
 			Point2D point = null;
 			point = at.transform( event.getPoint(), point );
-			ShapeLayer layer = ( ShapeLayer ) getLayer();
 			int index = layer.search( new Rectangle2D.Double( point.getX(),
 				point.getY(), 0, 0 ) );
+			return index;
+		}
+		
+		public boolean mouseClicked( final java.awt.event.MouseEvent event ) {
+			int index = getIndex( event );
 			if ( index == -1 ) {
-				System.out.println("didnt find anything here");
 				return false;
 			} else {
 				int[] selections = { index };
-				System.out.println("found something lets paint it");
-				layer.paintSelections( g, new DefaultRenderer( new FillSymbol( Color.cyan ) ), selections );
+				setSelections( selections );
+				notifyThemeChangedListeners( new ThemeChangedEvent( this,
+					ThemeChangedEvent.SELECTION ) );
 				return true;
 			}
 		}

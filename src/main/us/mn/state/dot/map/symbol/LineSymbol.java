@@ -38,8 +38,9 @@ public abstract class LineSymbol extends Symbol {
 	}
 
 	public LineSymbol( Color c ){
-		this.setColor( c );
+		super( c );
 		createStroke();
+		this.setOutLineSymbol( this );
 	}
 
 	public void setSize( int size ) {

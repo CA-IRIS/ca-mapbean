@@ -79,10 +79,9 @@ public abstract class AbstractLayer implements Layer {
 			layerChangedListeners.add( l );
 		}
 	}
-
-	public void updateLayer() {
+	
+	public void notifyLayerChangedListeners( LayerChangedEvent event ) {
 		ListIterator it = layerChangedListeners.listIterator();
-		LayerChangedEvent event = new LayerChangedEvent( this, 2 );
 		while ( it.hasNext() ){
 			(( LayerChangedListener ) it.next() ).layerChanged( event );
 		}
@@ -117,7 +116,5 @@ public abstract class AbstractLayer implements Layer {
 	
 	public Theme getTheme() {
 		return new Theme( this );
-	}
-	public void paintSelections(Graphics2D g,LayerRenderer renderer,int[] selections) {
 	}
 }

@@ -44,22 +44,21 @@ public abstract class PointSymbol extends Symbol {
 		super( c, label );
 	}
 
-	public PointSymbol( Color c, String label, boolean outline ){
-		super( c, label, outline );
+	public PointSymbol( Color c, String label, boolean outlined ){
+		super( c, label, outlined );
 	}
 
-   abstract protected Shape getShape( double x, double y );
+	abstract protected Shape getShape( double x, double y );
 
 	/** Draw symbol on map */
 	public final void draw( Graphics2D g, GeneralPath path ){
 		Point2D pt = path.getCurrentPoint();
-		if ( filled ) {
+		if ( isFilled() ) {
 			g.setColor( color );
 			g.fill( getShape( pt.getX(), pt.getY() ) );
 		}
-		if ( outline ){
-			g.setColor( outlineColor );
-			g.draw( getShape( pt.getX(), pt.getY() ) );
+		if ( this.isOutLined() ){
+			outlineSymbol.draw( g, getShape( pt.getX(), pt.getY() ) );
 		}
 	}
 }

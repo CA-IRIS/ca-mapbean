@@ -31,7 +31,7 @@ public interface Layer {
 		int[] selections );
 	public String getName();
 	public void addLayerChangedListener( LayerChangedListener listener );
-	public void updateLayer();
+	public void notifyLayerChangedListeners( LayerChangedEvent event );
 	public boolean isStatic();
 	public void setStatic( boolean b );
 	public Field [] getFields();

@@ -130,10 +130,8 @@ public final class MapBean extends JComponent implements ThemeChangedListener {
 		Iterator it = themes.iterator();
 		while ( it.hasNext() ) {
 			Theme theme = ( Theme ) it.next();
-			System.out.println("Checking " + theme.getLayer().getName() );
 			MapMouseListener listener = theme.getMapMouseListener();
 			if ( listener != null && listener.listensToMouseMode( modeId ) ) {
-				System.out.println("Registering " + theme.getLayer().getName() );
 				activeMouseMode.addMapMouseListener( listener );
 			}
 		}
@@ -147,7 +145,7 @@ public final class MapBean extends JComponent implements ThemeChangedListener {
 		return activeMouseMode;
 	}
 	
-	AffineTransform getTransform() {
+	public AffineTransform getTransform() {
 		return screenTransform;
 	}
 	
@@ -161,7 +159,7 @@ public final class MapBean extends JComponent implements ThemeChangedListener {
 		} else {
 			themes.add( theme );
 			MapMouseListener listener = theme.getMapMouseListener();
-			if ( listener != null && listener.listensToMouseMode( activeMouseMode.getID() ) ){
+			if ( listener != null && activeMouseMode != null && listener.listensToMouseMode( activeMouseMode.getID() ) ){
 				activeMouseMode.addMapMouseListener( listener );
 			}
 		}
@@ -486,12 +484,20 @@ public final class MapBean extends JComponent implements ThemeChangedListener {
 	}
 	
 	public void themeChanged( ThemeChangedEvent event ) {
-		Theme theme = ( Theme ) event.getSource();
-		if ( theme.isStatic() ) {
-			staticBufferDirty = true;
-			bufferDirty = true;
-		} else {
-			bufferDirty = true;
+		switch ( event.getReason() ) {
+		case ThemeChangedEvent.DATA: case ThemeChangedEvent.SHADE:
+			Theme theme = ( Theme ) event.getSource();
+			if ( theme.isStatic() ) {
+				staticBufferDirty = true;
+				bufferDirty = true;
+			} else {
+				bufferDirty = true;
+			}
+			break;
+		case ThemeChangedEvent.SELECTION:
+			break;
+		default:
+			break;
 		}
 		repaint();
 	}

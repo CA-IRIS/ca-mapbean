@@ -30,12 +30,14 @@ import us.mn.state.dot.shape.*;
 public final class StationMapTip implements MapTip {
 
 	public String getTip( Layer layer, int i ){
-		String result = null;
-		result = new String( "Station "	+
-			layer.getField( "STATION2" ).getStringValue( i ) + ": " +
-			layer.getField( "NAME" ).getStringValue( i ) + "\n Volume = " +
-			layer.getField( "VOLUME" ).getStringValue( i ) + "\n Occupancy = " +
-			layer.getField( "OCCUPANCY" ).getStringValue( i ));
-		return result;
+		StringBuffer result = new StringBuffer( "Station " );
+		result.append( layer.getField( "STATION2" ).getStringValue( i ) )
+			.append( ": " )
+			.append( layer.getField( "NAME" ).getStringValue( i ) )
+			.append( "\n Volume = " )
+			.append( layer.getField( "VOLUME" ).getStringValue( i ) )
+			.append( "\n Occupancy = " )
+			.append( layer.getField( "OCCUPANCY" ).getStringValue( i ) );
+		return result.toString();
 	}
 }

@@ -42,11 +42,14 @@ public class Theme implements LayerChangedListener {
 	/** The LayerRenderer used to paint this theme's layer */
 	protected LayerRenderer renderer;
 	
+	/** The LayerRenderer used to paint selected objects in the layer */
+	protected LayerRenderer selectionRenderer;
+	
 	/** The name of this theme.*/
 	private String name;
 	
 	/** Currently selected shapes.*/
-	private int[] selections = null;
+	private int[] selections = new int[ 0 ];
 	
 	/** Visibility flag for this theme.*/
 	private boolean visible = true;
@@ -88,14 +91,33 @@ public class Theme implements LayerChangedListener {
 		this.renderer = renderer;
 		this.name = layer.getName();
 		this.visible = visible;
+		selectionRenderer = renderer;
 	}
 	
 	public void setLayerRenderer( LayerRenderer renderer ) {
 		this.renderer = renderer;
+		notifyThemeChangedListeners( new ThemeChangedEvent( this,
+			ThemeChangedEvent.SHADE ) ); 
 	}
 	
 	public LayerRenderer getRenderer() {
 		return renderer;
+	}
+	
+	public void setSelectionRenderer( LayerRenderer renderer ) {
+		selectionRenderer = renderer;
+	}
+	
+	public void clearSelections() {
+		setSelections( new int[ 0 ] );
+	}
+			
+	public void setSelections( int[] newSelections ) {
+		selections = newSelections;
+	}
+	
+	public int[] getSelections() {
+		return selections;
 	}
 	
 	/** 
@@ -104,7 +126,7 @@ public class Theme implements LayerChangedListener {
 	public Rectangle2D getExtent(){
 		return layer.getExtent();
 	}
-	
+
 	/** 
 	 * Paint this layer.
 	 *
@@ -121,19 +143,8 @@ public class Theme implements LayerChangedListener {
 	 * @param g Graphics2D object to paint to
 	 */
 	public void paintSelections( Graphics2D g ){
-		layer.paintSelections( g, renderer, selections );
+		layer.paintSelections( g, selectionRenderer, selections );
 	}
-	
-	/**
-	 * Called by the map on a mouseClick event.
-	 * @param clickCount number of clicks
-	 * @param point location of click
-	 * @param g Graphics2D object that click occured on
-	 */
-	/*public boolean mouseClick( int clickCount, Point2D point,
-			Graphics2D g ) {
-		return false;
-	}*/
 	
 	/**
 	 * Called by the map to get appropriate tool tip text

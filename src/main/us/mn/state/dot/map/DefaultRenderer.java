@@ -31,7 +31,6 @@ import java.awt.*;
 
 public final class DefaultRenderer extends ShapeRenderer {
 
-	//private Symbol symbol;
 	private NumericField field = null;
 	private String name = null;
 

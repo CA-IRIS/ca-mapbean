@@ -26,20 +26,21 @@
 
 package us.mn.state.dot.shape;
 
-import us.mn.state.dot.dds.client.*;
-import java.util.*;
-import java.awt.geom.*;
 import java.awt.*;
-import javax.swing.ListSelectionModel;
-import us.mn.state.dot.tms.toast.TMSProxy;
-import us.mn.state.dot.tms.*;
+import java.awt.geom.*;
+import java.util.*;
+import javax.swing.*;
+import us.mn.state.dot.dds.client.*;
 import us.mn.state.dot.shape.event.*;
+import us.mn.state.dot.tms.*;
+import us.mn.state.dot.tms.toast.TMSProxy;
+
 
 public final class IncidentLayer extends AbstractLayer implements
 		IncidentListener {
 
 	private Incident [] incidents = null;
-	private ListSelectionModel selectionModel = null;
+	private ListSelectionModel selectionModel = new DefaultListSelectionModel();
 	private boolean directional = true;
 
 	/* the number of map units per mile */
@@ -50,22 +51,21 @@ public final class IncidentLayer extends AbstractLayer implements
 	private final TMSProxy proxy;
 
 	public IncidentLayer(){
-		this( null, null );
+		this( null );
 	}
 
 	public IncidentLayer( TMSProxy tms ) {
-		this( null, tms );
-	}
-
-	public IncidentLayer( ListSelectionModel m, TMSProxy tms ) {
 		setStatic( false );
 		proxy = tms;
 		setName( "incidents" );
-		selectionModel = m;
 	}
 
 	public void setSelectionModel( ListSelectionModel selectionModel ){
-		this.selectionModel = selectionModel;
+		if ( selectionModel == null ) {
+			throw new NullPointerException( "selectionModel can not be null" );
+		} else {
+			this.selectionModel = selectionModel;
+		}
 	}
 
 	public void update( Incident[] incidents ){
@@ -89,12 +89,53 @@ public final class IncidentLayer extends AbstractLayer implements
 			}
 			extent = new Rectangle2D.Double( minX, minY, ( maxX - minX )
 				, ( maxY - minY ) );
-			updateLayer();
+			notifyLayerChangedListeners( new LayerChangedEvent( this,
+				LayerChangedEvent.DATA ) );
 		}
 	}
 
 	public void paintSelections( Graphics2D g, LayerRenderer renderer,
-			ArrayList selection ) {
+			int[] selection ) {
+		selectionModel.clearSelection();
+		int[] diameters = new int[ 3 ];
+		if ( proxy == null ){
+			diameters = getDefaultDiameters();
+		} else {
+			DMSList dmsList = ( DMSList ) proxy.getDMSList().getList();
+			for ( int i = 0; i < 3; i++ ){
+				try {
+					diameters[ i ] = dmsList.getRingRadius( i ) *
+						MAP_UNITS_PER_MILE;
+				} catch ( java.rmi.RemoteException ex ){
+					diameters = getDefaultDiameters();
+				}
+			}
+		}
+		g.setColor( Color.red );
+		g.setXORMode( Color.white );
+		for ( int i = 0; i < selection.length; i++ ) {
+			selectionModel.addSelectionInterval( selection[ i ],
+				selection[ i ] );
+			drawEllipses( g, incidents[ selection[ i ] ], diameters );	
+		}
+	}
+	
+	private int[] getDefaultDiameters(){
+		int[] result = new int[ 3 ];
+		for ( int i = 0; i < 3; i++ ){
+			result[ i ] = RING_DEFAULTS[ i ] * MAP_UNITS_PER_MILE;
+		}
+		return result;
+	}
+	
+	private void drawEllipses( Graphics2D g, Incident incident,
+		int[] diameters) {
+		for ( int i = 0; i < 3; i++ ){
+			g.draw( new Ellipse2D.Double( ( incident.getX() -
+				( diameters[ i ] / 2 ) ), ( incident.getY() -
+				( diameters[ i ] / 2 ) ), diameters[ i ],
+				diameters[ i ] ) );
+		}
 	}
 	
 	public void paint( Graphics2D g, LayerRenderer renderer ){
@@ -109,55 +150,6 @@ public final class IncidentLayer extends AbstractLayer implements
 		}
 	}
 
-	private boolean mouseClick( Point2D p, Graphics2D g ) {
-		boolean result;
-		java.util.List found = getPaths( p );
-		if ( found.isEmpty() ) {
-			result = false;
-		} else {
-			result = true;
-			ListIterator it = found.listIterator();
-			double xCoord = 0;
-			double yCoord = 0;
-			int index = -1;
-			while ( it.hasNext() ){
-				index = it.nextIndex();
-				Incident incident = ( Incident ) it.next();
-				xCoord = incident.getX();
-				yCoord = incident.getY();
-				break;
-			}
-			if ( selectionModel != null ) {
-				selectionModel.clearSelection();
-				selectionModel.addSelectionInterval( index, index );
-			}
-			g.setColor( Color.red );
-			g.setXORMode( Color.white );
-			int[] diameters = new int[ 3 ];
-			if ( proxy == null ){
-				for ( int i = 0; i < 3; i++ ){
-					diameters[ i ] = RING_DEFAULTS[ i ] * MAP_UNITS_PER_MILE;
-				}
-			} else {
-				DMSList dmsList = ( DMSList ) proxy.getDMSList().getList();
-				for ( int i = 0; i < 3; i++ ){
-					try {
-						diameters[ i ] = dmsList.getRingRadius( i ) *
-							MAP_UNITS_PER_MILE;
-					} catch ( java.rmi.RemoteException ex ){
-						result = false;
-					}
-				}
-			}
-			for ( int i = 0; i < 3; i++ ){
-				g.draw( new Ellipse2D.Double( ( xCoord - ( diameters[ i ] /
-					2 ) ), ( yCoord - ( diameters[ i ] / 2 ) ),
-					diameters[ i ], diameters[ i ] ) );
-			}	
-		}
-		return result;
-	}
-
 	public java.util.List getPaths( Point2D p ){
 		ArrayList result = new ArrayList();
 		if ( incidents != null ) {
@@ -168,6 +160,23 @@ public final class IncidentLayer extends AbstractLayer implements
 					( y - 500 ), 1000, 1000 );
 				if ( r.contains( p ) ) {
 					result.add( incidents[ i ] );
+				}
+			}
+		}
+		return result;
+	}
+	
+	private int getIncident( Point2D p ) {
+		int result = -1;
+		if ( incidents != null ) {
+			for ( int i = ( incidents.length - 1 ); i >= 0; i-- ) {
+				double x = incidents[ i ].getX();
+				double y = incidents[ i ].getY();
+				Rectangle2D r = new Rectangle2D.Double( ( x - 500 ),
+					( y - 500 ), 1000, 1000 );
+				if ( r.contains( p ) ) {
+					result = i;
+					break;
 				}
 			}
 		}
@@ -271,7 +280,24 @@ public final class IncidentLayer extends AbstractLayer implements
 			Point2D point = null;
 			point = at.transform( event.getPoint(), point );
 			IncidentLayer layer = ( IncidentLayer ) getLayer();
-			return layer.mouseClick( point, g );
+			int index = getIncident( point );
+			if ( index == -1 ) {
+				setSelections( new int[ 0 ] );
+				notifyThemeChangedListeners( new ThemeChangedEvent( this,
+					ThemeChangedEvent.SELECTION ) );
+				return false;
+			} else {
+				int[] oldSelections = getSelections();
+				if ( oldSelections.length > 0 && index == oldSelections[ 0 ] ) {
+					clearSelections();
+				} else {
+					int[] selections = { index };
+					setSelections( selections );
+				}
+				notifyThemeChangedListeners( new ThemeChangedEvent( this,
+					ThemeChangedEvent.SELECTION ) );
+				return true;
+			}
 		}
 	}
 }
