@@ -33,7 +33,7 @@ import us.mn.state.dot.shape.event.*;
  * the internal MapPane.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.16 $ $Date: 2001/04/19 16:49:31 $
+ * @version $Revision: 1.17 $ $Date: 2001/04/20 15:52:03 $
  * @see us.mn.state.dot.shap.MapPane
  */
 public final class MapBean extends JComponent implements MapChangedListener{
@@ -66,8 +66,8 @@ public final class MapBean extends JComponent implements MapChangedListener{
 		mapPane = new MapPane( themes );
 		mapPane.addMapChangedListener( this );
 		mapPane.setBackground( this.getBackground() );
-		this.setDoubleBuffered( true );
-		this.setOpaque( false );
+		//this.setDoubleBuffered( false );
+		this.setOpaque( true );
 		this.setToolTipText( " " );
 		addComponentListener( new ComponentAdapter() {
 			public void componentResized( ComponentEvent e ) {
@@ -346,7 +346,7 @@ public final class MapBean extends JComponent implements MapChangedListener{
 	}
 
 	public void paintComponent( Graphics g ) {
-		super.paintComponent( g );
+		//super.paintComponent( g );
 		Image image = mapPane.getImage();
 		Graphics2D g2d = ( Graphics2D ) g;
 		g2d.drawImage( image, 0, 0, this );

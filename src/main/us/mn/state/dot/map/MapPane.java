@@ -31,7 +31,7 @@ import java.util.*;
  * subsystem is not available.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.39 $ $Date: 2001/04/19 23:54:11 $
+ * @version $Revision: 1.40 $ $Date: 2001/04/20 15:52:03 $
  */
 public final class MapPane implements ThemeChangedListener {
 	
@@ -135,13 +135,29 @@ public final class MapPane implements ThemeChangedListener {
 		if ( width == 0 ) {
 			width = 1;
 		}
-		screenBuffer = new BufferedImage( width, height,
-			BufferedImage.TYPE_4BYTE_ABGR );
-		staticBuffer = new BufferedImage( width, height,
-			BufferedImage.TYPE_4BYTE_ABGR );
+		//screenBuffer = new BufferedImage( width, height,
+		//	BufferedImage.TYPE_4BYTE_ABGR );
+		//staticBuffer = new BufferedImage( width, height,
+		//	BufferedImage.TYPE_4BYTE_ABGR );
+        screenBuffer = createImage( width, height );
+        staticBuffer = createImage( width, height );
 		rescale();
 	}
 	
+    private BufferedImage createImage( int width, int height ) {
+        if ( tranparent ) {
+            return new BufferedImage( width, height,
+                BufferedImage.TYPE_4BYTE_ABGR );
+        } else {
+           // return new BufferedImage( width, height,
+           //     BufferedImage.TYPE_INT_RGB );
+           GraphicsEnvironment.getLocalGraphicsEnvironment()
+                .getDefaultScreenDevice().getDefaultConfiguration()
+                .createCompatibleImage( width, height );
+           //FIXME
+        }
+        
+    }
 	/**
 	 * Get the size of the MapImage.
 	 */

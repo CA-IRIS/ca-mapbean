@@ -30,7 +30,7 @@ import us.mn.state.dot.shape.event.*;
  * Displays incidents as icons on map.
  *
  * @author erik.engstrom@dot.state.mn.us
- * @version $Revision: 1.33 $ $Date: 2001/04/19 17:39:03 $
+ * @version $Revision: 1.34 $ $Date: 2001/04/20 15:52:03 $
  */
 public class IncidentLayer extends AbstractLayer implements
 		IncidentListener {
@@ -80,7 +80,9 @@ public class IncidentLayer extends AbstractLayer implements
 			}
 			extent = new Rectangle2D.Double( minX, minY, ( maxX - minX ),
 				( maxY - minY ) );
-			SwingUtilities.invokeLater( new NotifyThread( this,
+			//SwingUtilities.invokeLater( new NotifyThread( this,
+			//	LayerChangedEvent.DATA ) );
+            notifyLayerChangedListeners( new LayerChangedEvent( this,
 				LayerChangedEvent.DATA ) );
 		}
 	}
