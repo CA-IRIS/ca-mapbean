@@ -31,7 +31,7 @@ public class SolidLine extends LineSymbol {
 
 	/** Create a new SolidLine */
 	public SolidLine() {
-		this(Color.black);
+		this(Color.BLACK);
 	}
 
 	/**
