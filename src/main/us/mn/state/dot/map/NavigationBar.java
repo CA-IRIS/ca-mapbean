@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000  Minnesota Department of Transportation
+ * Copyright (C) 2000-2004  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,7 +16,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package us.mn.state.dot.shape;
 
 import java.awt.Dimension;
@@ -24,14 +23,12 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URL;
-
 import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
-
 import us.mn.state.dot.shape.event.MapMouseMode;
 import us.mn.state.dot.shape.event.PanMouseMode;
 import us.mn.state.dot.shape.event.SelectMouseMode;
@@ -41,29 +38,27 @@ import us.mn.state.dot.shape.event.ZoomMouseMode;
  * ToolBar that supplies Navigation buttons for map.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.14 $ $Date: 2003/05/06 20:58:15 $ 
  */
-public class NavigationBar extends JToolBar {
+class NavigationBar extends JToolBar {
+
+	protected final MapBean map;
 
 	private final MapMouseMode zoomMode = new ZoomMouseMode();
 	private final MapMouseMode panMode = new PanMouseMode();
 	private final MapMouseMode selectMode = new SelectMouseMode();
-	private final MapBean map;
 
-	/**
-	 * Create a new NavigationBar.
-	 */
-	public NavigationBar( MapBean m ) {
+	/** Create a new NavigationBar */
+	public NavigationBar(MapBean m) {
 		super();
 		map = m;
-		putClientProperty( "JToolBar.isRollover", Boolean.TRUE );
+		putClientProperty("JToolBar.isRollover", Boolean.TRUE);
 		ButtonGroup bgToolbar = new ButtonGroup();
 		addSeparator();
-		add( getSelectButton( bgToolbar ), null );
-		add( getZoomButton( bgToolbar ), null );
-		add( getPanButton( bgToolbar ), null );
+		add(getSelectButton(bgToolbar), null);
+		add(getZoomButton(bgToolbar), null);
+		add(getPanButton(bgToolbar), null);
 		addSeparator();
-		add( getHomeButton(), null );
+		add(getHomeButton(), null);
 	}
 
 	private ImageIcon getImage( String path ){
@@ -127,11 +122,11 @@ public class NavigationBar extends JToolBar {
 		return btnHome;
 	}
 
-	private void sizeButton( AbstractButton b ){
-		b.setMargin( new Insets( 1, 1, 1, 1 ) );
-		Dimension dimension = new Dimension( 70, 25 );
-		b.setPreferredSize( dimension );
-		b.setMaximumSize( dimension );
-		b.setMinimumSize( dimension );
+	static protected void sizeButton(AbstractButton b) {
+		b.setMargin(new Insets(1, 1, 1, 1));
+		Dimension d = new Dimension(70, 25);
+		b.setPreferredSize(d);
+		b.setMaximumSize(d);
+		b.setMinimumSize(d);
 	}
 }

@@ -32,23 +32,18 @@ import javax.swing.JToolBar;
  */
 public class MapToolBar extends NavigationBar {
 
-	protected final MapBean map;
-
 	/** Create a new MapToolBar */
 	public MapToolBar(MapBean m, String themeName) {
 		super(m);
-		map = m;
-		putClientProperty("JToolBar.isRollover", Boolean.TRUE);
-		addSeparator();
-		JMenuBar menuBar = new JMenuBar();
 		LegendMenu legend = new LegendMenu(map.getTheme(
 			themeName).getCurrentLayerRenderer());
+		add(getPaintCombo(themeName, legend), 0);
+		JMenuBar menuBar = new JMenuBar();
 		menuBar.add(legend);
 		menuBar.add(new JToolBar.Separator());
 		menuBar.setBorderPainted(false);
 		menuBar.setAlignmentY(.5f);
 		menuBar.add(new ThemeMenu(map.getThemes()));
-		add(getPaintCombo(themeName, legend), 0);
 		add(menuBar, 1);
 	}
 
