@@ -272,9 +272,9 @@ public class MapBean extends JComponent implements MapChangedListener {
 		pb.setColor(getBackground());
 		pb.fillRect(0, 0, bounds.width, bounds.height);
 		pb.drawImage(mapPane.getImage(), distanceX, distanceY, this);
+		pb.dispose();
 		Graphics g = getGraphics();
 		g.drawImage(panBuffer, 0, 0, this);
-		pb.dispose();
 		g.dispose();
 	}
 
