@@ -15,49 +15,37 @@
 	<property name="version" value="2.0" />
 	<property name="src.images.dir" value="src/images" />
 	<property name="src.dir" value="src/main" />
-	<property name="lib.dir" value="lib" />
-	<property name="docs.dir" value="docs" />
 	<property name="build.dir" value="build" />
 	<property name="build.lib" value="${build.dir}/lib" />
 	<property name="build.classes" value="${build.dir}/classes" />
 	<property name="build.javadocs" value="${build.dir}/javadocs" />
-	<property name="MapBean.dist.dir" value="${name}-${version}" />
-	<property name="jar.location" value="${lib.dir}"/>
+	<property name="dist.dir" value="${name}-${version}" />
 	<property name="packages" value="us.mn.state.dot.map.*" />
-	<property name="manifest" value="src/etc/manifest.mf" />
+	<property name="manifest" value="src/etc/MANIFEST.MF" />
 	<property name="build.compiler" value="modern" />
 
 	<!-- =============================================== -->
 	<!-- Prepare the build directory                     -->
 	<!-- =============================================== -->
 	<target name="prepare"
-		description="Creates the build directory for this project.">
-		<mkdir dir="${build.dir}" />
+		description="Prepare the build directory for this project.">
+		<copy todir="${build.classes}/images">
+			<fileset dir="${src.images.dir}" />
+		</copy>
 	</target>
 
 	<!-- ================================================ -->
 	<!-- Compile the source code                          -->
 	<!-- ================================================ -->
 	<target name="compile"
-	        description="Compiles all of the source code for this project.">
-		<mkdir dir="${build.classes}"/>
+		depends="prepare"
+	        description="Compile all of the source code for this project.">
 		<javac srcdir="${src.dir}"
 		       destdir="${build.classes}"
 		       debug="on"
 		       deprecation="on"
 		       optimize="on">
 		</javac>
-
-		<copy todir="${build.classes}">
-			<fileset dir="${src.dir}">
-				<include name="**/manifest.mf" />
-				<include name="**/*.properties" />
-			</fileset>
-		</copy>
-
-		<copy todir="${build.classes}/images">
-			<fileset dir="${src.images.dir}" />
-		</copy>
 	</target>
 
 	<!-- ================================================= -->
@@ -68,17 +56,32 @@
 		description="Creates the jar file for this project.">
 		<mkdir dir="${build.lib}"/>
 		<jar jarfile="${build.lib}/${name}-${version}.jar"
-		      manifest="${manifest}">
-			<fileset dir="${build.classes}" includes="**/*.*"/>
+		     manifest="${manifest}">
+			<fileset dir="${build.classes}" />
 		</jar>
+	</target>
+
+	<!-- ================================================= -->
+	<!-- Create the distribution without source and docs   -->
+	<!-- ================================================= -->
+	<target name="dist-lite"
+	        depends="jar"
+	        description="Create the distribution directory and copy all
+	                     files except source and javadocs.">
+		<mkdir dir="${dist.dir}"/>
+		<mkdir dir="${dist.dir}/lib"/>
+		<copy todir="${dist.dir}/lib">
+			<fileset dir="${build.lib}" />
+		</copy>
+		<copy file="README.txt" todir="${dist.dir}"/>
+		<copy file="LICENSE.txt" todir="${dist.dir}"/>
 	</target>
 
 	<!-- ================================================= -->
 	<!-- Create the API documentation                      -->
 	<!-- ================================================= -->
 	<target name="javadocs"
-		depends="prepare"
-		description="Creates the javadocs for this project.">
+		description="Create the javadocs for this project.">
 		<mkdir dir="${build.javadocs}"/>
 		<javadoc packagenames="${packages}"
 		         sourcepath="${basedir}/${src.dir}"
@@ -93,48 +96,17 @@
 	</target>
 
 	<!-- ================================================= -->
-	<!-- Create the distribution without javadocs.         -->
-	<!-- ================================================= -->
-	<target name="dist-lite"
-	        depends="jar"
-	        description="Creates the distribution directory and copies all
-	                     files except javadocs.">
-		<mkdir dir="${MapBean.dist.dir}"/>
-		<mkdir dir="${MapBean.dist.dir}/bin"/>
-		<mkdir dir="${MapBean.dist.dir}/lib"/>
-		<mkdir dir="${MapBean.dist.dir}/docs"/>
-		<mkdir dir="${MapBean.dist.dir}/docs/api"/>
-		<mkdir dir="${MapBean.dist.dir}/src"/>
-		<copy todir="${MapBean.dist.dir}/src">
-			<fileset dir="${src.dir}">
-				<include name = "**/*.jar" />
-			</fileset>
-		</copy>
-		<copy todir="${MapBean.dist.dir}/lib">
-			<fileset dir="${lib.dir}" />
-		</copy>
-		<copy todir="${MapBean.dist.dir}/lib">
-			<fileset dir="${build.lib}" />
-		</copy>
-<!--		<copy todir="${MapBean.dist.dir}/bin">
-			<fileset dir="src/bin" />
-		</copy> -->
-		<copy todir="${MapBean.dist.dir}/docs">
-			<fileset dir="${docs.dir}" />
-		</copy>
-		<copy file="README.txt" tofile="${MapBean.dist.dir}/README"/>
-		<copy file="LICENSE.txt" tofile="${MapBean.dist.dir}/LICENSE"/>
-	</target>
-
-	<!-- ================================================= -->
 	<!-- Create the full distribution                      -->
 	<!-- ================================================= -->
 	<target name="dist"
 	        depends="dist-lite, javadocs"
-	        description="Creates the distribution directory and copies all
+	        description="Create the distribution directory and copy all
 	                     necessary files.">
-		<copy todir="${MapBean.dist.dir}/docs/api">
+		<copy todir="${dist.dir}/docs/api">
 			<fileset dir="${build.javadocs}" />
+		</copy>
+		<copy todir="${dist.dir}/src">
+			<fileset dir="${src.dir}" />
 		</copy>
 	</target>
 
@@ -142,8 +114,8 @@
 	<!-- Clean up generated stuff                          -->
 	<!-- ================================================= -->
 	<target name="clean"
-		description="Deletes the build and distribution directories.">
+		description="Delete the build and distribution directories.">
 		<delete dir="${build.dir}" />
-		<delete dir="${MapBean.dist.dir}" />
+		<delete dir="${dist.dir}" />
 	</target>
 </project>
