@@ -438,6 +438,7 @@ public final class MapPane extends JPanel implements LayerListener {
 		screenTransform.scale( scale, -scale );
 		screenBuffer = null;
 		staticBuffer = null;
+		repaint();
 	}
 
 	/**
@@ -545,11 +546,7 @@ public final class MapPane extends JPanel implements LayerListener {
 		repaint();
 	}
 
-	/**
-	 * Paint the shapes
-	 * @param g Graphics object to paint on
-	 */
-	public void paint( Graphics g ) {
+	public void paintComponent( Graphics g ) {
 		if ( screenBuffer == null ) {
 			screenBuffer = createBuffer();
 			updateScreenBuffer();
@@ -566,4 +563,27 @@ public final class MapPane extends JPanel implements LayerListener {
 			}
 		}
 	}
+
+	/**
+	 * Paint the shapes
+	 * @param g Graphics object to paint on
+	 */
+	/*public void paint( Graphics g ) {
+		if ( screenBuffer == null ) {
+			screenBuffer = createBuffer();
+			updateScreenBuffer();
+		} else if ( bufferDirty ) {
+			updateScreenBuffer();
+		}
+		g.drawImage( screenBuffer, 0, 0, this );
+		Graphics2D g2D = ( Graphics2D ) g;
+		g2D.transform( screenTransform );
+		for ( int i = ( layers.size() - 1 ); i >= 0; i-- ) {
+			Layer layer = ( Layer ) layers.get( i );
+			if ( layer.isVisible() ){
+				layer.paintSelections( g2D );
+			}
+		}
+
+	} */
 }

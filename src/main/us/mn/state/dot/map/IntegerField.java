@@ -53,13 +53,13 @@ public final class IntegerField extends NumericField {
 	public final int getRenderingClass( int index, double[] classBreaks ){
 		int result = -1;
 
-		for (int i = 0; i < classBreaks.length ; i++) {
+		for ( int i = 0; i < classBreaks.length ; i++ ) {
 			if ( data[ index ] <= classBreaks[ i ] ) {
 				result = i;
 				break;
 			}
 		}
-		if ( data[ index ] > classBreaks[ classBreaks.length - 1 ]){
+		if ( data[ index ] > classBreaks[ classBreaks.length - 1 ] ){
 			result = classBreaks.length;
 		}
 		return result;
