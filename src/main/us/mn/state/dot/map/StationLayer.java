@@ -30,7 +30,7 @@ import us.mn.state.dot.shape.event.*;
  * A StationLayer displays detector station data represented as a gpoly.shp file.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.26 $ $Date: 2001/04/19 17:39:03 $ 
+ * @version $Revision: 1.27 $ $Date: 2001/06/14 22:54:36 $ 
  */
 public final class StationLayer extends ShapeLayer implements StationListener {
 	/**
@@ -90,11 +90,12 @@ public final class StationLayer extends ShapeLayer implements StationListener {
 	}
 	
 	public final Theme getTheme() {
+		StationMapTip mapTip = new StationMapTip();
+		NumericField field = ( NumericField ) getField( "OCCUPANCY" );
 		ShapeRenderer renderer = new OccupancyRenderer(
-			( NumericField ) getField( "occupancy" ),
-			new StationMapTip() );
+			field, mapTip );
 		Theme result = new StationTheme( this, renderer );
-		result.setTip( new StationMapTip() );
+		result.setTip( mapTip );
 		return result;
 	}
 	

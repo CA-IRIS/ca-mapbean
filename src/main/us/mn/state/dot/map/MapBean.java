@@ -33,7 +33,7 @@ import us.mn.state.dot.shape.event.*;
  * the internal MapPane.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.20 $ $Date: 2001/06/01 16:45:38 $
+ * @version $Revision: 1.21 $ $Date: 2001/06/14 22:54:36 $
  * @see us.mn.state.dot.shape.MapPane
  */
 public final class MapBean extends JComponent implements MapChangedListener{
@@ -280,6 +280,10 @@ public final class MapBean extends JComponent implements MapChangedListener{
 		repaint();
 	}
 	
+	public Rectangle2D getExtent() {
+		return mapPane.getExtent();
+	}
+	
 	/**
 	 * Pan the map.
 	 * @param distanceX, number of pixels to move in the X coordinate.
@@ -347,6 +351,12 @@ public final class MapBean extends JComponent implements MapChangedListener{
 		double width = Math.abs( upperLeft.getX() - lowerRight.getX() );
 		double height = Math.abs( upperLeft.getY() - lowerRight.getY() );
 		mapPane.setExtentFrame( x, y, width, height );
+		repaint();
+	}
+
+	public void zoomTo( Rectangle2D extent ) {
+		mapPane.setExtentFrame( extent.getX(), extent.getY(), 
+			extent.getWidth(), extent.getHeight() );
 		repaint();
 	}
 

@@ -32,7 +32,7 @@ import us.mn.state.dot.shape.DbaseReader.*;
   *
   * @author Douglas Lau
   * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
-  * @version $Revision: 1.34 $ $Date: 2001/05/12 00:10:40 $
+  * @version $Revision: 1.35 $ $Date: 2001/06/14 22:54:36 $
   */
 public class ShapeLayer extends AbstractLayer {
 
@@ -54,12 +54,19 @@ public class ShapeLayer extends AbstractLayer {
 	}
 
 	public final Field getField( String name ){
-		for ( int i = 0; i < fields.length; i++ ) {
-			if ( ( fields[ i ].getName()).equalsIgnoreCase( name ) ) {
-				return fields[ i ];
+		synchronized( fields ) {
+			for ( int i = 0; i < fields.length; i++ ) {
+				if ( ( fields[ i ].getName() ).equalsIgnoreCase( name ) ) {
+					if ( fields[ i ] == null ) {
+						System.out.println( " STORED FIELD IS NULL!!!!" );
+					}
+					return fields[ i ];
+				}
 			}
+System.err.println( "Field " + name + " not found" ); //FIXME This should throw an exception.
+System.err.println( "There are " + fields.length + "fields" );
+			return null;
 		}
-		return null;
 	}
 	
 	public ShapeLayer( URL fileLocation, String layerName ) throws IOException {
