@@ -59,7 +59,7 @@ public class MapBean extends JComponent implements MapChangedListener{
 	private Rectangle2D extentHome = new Rectangle2D.Double();
 
 	/** current mouse mode */
-	private MapMouseMode activeMouseMode = null;
+	protected MapMouseMode mouseMode = null;
 
 	/** MapPane that will create the map */
 	private final MapPane mapPane;
@@ -96,13 +96,13 @@ public class MapBean extends JComponent implements MapChangedListener{
 
 	/** Set the action occuring on mouse events */
 	public void setMouseMode(MapMouseMode mode) {
-		if(activeMouseMode != null) {
-			removeMouseListener(activeMouseMode);
-			removeMouseMotionListener(activeMouseMode);
-			activeMouseMode.removeAllMapMouseListeners();
+		if(mouseMode != null) {
+			removeMouseListener(mouseMode);
+			removeMouseMotionListener(mouseMode);
+			mouseMode.removeAllMapMouseListeners();
 		}
-		activeMouseMode = mode;
-		setCursor(activeMouseMode.getCursor());
+		mouseMode = mode;
+		setCursor(mouseMode.getCursor());
 		addMouseListener(mode);
 		addMouseMotionListener(mode);
 		Iterator it = mapPane.getThemes().iterator();
@@ -114,7 +114,7 @@ public class MapBean extends JComponent implements MapChangedListener{
 
 	/** Gets the action occuring on mouse events */
 	public MapMouseMode getMouseMode() {
-		return activeMouseMode;
+		return mouseMode;
 	}
 
 	/** Add a new theme to the map */
@@ -148,7 +148,7 @@ public class MapBean extends JComponent implements MapChangedListener{
 	/** Register the theme with mouse listener */
 	protected void registerWithMouseListener(Theme theme) {
 		if(theme.layer instanceof DynamicLayer) {
-			MapMouseMode m = activeMouseMode;
+			MapMouseMode m = mouseMode;
 			MapMouseListener l = theme.getMapMouseListener();
 			if(m != null && l != null &&
 				l.listensToMouseMode(m.getID()))
@@ -185,11 +185,12 @@ public class MapBean extends JComponent implements MapChangedListener{
 	/** Unregister the theme with the mouse listener */
 	protected void unregisterWithMouseListener(Theme theme) {
 		if(theme.layer instanceof DynamicLayer) {
+			MapMouseMode m = mouseMode;
 			MapMouseListener l = theme.getMapMouseListener();
-			if(l != null && activeMouseMode != null &&
-				l.listensToMouseMode(activeMouseMode.getID()))
+			if(m != null && l != null &&
+				l.listensToMouseMode(m.getID()))
 			{
-				activeMouseMode.removeMapMouseListener(l);
+				m.removeMapMouseListener(l);
 			}
 		}
 	}
