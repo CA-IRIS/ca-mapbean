@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000  Minnesota Department of Transportation
+ * Copyright (C) 2000-2004  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,7 +16,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package us.mn.state.dot.shape.shapefile;
 
 import java.io.File;
@@ -27,42 +26,40 @@ import java.io.OutputStream;
 /**
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.3 $ $Date: 2003/05/19 21:23:41 $ 
  */
-public class ShapeFilePrinter extends java.lang.Object {
+public class ShapeFilePrinter {
 		
 	private ShapeLayer layer;
 
-	/** Creates new ShapeFilePrinter */
-    public ShapeFilePrinter( String fileName ) throws IOException {
-		File file = new File( fileName );
-		layer = new ShapeLayer( file.toURL(), fileName );
+	/** Create a new ShapeFilePrinter */
+	public ShapeFilePrinter(String fileName) throws IOException {
+		File file = new File(fileName);
+		layer = new ShapeLayer(file.toURL(), fileName);
 
-    }
+	}
     
-    public void print( OutputStream out ) throws IOException {
-    	layer.printData( out );
-    }
+	public void print(OutputStream out) throws IOException {
+		layer.printData(out);
+	}
 
-    /**
-    * @param args the command line arguments
-    */
-    public static void main( String args[] ) {
-		if ( args.length < 1 ) { 
-			System.out.println( "must include name of shape file to read" );
+	static public void main(String args[]) {
+		if(args.length < 1) { 
+			System.err.println("must include name of shape file");
 		}
-		String inFileName = args[ 0 ];
+		String inFileName = args[0];
 		try {
-			ShapeFilePrinter printer = new ShapeFilePrinter( inFileName );
-			if ( args.length > 1 ) {
-				File outFile = new File( args[ 1 ] );
-				OutputStream out = new FileOutputStream( outFile );
-				printer.print( out );
+			ShapeFilePrinter printer = new ShapeFilePrinter(
+				inFileName);
+			if(args.length > 1) {
+				File outFile = new File(args[1]);
+				OutputStream out = new FileOutputStream(
+					outFile);
+				printer.print(out);
 			} else {
-				printer.print( System.out );
+				printer.print(System.out);
 			}
-		} catch ( java.io.IOException ioe ) {
+		} catch(IOException ioe) {
 			ioe.printStackTrace();
 		}
-    }
+	}
 }
