@@ -35,28 +35,27 @@ import javax.swing.JLabel;
  * Symol for painting MapObjects as images.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.8 $ $Date: 2003/05/19 21:23:41 $
+ * @version $Revision: 1.9 $ $Date: 2003/09/02 16:09:10 $
  */
 public class ImageSymbol implements Symbol {
 
 	private String label;
-	
+
 	private ImageIcon icon;
-	
+
 	private Dimension size;
-	
+
 	protected boolean drawFullSize = true;
-	
+
 	/** Creates new ImageSymbol */
     public ImageSymbol( ImageIcon icon ) {
 		this( icon, "" );
     }
-	
+
 	public ImageSymbol( ImageIcon icon, String label ) {
-		this( icon, label, new Dimension( icon.getIconWidth(),
-			icon.getIconHeight() ) );
+		this( icon, label, null );
 	}
-	
+
 	public ImageSymbol( ImageIcon icon, String label, Dimension size ) {
 		this.icon = icon;
 		this.label = label;
@@ -65,11 +64,11 @@ public class ImageSymbol implements Symbol {
 			drawFullSize = false;
 		}
 	}
-	
+
 	public void setIcon( ImageIcon icon ) {
 		this.icon = icon;
 	}
-	
+
 	public ImageIcon getIcon( ImageIcon icon ) {
 		return icon;
 	}
@@ -84,26 +83,26 @@ public class ImageSymbol implements Symbol {
 		return new Rectangle2D.Double( ( xCoord - width / 2 ),
 			( yCoord - height / 2 ), width, height );
 	}
-	
+
 	public void setOutLined( boolean outlined ) {
 	}
-	
+
 	public boolean isOutLined() {
 		return false;
 	}
-	
+
 	public void setSize( Dimension size ) {
 		this.size = size;
 	}
-	
+
 	public Color getColor() {
 		return null;
 	}
-	
+
 	public Shape getShape( MapObject object ) {
 		return getBounds( object );
 	}
-	
+
 	public String getLabel() {
 		return label;
 	}
@@ -138,38 +137,39 @@ public class ImageSymbol implements Symbol {
 				return;
 			}
 		}
+
 		g.drawImage( icon.getImage(), ( ( int ) xCoord - width / 2 ),
 			( ( int ) yCoord - height / 2 ), width, height,
 			icon.getImageObserver() );
 	}
-	
+
 	public LineSymbol getOutLineSymbol() {
 		return null;
 	}
-	
+
 	public Dimension getSize() {
 		return size;
 	}
-	
+
 	public void setOutLineSymbol( LineSymbol symbol ) {
 	}
-	
+
 	public Component getLegend() {
 		return new JLabel( icon );
 	}
-	
+
 	public boolean isFilled() {
 		return true;
 	}
-	
+
 	public void setFilled( boolean f ) {
 	}
-	
+
 	public void setColor( Color color ) {
 	}
-	
+
 	public void setLabel( String l ) {
 		label = l;
 	}
-	
+
 }
