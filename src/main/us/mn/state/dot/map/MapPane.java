@@ -31,7 +31,7 @@ import java.util.*;
  * subsystem is not available.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.38 $ $Date: 2001/04/19 16:49:31 $
+ * @version $Revision: 1.39 $ $Date: 2001/04/19 23:54:11 $
  */
 public final class MapPane implements ThemeChangedListener {
 	
@@ -224,19 +224,21 @@ public final class MapPane implements ThemeChangedListener {
 	 */
 	private void updateStaticBuffer() {
 		if ( staticBuffer == null ) return;
-		Graphics2D g = staticBuffer.createGraphics();
-		g.clearRect( 0, 0, staticBuffer.getWidth(),
-			staticBuffer.getHeight() );
-		g.setColor( backgroundColor );
-		g.fillRect( 0, 0, staticBuffer.getWidth(),
-			staticBuffer.getHeight() );
-		g.transform( screenTransform );
-		staticBufferDirty = false;
-		ListIterator li = staticThemes.listIterator();
-		while ( li.hasNext() ) {
-			( ( Theme ) li.next() ).paint( g );
+		synchronized ( staticBuffer ) {
+			Graphics2D g = staticBuffer.createGraphics();
+			g.clearRect( 0, 0, staticBuffer.getWidth(),
+				staticBuffer.getHeight() );
+			g.setColor( backgroundColor );
+			g.fillRect( 0, 0, staticBuffer.getWidth(),
+				staticBuffer.getHeight() );
+			g.transform( screenTransform );
+			staticBufferDirty = false;
+			ListIterator li = staticThemes.listIterator();
+			while ( li.hasNext() ) {
+				( ( Theme ) li.next() ).paint( g );
+			}
+			g.dispose();
 		}
-		g.dispose();
 	}
 	
 	/**
@@ -244,18 +246,20 @@ public final class MapPane implements ThemeChangedListener {
 	 */
 	public void updateScreenBuffer() {
 		if ( screenBuffer == null ) return;
-		Graphics2D g = screenBuffer.createGraphics();
-		if ( staticBufferDirty ) {
-			updateStaticBuffer();
+		synchronized ( screenBuffer ) {
+			Graphics2D g = screenBuffer.createGraphics();
+				if ( staticBufferDirty ) {
+				updateStaticBuffer();
+			}
+			g.drawImage( staticBuffer, 0, 0, null );
+			g.transform( screenTransform );
+			bufferDirty = false;
+			ListIterator li = themes.listIterator();
+			while ( li.hasNext() ) {
+				( ( Theme ) li.next() ).paint( g );
+			}
+			g.dispose();
 		}
-		g.drawImage( staticBuffer, 0, 0, null );
-		g.transform( screenTransform );
-		bufferDirty = false;
-		ListIterator li = themes.listIterator();
-		while ( li.hasNext() ) {
-			( ( Theme ) li.next() ).paint( g );
-		}
-		g.dispose();
 	}
 	
 	public BufferedImage getImage() {
