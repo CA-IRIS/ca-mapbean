@@ -76,7 +76,7 @@ public final class Map extends JViewport implements LayerListener {
 	/** Sets extent to given coordinates  */
 	public void home(){
 		map.setPreferredSize( this.getSize() );
-		this.revalidate();
+		map.revalidate();
 	}
 
 	/** Add a new layer to the ShapePane */
@@ -124,6 +124,10 @@ public final class Map extends JViewport implements LayerListener {
 			scrollTo.y = 0;
 		}
 		this.setViewPosition( scrollTo );
+	}
+
+	public void zoomToRect( Rectangle2D r ) {
+		map.zoom( r, this.getViewRect() );
 	}
 
 	public String getToolTipText( MouseEvent e ) {
@@ -202,74 +206,7 @@ public final class Map extends JViewport implements LayerListener {
 					if ( box ) {
 						drawBox( rect );
 						box = false;
-						y2 = e.getY();
-						x2 = e.getX();
-						int w;
-						int h;
-						int temp;
-						if ( x1 > x2 ){
-							temp = x1;
-							x1 = x2;
-							x2 = temp;
-						}
-						w = x2 - x1;
-						if ( y1 > y2 ) {
-							temp = y1;
-							y1 = y2;
-							y2 = temp;
-						}
-						h = y2 - y1;
-
-						//Calculate the new size of the panel
-						double oldWidth = map.getMapWidth();
-						double oldHeight = map.getMapHeight();
-						double ratioMap = oldWidth / oldHeight;
-						double width = 0;
-						double height = 0;
-						double viewWidth = viewport.getViewRect().getWidth();
-						double viewHeight = viewport.getViewRect().getHeight();
-						if ( w >= h ) {
-							width = oldWidth * ( viewWidth / w );
-							height = width / ratioMap;
-						} else if ( h > w ) {
-							height = oldHeight * ( viewHeight / h );
-							width = height * ratioMap;
-						}
-
-						//Cheap way to limit zoom FIX LATER!!!!!!!
-						if ( ( width > 5000 ) || ( height > 5000 ) ){
-							return;
-						}
-
-						//Set the new size of the panel
-						Point viewLocation = viewport.getViewPosition();
-						map.setMinimumSize( new Dimension( ( int ) width,
-							( int ) height) );
-						map.setPreferredSize( new Dimension( ( int ) width,
-							( int ) height ) );
-						map.setSize( ( int ) width, ( int ) height );
-
-						//Scroll to the center of the zoom rectangle
-						viewWidth = viewport.getViewRect().getWidth();
-						viewHeight = viewport.getViewRect().getHeight();
-						double newX1 = ( ( x1 + viewLocation.getX()
-							- map.getShiftX()) * ( map.getWidth() / oldWidth ));
-						double newY1 = ( ( y1 + viewLocation.getY()
-							- map.getShiftY() ) * ( map.getHeight() /
-							oldHeight ));
-						double newX2 = ( ( x2 + viewLocation.getX()
-							- map.getShiftX() ) * ( map.getWidth() /
-							oldWidth ));
-						double newY2 = ( ( y2 + viewLocation.getY()
-							- map.getShiftY() ) * ( map.getHeight() / oldHeight
-							));
-						double newBoxWidth = newX2 - newX1;
-						double newBoxHeight = newY2 - newY1;
-						Point pan = new Point( ( int ) ( newX1
-							- ( ( viewWidth - newBoxWidth) / 2 ) ),
-							( int ) ( newY1 - ( ( viewHeight - newBoxHeight) /
-							2 ) ) );
-						panTo( pan );
+						map.zoom( rect, viewport.getViewRect() );
 					}
 					break;
 					//Mouse Pan
