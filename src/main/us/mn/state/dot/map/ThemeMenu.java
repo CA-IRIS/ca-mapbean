@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000  Minnesota Department of Transportation
+ * Copyright (C) 2000-2004  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,7 +16,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
- 
 package us.mn.state.dot.shape;
 
 import java.awt.Insets;
@@ -24,49 +23,44 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Iterator;
 import java.util.List;
-
 import javax.swing.BorderFactory;
 import javax.swing.JCheckBox;
 import javax.swing.JMenu;
 
-/** 
+/**
  * Menu for displaying a list of themes.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.4 $ $Date: 2003/05/06 20:58:15 $ 
  */
 public class ThemeMenu extends JMenu {
 
-  	/** Creates new ThemeMenu */
-  	public ThemeMenu( List themes ) {
-		super( "Themes:" );
-		this.setMargin( new Insets( 0, 0, 0, 0 ) );
-		this.setBorder( BorderFactory.createEtchedBorder() );
+  	/** Create a new theme menu */
+  	public ThemeMenu(List themes) {
+		super("Themes:");
+		setMargin(new Insets(0, 0, 0, 0));
+		setBorder(BorderFactory.createEtchedBorder());
 		Iterator it = themes.iterator();
-		while ( it.hasNext() ) {
-			add( new ThemeMenuItem( ( Theme ) it.next() ) );
+		while(it.hasNext()) {
+			add(new ThemeMenuItem((Theme)it.next()));
 		}
   	}
-	
-	/**
-	 * MenuItem for displaying a theme.  When a check box is selected the
-	 * Theme is made visible.  If it is deselected then the Theme is made 
-	 * invisible.
-	 */
-	class ThemeMenuItem extends JCheckBox {
-		
-		private final Theme theme;
-		
-		public ThemeMenuItem( Theme t ) {
-			super( t.getName() );
+
+	/** MenuItem for displaying a theme.  When a check box is selected the
+	 * Theme is made visible.  If it is deselected then the Theme is made
+	 * invisible. */
+	protected class ThemeMenuItem extends JCheckBox {
+
+		protected final Theme theme;
+
+		public ThemeMenuItem(Theme t) {
+			super(t.getName());
 			theme = t;
-			this.setSelected( theme.isVisible() );
-			this.addActionListener( new ActionListener(){
-				public void actionPerformed( ActionEvent e ) {
-					theme.setVisible( ! theme.isVisible() );
+			setSelected(theme.isVisible());
+			addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					theme.setVisible(!theme.isVisible());
 				}
 			});
 		}
 	}
-  
 }
