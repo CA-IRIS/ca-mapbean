@@ -108,4 +108,9 @@ abstract public class ClassBreaksRenderer extends ShapeRenderer {
 		if(symbol == null) return null;
 		else return symbol.getBounds(object);
 	}
+
+	/** Get tooltip text for the specified map object */
+	public String getTip(MapObject o) {
+		return null;
+	}
 }
