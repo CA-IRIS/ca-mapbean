@@ -198,20 +198,6 @@ public class MapPane implements ThemeChangedListener {
 	}
 
 	/**
-	 * Remove a Theme from the map.
-	 * @param theme Theme to remove.
-	 */
-	public void removeTheme(Theme theme) {
-		if(theme.layer instanceof DynamicLayer) {
-			themes.remove(theme);
-		} else {
-			staticThemes.remove(theme);
-		}
-		theme.removeThemeChangedListener(this);
-		theme.setMap(null);
-	}
-
-	/**
 	 * Add a new theme to the Map at the specified index.
 	 * @param theme Theme to be added to the Map
 	 * @param index int specifying the index at which the theme should be added
@@ -220,6 +206,17 @@ public class MapPane implements ThemeChangedListener {
 		themes.add(index, theme);
 		theme.setMap(this);
 		theme.addThemeChangedListener(this);
+	}
+
+	/** Remove a Theme from the map */
+	public void removeTheme(Theme theme) {
+		if(theme.layer instanceof DynamicLayer) {
+			themes.remove(theme);
+		} else {
+			staticThemes.remove(theme);
+		}
+		theme.removeThemeChangedListener(this);
+		theme.setMap(null);
 	}
 
 	/**
