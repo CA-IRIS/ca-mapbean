@@ -10,7 +10,7 @@ package us.mn.state.dot.shape;
 
 import java.io.*;
 
-public class IntegerField extends Field {
+public class IntegerField extends NumericField {
 
     /** Field properties */
     private int [] data;
@@ -57,6 +57,9 @@ public class IntegerField extends Field {
 				result = i;
 				break;
 			}
+		}
+		if (getValue(index) > classBreaks[classBreaks.length - 1]){
+			result = classBreaks.length - 1;
 		}
 		return result;
 	}

@@ -50,6 +50,9 @@ public class DoubleField extends NumericField {
 				break;
 			}
 		}
+		if (getValue(index) > classBreaks[classBreaks.length - 1]){
+			result = classBreaks.length - 1;
+		}
 		return result;
 	}
 }

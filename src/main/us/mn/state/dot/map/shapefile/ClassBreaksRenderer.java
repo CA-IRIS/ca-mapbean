@@ -55,33 +55,6 @@ public class ClassBreaksRenderer extends ShapeRenderer {
 
 	/** Paints a shape. */
 	public void paint(Graphics2D g, GeneralPath path, int index){
-		/*switch(field.getType()){
-		case Field.DOUBLE_FIELD:
-			double dValue = ((DoubleField)field).getValue(index);
-			for (int i = 0; i < classBreaks.length ; i++){
-				if (( dValue <= classBreaks[i] ) && ( symbols[i] != null )) {
-					symbols[i].draw(g, path);
-					break;
-				}
-			}
-			if ((dValue > classBreaks[classBreaks.length - 1])
-				&& (symbols[symbols.length - 1] != null)) {
-				symbols[symbols.length - 1].draw(g, path);
-			}
-			break;
-		case Field.INTEGER_FIELD:
-			int iValue = ((IntegerField) field).getValue(index);
-			for (int i = 0; i < classBreaks.length ; i++) {
-				if (( iValue <= classBreaks[i] ) && ( symbols[i] != null )) {
-					symbols[i].draw(g, path);
-					break;
-				}
-			}
-			if ((iValue > classBreaks[classBreaks.length - 1])
-					&& (symbols[symbols.length - 1] != null)) {
-				symbols[symbols.length - 1].draw(g, path);
-			}
-		} */
 		int classBreak = field.getRenderingClass(index, classBreaks);
 		if ((classBreak > -1) && (symbols[classBreak] != null)){
 			symbols[classBreak].draw(g, path);

@@ -30,6 +30,7 @@ public class ShapeLayer extends AbstractLayer {
 		painter = p;
 	}
 
+	/** Get the Renderer for the layer */
 	public ShapeRenderer getRenderer(){
 		return painter;
 	}
@@ -96,15 +97,10 @@ public class ShapeLayer extends AbstractLayer {
 	}
 
 	public boolean mouseClick(int clickCount, Point2D p, Graphics2D g){
-		/*boolean result;
+		boolean result;
 		Vector found = hit(p);
-		if ( !found.isEmpty()) {
-			result = false;
-		} else {
-			result = true;
-		}
-		*/
-		return false;
+		result = !found.isEmpty();
+		return result;// false;
 	}
 
 	private Vector hit(Point2D p){
