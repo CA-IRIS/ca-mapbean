@@ -76,7 +76,7 @@ public class MapBean extends JComponent implements MapChangedListener{
 	 * themes parameter.
 	 * @param themes a list of themes to be used in the map
 	 */
-	public MapBean( java.util.List themes ) {
+	public MapBean(List themes) {
 		mapPane = new MapPane( themes );
 		mapPane.addMapChangedListener( this );
 		mapPane.setBackground( this.getBackground() );
@@ -115,7 +115,7 @@ public class MapBean extends JComponent implements MapChangedListener{
 		addMouseListener( mode );
 		addMouseMotionListener( mode );
 		String modeId = activeMouseMode.getID();
-		java.util.List themes = mapPane.getThemes();
+		List themes = mapPane.getThemes();
 		Iterator it = themes.iterator();
 		while ( it.hasNext() ) {
 			Theme theme = ( Theme ) it.next();
@@ -158,7 +158,7 @@ public class MapBean extends JComponent implements MapChangedListener{
 	 * Add a List of themes to the Map
 	 * @param themes List of themes to be added to the map
 	 */
-	public void addThemes(java.util.List themes) {
+	public void addThemes(List themes) {
 		ListIterator li = themes.listIterator();
 		while(li.hasNext()) {
 			addTheme((Theme)li.next());
@@ -219,7 +219,7 @@ public class MapBean extends JComponent implements MapChangedListener{
 		}
 	}
 
-	public void addLayers( java.util.List layers ) {
+	public void addLayers(List layers) {
 		for ( ListIterator li = layers.listIterator(); li.hasNext(); ){
 			Object ob = li.next();
 			Theme theme;
@@ -247,7 +247,7 @@ public class MapBean extends JComponent implements MapChangedListener{
 	 * Returns a List of the themes contained by this Map.
 	 * @return List of current themes contained by this Map
 	 */
-	public java.util.List getThemes() {
+	public List getThemes() {
 		return mapPane.getThemes();
 	}
 
@@ -405,7 +405,7 @@ public class MapBean extends JComponent implements MapChangedListener{
 		Graphics2D g2d = ( Graphics2D ) g;
 		g2d.drawImage( image, 0, 0, this );
 		g2d.transform( mapPane.getTransform() );
-		java.util.List themes = mapPane.getThemes();
+		List themes = mapPane.getThemes();
 		ListIterator li = themes.listIterator( themes.size() );
 		while ( li.hasPrevious() ) {
 			( ( Theme ) li.previous() ).paintSelections( g2d );
