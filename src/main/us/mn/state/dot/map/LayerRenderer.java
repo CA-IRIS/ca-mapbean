@@ -21,7 +21,6 @@ package us.mn.state.dot.map;
 import java.awt.Component;
 import java.awt.Graphics2D;
 import java.awt.Shape;
-import java.awt.geom.Rectangle2D;
 
 /**
  * A LayerRenderer determines how a Layers data is rendered on the map.
@@ -35,9 +34,6 @@ public interface LayerRenderer {
 
 	/** Get the shape that would be used to render this object */
 	public Shape getShape(MapObject object);
-
-	/** Get the bounds of the rendered MapObject */
-	public Rectangle2D getBounds(MapObject object);
 
 	/** Get the legend for this renderer */
 	public Component[] getLegend();

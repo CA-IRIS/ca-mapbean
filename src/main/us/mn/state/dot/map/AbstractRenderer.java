@@ -21,7 +21,6 @@ package us.mn.state.dot.map;
 import java.awt.Component;
 import java.awt.Graphics2D;
 import java.awt.Shape;
-import java.awt.geom.Rectangle2D;
 import us.mn.state.dot.map.MapObject;
 import us.mn.state.dot.map.Symbol;
 
@@ -60,13 +59,6 @@ abstract public class AbstractRenderer implements LayerRenderer {
 		Symbol s = getSymbol(o);
 		if(s == null) return null;
 		else return s.getShape(o);
-	}
-
-	/** Get the bounds of the specified map object */
-	public Rectangle2D getBounds(MapObject o) {
-		Symbol s = getSymbol(o);
-		if(s == null) return null;
-		else return s.getBounds(o);
 	}
 
 	/** Get components to display the legend */
