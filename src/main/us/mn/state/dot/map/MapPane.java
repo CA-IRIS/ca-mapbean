@@ -31,7 +31,7 @@ import java.util.*;
  * subsystem is not available.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.44 $ $Date: 2001/05/07 22:16:24 $
+ * @version $Revision: 1.45 $ $Date: 2001/06/01 16:45:38 $
  */
 public final class MapPane implements ThemeChangedListener {
 	
@@ -195,6 +195,19 @@ public final class MapPane implements ThemeChangedListener {
 		}
 		theme.addThemeChangedListener( this );
 		setExtent( theme.getExtent() );
+	}
+	
+	/**
+	 * Remove a Theme from the map.
+	 * @param theme Theme to remove.
+	 */
+	public void removeTheme( Theme theme ) {
+		if ( theme.isStatic() ) {
+			staticThemes.remove( theme );
+		} else {
+			themes.remove( theme );
+		}
+		theme.removeThemeChangedListener( this );
 	}
 	
 	/**

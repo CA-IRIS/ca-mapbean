@@ -33,7 +33,7 @@ import us.mn.state.dot.shape.event.*;
  * the internal MapPane.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.19 $ $Date: 2001/05/07 22:16:24 $
+ * @version $Revision: 1.20 $ $Date: 2001/06/01 16:45:38 $
  * @see us.mn.state.dot.shape.MapPane
  */
 public final class MapBean extends JComponent implements MapChangedListener{
@@ -135,13 +135,38 @@ public final class MapBean extends JComponent implements MapChangedListener{
 	 * Remove a Theme from the Map.
 	 * @param name Name of theme to be removed.
  	 */
-	/*public void removeTheme( String name ) {
+	public void removeTheme( String name ) {
 		Theme theme = mapPane.getTheme( name );
-		theme.removeThemeChangedListener( this );
-		mapPane.removeTheme( name );
-	}*/
-		
+		removeTheme( theme );
+	}
 	
+	/** 
+	 * Remove a Theme from the Map.
+	 * @param theme Theme to be removed.
+ 	 */
+	public void removeTheme( Theme theme ) {
+		if ( ! theme.isStatic() ) {
+			MapMouseListener listener = theme.getMapMouseListener();
+			if ( listener != null && activeMouseMode != null && 
+					listener.listensToMouseMode( activeMouseMode.getID() ) ) {
+				activeMouseMode.removeMapMouseListener( listener );
+			}
+		}
+		mapPane.removeTheme( theme );
+	}
+	
+	/**
+	 * Remove all themes from the map. 
+	 */
+	public void removeAllThemes() {
+		ArrayList list = mapPane.getThemes();
+		Iterator it = list.iterator();
+		while ( it.hasNext() ) {
+			Theme theme = ( Theme ) it.next();
+			removeTheme( theme );
+		}
+	}
+		
 	/**
 	 * Add a new theme to the Map at the specified index.
 	 * @param theme Theme to be added to the Map
@@ -149,7 +174,6 @@ public final class MapBean extends JComponent implements MapChangedListener{
 	 */
 	public void addTheme( Theme theme, int index ) {
 		mapPane.addTheme( theme, index );
-		//theme.addThemeChangedListener( this );
 		registerWithMouseListener( theme );
 	}
 	

@@ -2,7 +2,7 @@
 
 <!-- ======================================================================= -->
 <!-- MapBean build file 	                                             -->
-<!-- $Revision: 1.10 $ $Date: 2001/05/07 22:16:24 $                                                       -->
+<!-- $Revision: 1.11 $ $Date: 2001/06/01 16:45:38 $                          -->
 <!-- ======================================================================= -->
 
 <project name="MapBean" default="jar" basedir=".">
@@ -28,9 +28,9 @@
     <property name="manifest" value="src/etc/manifest" /> 
     <property name="build.compiler" value="modern" /> 
 
-    <!--  ===================================================================  --> 
-    <!--  Prepares the build directory                                         --> 
-    <!--  ===================================================================  --> 
+    <!--  ================================================================== --> 
+    <!--  Prepares the build directory                                       --> 
+    <!--  ================================================================== --> 
     <target name="prepare"
             description="Creates the build directory for this project.">
         <mkdir dir="${build.dir}" /> 
@@ -154,7 +154,7 @@
     <!-- =================================================================== -->
     <!-- Total cleanup                                                       -->
     <!-- =================================================================== -->
-    <target name="total-clean"
+    <target name="clean-all"
             depends="clean"
             description="Deletes the jar file for this project.">
         <delete file="${lib.dir}/${name}.jar"
