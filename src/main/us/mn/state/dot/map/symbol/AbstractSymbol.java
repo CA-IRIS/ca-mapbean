@@ -26,6 +26,7 @@ import java.awt.Shape;
 import javax.swing.Icon;
 import javax.swing.JLabel;
 import us.mn.state.dot.map.MapObject;
+import us.mn.state.dot.map.Outline;
 import us.mn.state.dot.map.Symbol;
 
 /**
@@ -40,34 +41,24 @@ abstract public class AbstractSymbol implements Symbol {
 	protected final String label;
 
 	/** Fill color */
-	protected final Color color;
+	protected final Color fill_color;
 
-	/** Outline symbol */
-	protected LineSymbol outline = new SolidLine(Color.BLACK, 0.05f);
+	/** Symbol outline */
+	protected final Outline outline;
 
 	/** Draw a map object with this symbol */
 	abstract public void draw(Graphics2D g, MapObject o);
 
 	/** Create a new abstract symbol */
-	public AbstractSymbol(String l, Color c, Color o) {
+	public AbstractSymbol(String l, Outline o, Color f) {
 		label = l;
-		color = c;
-		outline.setColor(o);
+		outline = o;
+		fill_color = f;
 	}
 
 	/** Get the symbol label */
 	public String getLabel() {
 		return label;
-	}
-
-	/** Get the fill color (null means not filled) */
-	public Color getColor() {
-		return color;
-	}
-
-	/** Get the outline color (null means not outlined) */
-	public Color getOutlineColor() {
-		return outline.getColor();
 	}
 
 	/** Get the legend component for the symbol */
@@ -91,12 +82,12 @@ abstract public class AbstractSymbol implements Symbol {
 
 		/** Paint the icon onto the given component */
 		public void paintIcon(Component c, Graphics g, int x, int y) {
-			if(color != null) {
-				g.setColor(getColor());
+			if(fill_color != null) {
+				g.setColor(fill_color);
 				g.fillRect(x + 1, y + 1, WIDTH - 2, HEIGHT - 2);
 			}
-			if(getOutlineColor() != null) {
-				g.setColor(getOutlineColor());
+			if(outline != null) {
+				g.setColor(outline.color);
 				g.drawRect(x, y, WIDTH - 1, HEIGHT - 1);
 			}
 		}

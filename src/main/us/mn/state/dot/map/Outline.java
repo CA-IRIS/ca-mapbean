@@ -1,0 +1,85 @@
+/*
+ * IRIS -- Intelligent Roadway Information System
+ * Copyright (C) 2004  Minnesota Department of Transportation
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
+package us.mn.state.dot.map;
+
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Stroke;
+
+/**
+ * A symbol outline
+ *
+ * @author Douglas Lau
+ */
+public class Outline {
+
+	/** Color to render the outline */
+	public final Color color;
+
+	/** Width of the outline */
+	public final float width;
+
+	/** Stroke to render the outline */
+	public final Stroke stroke;
+
+	/** Create a new outline */
+	protected Outline(Color c, float w, Stroke s) {
+		color = c;
+		width = w;
+		stroke = s;
+	}
+
+	/** Create a solid outline */
+	static public Outline createSolid(Color c, float w) {
+		Stroke s = new BasicStroke(w);
+		return new Outline(c, w, s);
+	}
+
+	/** Create a dotted outline */
+	static public Outline createDotted(Color c, float w) {
+		float[] dash = new float[] { w, w * 2 };
+		Stroke s = new BasicStroke(w, BasicStroke.CAP_BUTT,
+			BasicStroke.JOIN_MITER, w, dash, 0);
+		return new Outline(c, w, s);
+	}
+
+	/** Create a dashed outline */
+	static public Outline createDashed(Color c, float w) {
+		float[] dash = new float[] { w * 3, w * 2 };
+		Stroke s = new BasicStroke(w, BasicStroke.CAP_BUTT,
+			BasicStroke.JOIN_MITER, w, dash, 0);
+		return new Outline(c, w, s);
+	}
+
+	/** Create a dash-dot outline */
+	static public Outline createDashDotted(Color c, float w) {
+		float[] dash = new float[] { w * 3, w * 2, w, w * 2 };
+		Stroke s = new BasicStroke(w, BasicStroke.CAP_BUTT,
+			BasicStroke.JOIN_MITER, w, dash, 0);
+		return new Outline(c, w, s);
+	}
+
+	/** Create a dash-dot-dot outline */
+	static public Outline createDashDotDotted(Color c, float w) {
+		float[] dash = new float[] { w * 3, w * 2, w, w * 2, w, w * 2 };
+		Stroke s = new BasicStroke(w, BasicStroke.CAP_BUTT,
+			BasicStroke.JOIN_MITER, w, dash, 0);
+		return new Outline(c, w, s);
+	}
+}

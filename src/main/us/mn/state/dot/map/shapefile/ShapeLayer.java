@@ -18,6 +18,7 @@
  */
 package us.mn.state.dot.map.shapefile;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.geom.Point2D;
@@ -29,11 +30,11 @@ import us.mn.state.dot.map.AbstractLayer;
 import us.mn.state.dot.map.DefaultRenderer;
 import us.mn.state.dot.map.LayerRenderer;
 import us.mn.state.dot.map.MapObject;
+import us.mn.state.dot.map.Outline;
 import us.mn.state.dot.map.Symbol;
 import us.mn.state.dot.map.Theme;
-import us.mn.state.dot.map.symbol.FillSymbol;
+import us.mn.state.dot.map.symbol.PenSymbol;
 import us.mn.state.dot.map.symbol.PointSymbol;
-import us.mn.state.dot.map.symbol.SolidLine;
 
 /**
  * ShapeLayer is a class for drawing ESRI shape files.
@@ -75,11 +76,16 @@ public class ShapeLayer extends AbstractLayer {
 	protected Symbol getSymbol() {
 		switch(shapeType) {
 			case ShapeFactory.POINT:
-				return new PointSymbol();
+				return new PointSymbol("Point",
+					Outline.createSolid(Color.BLACK, 20),
+					Color.WHITE);
 			case ShapeFactory.POLYLINE:
-				return new SolidLine();
+				return new PenSymbol("Polyline",
+					Outline.createSolid(Color.BLACK, 20),
+					null);
 			case ShapeFactory.POLYGON:
-				return new FillSymbol();
+				return new PenSymbol("Polygon", null,
+					Color.BLACK);
 		}
 		return null;
 	}

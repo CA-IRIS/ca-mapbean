@@ -27,21 +27,22 @@ import java.util.LinkedList;
 import us.mn.state.dot.map.AbstractRenderer;
 import us.mn.state.dot.map.MapObject;
 import us.mn.state.dot.map.Symbol;
-import us.mn.state.dot.map.symbol.FillSymbol;
+import us.mn.state.dot.map.symbol.PenSymbol;
 
 /**
  * A renderer that renders objects base on a numeric field and a set of
  * class breaks.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
+ * @author Douglas Lau
  */
 abstract public class ClassBreaksRenderer extends AbstractRenderer {
 
 	/** A field value and symbol together make up a class break */
 	class ClassBreak {
 		public final double value;
-		public final FillSymbol symbol;
-		public ClassBreak(double v, FillSymbol s) {
+		public final PenSymbol symbol;
+		public ClassBreak(double v, PenSymbol s) {
 			value = v;
 			symbol = s;
 		}
@@ -60,7 +61,7 @@ abstract public class ClassBreaksRenderer extends AbstractRenderer {
 	}
 
 	/** Add a break to this renderer */
-	public void addBreak(double v, FillSymbol s) {
+	public void addBreak(double v, PenSymbol s) {
 		ClassBreak b = new ClassBreak(v, s);
 		classBreaks.add(b);
 	}

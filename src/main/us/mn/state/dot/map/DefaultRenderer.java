@@ -25,6 +25,7 @@ import java.awt.Component;
  * Shapes are all rendered with the same symbol.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
+ * @author Douglas Lau
  */
 public class DefaultRenderer extends AbstractRenderer {
 
@@ -39,7 +40,7 @@ public class DefaultRenderer extends AbstractRenderer {
 
 	/** Get components to display the legend */
 	public Component[] getLegend() {
-		return null;
+		return new Component[] { symbol.getLegend() };
 	}
 
 	/** Get the symbol for the specified map object */

@@ -25,6 +25,7 @@ import java.awt.geom.AffineTransform;
  * Interface for objects painted on a MapBean.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
+ * @author Douglas Lau
  */
 public interface MapObject {
 

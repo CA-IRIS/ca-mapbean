@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2004  Minnesota Department of Transportation
+ * Copyright (C) 2000-2004  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,19 +16,37 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-package us.mn.state.dot.map.marker;
+package us.mn.state.dot.map.symbol;
 
-import java.awt.geom.Ellipse2D;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.Shape;
+import us.mn.state.dot.map.MapObject;
+import us.mn.state.dot.map.Outline;
 
 /**
- * A circle marker
+ * A pen symbol can stroke/fill any arbitrary map objects
  *
  * @author Douglas Lau
  */
-public class Circle extends Ellipse2D.Float {
+public class PenSymbol extends AbstractSymbol {
 
-	/** Create a new circle marker */
-	public Circle() {
-		super(-0.5f, -0.5f, 0.5f, 0.5f);
+	/** Create a new pen symbol with given label, outline and fill color */
+	public PenSymbol(String l, Outline o, Color f) {
+		super(l, o, f);
+	}
+
+	/** Draw a shape on map with the pen symbol */
+	public void draw(Graphics2D g, MapObject o) {
+		Shape shape = o.getShape();
+		if(fill_color != null) {
+			g.setColor(fill_color);
+			g.fill(shape);
+		}
+		if(outline != null) {
+			g.setColor(outline.color);
+			g.setStroke(outline.stroke);
+			g.draw(shape);
+		}
 	}
 }

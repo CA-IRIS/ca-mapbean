@@ -148,10 +148,7 @@ public class Theme implements LayerChangedListener {
 		MapObject[] s = selections;
 		if(visible && s != null) {
 			for(int i = 0; i < s.length; i++) {
-				MapObject object = s[i];
-				if(object != null) {
-					selectionRenderer.render(g, object);
-				}
+				selectionRenderer.render(g, s[i]);
 			}
 		}
 	}

@@ -23,6 +23,7 @@ import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import us.mn.state.dot.map.MapObject;
+import us.mn.state.dot.map.Outline;
 
 /**
  * Symbol object used to render point shapes on map.
@@ -33,36 +34,23 @@ import us.mn.state.dot.map.MapObject;
 public class PointSymbol extends AbstractSymbol {
 
 	/** Create a new point symbol */
-	public PointSymbol() {
-		this(Color.BLACK);
-	}
-
-	/** Create a new point symbol */
-	public PointSymbol(Color c) {
-		this("", c);
-	}
-
-	/** Create a new point symbol */
-	public PointSymbol(String l, Color c) {
-		this(l, c, null);
-	}
-
-	/** Create a new point symbol */
-	public PointSymbol(String l, Color c, Color o) {
-		super(l, c, o);
+	public PointSymbol(String l, Outline o, Color f) {
+		super(l, o, f);
 	}
 
 	/** Draw symbol on map */
 	public void draw(Graphics2D g, MapObject o) {
 		AffineTransform t = g.getTransform();
 		g.transform(o.getTransform());
-		Shape s = o.getShape();
-		if(color != null) {
-			g.setColor(color);
-			g.fill(s);
+		Shape shape = o.getShape();
+		if(fill_color != null) {
+			g.setColor(fill_color);
+			g.fill(shape);
 		}
-		if(getOutlineColor() != null) {
-			outline.draw(g, o);
+		if(outline != null) {
+			g.setColor(outline.color);
+			g.setStroke(outline.stroke);
+			g.draw(shape);
 		}
 		g.setTransform(t);
 	}

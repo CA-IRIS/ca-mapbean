@@ -18,7 +18,6 @@
  */
 package us.mn.state.dot.map;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics2D;
 
@@ -31,10 +30,6 @@ import java.awt.Graphics2D;
 public interface Symbol {
 
 	public String getLabel();
-
-	public Color getColor();
-
-	public Color getOutlineColor();
 
 	public Component getLegend();
 

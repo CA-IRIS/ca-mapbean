@@ -99,12 +99,14 @@ public class ImageSymbol implements Symbol {
 	 * If size == null then the image is drawn at full size.
 	 */
 	public void draw(Graphics2D g, MapObject o) {
-		Shape shape = o.getShape();
+/*		Shape shape = o.getShape();
 		Rectangle2D rect = shape.getBounds2D();
 		double xCoord = rect.getX();
-		double yCoord = rect.getY();
-		int width = 0;
-		int height = 0;
+		double yCoord = rect.getY(); */
+		AffineTransform t = o.getTransform();
+		g.drawImage(icon.getImage(), t, null);
+/*		int width = icon.getIconWidth();
+		int height = icon.getIconHeight();
 		if ( !drawFullSize ) {
 			width = ( int ) size.getWidth();
 			height = ( int ) size.getHeight();
@@ -128,7 +130,7 @@ public class ImageSymbol implements Symbol {
 
 		g.drawImage( icon.getImage(), ( ( int ) xCoord - width / 2 ),
 			( ( int ) yCoord - height / 2 ), width, height,
-			icon.getImageObserver() );
+			icon.getImageObserver() ); */
 	}
 
 	public Dimension getSize() {

@@ -329,26 +329,29 @@ public class MapBean extends JComponent implements MapChangedListener {
 	 * Get the transform that the map uses to convert from map coordinates
 	 * to screen coordinates.
 	 */
-	public AffineTransform getTransform(){
+	public AffineTransform getTransform() {
 		return mapPane.getTransform();
 	}
 
-	public void paintComponent(Graphics g) {
+	protected void paint(Graphics2D g) {
 		Image image = mapPane.getImage();
 		if(image == null) return;
-		Graphics2D g2d = (Graphics2D)g;
-		g2d.drawImage(image, 0, 0, this);
-		g2d.transform(mapPane.getTransform());
+		g.drawImage(image, 0, 0, this);
+		g.transform(mapPane.getTransform());
 		if(mapPane.antialiased) {
-			g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+			g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 				RenderingHints.VALUE_ANTIALIAS_ON);
 		}
 		List themes = mapPane.getThemes();
 		ListIterator li = themes.listIterator(themes.size());
 		while(li.hasPrevious()) {
 			Theme t = (Theme)li.previous();
-			t.paintSelections(g2d);
+			t.paintSelections(g);
 		}
+	}
+
+	public void paintComponent(Graphics g) {
+		paint((Graphics2D)g);
 	}
 
 	public void mapChanged() {
