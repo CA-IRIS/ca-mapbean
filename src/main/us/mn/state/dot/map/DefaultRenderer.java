@@ -51,8 +51,8 @@ public final class DefaultRenderer extends ShapeRenderer {
 		return symbol;
 	}
 
-	public void paint( Graphics2D g, GeneralPath path, int index ){
-		symbol.draw( g, path );
+	public Symbol render( int index ){
+		return symbol;
 	}
 
 	public void setField( Field f ){

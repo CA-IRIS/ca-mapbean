@@ -34,9 +34,9 @@ import java.util.*;
 import us.mn.state.dot.dds.client.*;
 
 /**
- * The Map class is a container for a MapPane which allows the pane to be scrolled
- * and zoomed.  It has several convenience methods giving access to the internal
- * MapPane.
+ * The Map class is a container for a MapPane which allows the pane to be
+ * scrolled and zoomed.  It has several convenience methods giving access to
+ * the internal MapPane.
  * @author Erik Engstrom
  * @version 1.0
  * @see us.mn.state.dot.shap.MapPane
@@ -74,7 +74,7 @@ public final class Map extends JViewport {
 	private int mouseAction = SELECT;
 
 	/** Mouse helper class */
-	private final MouseHelper mouse =new MouseHelper( ( JViewport ) this );
+	private final MouseHelper mouse = new MouseHelper( ( JViewport ) this );
 
 	/**
 	 * Constructor
@@ -84,17 +84,17 @@ public final class Map extends JViewport {
 	}
 
 	/**
-	 * Constructs a Map containing a MapPane using the layers contained in the layers
-	 * parameter.
-	 * @param layers a list of layers to be used in the map
+	 * Constructs a Map containing a MapPane using the themes contained in the
+	 * themes parameter.
+	 * @param themes a list of themes to be used in the map
 	 */
-	public Map(java.util.List layers) {
+	public Map(java.util.List themes) {
 		addMouseListener( mouse );
 		addMouseMotionListener( mouse );
 		this.setView( map );
 		this.setToolTipText( "" );
-		for ( ListIterator li = layers.listIterator(); li.hasNext(); ){
-			addLayer( ( Layer ) li.next() );
+		for ( ListIterator li = themes.listIterator(); li.hasNext(); ){
+			addTheme( ( Theme ) li.next() );
 		}
 		setMouseAction( SELECT );
 	}
@@ -128,8 +128,8 @@ public final class Map extends JViewport {
 	}
 
 	/**
-	 * notifies the Map that the selected map objects have changed and the map should
-	 * be updated
+	 * notifies the Map that the selected map objects have changed and the map
+	 * should be updated
 	 */
 	public void selectionChanged() {
 		map.selectionChanged();
@@ -137,16 +137,17 @@ public final class Map extends JViewport {
 	}
 
 	/**
-	 * gets the layer with of the name
-	 * @param name string containing name of layer to be retrieved
-	 * @return reurns the layer with the corresponding name; returns null if not found
+	 * gets the theme with of the name
+	 * @param name string containing name of theme to be retrieved
+	 * @return reurns the theme with the corresponding name; returns null if not
+	 * found
 	 */
-	public Layer getLayer( String name ) {
-		return map.getLayer( name );
+	public Theme getTheme( String name ) {
+		return map.getTheme( name );
 	}
 	
-	public java.util.List getLayers() {
-		return map.getLayers();
+	public java.util.List getThemes() {
+		return map.getThemes();
 	}
 
 	/**
@@ -162,30 +163,30 @@ public final class Map extends JViewport {
 	}
 
 	/**
-	 * Add a new layer to the ShapePane
-	 * @param layer layer to be added to the map
+	 * Add a new theme to the ShapePane
+	 * @param theme theme to be added to the map
 	 */
-	public void addLayer( Layer layer ) {
-		map.addLayer( layer );
+	public void addTheme( Theme theme ) {
+		map.addTheme( theme );
 	}
 	
 	/**
-	 * Add a new layer to the ShapePane at the specified index
-	 * @param layer layer to be added to the map
-	 * @param index index layer is to be added to
+	 * Add a new theme to the ShapePane at the specified index
+	 * @param theme theme to be added to the map
+	 * @param index index theme is to be added to
 	 */
-	public void addLayer( Layer layer, int index ) {
-		map.addLayer( layer, index );
+	public void addTheme( Theme theme, int index ) {
+		map.addTheme( theme, index );
 	}
 	
 	/**
-	 * Add a List of layers to the ShapePane
-	 * @param layers List of layers to be added to the map
+	 * Add a List of themes to the ShapePane
+	 * @param themes List of themes to be added to the map
 	 */
-	public void addLayers( java.util.List layers ) {
-		ListIterator li = layers.listIterator();
+	public void addThemes( java.util.List themes ) {
+		ListIterator li = themes.listIterator();
 		while ( li.hasNext() ) {
-			map.addLayer( ( Layer ) li.next() );
+			map.addTheme( ( Theme ) li.next() );
 		}
 	}
 
@@ -226,10 +227,10 @@ public final class Map extends JViewport {
 		Point2D p1 = new Point2D.Double( xCoord + viewPosition.getX(),
 		yCoord + viewPosition.getY() );
 		Point2D p = world.transform( p1, new Point( 0, 0 ) );
-		java.util.List layers = map.getLayers();
+		java.util.List themes = map.getThemes();
 		String result = null;
-		for ( ListIterator it = layers.listIterator(); it.hasNext(); ) {
-			Layer l = ( Layer ) it.next();
+		for ( ListIterator it = themes.listIterator(); it.hasNext(); ) {
+			Theme l = ( Theme ) it.next();
 			result = l.getTip( p );
 			if ( result != null ) {
 				break;
@@ -247,8 +248,9 @@ public final class Map extends JViewport {
 	}
 
 	/** Inner class to take care of mouse events */
-	private final class MouseHelper extends MouseAdapter implements MouseMotionListener {
-		boolean box =false;
+	private final class MouseHelper extends MouseAdapter implements
+			MouseMotionListener {
+		boolean box = false;
 
 		int x1;
 
@@ -258,11 +260,11 @@ public final class Map extends JViewport {
 
 		int y2;
 
-		Rectangle rect =new Rectangle();
+		Rectangle rect = new Rectangle();
 
-		private Point last =new Point();
+		private Point last = new Point();
 
-		private Point scrollTo =new Point();
+		private Point scrollTo = new Point();
 
 		private JViewport viewport;
 
@@ -270,14 +272,16 @@ public final class Map extends JViewport {
 			this.viewport = viewport;
 		}
 
-		public void mousePressed(MouseEvent e) {
+		public void mousePressed( MouseEvent e ) {
 			last = e.getPoint();
 			x1 = e.getX();
 			y1 = e.getY();
+			x2 = x1;
+			y2 = y1;
 			box = false;
 		}
 
-		public void mouseReleased(MouseEvent e) {
+		public void mouseReleased( MouseEvent e ) {
 			if ( SwingUtilities.isLeftMouseButton( e ) ){
 				switch ( mouseAction ){
 					//Mouse Select
@@ -293,6 +297,8 @@ public final class Map extends JViewport {
 					break;
 					//Mouse Pan
 					case PAN:
+						map.finishPan( new Point2D.Double( x1, y1 ), 
+							new Point2D.Double( x2, y2 ) );
 					break;
 				}
 			}
@@ -317,12 +323,12 @@ public final class Map extends JViewport {
 					Point2D p1 = new Point2D.Double( pointX +
 					viewPosition.getX(), pointY + viewPosition.getY() );
 					Point2D p = world.transform( p1, new Point( 0, 0 ) );
-					java.util.List layers = map.getLayers();
+					java.util.List themes = map.getThemes();
 					g.setTransform( t );
 					boolean found = false;
-					for ( ListIterator it = layers.listIterator();
+					for ( ListIterator it = themes.listIterator();
 							it.hasNext();){
-						Layer l = ( Layer ) it.next();
+						Theme l = ( Theme ) it.next();
 						found = l.mouseClick( e.getClickCount(), p, g );
 						if ( found ) {
 							break;
@@ -330,10 +336,11 @@ public final class Map extends JViewport {
 					}
 					break;
 					case ZOOM:
-					Point2D center = new Point2D.Double( ( e.getX() +
+					/*Point2D center = new Point2D.Double( ( e.getX() +
 						getViewPosition().getX() ), ( e.getY() +
 						getViewPosition().getY() ) );
-					map.zoomOut( center, 1.5 );
+					map.zoomOut( center, 1.5 );*/
+					map.zoomOut( e.getPoint() );
 					break;
 					case PAN:
 					break;
@@ -356,12 +363,12 @@ public final class Map extends JViewport {
 					Point2D p1 = new Point2D.Double( pointX +
 					viewPosition.getX(), pointY + viewPosition.getY() );
 					Point2D p = world.transform( p1, new Point( 0, 0 ) );
-					java.util.List layers = map.getLayers();
+					java.util.List themes = map.getThemes();
 					g.setTransform( t );
 					boolean found = false;
-					for ( ListIterator it = layers.listIterator();
+					for ( ListIterator it = themes.listIterator();
 							it.hasNext();){
-						Layer l = ( Layer ) it.next();
+						Theme l = ( Theme ) it.next();
 						found = l.mouseClick( e.getClickCount(), p, g );
 						if ( found ) {
 							break;
@@ -394,14 +401,15 @@ public final class Map extends JViewport {
 					box = true;
 					break;
 					case PAN:
-					Point viewPos = viewport.getViewPosition();
+					/*Point viewPos = viewport.getViewPosition();
 					Point offset = new Point( ( x2 - last.x ),
 					( y2 - last.y ) );
 					last.x = x2;
 					last.y = y2;
 					scrollTo.x = viewPos.x - offset.x;
 					scrollTo.y = viewPos.y - offset.y;
-					panTo( scrollTo );
+					panTo( scrollTo );*/
+					map.pan( x2 - last.x, y2 - last.y );
 					break;
 				}
 			}

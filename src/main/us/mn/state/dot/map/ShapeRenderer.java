@@ -34,11 +34,11 @@ public abstract class ShapeRenderer implements Renderer {
     Symbol symbol = null;
 	private String name = "";
 
-    public abstract void paint( Graphics2D g, GeneralPath path, int index );
+    public abstract Symbol render( int index );
 	public abstract void setField( Field f );
 	public abstract Field getField();
 	
-    public void setTip(MapTip m) {
+    public void setTip( MapTip m ) {
         mapTip = m;
     }
 
@@ -46,11 +46,11 @@ public abstract class ShapeRenderer implements Renderer {
         return symbol;
     }
 
-    public void setSymbol(Symbol s){
+    public void setSymbol( Symbol s ){
         symbol = s;
     }
 
-    public String getTip(ShapeLayer layer, int i){
+    public String getTip( ShapeLayer layer, int i ){
         String result = null;
         if (mapTip != null){
             result = mapTip.getTip(layer, i);

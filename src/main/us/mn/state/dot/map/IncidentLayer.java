@@ -89,15 +89,17 @@ public final class IncidentLayer extends AbstractLayer implements
 		}
 	}
 
-	public void paint( Graphics2D g ){
-		if ( isVisible() ) {
-			if ( incidents != null ) {
-				for ( int i = ( incidents.length - 1 ); i >= 0; i-- ){
-					if ( directional ) {
-						incidents[ i ].paintDirectionalIcon( g );
-					} else {
-						incidents[ i ].paintIncidentIcon( g );
-					}
+	public void paintSelections( Graphics2D g, Renderer renderer,
+			ArrayList selection ) {
+	}
+	
+	public void paint( Graphics2D g, Renderer renderer ){
+		if ( incidents != null ) {
+			for ( int i = ( incidents.length - 1 ); i >= 0; i-- ){
+				if ( directional ) {
+					incidents[ i ].paintDirectionalIcon( g );
+				} else {
+					incidents[ i ].paintIncidentIcon( g );
 				}
 			}
 		}

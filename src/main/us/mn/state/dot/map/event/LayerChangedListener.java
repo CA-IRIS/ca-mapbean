@@ -26,7 +26,8 @@
 
 package us.mn.state.dot.shape;
 
-public interface LayerListener {
-	public void updateLayer( Layer layer );
-	public void refresh( Layer layer );
+public interface LayerChangedListener extends java.util.EventListener {
+	void layerChanged( LayerChangedEvent event );
+	//public void updateLayer( Layer layer );
+	//public void refresh( Layer layer );
 }

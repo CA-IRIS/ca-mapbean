@@ -77,11 +77,19 @@ public class ClassBreaksRenderer extends ShapeRenderer {
 	}
 
 	/** Paints a shape. */
-	public final void paint( Graphics2D g, GeneralPath path, int index ){
+	/*public final void paint( Graphics2D g, GeneralPath path, int index ){
 		int classBreak = field.getRenderingClass( index, classBreaks );
 		if (( classBreak > -1 ) && ( symbols[ classBreak ] != null )){
 			symbols[ classBreak ].draw( g, path );
 		}
+	}*/
+	
+	public final Symbol render( int index ) {
+		int classBreak = field.getRenderingClass( index, classBreaks );
+		if (( classBreak > -1 ) && ( symbols[ classBreak ] != null )){
+			return symbols[ classBreak ];
+		} 
+		return null;
 	}
 
 	public final void setField( Field f ){

@@ -31,47 +31,56 @@ import java.awt.*;
  */
 public abstract class AbstractLayer implements Layer {
 	/** extent of layer */
-	protected Rectangle2D.Double extent =new Rectangle2D.Double();
+	protected Rectangle2D.Double extent = new Rectangle2D.Double();
 
-	private boolean visible =true;
+	private boolean visible = true;
 
 	private String name;
 
-	private java.util.List layerListeners =new ArrayList();
+	private java.util.List layerChangedListeners = new ArrayList();
 
-	private boolean dynamic =false;
+	private boolean dynamic = false;
 
-	/** gets the extent of the layer
+	/** 
+	 * Gets the extent of the layer.
+	 *
 	 * @return the extent of the layer.
 	 */
 	public Rectangle2D getExtent() {
 		return extent;
 	}
 
-	/** returns true if the layer is visible
+	/**
+	 * Returns true if the layer is visible.
+	 *
 	 * @return returns true if the layer is visible
 	 */
-	public boolean isVisible() {
+	/*public boolean isVisible() {
 		return visible;
-	}
+	}*/
 
-	/** Shows or hides this layer depending on the value of parameter b
+	/**
+	 * Shows or hides this layer depending on the value of parameter b.
+	 *
 	 * @param b boolean determining if the layer is visible or not
 	 */
-	public void setVisible(boolean b) {
+	/*public void setVisible( boolean b ) {
 		visible = b;
 		repaintLayer();
-	}
+	}*/
 
 	/**
 	 * Returns a string contining the name of the layer.
+	 *
 	 * @return String containing the name of the layer
 	 */
 	public String getName() {
 		return name;
 	}
 
-	/** Sets the name of the layer.
+	/**
+	 * Sets the name of the layer.
+	 *
 	 * @param s String containing the name of the layer
 	 */
 	public void setName(String s) {
@@ -81,36 +90,21 @@ public abstract class AbstractLayer implements Layer {
 	/**
 	 * Adds a LayerListener to the layer that is notified when the layer's data is
 	 * changed.
+	 *
 	 * @param l LayerListener to be added to the layer
 	 */
-	public void addLayerListener(LayerListener l) {
-		if ( ! layerListeners.contains( l ) ) {
-			layerListeners.add( l );
+	public void addLayerChangedListener( LayerChangedListener l) {
+		if ( ! layerChangedListeners.contains( l ) ) {
+			layerChangedListeners.add( l );
 		}
 	}
 
 	public void updateLayer() {
-		ListIterator it = layerListeners.listIterator();
+		ListIterator it = layerChangedListeners.listIterator();
+		LayerChangedEvent event = new LayerChangedEvent( this, 2 );
 		while ( it.hasNext() ){
-			(( LayerListener ) it.next() ).updateLayer( this );
+			(( LayerChangedListener ) it.next() ).layerChanged( event );
 		}
-	}
-
-	/**
-	 * Repaints the Layer.  Should we get rid of this method??????????
-	 */
-	public void repaintLayer() {
-		ListIterator it = layerListeners.listIterator();
-		while ( it.hasNext() ){
-			(( LayerListener ) it.next() ).refresh( this );
-		}
-	}
-
-	/**
-	 * paints the selected objects of this layer
-	 * @param g Graphics object to be painted on.
-	 */
-	public void paintSelections(Graphics2D g) {
 	}
 
 	/** Is this layer static?
@@ -128,9 +122,14 @@ public abstract class AbstractLayer implements Layer {
 	 * false - layer is dynamic and layer will change if the layer's data is changed;
 	 * will be painted in front of any static layers
 	 */
-	public void setStatic(boolean b) {
+	public void setStatic( boolean b ) {
 		dynamic = ! b;
 	}
 
-
+	/*public void paint( Graphics2D g, Renderer r ) {
+	}
+	
+	public void paintSelections( Graphics2D g, Renderer renderer,
+		ArrayList selections ) {
+	}*/
 }

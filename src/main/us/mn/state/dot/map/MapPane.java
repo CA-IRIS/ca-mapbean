@@ -33,18 +33,18 @@ import java.awt.image.*;
  * @author Erik Engstrom
  * @version 1.0
  */
-public final class MapPane extends JPanel implements LayerListener {
+public final class MapPane extends JPanel implements ThemeChangedListener {
 	/** buffer for map */
 	private BufferedImage screenBuffer;
 
-	/** buffer for static layers in map */
+	/** buffer for static themes in map */
 	private BufferedImage staticBuffer;
 
-	/** List of dynamic layers */
-	private final ArrayList layers = new ArrayList();
+	/** List of dynamic themes */
+	private final ArrayList themes = new ArrayList();
 
-	/** List of static layers */
-	private final ArrayList staticLayers = new ArrayList();
+	/** List of static themes */
+	private final ArrayList staticThemes = new ArrayList();
 
 	/** Transformation to draw shapes in the ShapePane */
 	private final AffineTransform screenTransform = new AffineTransform();
@@ -57,13 +57,16 @@ public final class MapPane extends JPanel implements LayerListener {
 	public Rectangle2D extentHome = new Rectangle2D.Double();
 
 	/** Scale factor */
-	private double scale;
+	// use screenTransform.getScaleX()
+	//private double scale;
 
 	/** X-Axis */
-	private double shiftX;
+	//use screenTransform.getTranslateX()
+	//private double ;
 
 	/** Y-Axis */
-	private double shiftY;
+	//use screenTransform.getTranslateY()
+	//private double shiftY;
 
 	private boolean bufferDirty = true;
 
@@ -94,12 +97,12 @@ public final class MapPane extends JPanel implements LayerListener {
 	}
 
 	/**
-	 * Returns a List of the layers contained by this MapPane.
-	 * @return List of current layers contained by this MapPane
+	 * Returns a List of the themes contained by this MapPane.
+	 * @return List of current themes contained by this MapPane
 	 */
-	public java.util.List getLayers() {
-		java.util.List result = new ArrayList( layers );
-		result.addAll( staticLayers );
+	public java.util.List getThemes() {
+		java.util.List result = new ArrayList( themes );
+		result.addAll( staticThemes );
 		return result;
 	}
 
@@ -108,22 +111,22 @@ public final class MapPane extends JPanel implements LayerListener {
 	}
 
 	/**
-	 * Returns the layers contained in the MapPane.
+	 * Returns the themes contained in the MapPane.
 	 * @param name Name of layer to return.
-	 * @return Layer or null if not found.
+	 * @return Theme or null if not found.
 	 */
-	public Layer getLayer( String name ) {
-		Layer result = findLayer( name, layers );
+	public Theme getTheme( String name ) {
+		Theme result = findTheme( name, themes );
 		if ( result == null ) {
-			result = findLayer( name, staticLayers );
+			result = findTheme( name, staticThemes );
 		}
 		return result;
 	}
 
-	private Layer findLayer( String name, java.util.List layerList ) {
-		Layer result = null;
+	private Theme findTheme( String name, java.util.List layerList ) {
+		Theme result = null;
 		for ( ListIterator li = layerList.listIterator(); li.hasNext(); ){
-			Layer temp = ( Layer ) li.next();
+			Theme temp = ( Theme ) li.next();
 			if ( name.equals( temp.getName() ) ) {
 				result = temp;
 				break;
@@ -227,7 +230,43 @@ public final class MapPane extends JPanel implements LayerListener {
 		screenTransform.transform( point, point );
 		return new Point( ( int ) point.getX(), ( int ) point.getY() );
 	}
-
+	
+	private transient Image panBuffer = null;
+	
+	public void pan( int distanceX, int distanceY ) {
+		if ( panBuffer == null ) {
+			panBuffer = this.createImage( getBounds().width,
+				getBounds().height );
+		}
+		Graphics pb = panBuffer.getGraphics();
+		pb.setColor( this.getBackground() );
+		pb.fillRect( 0, 0, getBounds().width, getBounds().height );
+		pb.drawImage( screenBuffer, distanceX, distanceY, this );
+		Graphics g = this.getGraphics();
+		g.drawImage( panBuffer, 0, 0, this );
+	}
+	
+	public void zoomOut( Point center ) { //CHANGE SO THAT IT CENTERS THE VIEW AT THE POINT OF CLICK
+		extent.setFrame( extent.getX() - extent.getWidth() / 2, 
+			extent.getY() - extent.getHeight() / 2, extent.getWidth() * 2,
+			extent.getHeight() * 2 );
+		resized();
+	}
+	
+	public void finishPan( Point2D start, Point2D end ) {
+		try {
+			screenTransform.inverseTransform( start, start );
+			screenTransform.inverseTransform( end, end );
+		} catch ( NoninvertibleTransformException ex ) {
+			ex.printStackTrace();
+		}
+		double newX = start.getX() - end.getX();
+		double newY = start.getY() - end.getY();
+		extent.setFrame( extent.getX() + newX, extent.getY() + newY, 
+			extent.getWidth(), extent.getHeight() );
+		resized();	
+	}
+	
 	/** Pan to point on map */
 	public void panTo(Point p) {
 		Point scrollTo = p;
@@ -330,8 +369,23 @@ public final class MapPane extends JPanel implements LayerListener {
 	 * @param viewerSpace current viewport size.
 	 */
 	public void zoom( Rectangle2D mapSpace, Rectangle2D viewerSpace ) {
-		double w = mapSpace.getWidth();
+		Point2D upperLeft = new Point2D.Double( mapSpace.getMinX(), mapSpace.getMinY() );
+		Point2D lowerRight = new Point2D.Double( mapSpace.getMaxX(), mapSpace.getMaxY() );
+		try {
+			screenTransform.inverseTransform( upperLeft, upperLeft );
+			screenTransform.inverseTransform( lowerRight, lowerRight );
+		} catch ( NoninvertibleTransformException e ) {
+			e.printStackTrace();
+		}
+		double x = Math.min( upperLeft.getX(), lowerRight.getX() );
+		double y = Math.min( upperLeft.getY(), lowerRight.getY() );
+		double width = Math.abs( upperLeft.getX() - lowerRight.getX() );
+		double height = Math.abs( upperLeft.getY() - lowerRight.getY() );
+		extent.setFrame( x, y, width, height );
+		resized();
+		/*double w = mapSpace.getWidth();
 		double h = mapSpace.getHeight();
+		double scale = screenTransform.getScaleX();
 		//Calculate the new size of the panel
 		double oldWidth = extent.getWidth() * scale;
 		double oldHeight = extent.getHeight() * scale;
@@ -355,12 +409,12 @@ public final class MapPane extends JPanel implements LayerListener {
 			viewLocation.getX() ), ( mapSpace.getY() +
 			viewLocation.getY() ) );
 		AffineTransform inverse = null;
-			try {
-				inverse = screenTransform.createInverse();
-			} catch ( NoninvertibleTransformException ex ) {
-				ex.printStackTrace();
-			}
-			inverse.transform( ptHome, ptHome );
+		try {
+			inverse = screenTransform.createInverse();
+		} catch ( NoninvertibleTransformException ex ) {
+			ex.printStackTrace();
+		}
+		inverse.transform( ptHome, ptHome );
 		if ( ( width > maxWidth ) || ( height > maxHeight ) ){
 			width = maxWidth;
 			height = maxHeight;
@@ -381,6 +435,7 @@ public final class MapPane extends JPanel implements LayerListener {
 		viewport.setViewPosition( new Point( (int) ptHome.getX(),
 			( int ) ptHome.getY() ) );
 		repaint();
+		*/
 	}
 
 	/**
@@ -388,10 +443,12 @@ public final class MapPane extends JPanel implements LayerListener {
 	 * @param r The rectangle which describes the new bounding box for the display.
 	 */
 	public void setExtent( Rectangle2D r ) {
-		extent.setFrame( r.getMinX(), r.getMinY(), r.getWidth(),
-			r.getHeight() );
-		extentHome.setFrame( r.getMinX(), r.getMinY(), r.getWidth(),
-			r.getHeight() );
+		setExtent( r.getMinX(), r.getMinY(), r.getWidth(), r.getHeight() );		
+	}
+	
+	public void setExtent( double x, double y, double width, double height ) {
+		extent.setFrame( x, y, width, height );
+		extentHome.setFrame( x, y, width, height );
 		resized();
 		repaint();
 	}
@@ -411,16 +468,15 @@ public final class MapPane extends JPanel implements LayerListener {
 		}
 		double scaleX = ( double ) w / extent.getWidth();
 		double scaleY = ( double ) h / extent.getHeight();
-		double scaleTemp = scaleX;
-		shiftX = 0;
-		shiftY = ( h - ( extent.getHeight() * scaleTemp ) ) / 2;
-		if ( scaleTemp > scaleY ) {
-			scaleTemp = scaleY;
+		double scale = scaleX;
+		double shiftX = 0;
+		double shiftY = ( h - ( extent.getHeight() * scale ) ) / 2;
+		if ( scale > scaleY ) {
+			scale = scaleY;
 			shiftY = 0;
-			shiftX = ( w - ( extent.getWidth() * scaleTemp ) ) / 2;
+			shiftX = ( w - ( extent.getWidth() * scale ) ) / 2;
 		}
-		scale = scaleTemp;
-		screenTransform.setToTranslation( - ( extent.getMinX() * scale )
+		screenTransform.setToTranslation(  - ( extent.getMinX() * scale )
 			+ shiftX, ( extent.getMaxY() * scale ) + shiftY );
 		screenTransform.scale( scale, -scale );
 		screenBuffer = null;
@@ -432,14 +488,14 @@ public final class MapPane extends JPanel implements LayerListener {
 	 * Add a new layer to the MapPane
 	 * @param layer layer to be added to the MapPane
 	 */
-	public void addLayer( Layer layer ) {
-		if ( layer.isStatic() ) {
-			staticLayers.add( layer );
+	public void addTheme( Theme theme ) {
+		if ( theme.isStatic() ) {
+			staticThemes.add( theme );
 		} else {
-			layers.add( layer );
+			themes.add( theme );
 		}
-		layer.addLayerListener( this );
-		setExtent( layer.getExtent() );
+		theme.addThemeChangedListener( this );
+		setExtent( theme.getExtent() );
 	}
 	
 	/**
@@ -447,9 +503,9 @@ public final class MapPane extends JPanel implements LayerListener {
 	 * @param layer layer to be added to the MapPane
 	 * @param index 
 	 */
-	public void addLayer( Layer layer, int index ) {
-		layers.add( index, layer );
-		layer.addLayerListener( this );
+	public void addTheme( Theme theme, int index ) {
+		themes.add( index, theme );
+		theme.addThemeChangedListener( this );
 	}
 
 	/**
@@ -460,14 +516,14 @@ public final class MapPane extends JPanel implements LayerListener {
 		paint( g );
 	}
 
-	public void updateLayer( Layer l ) {
+	public void updateLayer( Theme l ) {
 		refresh( l );
 	}
 
 	/**
 	 * Refreshes map data
 	 */
-	public void refresh( Layer l ) {
+	public void refresh( Theme l ) {
 		bufferDirty = true;
 		if ( l.isStatic() ) {
 			staticBuffer = null;
@@ -500,10 +556,10 @@ public final class MapPane extends JPanel implements LayerListener {
 		g2D.transform( screenTransform );
 		g2D.setRenderingHint( RenderingHints.KEY_ANTIALIASING, 
 			RenderingHints.VALUE_ANTIALIAS_ON );
-		for ( int i = ( staticLayers.size() - 1 ); i >= 0; i-- ) {
-			Layer layer = ( Layer ) staticLayers.get( i );
-			if ( layer.isVisible() ){
-				layer.paint( g2D );
+		for ( int i = ( staticThemes.size() - 1 ); i >= 0; i-- ) {
+			Theme theme = ( Theme ) staticThemes.get( i );
+			if ( theme.isVisible() ){
+				theme.paint( g2D );
 			}
 		}
 	}
@@ -525,8 +581,8 @@ public final class MapPane extends JPanel implements LayerListener {
 		int h = screenBuffer.getHeight( null );
 		g2D.drawImage( staticBuffer, 0, 0, this );
 		g2D.transform( screenTransform );
-		for ( int i = ( layers.size() - 1 ); i >= 0; i-- ) {
-			Layer layer = ( Layer ) layers.get( i );
+		for ( int i = ( themes.size() - 1 ); i >= 0; i-- ) {
+			Theme layer = ( Theme ) themes.get( i );
 			if ( layer.isVisible() ){
 				layer.paint( g2D );
 			}
@@ -555,11 +611,14 @@ public final class MapPane extends JPanel implements LayerListener {
 		g.drawImage( screenBuffer, 0, 0, this );
 		Graphics2D g2D = ( Graphics2D ) g;
 		g2D.transform( screenTransform );
-		for ( int i = ( layers.size() - 1 ); i >= 0; i-- ) {
-			Layer layer = ( Layer ) layers.get( i );
+		for ( int i = ( themes.size() - 1 ); i >= 0; i-- ) {
+			Theme layer = ( Theme ) themes.get( i );
 			if ( layer.isVisible() ){
 				layer.paintSelections( g2D );
 			}
 		}
+	}
+	
+	public void themeChanged( ThemeChangedEvent event ) {
 	}
 }

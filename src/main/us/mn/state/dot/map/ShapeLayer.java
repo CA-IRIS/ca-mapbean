@@ -37,25 +37,27 @@ public class ShapeLayer extends AbstractLayer {
 
 	//private DbaseReader dbFile;
 	private Field [] fields;
+	
+	private Symbol symbol = null;
 
 	/** Set symbol to paint layer with */
 	public final void setSymbol( Symbol s ){
-		painter.setSymbol( s );
+		symbol = s;
 	}
 
 	/** Renderer for this layer */
-	private ShapeRenderer painter = null;
+	//private ShapeRenderer painter = null;
 
 	/** Set the Renderer for the layer */
-	public final void setRenderer( ShapeRenderer p ) {
+	/*public final void setRenderer( ShapeRenderer p ) {
 		painter = p;
 		updateLayer();
-	}
+	}*/
 
 	/** Get the Renderer for the layer */
-	public final ShapeRenderer getRenderer(){
+	/*public final ShapeRenderer getRenderer(){
 		return painter;
-	}
+	}*/
 
 	/** Array to hold all shape information */
 	protected GeneralPath [] paths;
@@ -114,20 +116,20 @@ public class ShapeLayer extends AbstractLayer {
 			path.append( ( PathIterator )list.get( i ), false );
 			paths[ i ] = path;
 		}
-		painter = new DefaultRenderer();
+		//painter = new DefaultRenderer();
 		extent = new Rectangle2D.Double( file.getXmin(), file.getYmin(),
 			( file.getXmax() - file.getXmin() ),
 			( file.getYmax() - file.getYmin() ) );
 		shapeType = file.getShapeType();
 		switch( shapeType ) {
 		case ShapeTypes.POINT:
-			painter.setSymbol( new CircleMarker() );
+			setSymbol( new CircleMarker() );
 			break;
 		case ShapeTypes.POLYLINE:
-			painter.setSymbol( new SolidLine() );
+			setSymbol( new SolidLine() );
 			break;
 		case ShapeTypes.POLYGON:
-			painter.setSymbol( new FillSymbol() );
+			setSymbol( new FillSymbol() );
 			break;
 		}
 	}
@@ -138,12 +140,19 @@ public class ShapeLayer extends AbstractLayer {
 	}
 
 	/** Paint this Layer */
-	public final void paint( Graphics2D g ) {
-		if ( isVisible() ) {
-			for ( int i = ( paths.length - 1 ) ; i >= 0; i-- ){
-				painter.paint( g, paths[ i ], i );
+	public void paint( Graphics2D g, Renderer renderer ) {
+		for ( int i = ( paths.length - 1 ) ; i >= 0; i-- ){
+			Symbol drawSymbol = symbol;
+			if ( renderer != null ) {
+				drawSymbol = renderer.render( i );
 			}
+			drawSymbol.draw( g, paths[ i ] );
+			//painter.paint( g, paths[ i ], i );
 		}
+	}
+	
+	public void paintSelections( Graphics2D g, Renderer renderer,
+			ArrayList selections ) {
 	}
 
 	public boolean mouseClick( int clickCount, Point2D p, Graphics2D g ){
@@ -156,7 +165,7 @@ public class ShapeLayer extends AbstractLayer {
 	protected final java.util.List hit( Point2D p ){
 		java.util.List result = new ArrayList();
 		switch( shapeType ) {
-		case ShapeTypes.POINT:
+		/*case ShapeTypes.POINT:
 			Symbol symbol = painter.getSymbol();
 			if ( symbol == null ) {
 				return result;
@@ -170,7 +179,7 @@ public class ShapeLayer extends AbstractLayer {
 					break;
 				}
 			}
-			break;
+			break;*/
 		case ShapeTypes.POLYLINE: case ShapeTypes.POLYGON:
 			//Rectangle2D r = null;
 			for ( int i = ( paths.length - 1 ); i >= 0; i-- ) {
@@ -212,7 +221,7 @@ public class ShapeLayer extends AbstractLayer {
 	public final String getTip( Point2D p ){
 		String result = null;
 		switch( shapeType ) {
-		case ShapeTypes.POINT:
+		/*case ShapeTypes.POINT:
 			Symbol symbol = painter.getSymbol();
 			if ( symbol == null ) {
 				return null;
@@ -228,14 +237,14 @@ public class ShapeLayer extends AbstractLayer {
 					break;
 				}
 			}
-			break;
+			break;*/
 		case ShapeTypes.POLYLINE: case ShapeTypes.POLYGON:
-			for ( int i = ( paths.length - 1 ); i >= 0; i-- ) {
+			/*for ( int i = ( paths.length - 1 ); i >= 0; i-- ) {
 				if ( paths[ i ].contains( p ) ) {
 					result = painter.getTip( this, i );
 					break;
 				}
-			}
+			}*/
 			break;
 		}
 		return result;
