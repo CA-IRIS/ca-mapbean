@@ -190,8 +190,6 @@ public final class MapPane extends JPanel {
 		}
 		g2D.setColor(Color.lightGray);
 		g2D.fillRect(0, 0, w, h);
-		g2D.setColor(Color.black);
-		g2D.drawRect(0, 0, w, h);
 		g2D.transform( at );
 		for ( int i = (layers.size() - 1); i >= 0; i-- ) {
 			Layer layer = (Layer)layers.get( i );
@@ -199,7 +197,7 @@ public final class MapPane extends JPanel {
 				layer.paint( g2D );
 			}
 		}
+		g2D.setColor(Color.black);
+		g2D.drawRect(0, 0, w, h);
 	}
-
-
 }
