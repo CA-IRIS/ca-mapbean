@@ -27,7 +27,7 @@ import java.awt.*;
  * interface.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.26 $ $Date: 2001/08/17 22:14:38 $ 
+ * @version $Revision: 1.27 $ $Date: 2001/08/21 18:57:45 $ 
  * @since 1.0
  */
 public abstract class AbstractLayer implements Layer {
@@ -42,6 +42,22 @@ public abstract class AbstractLayer implements Layer {
 	private java.util.List layerChangedListeners = new ArrayList();
 
 	private boolean dynamic = false;
+
+	/**
+	 * Paints the selected Map objects.
+	 * @param g the Graphics object to draw on.
+	 */
+	public void paintSelections( Graphics2D g, LayerRenderer renderer,
+			MapObject[] selections ) {
+		if ( selections != null ) {
+			for ( int i = 0; i < selections.length; i++ ) {
+				MapObject object = selections[ i ];
+				if ( object != null ) {
+					renderer.render( g, object );
+				}
+			}
+		}
+	}
 
 	/** 
 	 * Gets the extent of the layer.
