@@ -62,7 +62,7 @@ public class NavigationBar extends JToolBar {
 
 	private JToggleButton getZoomButton(ButtonGroup bgToolbar){
 		JToggleButton btnZoom = new JToggleButton("Zoom",
-			getImage("/images/arrow.gif"));
+			getImage("/images/zoom.gif"));
 		btnZoom.setToolTipText("Zoom Map");
 		sizeButton(btnZoom);
 		btnZoom.addActionListener(new ActionListener(){

@@ -207,6 +207,7 @@ public final class Map extends JViewport implements LayerListener {
 				//Mouse Zoom
 				case ZOOM:
 					if ( box ) {
+						drawBox(rect);
 						box = false;
 						y2 = e.getY();
 						x2 = e.getX();
@@ -240,6 +241,11 @@ public final class Map extends JViewport implements LayerListener {
 						} else if (h > w) {
 							height = oldHeight * (viewHeight / h);
 							width = height * ratioMap;
+						}
+
+						//Cheap way to limit zoom FIX LATER!!!!!!!
+						if ((width > 5000) || (height > 5000)){
+							return;
 						}
 
 						//Set the new size of the panel

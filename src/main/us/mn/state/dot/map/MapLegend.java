@@ -27,7 +27,6 @@ public class MapLegend extends JPanel {
 			}
 			if (! text.equals("")){
 				JLabel label = new JLabel(text, icon, SwingConstants.RIGHT);
-				add(label);
 			}
 		}
 		ColorIcon icon = new ColorIcon(renderer.getSymbol(
