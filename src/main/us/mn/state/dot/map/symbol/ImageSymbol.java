@@ -156,9 +156,6 @@ public class ImageSymbol implements Symbol {
 		return size;
 	}
 
-	public void setOutLineSymbol( LineSymbol symbol ) {
-	}
-
 	public Component getLegend() {
 		return new JLabel( icon );
 	}
