@@ -42,7 +42,7 @@ import us.mn.state.dot.dds.client.*;
  * @version 1.0
  * @see us.mn.state.dot.shap.MapPane
  */
-public final class Map extends JPanel implements ThemeChangedListener {
+public final class Map extends JComponent implements ThemeChangedListener {
 	
 	/** buffer for map */
 	private BufferedImage screenBuffer;
