@@ -23,7 +23,7 @@ import us.mn.state.dot.dds.client.*;
  * @version 1.0
  * @see us.mn.state.dot.shap.MapPane
  */
-public final class Map extends JViewport implements LayerListener {
+public final class Map extends JViewport {
 	/**
 	 * Mouse behavior constant, no action.
 	 */
@@ -133,6 +133,7 @@ public final class Map extends JViewport implements LayerListener {
 	public void home() {
 		this.setViewSize( this.getSize() );
 		map.setPreferredSize( this.getSize() );
+		map.setExtent( map.extentHome );
 		map.resized();
 		map.setLocation( new Point( 0, 0 ) );
 		revalidate();
@@ -144,12 +145,11 @@ public final class Map extends JViewport implements LayerListener {
 	 */
 	public void addLayer(Layer layer) {
 		map.addLayer( layer );
-		layer.addLayerListener( this );
 	}
 
-	public void refresh() {
+	/*public void refresh() {
 		map.refresh();
-	}
+	} */
 
 	/** Draw an XOR box (rubberbanding box) */
 	void drawBox(Rectangle r) {
@@ -163,31 +163,19 @@ public final class Map extends JViewport implements LayerListener {
 
 	/** Pan to point on map */
 	void panTo(Point p) {
-		Point scrollTo = p;
-		if ( ( scrollTo.getX() + this.getWidth() ) > map.getWidth() ) {
-			scrollTo.x = map.getWidth() - this.getWidth();
-		}
-		if ( ( scrollTo.getY() + this.getHeight() ) > map.getHeight() ) {
-			scrollTo.y = map.getHeight() - this.getHeight();
-		}
-		if ( scrollTo.getX() < 0 ) {
-			scrollTo.x = 0;
-		}
-		if ( scrollTo.getY() < 0 ) {
-			scrollTo.y = 0;
-		}
-		this.setViewPosition( scrollTo );
+	   map.panTo( p );
 	}
 
 	/**
 	 * move the viewport so that the point is visible
-	 * @param center a Point2d in world coordinates
+	 * @param center a Point2D in world coordinates
 	 */
 	public void scrollToMapPoint(Point2D center) {
-		Point2D p = map.convertPoint( center );
+		map.scrollToMapPoint( center );
+		/*Point2D p = map.convertPoint( center );
 		Rectangle2D rec = new Rectangle2D.Double( p.getX() - 25, p.getY() - 25,
-		50, 50 );
-		map.scrollRectToVisible( rec.getBounds() );
+			50, 50 );
+		map.scrollRectToVisible( rec.getBounds() );*/
 	}
 
 	public String getToolTipText(MouseEvent e) {
@@ -208,6 +196,7 @@ public final class Map extends JViewport implements LayerListener {
 		String result = null;
 		for ( ListIterator it = layers.listIterator(); it.hasNext(); ) {
 			Layer l = ( Layer ) it.next();
+			//System.out.println(" Searching layer - " + l.getName());
 			result = l.getTip( p );
 			if ( result != null ) {
 				break;
@@ -218,10 +207,6 @@ public final class Map extends JViewport implements LayerListener {
 
 	public JToolTip createToolTip() {
 		return new JMultiLineToolTip();
-	}
-
-	public void updateLayer(Layer l) {
-		map.refresh();
 	}
 
 	public void setExtent(Rectangle2D r) {
@@ -286,14 +271,18 @@ public final class Map extends JViewport implements LayerListener {
 					case SELECT:
 					break;
 					case ZOOM:
-					Double width = new Double( map.getSize().getWidth() / 1.5 );
+					/*Double width = new Double( map.getSize().getWidth() / 1.5 );
 					Double height = new Double( map.getSize().getHeight() /
 					1.5 );
 					map.setMinimumSize( new Dimension( width.intValue(),
 					height.intValue() ) );
 					map.setPreferredSize( new Dimension( width.intValue(),
 					height.intValue() ) );
-					map.setSize( width.intValue(), height.intValue() );
+					map.setSize( width.intValue(), height.intValue() );*/
+					Point2D center = new Point2D.Double( ( e.getX() +
+						getViewPosition().getX() ), ( e.getY() +
+						getViewPosition().getY() ) );
+					map.zoomOut( center, 1.5 );
 					break;
 					case PAN:
 					break;

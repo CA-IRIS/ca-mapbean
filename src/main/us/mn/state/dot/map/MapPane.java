@@ -14,12 +14,12 @@ import java.awt.image.*;
  * @author Erik Engstrom
  * @version 1.0
  */
-public final class MapPane extends JPanel {
+public final class MapPane extends JPanel implements LayerListener {
 	/** buffer for map */
-	private Image screenBuffer;
-	
+	private BufferedImage screenBuffer;
+
 	/** buffer for static layers in map */
-	private Image staticBuffer;
+	private BufferedImage staticBuffer;
 
 	/** List of dynamic layers */
 	private final ArrayList layers = new ArrayList();
@@ -28,20 +28,21 @@ public final class MapPane extends JPanel {
 	private final ArrayList staticLayers = new ArrayList();
 
 	/** Transformation to draw shapes in the ShapePane */
-	private final AffineTransform at = new AffineTransform();
+	private final AffineTransform screenTransform = new AffineTransform();
 
 	/** Optional viewport */
 	private Map viewport;
 
 	/** Bounding box */
 	private Rectangle2D extent = new Rectangle2D.Double();
+	public Rectangle2D extentHome = new Rectangle2D.Double();
 
 	/** Scale factor */
 	private double scale;
-	
+
 	/** X-Axis */
 	private double shiftX;
-	
+
 	/** Y-Axis */
 	private double shiftY;
 
@@ -62,6 +63,8 @@ public final class MapPane extends JPanel {
 	 */
 	public MapPane(Map map) {
 		setDoubleBuffered( false );
+		staticBuffer = new BufferedImage( 1405, 1728,
+			BufferedImage.TYPE_INT_RGB );
 		viewport = map;
 		addComponentListener( new ComponentAdapter() {
 			public void componentResized( ComponentEvent e ) {
@@ -82,7 +85,7 @@ public final class MapPane extends JPanel {
 	}
 
 	AffineTransform getTransform() {
-		return at;
+		return screenTransform;
 	}
 
 	/**
@@ -111,17 +114,200 @@ public final class MapPane extends JPanel {
 	}
 
 	/**
+	 * move the viewport so that the point is visible
+	 * @param center a Point2D in world coordinates
+	 */
+	public void scrollToMapPoint(Point2D center) {
+		Point2D a = convertPoint( center );
+		Point p = new Point( ( int ) a.getX() - 25, ( int ) a.getY() - 25 );
+		if ( p.getY() < 0 ){
+			System.out.println( "outside extent 1" );
+			System.out.println("x = " + p.getX() + " y = " + p.getY() );
+			p = shiftExtent( p, new Point( 0, -1 ) );
+		}
+		if ( p.getX() < 0 ) {
+			System.out.println( "outside extent 2" );
+			System.out.println("x = " + p.getX() + " y = " + p.getY() );
+			p = shiftExtent( p, new Point( -1, 0 ) );
+		}
+		if ( p.getY() > getHeight() ) {
+			System.out.println( "outside extent 3" );
+			System.out.println("x = " + p.getX() + " y = " + p.getY() );
+			p = shiftExtent( p, new Point( 0, 1 ) );
+		}
+		if ( p.getX() > getWidth() ) {
+			System.out.println( "outside extent 4" );
+			System.out.println("x = " + p.getX() + " y = " + p.getY() );
+			p = shiftExtent( p, new Point( 1, 0 ) );
+		}
+		System.out.println(" new x = " + p.getX() + " new y = " + p.getY() );
+		Rectangle2D rec = new Rectangle2D.Double( p.getX(), p.getY(),
+			50, 50 );
+		viewport.scrollRectToVisible( rec.getBounds() );
+	}
+
+	/**
 	 * Converts a Point2D from world coordinates to screen coordinates.
 	 * @param point The point in world coordinates to be converted.
 	 * @return A new points whose coordinates are in screen coordinates.
 	 */
 	public Point2D convertPoint(Point2D point) {
 		Point2D result = null;
-		result = at.transform( point, result );
+		result = screenTransform.transform( point, result );
 		return result;
 	}
 
-	/** Increase the size of this MapPane so that the mapSpace will fill the
+	private Point shiftExtent( Point scrollTo, Point how ) {
+		AffineTransform inverse = null;
+		try {
+			inverse = screenTransform.createInverse();
+		} catch ( NoninvertibleTransformException ex ) {
+			ex.printStackTrace();
+		}
+		Point2D point = null;
+		point = inverse.transform( scrollTo, point );
+		Point2D upperLeft = viewport.getLocation();
+		inverse.transform( upperLeft, upperLeft );
+		Point2D lowerRight = new Point( ( viewport.getX() +
+			viewport.getWidth() ), ( viewport.getY() +
+			viewport.getHeight() ) );
+		inverse.transform( lowerRight, lowerRight );
+		double shiftX = lowerRight.getX() - upperLeft.getX();
+		double shiftY = lowerRight.getY() - upperLeft.getY();
+		double newX = extent.getX() + ( how.getX() * shiftX );
+		if ( newX < extentHome.getX() ) {
+			newX = extentHome.getX();
+		}
+		if ( newX > extentHome.getMaxX() - extent.getWidth() ) {
+			newX = extentHome.getMaxX() - extent.getWidth();
+		}
+		double newY = extent.getY() + ( how.getY() * shiftY );
+		if ( newY < extentHome.getMinY() ) {
+			newY = extentHome.getMinY();
+		}
+		double yMax = extentHome.getMaxY() - extent.getHeight();
+		if ( newY > yMax ) {
+			newY = yMax;
+		}
+		extent.setFrame( newX, newY, extent.getWidth(), extent.getHeight() );
+		resized();
+		screenTransform.transform( point, point );
+		return new Point( ( int ) point.getX(), ( int ) point.getY() );
+	}
+
+	/** Pan to point on map */
+	public void panTo(Point p) {
+		Point scrollTo = p;
+		if ( scrollTo.getX() < 0 ) {
+			if ( extent.getX() > extentHome.getX() ) {
+				scrollTo = shiftExtent( scrollTo, new Point( -1, 0 ) );
+			} else {
+				scrollTo.x = 0;
+			}
+		}
+		if ( scrollTo.getY() < 0 ) {
+			if ( extent.getY() >= extentHome.getY() ) {
+				scrollTo = shiftExtent( scrollTo, new Point( 0, -1 ) );
+				if ( scrollTo.getY() < 0 ) {
+					scrollTo.y = 0;
+				}
+			} else {
+				scrollTo.y = 0;
+			}
+		}
+		if ( ( scrollTo.getX() + viewport.getWidth() ) > getWidth() ) {
+			if ( extent.getMaxX() < extentHome.getMaxX() ) {
+				scrollTo = shiftExtent( scrollTo, new Point( 1, 0 ) );
+			} else {
+				scrollTo.x = getWidth() - viewport.getWidth();
+			}
+		}
+		if ( ( scrollTo.getY() + viewport.getHeight() ) > getHeight() ) {
+			if ( extent.getMaxY() <= extentHome.getMaxY() ) {
+				scrollTo = shiftExtent( scrollTo, new Point( 0, 1 ) );
+				if ( ( scrollTo.getY() + viewport.getHeight() ) >
+						getHeight() ) {
+					scrollTo.y = getHeight() - viewport.getHeight();
+				}
+
+			} else {
+				scrollTo.y = getHeight() - viewport.getHeight();
+			}
+		}
+		viewport.setViewPosition( scrollTo );
+	}
+
+	/**
+	 *
+	 */
+	public void zoomOut( Point2D center, double factor ) {
+		try {
+			screenTransform.inverseTransform( center, center );
+		} catch ( NoninvertibleTransformException ex ) {
+			ex.printStackTrace();
+		}
+		double homeWidth = extentHome.getWidth();
+		double homeHeight = extentHome.getHeight();
+		double oldWidth = extent.getWidth();
+		double oldHeight = extent.getHeight();
+		if ( ( oldWidth < homeWidth ) || ( oldHeight < homeHeight ) ) {
+			double newWidth = oldWidth * factor;
+			double newHeight = oldWidth * factor;
+			if ( ( newWidth > homeWidth ) || ( newHeight > homeHeight ) ){
+				newWidth = homeHeight;
+				newHeight = homeHeight;
+			}
+			double newX = extent.getX() - ( ( newWidth - oldWidth ) / 2 );
+			double newY = extent.getY() - ( ( newHeight - oldHeight ) / 2 );
+			if ( newX < extentHome.getX() ) {
+				newX = extentHome.getX();
+			}
+			if ( newY < extentHome.getY() ) {
+				newY = extentHome.getY();
+			}
+			extent.setFrame( newX, newY, newWidth, newHeight );
+		} else if ( ( getWidth() > viewport.getWidth() ) ||
+				( getHeight() > viewport.getHeight() ) ) {
+			int newWidth = ( int ) ( getWidth() / factor );
+			int newHeight = ( int ) ( getHeight() / factor );
+			if ( newWidth < viewport.getWidth() ) {
+				newWidth = viewport.getWidth();
+			}
+			if ( newHeight < viewport.getHeight() ) {
+				newHeight = viewport.getHeight();
+			}
+			Dimension newSize = new Dimension( newWidth, newHeight );
+			setSize( newSize );
+			setPreferredSize( newSize );
+		} else {
+			return;
+		}
+		resized();
+		screenTransform.transform( center, center );
+		double xShift = viewport.getWidth() / 2;
+		double yShift = viewport.getHeight() / 2;
+		int xCoor = ( int ) ( center.getX() - xShift );
+		int yCoor = ( int ) ( center.getY() - yShift );
+		if ( xCoor < 0 ) {
+			xCoor = 0;
+		}
+		if ( yCoor < 0 ) {
+			yCoor = 0;
+		}
+		int xMax = this.getWidth() - viewport.getWidth();
+		int yMax = this.getHeight() - viewport.getHeight();
+		if ( xCoor > xMax ) {
+			xCoor = xMax;
+		}
+		if ( yCoor > yMax ) {
+			yCoor = yMax;
+		}
+		viewport.setViewPosition( new Point( xCoor, yCoor ) );
+		revalidate();
+	}
+
+	/**
+	 * Increase the size of this MapPane so that the mapSpace will fill the
 	 * viewerSpace
 	 * @param mapSpace seleted region to zoom to
 	 * @param viewerSpace current viewport size.
@@ -135,6 +321,8 @@ public final class MapPane extends JPanel {
 		double ratioMap = oldWidth / oldHeight;
 		double viewWidth = viewerSpace.getWidth();
 		double viewHeight = viewerSpace.getHeight();
+		double maxWidth = 1776;//viewWidth * 3;
+		double maxHeight = 2268;//viewHeight * 3;
 		double width = 0;
 		double height = 0;
 		if ( ( int ) w >= ( int ) h ) {
@@ -144,34 +332,38 @@ public final class MapPane extends JPanel {
 			height = oldHeight * ( viewHeight / h );
 			width = height * ratioMap;
 		}
-		//Cheap way to limit zoom FIX LATER!!!!!!!
-		if ( ( width > 5000 ) || ( height > 5000 ) ){
-			return;
-		}
-		//Set the new size of the panel
 		Point2D viewLocation = new Point2D.Double( viewerSpace.getX(),
 		viewerSpace.getY() );
-		Dimension d = new Dimension( ( int ) width, ( int ) height );
-		Point pan = null;
-		if ( viewport != null ) {
-		//Scroll to the center of the zoom rectangle
-			double X1 = ( ( mapSpace.getMinX() + viewLocation.getX()
-				- shiftX ) * ( width / oldWidth ) );
-			double Y1 = ( ( mapSpace.getMinY() + viewLocation.getY()
-				- shiftY ) * ( height / oldHeight ) );
-			double newBoxWidth = mapSpace.getWidth() * ( width /
-				oldWidth );
-			double newBoxHeight = mapSpace.getHeight() * ( height /
-				oldHeight );
-			pan = new Point( ( int ) ( X1 - ( ( viewWidth - newBoxWidth ) /
-				2 ) ), ( int ) ( Y1 - ( ( viewHeight - newBoxHeight ) / 2 ) ) );
+		Point2D ptHome = new Point2D.Double( ( mapSpace.getX() +
+			viewLocation.getX() ), ( mapSpace.getY() +
+			viewLocation.getY() ) );
+		AffineTransform inverse = null;
+			try {
+				inverse = screenTransform.createInverse();
+			} catch ( NoninvertibleTransformException ex ) {
+				ex.printStackTrace();
+			}
+			inverse.transform( ptHome, ptHome );
+		if ( ( width > maxWidth ) || ( height > maxHeight ) ){
+			width = maxWidth;
+			height = maxHeight;
+			Point2D ptMax = new Point2D.Double( ( mapSpace.getMaxX() +
+				viewLocation.getX() ), ( mapSpace.getMaxY() +
+				viewLocation.getY() ) );
+			inverse.transform( ptMax, ptMax );
+			double xDist = ptMax.getX() - ptHome.getX();
+			double yDist = ptHome.getY() - ptMax.getY();
+			extent.setRect( ( ptHome.getX() - xDist ),
+				( ( ptHome.getY() - yDist ) ), ( xDist * 3 ), ( yDist * 3 ) );
 		}
+		Dimension d = new Dimension( ( int ) width, ( int ) height );
 		setSize( d );
 		setPreferredSize( d );
 		resized();
-		if ( pan != null ) {
-			viewport.panTo( pan );
-		}
+		screenTransform.transform( ptHome, ptHome );
+		viewport.setViewPosition( new Point( (int) ptHome.getX(),
+			( int ) ptHome.getY() ) );
+		repaint();
 	}
 
 	/**
@@ -179,7 +371,10 @@ public final class MapPane extends JPanel {
 	 * @param r The rectangle which describes the new bounding box for the display.
 	 */
 	public void setExtent( Rectangle2D r ) {
-		extent = r;
+		extent.setFrame( r.getMinX(), r.getMinY(), r.getWidth(),
+			r.getHeight() );
+		extentHome.setFrame( r.getMinX(), r.getMinY(), r.getWidth(),
+			r.getHeight() );
 		resized();
 		repaint();
 	}
@@ -214,9 +409,9 @@ public final class MapPane extends JPanel {
 			shiftX = ( w - ( extent.getWidth() * scaleTemp ) ) / 2;
 		}
 		scale = scaleTemp;
-		at.setToTranslation( - ( extent.getMinX() * scale )
+		screenTransform.setToTranslation( - ( extent.getMinX() * scale )
 			+ shiftX, ( extent.getMaxY() * scale ) + shiftY );
-		at.scale( scale, -scale );
+		screenTransform.scale( scale, -scale );
 		screenBuffer = null;
 		staticBuffer = null;
 	}
@@ -231,6 +426,7 @@ public final class MapPane extends JPanel {
 		} else {
 			layers.add( layer );
 		}
+		layer.addLayerListener( this );
 		setExtent( layer.getExtent() );
 	}
 
@@ -242,11 +438,18 @@ public final class MapPane extends JPanel {
 		paint( g );
 	}
 
+	public void updateLayer( Layer l ) {
+		refresh( l );
+	}
+
 	/**
 	 * Refreshes map data
 	 */
-	public void refresh() {
+	public void refresh( Layer l ) {
 		bufferDirty = true;
+		if ( l.isStatic() ) {
+			staticBuffer = null;
+		}
 		repaint();
 	}
 
@@ -254,13 +457,13 @@ public final class MapPane extends JPanel {
 		int h = 0;
 		int w = 0;
 		if ( this.isDisplayable() ) {
-			w = this.getHeight();
-			h = this.getWidth();
+			h = this.getHeight();
+			w = this.getWidth();
 		} else {
 			h = 600;
 			w = 600;
 		}
-		return new BufferedImage( h, w, BufferedImage.TYPE_INT_RGB );
+		return new BufferedImage( w, h, BufferedImage.TYPE_INT_RGB );
 	}
 
 	/**
@@ -272,7 +475,7 @@ public final class MapPane extends JPanel {
 		int h = staticBuffer.getHeight( null );
 		g2D.setColor( Color.lightGray );
 		g2D.fillRect( 0, 0, w, h );
-		g2D.transform( at );
+		g2D.transform( screenTransform );
 		for ( int i = ( staticLayers.size() - 1 ); i >= 0; i-- ) {
 			Layer layer = ( Layer ) staticLayers.get( i );
 			if ( layer.isVisible() ){
@@ -281,7 +484,11 @@ public final class MapPane extends JPanel {
 		}
 	}
 	
-	/** 
+	public void setBufferDirty( boolean b ) {
+		bufferDirty = b;
+	}
+
+	/**
 	 * Updates screenBuffer.
 	 */
 	public void updateScreenBuffer() {
@@ -292,12 +499,9 @@ public final class MapPane extends JPanel {
 		Graphics2D g2D = ( Graphics2D ) screenBuffer.getGraphics();
 		int w = screenBuffer.getWidth( null );
 		int h = screenBuffer.getHeight( null );
-		/*g2D.setColor( Color.lightGray );
-		g2D.fillRect( 0, 0, w, h );*/
 		g2D.drawImage( staticBuffer, 0, 0, this );
-		g2D.transform( at );
+		g2D.transform( screenTransform );
 		for ( int i = ( layers.size() - 1 ); i >= 0; i-- ) {
-		//for ( int i = 0; i < layers.size(); i++ ) {
 			Layer layer = ( Layer ) layers.get( i );
 			if ( layer.isVisible() ){
 				layer.paint( g2D );
@@ -330,7 +534,7 @@ public final class MapPane extends JPanel {
 		}
 		g.drawImage( screenBuffer, 0, 0, this );
 		Graphics2D g2D = ( Graphics2D ) g;
-		g2D.transform( at );
+		g2D.transform( screenTransform );
 		for ( int i = ( layers.size() - 1 ); i >= 0; i-- ) {
 			Layer layer = ( Layer ) layers.get( i );
 			if ( layer.isVisible() ){

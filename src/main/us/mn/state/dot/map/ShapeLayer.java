@@ -189,17 +189,15 @@ public class ShapeLayer extends AbstractLayer {
 
 	public final String getTip( Point2D p ){
 		String result = null;
-		/*Rectangle2D searchZone = new Rectangle2D.Double( ( p.getX() - 250 ),
-			( p.getY() - 250 ), 500, 500 );
-		Rectangle2D r = null;
-		Point2D q = null;*/
 		switch( shapeType ) {
 		case ShapeTypes.POINT:
 			double size = painter.getSymbol().getSize();
-			Rectangle2D r = new Rectangle2D.Double( p.getX() - ( size / 2 ),
-				p.getY() - ( size / 2 ), size, size );
+			Rectangle2D r = new Rectangle2D.Double( ( p.getX() - ( size / 2 ) ),
+				( p.getY() - ( size / 2 ) ), size, size );
 			for ( int i = ( paths.length - 1 ); i >= 0; i-- ) {
-				if ( r.contains( paths[ i ].getBounds() ) ) {
+				Rectangle r2 = paths[ i ].getBounds();
+				r2.setSize( 1, 1 );
+				if ( r.contains( r2 ) ) {
 					result = painter.getTip( this, i );
 					break;
 				}
@@ -214,21 +212,6 @@ public class ShapeLayer extends AbstractLayer {
 			}
 			break;
 		}
-			/*r = paths[ i ].getBounds2D();
-			if ( ( r.getWidth() == 0) || ( r.getHeight() == 0 ) ) {
-				q = paths[ i ].getCurrentPoint();
-				if ( searchZone.contains( q ) ) {
-					result = painter.getTip( this, i );
-					break;
-				}
-			} else {
-				if ( searchZone.contains( r ) || r.contains( searchZone ) ||
-						r.intersects( searchZone ) ) {
-					result = painter.getTip( this, i );
-					break;
-				}
-			}
-		} */
 		return result;
 	}
 }
