@@ -272,38 +272,14 @@ public final class Map extends JViewport implements LayerListener {
 					g.setTransform(t);
 					ArrayList layers = map.getLayers();
 					ListIterator it = layers.listIterator();
-					//Vector found = null;
 					boolean found = false;
 					while (it.hasNext()){
 						Layer l = (Layer) it.next();
-						found = l.select(p, g);//l.hit(p);
+						found = l.select(p, g);
 						if ( found ) {
 							break;
 						}
 					}
-					/*
-					it = found.listIterator();
-					Object o = null;
-					double xCoord = 0;
-					double yCoord = 0;
-					while (it.hasNext()){
-						o = it.next();
-						if (o instanceof Incident){
-							Incident incident = (Incident) o;
-							xCoord = incident.getX();
-							yCoord = incident.getY();
-							break;
-						}
-					}
-					g.setTransform(t);
-					g.setColor(Color.red);
-					g.setXORMode(Color.white);
-					g.draw(new Ellipse2D.Double((xCoord - (ONE_MILE / 2)),
-						(yCoord - (ONE_MILE / 2)), ONE_MILE, ONE_MILE));
-					g.draw(new Ellipse2D.Double((xCoord - (FIVE_MILES / 2)),
-						(yCoord - (FIVE_MILES / 2)), FIVE_MILES, FIVE_MILES));
-					g.draw(new Ellipse2D.Double((xCoord - (TEN_MILES / 2)),
-						(yCoord - TEN_MILES / 2), TEN_MILES, TEN_MILES));   */
 				case ZOOM:
 					break;
 				case PAN:
@@ -348,11 +324,9 @@ public final class Map extends JViewport implements LayerListener {
 						(y2 - last.y));
 					last.x = x2;
 					last.y = y2;
-					//if(viewport.contains(e.getPoint())){
-						scrollTo.x = viewPos.x - offset.x;
-						scrollTo.y = viewPos.y - offset.y;
-						panTo(scrollTo);
-					//}
+					scrollTo.x = viewPos.x - offset.x;
+					scrollTo.y = viewPos.y - offset.y;
+					panTo(scrollTo);
 					break;
 				}
 			}
@@ -411,5 +385,6 @@ public final class Map extends JViewport implements LayerListener {
 
 	public void setExtent(Rectangle2D r){
 		map.setExtent(r);
+		System.out.println("map extent changed");
 	}
 }

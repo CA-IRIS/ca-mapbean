@@ -83,6 +83,8 @@ public final class MapPane extends JPanel {
 	/** Set the bounding box for display */
 	public void setExtent(Rectangle2D r){
 		extent = r;
+		resized();
+		repaint();
 	}
 
 	/** Constructor */
