@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000  Minnesota Department of Transportation
+ * Copyright (C) 2000-2004  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,62 +16,48 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package us.mn.state.dot.shape.shapefile;
 
 import java.awt.Shape;
 import java.util.Map;
-
 import us.mn.state.dot.shape.MapObject;
 
 /**
  * A ShapeObject represents a record from an ESRI shape file.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.2 $ $Date: 2003/05/06 20:58:15 $
  */
 public class ShapeObject implements MapObject {
-	
-	/** Map containing this ShapeObjects data. */
-	private final Map fieldMap;
-	
-	/** Shape that contains the geo data for this object. */
-	private Shape shape;
 
-	/**
-	 * Creates new EsriShape 
-	 */
-    public ShapeObject( Shape shape, Map fields ) {
+	/** Map containing this ShapeObjects data */
+	protected final Map fieldMap;
+
+	/** Shape that contains the geo data for this object */
+	protected Shape shape;
+
+	/** Create a new ShapeObject */
+	public ShapeObject(Shape shape, Map fields) {
 		this.shape = shape;
 		this.fieldMap = fields;
-    }
-	
-	/**
-	 * Add a field to this ShapeObject. 
-	 */
-	public void addField( String key, Object value ) {
-		fieldMap.put( key, value );
 	}
 
-	/** 
-	 * Get the shape to draw this object. 
-	 */
+	/** Get the shape to draw this object */
 	public Shape getShape() {
 		return shape;
 	}
-	
-	/** 
-	 * Get the value of the specified field. 
-	 */
-	public Object getValue( String key ) {
-		return fieldMap.get( key );
+
+	/** Add a field to this ShapeObject */
+	public void addField(String key, Object value) {
+		fieldMap.put(key, value);
 	}
-	
-	/** 
-	 * Get the fields of this Shape Object. 
-	 */
+
+	/** Get the value of the specified field */
+	public Object getValue(String key) {
+		return fieldMap.get(key);
+	}
+
+	/** Get the fields of this Shape Object */
 	public String[] getFields() {
-		return ( String[] ) fieldMap.keySet().toArray( new String[] {} );
+		return (String[])fieldMap.keySet().toArray(new String[] {});
 	}
-	
 }
