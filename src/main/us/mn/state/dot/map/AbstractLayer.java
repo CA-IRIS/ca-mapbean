@@ -51,25 +51,6 @@ public abstract class AbstractLayer implements Layer {
 	}
 
 	/**
-	 * Returns true if the layer is visible.
-	 *
-	 * @return returns true if the layer is visible
-	 */
-	/*public boolean isVisible() {
-		return visible;
-	}*/
-
-	/**
-	 * Shows or hides this layer depending on the value of parameter b.
-	 *
-	 * @param b boolean determining if the layer is visible or not
-	 */
-	/*public void setVisible( boolean b ) {
-		visible = b;
-		repaintLayer();
-	}*/
-
-	/**
 	 * Returns a string contining the name of the layer.
 	 *
 	 * @return String containing the name of the layer

@@ -111,6 +111,7 @@ public class Theme implements LayerChangedListener {
 	 */
 	public void paint( Graphics2D g ){
 		if ( visible ) {
+			System.out.println(" painting layer - " + layer.getName() );
 			layer.paint( g, renderer );
 		}
 	}
