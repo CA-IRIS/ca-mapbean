@@ -117,8 +117,7 @@ public class Theme implements LayerChangedListener {
 	/** Set the current LayerRenderer */
 	public void setCurrentLayerRenderer(LayerRenderer r) {
 		renderer = r;
-		notifyThemeChangedListeners(new ThemeChangedEvent(this,
-			ThemeChangedEvent.SHADE));
+		notifyThemeChangedListeners(ThemeChangedEvent.SHADE);
 	}
 
 	public LayerRenderer getCurrentLayerRenderer() {
@@ -187,8 +186,7 @@ public class Theme implements LayerChangedListener {
 	/** Set the visibility of the theme */
 	public void setVisible(boolean v) {
 		visible = v;
-		notifyThemeChangedListeners(new ThemeChangedEvent(this,
-			ThemeChangedEvent.DATA));
+		notifyThemeChangedListeners(ThemeChangedEvent.DATA);
 	}
 
 	/** Add a ThemeChangedListener to the listeners of this theme */
@@ -206,12 +204,13 @@ public class Theme implements LayerChangedListener {
 	}
 
 	/** Notify all listeners that this theme has changed */
-	protected void notifyThemeChangedListeners(ThemeChangedEvent event) {
+	protected void notifyThemeChangedListeners(int reason) {
+		ThemeChangedEvent e = new ThemeChangedEvent(this, reason);
 		Iterator it = listeners.iterator();
 		while(it.hasNext()) {
 			ThemeChangedListener l =
 				(ThemeChangedListener)it.next();
-			l.themeChanged(event);
+			l.themeChanged(e);
 		}
 	}
 
@@ -225,9 +224,8 @@ public class Theme implements LayerChangedListener {
 		layer.setStatic( b );
 	}
 
-	public void layerChanged( LayerChangedEvent e ) {
-		notifyThemeChangedListeners( new ThemeChangedEvent( this,
-			e.getReason() ) );
+	public void layerChanged(LayerChangedEvent e) {
+		notifyThemeChangedListeners(e.getReason());
 	}
 
 	public Layer getLayer() {
