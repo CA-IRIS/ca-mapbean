@@ -27,9 +27,10 @@ import java.awt.geom.*;
  * files.
  * @since 1.0
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.7 $ $Date: 2001/06/27 16:36:37 $ 
+ * @version $Revision: 1.8 $ $Date: 2001/08/14 21:29:58 $ 
  */
 public class TriangleMarker extends PointSymbol {
+	
 	/** 
 	 * Constructs a TriangleMarker
 	 */
@@ -44,16 +45,36 @@ public class TriangleMarker extends PointSymbol {
 	public TriangleMarker( Color c ) {
 		super( c );
 	}
+	
+	/**
+	 * Create a new TriangleMarker with the given color and the given legend
+	 * lable.
+	 * @param c, color to use.
+	 * @param label, the label to use in this symbols legend.
+	 */
+	public TriangleMarker( Color c, String label ){
+		super( c, label );
+	}
+
+	/**
+	 * Create a new TriangleMarker with the given color, and label.
+	 * @param c, color to use.
+	 * @param lable, the label to use in this symbols legend.
+	 * @param outlined, the symbol is outlined if true.
+	 */
+	public TriangleMarker( Color c, String label, boolean outlined ){
+		super( c, label, outlined );
+	}
 
 	protected Shape getShape( double x, double y ) {
 		float length = getSize() / 2;
 		GeneralPath p = new GeneralPath( GeneralPath.WIND_NON_ZERO, 4 );
 		final float a = ( float ) ( length * Math.tan( 60 ) );
-		final float c = ( float ) Math.sqrt( ( a * a ) + ( length * length ));
-		p.moveTo( ( float )( x - length ), ( float )( y - a ));
-		p.lineTo( ( float ) x, ( float ) ( y + c ));
-		p.lineTo( ( float ) ( x + length ),  ( float ) ( y - a ));
-		p.lineTo( ( float ) ( x - length ),  ( float ) ( y - a ));
+		final float c = ( float ) Math.sqrt( ( a * a ) + ( length * length ) );
+		p.moveTo( ( float )( x - length ), ( float )( y - a ) );
+		p.lineTo( ( float ) x, ( float ) ( y + c ) );
+		p.lineTo( ( float ) ( x + length ),  ( float ) ( y - a ) );
+		p.lineTo( ( float ) ( x - length ),  ( float ) ( y - a ) );
 		return p;
 	}
 } 

@@ -26,7 +26,7 @@ import java.awt.geom.*;
  * A PointSymbol that renders a circle.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.8 $ $Date: 2001/07/09 21:10:19 $ 
+ * @version $Revision: 1.9 $ $Date: 2001/08/14 21:29:58 $ 
  */
 public final class CircleMarker extends PointSymbol {
 
@@ -34,12 +34,39 @@ public final class CircleMarker extends PointSymbol {
 	
 	private int radius;
 
+	/** 
+	 * Constructs a CircleMarker
+	 */
 	public CircleMarker() {
 		this( Color.black );
 	}
 
+	/**
+	 * Constructs a CircleMarker with the color set to c.
+	 * @param c The color of the Circle Marker.
+	 */
 	public CircleMarker( Color c ) {
 		super( c );
+	}
+	
+	/**
+	 * Create a new CircleMarker with the given color and the given legend 
+	 * lable.
+	 * @param c, color to use.
+	 * @param label, the label to use in this symbols legend.
+	 */
+	public CircleMarker( Color c, String label ) {
+		super( c, label );
+	}
+	
+	/**
+	 * Create a new CircleMarker with the given color, and label.
+	 * @param c, color to use.
+	 * @param lable, the label to use in this symbols legend.
+	 * @param outlined, the symbol is outlined if true.
+	 */
+	public CircleMarker( Color c, String label, boolean outlined ) {
+		super( c, label, outlined );
 	}
 	
 	public void setSize( int size ) {

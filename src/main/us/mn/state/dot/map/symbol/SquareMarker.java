@@ -26,7 +26,7 @@ import java.awt.geom.*;
  * A PointSymbol that renders a square.
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.10 $ $Date: 2001/07/09 21:12:37 $ 
+ * @version $Revision: 1.11 $ $Date: 2001/08/14 21:29:58 $ 
  */
 public final class SquareMarker extends PointSymbol {
 
@@ -48,7 +48,9 @@ public final class SquareMarker extends PointSymbol {
 	}
 
 	/**
-	 * Create a new SquareMarker with the given color and the given legend lable.
+	 * Create a new SquareMarker with the given color and the given legend 
+	 * lable.
+	 *
 	 * @param c, color to use.
 	 * @param label, the label to use in this symbols legend.
 	 */
@@ -58,8 +60,9 @@ public final class SquareMarker extends PointSymbol {
 
 	/**
 	 * Create a new SquareMarker with the given color, and label.
+	 *
 	 * @param c, color to use.
-	 * @param lable, the label to use in this symbols legind.
+	 * @param lable, the label to use in this symbols legend.
 	 * @param outlined, the symbol is outlined if true.
 	 */
 	public SquareMarker( Color c, String label, boolean outlined ){
