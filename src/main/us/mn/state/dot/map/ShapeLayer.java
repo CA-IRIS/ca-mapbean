@@ -73,17 +73,17 @@ public class ShapeLayer extends AbstractLayer {
 		fields = dbFile.getFields();
 		createShapeLayer( shapeFile );
 	}
-
+	
 	public ShapeLayer( String fileName, String layerName ) throws IOException {
 		setName( layerName );
-		URL url = ShapeLayer.class.getResource( "/" + fileName + ".dbf" );
-		//URL url = new URL("file:\\" + fileName + ".dbf");
+		//URL url = ShapeLayer.class.getResource( "/" + fileName + ".dbf" );
+		URL url = new URL("file:\\" + fileName + ".dbf");
 		if ( url == null ) {
 			System.out.println( "File " + fileName + ".dbf was not found" );
 		}
 		DbaseReader dbFile = new DbaseReader( url );
-		url = ShapeLayer.class.getResource( "/" + fileName + ".shp" );
-		//url = new URL("file:\\" + fileName + ".shp");
+		//url = ShapeLayer.class.getResource( "/" + fileName + ".shp" );
+		url = new URL("file:\\" + fileName + ".shp");
 		if ( url == null ) {
 			System.out.println( "File " + fileName + ".shp was not found" );
 		}
@@ -207,28 +207,22 @@ public class ShapeLayer extends AbstractLayer {
 		return result;
 	}
 
-	public boolean writeToFile( FileWriter f ){   //only works for point shapes
+	public void printData( OutputStream out ){   //only works for point shapes
 		Field fields [] = this.getFields();
-		try {
-			f.write( "XCoord\tYCoord\t" );
-			for ( int i = 0; i < fields.length; i++ ) {
-				f.write( fields[ i ].getName() + "\t" );
-			}
-			f.write( "\r\n" );
-			for ( int i = 0; i < fields[ 1 ].getLength(); i++ ){
-				System.out.println( i );
-				f.write( paths[ i ].getBounds().getX() + "\t" +
-					paths[ i ].getBounds().getY() + "\t" );
-				for ( int j = 0; j < fields.length; j++ ) {
-					f.write( fields[ j ].getStringValue( i ) + "\t" );
-				}
-				f.write( "\r\n" );
-			}
-			f.flush();
-		} catch ( IOException ex ) {
-			ex.printStackTrace();
-			return false;
+		PrintWriter writer = new PrintWriter( out );
+		writer.write( "XCoord\tYCoord\t" );
+		for ( int i = 0; i < fields.length; i++ ) {
+			writer.write( fields[ i ].getName() + "\t" );
 		}
-		return true;
+		writer.write( "\r\n" );
+		for ( int i = 0; i < fields[ 0 ].getLength(); i++ ){
+			writer.write( paths[ i ].getBounds2D().getX() + "\t" +
+				paths[ i ].getBounds2D().getY() + "\t" );
+			for ( int j = 0; j < fields.length; j++ ) {
+				writer.write( fields[ j ].getStringValue( i ) + "\t" );
+			}
+			writer.write( "\r\n" );
+		}
+		writer.flush();
 	}
 }
