@@ -34,44 +34,49 @@ import java.io.IOException;
  */
 public class ShapeFactory {
 
-	/** Shape Type Constants */
-	public static final int NULL = 0;
+	/** Null shape type */
+	static public final int NULL = 0;
 
-	public static final int POINT = 1;
+	/** Point shape type */
+	static public final int POINT = 1;
 
-	public static final int POLYLINE = 3;
+	/** Polyline shape type */
+	static public final int POLYLINE = 3;
 
-	public static final int POLYGON = 5;
+	/** Polygon shape type */
+	static public final int POLYGON = 5;
 
-	public static final int POINTZ = 11;
+	/** PointZ shape type */
+	static public final int POINTZ = 11;
 
-	/** Create a Shape and return a PathIterator for it */
+	/** Read a geometric shape from a shape input stream */
 	static public Shape readShape(ShapeDataInputStream in)
 		throws IOException
 	{
 		int skipped = in.skipBytes(8);
-		int type = in.readLittleInt();
+		int shape_type = in.readLittleInt();
 		GeneralPath path = new GeneralPath(GeneralPath.WIND_EVEN_ODD);
-		switch(type) {
+		path.append(readPath(in, shape_type), false);
+		return path;
+	}
+
+	/** Read a path iterator from a shape input stream */
+	static protected PathIterator readPath(ShapeDataInputStream in,
+		int shape_type) throws IOException
+	{
+		switch(shape_type) {
 			case NULL:
-				path.append(new Null(), false);
-				return path;
+				return new Null();
 			case POINT:
-				path.append(new Point(in), false);
-				return path;
+				return new Point(in);
 			case POLYLINE:
-				path.append(new PolyLine(in), false);
-				return path;
+				return new PolyLine(in);
 			case POLYGON:
-				path.append(new Polygon(in), false);
-				return path;
+				return new Polygon(in);
 			case POINTZ:
-				path.append(new PointZ(in), false);
-				return path;
-			default:
-				throw new IOException("Invalid shape type: " +
-					type);
+				return new PointZ(in);
 		}
+		throw new IOException("Invalid shape type: " + shape_type);
 	}
 
 	/** Null shape */
@@ -115,11 +120,6 @@ public class ShapeFactory {
 			Y = in.readLittleDouble();
 		}
 
-		public Point(double x, double y) {
-			X = x;
-			Y = y;
-		}
-
 		public int currentSegment(double [] coords) {
 			coords[0] = X;
 			coords[1] = Y;
@@ -140,7 +140,7 @@ public class ShapeFactory {
 			return done;
 		}
 
-		public final int getWindingRule() {
+		public int getWindingRule() {
 			return WIND_EVEN_ODD;
 		}
 	}
@@ -167,13 +167,6 @@ public class ShapeFactory {
 			Y = in.readLittleDouble();
 			Z = in.readLittleDouble();
 			measure = in.readLittleDouble();
-		}
-
-		public PointZ(double x, double y, double z, double measure) {
-			X = x;
-			Y = y;
-			Z = z;
-			this.measure = measure;
 		}
 
 		public int currentSegment(double [] coords) {
@@ -245,7 +238,7 @@ public class ShapeFactory {
 			coords[1] = ypoints[point];
 		}
 
-		protected void fillCurrentSegment( float [] coords ) {
+		protected void fillCurrentSegment(float [] coords) {
 			coords[0] = (float)xpoints[point];
 			coords[1] = (float)ypoints[point];
 		}
