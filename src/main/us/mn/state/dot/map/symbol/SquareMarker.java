@@ -25,7 +25,7 @@ import java.awt.geom.*;
 /**
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.7 $ $Date: 2001/04/19 16:49:31 $ 
+ * @version $Revision: 1.8 $ $Date: 2001/06/27 16:36:37 $ 
  */
 public final class SquareMarker extends PointSymbol {
 
@@ -43,7 +43,7 @@ public final class SquareMarker extends PointSymbol {
 		super( c, label );
 	}
 
-	public SquareMarker( Color c, String label, boolean outline ){
+	public SquareMarker( Color c, String label, boolean outlined ){
 		super( c, label, outline );
 	}
 

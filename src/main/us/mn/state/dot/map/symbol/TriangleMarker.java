@@ -27,7 +27,7 @@ import java.awt.geom.*;
  * files.
  * @since 1.0
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.6 $ $Date: 2001/04/19 16:49:31 $ 
+ * @version $Revision: 1.7 $ $Date: 2001/06/27 16:36:37 $ 
  */
 public class TriangleMarker extends PointSymbol {
 	/** 
