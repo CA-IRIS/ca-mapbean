@@ -87,7 +87,7 @@ public class MapPane implements ThemeChangedListener {
 
 	/**
 	 * Add a MapChangedListener to the listeners of this MapPane.
-	 * @param l, the listener to add.
+	 * @param l the listener to add.
 	 */
 	public void addMapChangedListener( MapChangedListener l ) {
 		listeners.add( l );
@@ -105,25 +105,15 @@ public class MapPane implements ThemeChangedListener {
 
 	/**
 	 * Set the size of the map.
-	 * @param d, the new dimension of the image.
+	 * @param d the new dimension of the image.
 	 */
 	public void setSize( Dimension d ) {
 		int height = d.height;
 		int width = d.width;
-		if ( height < 0 ) {
-			throw new IllegalArgumentException(
-			"Height must be greater than 0: height= " + height );
-		}
-		if ( width < 0 ) {
-			throw new IllegalArgumentException(
-			"Width must be greater than 0: width= " + width );
-		}
-		if ( height == 0 ) {
+		if(height < 1)
 			height = 1;
-		}
-		if ( width == 0 ) {
+		if(width < 1)
 			width = 1;
-		}
 		screenBuffer = createImage(width, height);
 		staticBuffer = createImage(width, height);
 		rescale();
@@ -168,15 +158,13 @@ public class MapPane implements ThemeChangedListener {
 	}
 
 	/** Called when the map is resized or the extent is changed */
-	private synchronized void rescale() {
-		if ( screenBuffer == null ) {
+	protected void rescale() {
+		if(screenBuffer == null)
 			return;
-		}
 		height = screenBuffer.getHeight();
 		width = screenBuffer.getWidth();
-		if ( height == 0 || width == 0 || extent == null ) {
+		if(height == 0 || width == 0 || extent == null)
 			return;
-		}
 		double mapWidth = extent.getWidth();
 		double mapHeight = extent.getHeight();
 		double scale = 0;
@@ -191,16 +179,18 @@ public class MapPane implements ThemeChangedListener {
 			scale = scaleX;
 			shiftY = ( height - ( mapHeight * scale ) ) / 2;
 		}
-		screenTransform.setToTranslation( - ( extent.getMinX() * scale )
-			+ shiftX, ( extent.getMaxY() * scale ) + shiftY );
-		screenTransform.scale( scale, -scale );
+		screenTransform.setToTranslation(
+			-(extent.getMinX() * scale) + shiftX,
+			(extent.getMaxY() * scale) + shiftY
+		);
+		screenTransform.scale(scale, -scale);
 		bufferDirty = true;
 		staticBufferDirty = true;
 	}
 
 	/**
 	 * Sets the background color of the map.
-	 * @param color, new color for the backgound.
+	 * @param color new color for the backgound.
 	 */
 	public void setBackground( Color color ) {
 		backgroundColor = color;
@@ -226,8 +216,8 @@ public class MapPane implements ThemeChangedListener {
 		staticBufferDirty = false;
 	}
 
-	/** Update the screenBuffer */
-	public synchronized void updateScreenBuffer() {
+	/** Update the screen buffer */
+	protected void updateScreenBuffer() {
 		if(screenBuffer == null) return;
 		Graphics2D g = screenBuffer.createGraphics();
 		if(staticBufferDirty) updateStaticBuffer();
@@ -302,26 +292,16 @@ public class MapPane implements ThemeChangedListener {
 	}
 
 	/** Get the extent of the map */
-	public Rectangle2D getExtent(){
+	public Rectangle2D getExtent() {
 		return extent;
 	}
 
 	/**
 	 * Set the bounding box for display
-	 * @param r The rectangle which describes the new bounding box for the
-	 *	display.
-	 */
-	public void setExtent(Rectangle2D r) {
-		setExtent(r.getMinX(), r.getMinY(), r.getWidth(),
-			r.getHeight());
-	}
-
-	/**
-	 * Set the bounding box for display
-	 * @param x, the new x-coordinate for the map.
-	 * @param y, the new y-coordinate for the map.
-	 * @param width, the new width for the map.
-	 * @param height, the new height for the map.
+	 * @param x the new x-coordinate for the map.
+	 * @param y the new y-coordinate for the map.
+	 * @param width the new width for the map.
+	 * @param height the new height for the map.
 	 */
 	public void setExtent(double x, double y, double width, double height) {
 		extent.setFrame(x, y, width, height);

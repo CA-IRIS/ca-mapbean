@@ -40,6 +40,7 @@ import java.util.ListIterator;
 
 import javax.swing.JComponent;
 import javax.swing.JToolTip;
+import javax.swing.SwingUtilities;
 
 import us.mn.state.dot.map.event.MapChangedListener;
 import us.mn.state.dot.map.event.MapMouseListener;
@@ -240,9 +241,16 @@ public class MapBean extends JComponent implements MapChangedListener {
 			r.getHeight());
 	}
 
-	public void setExtent(double x, double y, double width, double height) {
-		mapPane.setExtent(x, y, width, height);
-		repaint();
+	/** Set the extent of the map to display */
+	protected void setExtent(final double x, final double y,
+		final double width, final double height)
+	{
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				mapPane.setExtent(x, y, width, height);
+				repaint();
+			}
+		});
 	}
 
 	public Rectangle2D getExtent() {
@@ -251,8 +259,8 @@ public class MapBean extends JComponent implements MapChangedListener {
 
 	/**
 	 * Pan the map.
-	 * @param distanceX, number of pixels to move in the X coordinate.
-	 * @param distanceY, number of pixels to move in the Y coordinate.
+	 * @param distanceX number of pixels to move in the X coordinate.
+	 * @param distanceY number of pixels to move in the Y coordinate.
 	 */
 	public void pan(int distanceX, int distanceY) {
 		Rectangle bounds = getBounds();
@@ -322,7 +330,7 @@ public class MapBean extends JComponent implements MapChangedListener {
 	}
 
 	/** Called when the map is resized or the extent is changed */
-	private synchronized void rescale() {
+	protected void rescale() {
 		mapPane.setSize(this.getSize());
 		panBuffer = null;
 		if(this.isShowing()) {
@@ -363,10 +371,6 @@ public class MapBean extends JComponent implements MapChangedListener {
 
 	public void mapChanged() {
 		repaint();
-	}
-
-	public BufferedImage getImage() {
-		return mapPane.getImage();
 	}
 
 	/** Dispose of the map */
