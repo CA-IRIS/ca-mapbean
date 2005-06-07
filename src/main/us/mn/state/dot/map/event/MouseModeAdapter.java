@@ -76,7 +76,7 @@ public class MouseModeAdapter implements MapMouseMode {
 
     /**
      * Set the id (mode name).
-     * @param id string that identifies the delegate.
+     * @param name string that identifies the delegate.
      */
     public void setID( String name ){
 		id = name;
@@ -95,7 +95,7 @@ public class MouseModeAdapter implements MapMouseMode {
     /**
      * Sets the cursor that is recommended for use on the map
      * when this mouse mode is active.
-     * @param curs the cursor that is recommended for use on the map
+     * @param cursor the cursor that is recommended for use on the map
      * when this mouse mode is active. 
      */
     public void setCursor( Cursor cursor ) {
