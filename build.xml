@@ -42,9 +42,11 @@
 	        description="Compile all of the source code for this project.">
 		<javac srcdir="${src.dir}"
 		       destdir="${build.classes}"
-		       debug="on"
+		       debug="off"
 		       deprecation="on"
-		       optimize="on">
+		       optimize="on"
+		       source="1.4"
+		       target="1.4">
 		</javac>
 	</target>
 
