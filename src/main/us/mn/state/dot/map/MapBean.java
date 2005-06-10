@@ -157,7 +157,8 @@ public class MapBean extends JComponent implements MapChangedListener {
 	/** Remove a theme from the map */
 	public void removeTheme(String name) {
 		Theme theme = mapPane.getTheme(name);
-		if(theme != null) removeTheme(theme);
+		if(theme != null)
+			removeTheme(theme);
 	}
 
 	/** Remove a theme from the map */
@@ -380,6 +381,7 @@ public class MapBean extends JComponent implements MapChangedListener {
 		while(it.hasNext()) {
 			Theme theme = (Theme)it.next();
 			removeTheme(theme);
+			theme.dispose();
 		}
 	}
 }

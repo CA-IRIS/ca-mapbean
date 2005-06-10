@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000-2004  Minnesota Department of Transportation
+ * Copyright (C) 2000-2005  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -61,7 +61,7 @@ public class Theme implements LayerChangedListener {
 	protected boolean visible = true;
 
 	/** ThemeChangedListeners that listen to this theme */
-	protected List listeners = new LinkedList();
+	protected final List listeners = new LinkedList();
 
 	/**
 	 * Create a new theme based on the layer parameter. It will have
@@ -95,6 +95,13 @@ public class Theme implements LayerChangedListener {
 		this.layer = layer;
 		this.renderer = renderer;
 		this.visible = visible;
+		selectionRenderer = null;
+	}
+
+	/** Dispose of the theme */
+	public void dispose() {
+		layerRenderers.clear();
+		listeners.clear();
 		selectionRenderer = null;
 	}
 
