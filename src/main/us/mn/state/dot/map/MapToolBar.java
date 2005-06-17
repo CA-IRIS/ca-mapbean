@@ -23,7 +23,6 @@ import java.awt.event.ActionListener;
 import java.util.Iterator;
 import javax.swing.JComboBox;
 import javax.swing.JMenuBar;
-import javax.swing.JToolBar;
 
 /**
  * Toolbar used for MapBean.
