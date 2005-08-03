@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000-2004  Minnesota Department of Transportation
+ * Copyright (C) 2000-2005  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -79,12 +79,14 @@ abstract public class ClassBreaksRenderer extends AbstractRenderer {
 	protected Symbol getSymbol(MapObject o) {
 		ShapeObject shapeObject = (ShapeObject)o;
 		Number number = (Number)shapeObject.getValue(field);
-		if(number == null) return null;
+		if(number == null)
+			return null;
 		double value = number.doubleValue();
 		Iterator it = classBreaks.iterator();
 		while(it.hasNext()) {
 			ClassBreak b = (ClassBreak)it.next();
-			if(value <= b.value) return b.symbol;
+			if(value <= b.value)
+				return b.symbol;
 		}
 		return null;
 	}
