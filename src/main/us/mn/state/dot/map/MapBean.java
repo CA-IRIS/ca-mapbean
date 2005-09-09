@@ -223,7 +223,8 @@ public class MapBean extends JComponent implements MapChangedListener {
 			Theme t = (Theme)it.previous();
 			if(t.isVisible()) {
 				String tip = t.getTip(p);
-				if(tip != null) return tip;
+				if(tip != null)
+					return tip;
 			}
 		}
 		return null;
@@ -242,7 +243,7 @@ public class MapBean extends JComponent implements MapChangedListener {
 			r.getHeight());
 	}
 
-	/** Set the extent of the map to display */
+	/** Set the extent of the map */
 	protected void setExtent(final double x, final double y,
 		final double width, final double height)
 	{
@@ -266,9 +267,8 @@ public class MapBean extends JComponent implements MapChangedListener {
 	 */
 	public void pan(int distanceX, int distanceY) {
 		Rectangle bounds = getBounds();
-		if(panBuffer == null) {
+		if(panBuffer == null)
 			panBuffer = createImage(bounds.width, bounds.height);
-		}
 		Graphics pb = panBuffer.getGraphics();
 		pb.setColor(getBackground());
 		pb.fillRect(0, 0, bounds.width, bounds.height);
@@ -280,12 +280,12 @@ public class MapBean extends JComponent implements MapChangedListener {
 	}
 
 	/** Finish panning the map */
-	public void finishPan( Point2D start, Point2D end ) {
+	public void finishPan(Point2D start, Point2D end) {
 		AffineTransform transform = mapPane.getTransform();
 		try {
-			transform.inverseTransform( start, start );
-			transform.inverseTransform( end, end );
-		} catch ( NoninvertibleTransformException ex ) {
+			transform.inverseTransform(start, start);
+			transform.inverseTransform(end, end);
+		} catch(NoninvertibleTransformException ex) {
 			ex.printStackTrace();
 		}
 		double newX = start.getX() - end.getX();
@@ -296,7 +296,7 @@ public class MapBean extends JComponent implements MapChangedListener {
 	}
 
 	/** Zoom out from the current extent */
-	public void zoomOut( Point center ) {
+	public void zoomOut(Point center) {
 		// FIXME: SHOULD CENTER THE VIEW AT THE POINT OF CLICK
 		Rectangle2D extent = mapPane.getExtent();
 		setExtent(extent.getX() - extent.getWidth() / 2,
@@ -309,36 +309,36 @@ public class MapBean extends JComponent implements MapChangedListener {
 	 * viewerSpace
 	 * @param mapSpace seleted region to zoom to
 	 */
-	public void zoom( Rectangle2D mapSpace ) {
-		Point2D upperLeft = new Point2D.Double( mapSpace.getMinX(),
-			mapSpace.getMinY() );
-		Point2D lowerRight = new Point2D.Double( mapSpace.getMaxX(),
-			mapSpace.getMaxY() );
+	public void zoom(Rectangle2D mapSpace) {
+		Point2D upperLeft = new Point2D.Double(mapSpace.getMinX(),
+			mapSpace.getMinY());
+		Point2D lowerRight = new Point2D.Double(mapSpace.getMaxX(),
+			mapSpace.getMaxY());
 		AffineTransform transform = mapPane.getTransform();
 		try {
-			transform.inverseTransform( upperLeft, upperLeft );
-			transform.inverseTransform( lowerRight, lowerRight );
-		} catch ( NoninvertibleTransformException e ) {
+			transform.inverseTransform(upperLeft, upperLeft);
+			transform.inverseTransform(lowerRight, lowerRight);
+		} catch(NoninvertibleTransformException e) {
 			e.printStackTrace();
 		}
-		double x = Math.min( upperLeft.getX(), lowerRight.getX() );
-		double y = Math.min( upperLeft.getY(), lowerRight.getY() );
-		double width = Math.abs( upperLeft.getX() - lowerRight.getX() );
-		double height = Math.abs( upperLeft.getY() - lowerRight.getY() );
+		double x = Math.min(upperLeft.getX(), lowerRight.getX());
+		double y = Math.min(upperLeft.getY(), lowerRight.getY());
+		double width = Math.abs(upperLeft.getX() - lowerRight.getX());
+		double height = Math.abs(upperLeft.getY() - lowerRight.getY());
 		setExtent(x, y, width, height);
 	}
 
 	/** Zoom to the specified extent */
-	public void zoomTo( Rectangle2D extent ) {
+	public void zoomTo(Rectangle2D extent) {
 		setExtent(extent.getX(), extent.getY(),
 			extent.getWidth(), extent.getHeight());
 	}
 
 	/** Called when the map is resized or the extent is changed */
 	protected void rescale() {
-		mapPane.setSize(this.getSize());
+		mapPane.setSize(getSize());
 		panBuffer = null;
-		if(this.isShowing())
+		if(isShowing())
 			repaint();
 	}
 
@@ -353,7 +353,8 @@ public class MapBean extends JComponent implements MapChangedListener {
 	/** Paint the map */
 	protected void paint(Graphics2D g) {
 		Image image = mapPane.getImage();
-		if(image == null) return;
+		if(image == null)
+			return;
 		g.drawImage(image, 0, 0, this);
 		g.transform(mapPane.getTransform());
 		if(mapPane.antialiased) {
