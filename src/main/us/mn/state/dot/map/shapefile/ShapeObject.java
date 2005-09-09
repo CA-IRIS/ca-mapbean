@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000-2004  Minnesota Department of Transportation
+ * Copyright (C) 2000-2005  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -60,13 +60,16 @@ public class ShapeObject implements MapObject {
 
 	/** Add a field mapping */
 	public void addField(String key, Object value) {
-		if(fields == null) fields = new HashMap();
+		if(fields == null)
+			fields = new HashMap();
 		fields.put(key, value);
 	}
 
 	/** Get the value of the specified field */
 	public Object getValue(String key) {
-		if(fields == null) return null;
-		else return fields.get(key);
+		if(fields == null)
+			return null;
+		else
+			return fields.get(key);
 	}
 }

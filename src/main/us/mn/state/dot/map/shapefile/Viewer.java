@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000-2004  Minnesota Department of Transportation
+ * Copyright (C) 2000-2005  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -46,13 +46,13 @@ public class Viewer extends JFrame {
 
 	/** Create a new Viewer */
 	public Viewer() {
-		super( "Shapefile Viewer" );
-		this.setJMenuBar( buildMenus() );
-		this.getContentPane().setLayout( new BorderLayout() );
-		this.getContentPane().add( map, BorderLayout.CENTER );
-		NavigationBar toolbar = new NavigationBar( map );
+		super("Shapefile Viewer");
+		this.setJMenuBar(buildMenus());
+		this.getContentPane().setLayout(new BorderLayout());
+		this.getContentPane().add(map, BorderLayout.CENTER);
+		NavigationBar toolbar = new NavigationBar(map);
 		toolbar.setFloatable(false);
-		this.getContentPane().add( toolbar, BorderLayout.NORTH );
+		this.getContentPane().add(toolbar, BorderLayout.NORTH);
                 addWindowListener(new WindowAdapter() {
                         public void windowClosing(WindowEvent evt) {
                                 quit();
@@ -66,74 +66,75 @@ public class Viewer extends JFrame {
 
 	private JMenuBar buildMenus() {
 		JMenuBar menuBar = new JMenuBar();
-		menuBar.add( createFileMenu() );
-		menuBar.add( createViewMenu() );
+		menuBar.add(createFileMenu());
+		menuBar.add(createViewMenu());
 		return menuBar;
 	}
 
 	private JMenu createFileMenu(){
-		JMenu file = new JMenu( "File" );
-		JMenuItem newItem = new JMenuItem( "New" );
-		newItem.setEnabled( false );
-		file.add( newItem );
-		JMenuItem openItem = new JMenuItem( "Open" );
-		openItem.setEnabled( false );
-		file.add( openItem );
-		JMenuItem saveItem = new JMenuItem( "Save" );
-		saveItem.setEnabled( false );
-		file.add( saveItem );
+		JMenu file = new JMenu("File");
+		JMenuItem newItem = new JMenuItem("New");
+		newItem.setEnabled(false);
+		file.add(newItem);
+		JMenuItem openItem = new JMenuItem("Open");
+		openItem.setEnabled(false);
+		file.add(openItem);
+		JMenuItem saveItem = new JMenuItem("Save");
+		saveItem.setEnabled(false);
+		file.add(saveItem);
 		file.addSeparator();
-		JMenuItem exitItem = new JMenuItem( "Exit" );
+		JMenuItem exitItem = new JMenuItem("Exit");
 		exitItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				quit();
 			}
 		});
-		file.add( exitItem );
+		file.add(exitItem);
 		return file;
 	}
 
 	private JMenu createViewMenu() {
-		JMenu viewMenu = new JMenu( "View" );
-		JMenuItem addLayer = new JMenuItem( "Add Layer" );
+		JMenu viewMenu = new JMenu("View");
+		JMenuItem addLayer = new JMenuItem("Add Layer");
 		final JFrame frame = this;
-		addLayer.addActionListener( new ActionListener() {
-			public void actionPerformed( ActionEvent event ) {
+		addLayer.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent event) {
 				JFileChooser dialog = new JFileChooser();
-				dialog.setDialogTitle( "Load ShapeFile" );
-				dialog.setDialogType( JFileChooser.OPEN_DIALOG );
-				javax.swing.filechooser.FileFilter shp = new ShapeFileFilter( );
-				dialog.setFileFilter( shp );
-				int returnVal = dialog.showOpenDialog( frame );
-				if ( returnVal == JFileChooser.APPROVE_OPTION ) {
+				dialog.setDialogTitle("Load ShapeFile");
+				dialog.setDialogType(JFileChooser.OPEN_DIALOG);
+				javax.swing.filechooser.FileFilter shp =
+					new ShapeFileFilter();
+				dialog.setFileFilter(shp);
+				int returnVal = dialog.showOpenDialog(frame);
+				if(returnVal == JFileChooser.APPROVE_OPTION) {
 					File file = dialog.getSelectedFile();
-					addLayer( file );
+					addLayer(file);
 				}
 			}
 		});
-		viewMenu.add( addLayer );
-		JMenuItem removeLayer = new JMenuItem( "Remove Layer" );
-		viewMenu.add( removeLayer );
+		viewMenu.add(addLayer);
+		JMenuItem removeLayer = new JMenuItem("Remove Layer");
+		viewMenu.add(removeLayer);
 		return viewMenu;
 	}
 
-	private void addLayer( File file ) {
+	private void addLayer(File file) {
 		try {
-			Layer layer = new ShapeLayer( file.toURL(), getName( file ) );
-			map.addTheme( layer.getTheme() );
-			map.setHomeExtent(layer.getExtent());
-		} catch ( IOException ioe ) {
+			Layer l = new ShapeLayer(file.toURL(), getName(file));
+			map.addTheme(l.getTheme());
+			map.setHomeExtent(l.getExtent());
+		} catch(IOException ioe) {
 			ioe.printStackTrace();
 		}
 	}
 
-	private String getName( File file ) {
+	private String getName(File file) {
 		String fileName = file.getName();
-		int index = fileName.lastIndexOf( '.' );
-		return fileName.substring( 0, index );
+		int index = fileName.lastIndexOf('.');
+		return fileName.substring(0, index);
 	}
 
-	public static void main( String[] args ) {
+	public static void main(String[] args) {
 		Viewer viewer = new Viewer();
 		viewer.setSize(500, 500);
 		viewer.setVisible(true);

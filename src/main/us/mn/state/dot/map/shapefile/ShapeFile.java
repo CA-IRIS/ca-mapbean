@@ -134,13 +134,17 @@ public class ShapeFile {
 		throws IOException
 	{
 		int magic = shapeIn.readInt();
-		if(magic != FILE_CODE) throw new ParseException(
-			"Invalid shape file (bad file code)");
+		if(magic != FILE_CODE) {
+			throw new ParseException(
+				"Invalid shape file (bad file code)");
+		}
 		shapeIn.skipBytes(20); // unused (reserved for future use)
 		total_words = shapeIn.readInt();
 		int version = shapeIn.readLittleInt();
-		if(version != SHAPEFILE_VERSION) throw new ParseException(
-			"Unsupported shape file version: " + version);
+		if(version != SHAPEFILE_VERSION) {
+			throw new ParseException(
+				"Unsupported shape file version: " + version);
+		}
 		shapeType = shapeIn.readLittleInt();
 		minX = shapeIn.readLittleDouble();
 		minY = shapeIn.readLittleDouble();
@@ -153,9 +157,8 @@ public class ShapeFile {
 	/** Read the shapes from the file */
 	protected void readShapes(ShapeDataInputStream in) throws IOException
 	{
-		while(moreShapes()) {
+		while(moreShapes())
 			shapes.add(new ShapeObject(nextShape(in)));
-		}
 	}
 
 	/** Check if the file contains more shapes */
@@ -213,13 +216,16 @@ public class ShapeFile {
 	/** Read a geometric shape from a shape input stream */
 	protected Shape nextShape(ShapeDataInputStream in) throws IOException {
 		int r = in.readInt();
-		if(r != ++record) throw new ParseException("Record (" + r +
-			") is not in sequence: " + record);
+		if(r != ++record) {
+			throw new ParseException("Record (" + r +
+				") is not in sequence: " + record);
+		}
 		int r_words = in.readInt();
-		int shape_type = in.readLittleInt();
-		if(shape_type != shapeType) throw new ParseException(
-			"Shape type (" + shape_type +
-			") does not match header (" + shapeType + ")");
+		int t = in.readLittleInt();
+		if(t != shapeType) {
+			throw new ParseException("Shape type (" + t +
+				") does not match header (" + shapeType + ")");
+		}
 		word += 6;
 		GeneralPath path = new GeneralPath(GeneralPath.WIND_EVEN_ODD);
 		path.append(readPath(in), false);
@@ -406,8 +412,10 @@ public class ShapeFile {
 		}
 
 		public boolean isDone() {
-			if(point < numPoints) return false;
-			return true;
+			if(point < numPoints)
+				return false;
+			else
+				return true;
 		}
 
 		public int getWindingRule() {
@@ -424,9 +432,8 @@ public class ShapeFile {
 
 		protected int currentSegmentType() {
 			for(int i = 0; i < numParts; i++) {
-				if(point == parts[i]) {
+				if(point == parts[i])
 					return SEG_MOVETO;
-				}
 			}
 			return SEG_LINETO;
 		}
@@ -443,15 +450,13 @@ public class ShapeFile {
 			int nextPoint = point + 1;
 			for(int i = 0; i < numParts; i++) {
 				int part = parts[i];
-				if(point == part) {
+				if(point == part)
 					return SEG_MOVETO;
-				} else if(nextPoint == part) {
+				else if(nextPoint == part)
 					return SEG_CLOSE;
-				}
 			}
-			if(nextPoint == numPoints) {
+			if(nextPoint == numPoints)
 				return SEG_CLOSE;
-			}
 			return SEG_LINETO;
 		}
 	}
@@ -497,9 +502,8 @@ public class ShapeFile {
 
 		protected int currentSegmentType() {
 			for(int i = 0; i < numParts; i++) {
-				if(point == parts[i]) {
+				if(point == parts[i])
 					return SEG_MOVETO;
-				}
 			}
 			return SEG_LINETO;
 		}

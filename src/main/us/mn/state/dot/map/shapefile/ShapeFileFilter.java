@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000  Minnesota Department of Transportation
+ * Copyright (C) 2000-2005  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,62 +16,51 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package us.mn.state.dot.map.shapefile;
 
 import java.io.File;
-
 import javax.swing.filechooser.FileFilter;
 
 /**
- * A file filter for filtering for ESRI shape files.
+ * A file filter for filtering only ESRI shape files.
+ *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
- * @version $Revision: 1.3 $ $Date: 2004/08/19 15:53:41 $ 
+ * @author Douglas Lau
  */
-public class ShapeFileFilter extends FileFilter {	
-	
-	/** Description used if set */
-	private static final String DESCRIPTION = "ESRI ShapeFiles";
-	
-	/** Creates a new ExtensionFileFilter that accepts all files */
-    public ShapeFileFilter() {
-    }
-	
-	public boolean accept( File f ){
-		if ( f.isDirectory() ) {
-			return true;
-		}
-		String extension = getFileExtension( f );
-		if ( extension == null ) {
-			return false;
-		}
-		if ( extension.equals( "shp" ) ){
-			//FIXME check to make sure the .dbf file is also present
-			return true;
-		}
-		return false;
-	}
-	
-	/**
-	 * Returns the extension of the filename.
-	 * 
-	 * @param file 
-	 */
-	private String getFileExtension( File file ) {
+public class ShapeFileFilter extends FileFilter {
+
+	/** Description of the file filter */
+	static protected final String DESCRIPTION = "ESRI ShapeFiles";
+
+	/** Get the extension of the given filename */
+	static protected String getFileExtension(File file) {
 		String fileName = file.getName();
-		int index = fileName.lastIndexOf( '.' );
-		if ( index > 0 && index < fileName.length() - 1 ) {
-			return fileName.substring( index + 1 ).toLowerCase();
-		}	
+		int i = fileName.lastIndexOf('.');
+		if(i > 0 && i < fileName.length() - 1)
+			return fileName.substring(i + 1).toLowerCase();
 		return null;
 	}
-	
+
+	/** Create a new file filter that accepts only ESRI shape files */
+	public ShapeFileFilter() {
+	}
+
+	/** Test if the filter accepts the specified file */
+	public boolean accept(File f) {
+		if(f.isDirectory())
+			return true;
+		String ext = getFileExtension(f);
+		if(ext != null && ext.equals("shp"))
+			return true;
+		return false;
+	}
+
 	/**
-     * Returns the human readable description of this filter.
-     *
-     * @see FileFilter#getDescription
-     */
-    public String getDescription() {
+	 * Returns the human readable description of this filter.
+	 *
+	 * @see FileFilter#getDescription
+	 */
+	public String getDescription() {
 		return DESCRIPTION;
-    }
+	}
 }
