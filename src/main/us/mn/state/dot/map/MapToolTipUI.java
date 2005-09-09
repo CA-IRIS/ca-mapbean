@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000-2004  Minnesota Department of Transportation
+ * Copyright (C) 2000-2005  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,57 +28,55 @@ import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicToolTipUI;
 
 /**
+ * Tool tip UI which allows for multi-line tooltips, using a JTextArea
  *
  * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
  */
 class MapToolTipUI extends BasicToolTipUI {
 
-	static MapToolTipUI sharedInstance = new MapToolTipUI();
-	static private JTextArea textArea;
+	protected final JTextArea textArea = new JTextArea();
 
-	protected CellRendererPane rendererPane;
+	protected final CellRendererPane rendererPane = new CellRendererPane();
 
 	static public ComponentUI createUI(JComponent c) {
-		return sharedInstance;
+		return new MapToolTipUI(c);
 	}
 
-	public MapToolTipUI() {
-		super();
+	protected MapToolTipUI(JComponent c) {
+		textArea.setBackground(c.getBackground());
+		textArea.setWrapStyleWord(true);
+		textArea.setLineWrap(false);
+		rendererPane.add(textArea);
 	}
 
 	public void installUI(JComponent c) {
 		super.installUI(c);
-		rendererPane = new CellRendererPane();
 		c.add(rendererPane);
 	}
 
 	public void uninstallUI(JComponent c) {
 		super.uninstallUI(c);
 		c.remove(rendererPane);
-		rendererPane = null;
 	}
 
 	public void paint(Graphics g, JComponent c) {
 		Dimension size = c.getSize();
-		textArea.setBackground(c.getBackground());
 		rendererPane.paintComponent(g, textArea, c, 1, 1,
 			size.width, size.height, true);
 	}
 
 	public Dimension getPreferredSize(JComponent c) {
-		String tipText = ((JToolTip)c).getTipText();
-		if(tipText == null) {
-			return new Dimension(0, 0);
+		if(c instanceof JToolTip) {
+			String t = ((JToolTip)c).getTipText();
+			if(t != null) {
+				textArea.setText(t);
+				Dimension d = textArea.getPreferredSize();
+				d.height += 3;
+				d.width += 3;
+				return d;
+			}
 		}
-		textArea = new JTextArea(tipText);
-		rendererPane.removeAll();
-		rendererPane.add(textArea);
-		textArea.setWrapStyleWord(true);
-		textArea.setLineWrap(false);
-		Dimension dim = textArea.getPreferredSize();
-		dim.height += 3;
-		dim.width += 3;
-		return dim;
+		return new Dimension(0, 0);
 	}
 
 	public Dimension getMinimumSize(JComponent c) {

@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2004  Minnesota Department of Transportation
+ * Copyright (C) 2004-2005  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,4 +32,3 @@ public class MapToolTip extends JToolTip {
 		setUI(MapToolTipUI.createUI(this));
 	}
 }
-
