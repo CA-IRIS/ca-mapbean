@@ -42,11 +42,14 @@ import us.mn.state.dot.map.event.ThemeChangedListener;
  */
 public class MapPane implements ThemeChangedListener {
 
-	/** buffer for map */
-	private transient BufferedImage screenBuffer;
+	/** Minimum width/height of map pane */
+	static protected final int MIN_SIZE = 1;
 
-	/** buffer for static themes in map */
-	private transient BufferedImage staticBuffer;
+	/** Buffer for static themes in map */
+	protected BufferedImage staticBuffer;
+
+	/** Buffer for map */
+	protected BufferedImage screenBuffer;
 
 	/** List of dynamic themes */
 	protected final List themes = new ArrayList();
@@ -55,129 +58,102 @@ public class MapPane implements ThemeChangedListener {
 	protected final List staticThemes = new ArrayList();
 
 	/** Transformation to draw shapes on the map */
-	private final AffineTransform screenTransform = new AffineTransform();
+	protected final AffineTransform screenTransform = new AffineTransform();
 
 	/** Bounding box */
-	protected Rectangle2D extent = new Rectangle2D.Double();
+	protected final Rectangle2D extent = new Rectangle2D.Double();
 
-	/** does the buffer need to be updated? */
-	private boolean bufferDirty = true;
+	/** Does the buffer need to be updated? */
+	protected boolean bufferDirty = true;
 
-	/** does the static buffer need to be updated? */
-	private boolean staticBufferDirty = false;
+	/** Does the static buffer need to be updated? */
+	protected boolean staticBufferDirty = true;
 
 	/** Background color of map */
-	private Color backgroundColor = Color.gray;
+	protected Color backgroundColor = Color.GRAY;
 
-	/** height of map image */
-	private int height = 0;
-
-	/** width of map image */
-	private int width = 0;
-
-	private List listeners = new ArrayList();
+	/** Listeners for map changed events */
+	protected List listeners = new ArrayList();
 
 	/** Draw map antialiased */
 	public final boolean antialiased;
 
-	/** Create a new MapPane without any themes */
+	/** Create a new map pane */
 	public MapPane(boolean a) {
 		antialiased = a;
+		setSize(new Dimension(MIN_SIZE, MIN_SIZE));
 	}
 
-	/**
-	 * Add a MapChangedListener to the listeners of this MapPane.
-	 * @param l the listener to add.
-	 */
-	public void addMapChangedListener( MapChangedListener l ) {
-		listeners.add( l );
+	/** Add a MapChangedListener to the MapPane */
+	public void addMapChangedListener(MapChangedListener l) {
+		listeners.add(l);
 	}
 
-	/**
-	 * Gets the list of themes contained in the MapPane.
-	 * @return the list of themes contained by the MapPane
-	 */
+	/** Get the list of themes contained in the MapPane */
 	public List getThemes() {
-		ArrayList result = new ArrayList( staticThemes );
-		result.addAll( themes );
+		ArrayList result = new ArrayList(staticThemes);
+		result.addAll(themes);
 		return result;
 	}
 
-	/**
-	 * Set the size of the map.
-	 * @param d the new dimension of the image.
-	 */
-	public void setSize( Dimension d ) {
-		int height = d.height;
-		int width = d.width;
-		if(height < 1)
-			height = 1;
-		if(width < 1)
-			width = 1;
-		screenBuffer = createImage(width, height);
-		staticBuffer = createImage(width, height);
+	/** Set the pixel size of the map panel */
+	public void setSize(Dimension d) {
+		screenBuffer = createImage(d.width, d.height);
+		staticBuffer = createImage(d.width, d.height);
 		rescale();
 	}
 
 	/** Create a buffered image of the specified size */
 	protected BufferedImage createImage(int width, int height) {
-		return new BufferedImage(width, height,
+		return new BufferedImage(
+			Math.max(width, MIN_SIZE),
+			Math.max(height, MIN_SIZE),
 			BufferedImage.TYPE_INT_RGB);
 	}
 
 	/** Get the size of the map */
 	public Dimension getSize() {
-		if(screenBuffer == null) {
-			return null;
-		} else {
-			return new Dimension(screenBuffer.getWidth(),
-				screenBuffer.getHeight());
-		}
+		return new Dimension(screenBuffer.getWidth(),
+			screenBuffer.getHeight());
 	}
 
 	/** Add a new theme to the map */
 	public void addTheme(Theme theme) {
-		if(theme.layer instanceof DynamicLayer) {
+		if(theme.layer instanceof DynamicLayer)
 			themes.add(theme);
-		} else {
+		else
 			staticThemes.add(theme);
-		}
 		theme.addThemeChangedListener(this);
 		theme.layer.addLayerChangedListener(theme);
 	}
 
 	/** Remove a theme from the map */
 	public void removeTheme(Theme theme) {
-		if(theme.layer instanceof DynamicLayer) {
+		if(theme.layer instanceof DynamicLayer)
 			themes.remove(theme);
-		} else {
+		else
 			staticThemes.remove(theme);
-		}
 		theme.removeThemeChangedListener(this);
 		theme.layer.removeLayerChangedListener(theme);
 	}
 
-	/** Called when the map is resized or the extent is changed */
+	/** Change the scale of the map panel */
 	protected void rescale() {
-		if(screenBuffer == null)
-			return;
-		height = screenBuffer.getHeight();
-		width = screenBuffer.getWidth();
-		if(height == 0 || width == 0 || extent == null)
-			return;
-		double mapWidth = extent.getWidth();
-		double mapHeight = extent.getHeight();
+		int height = screenBuffer.getHeight();
+		int width = screenBuffer.getWidth();
+		double mapWidth = Math.max(extent.getWidth(), MIN_SIZE);
+		double mapHeight = Math.max(extent.getHeight(), MIN_SIZE);
 		double scale = 0;
 		double shiftX = 0;
 		double shiftY = 0;
 		double scaleX = width / mapWidth;
 		double scaleY = height / mapHeight;
-		if ( scaleX > scaleY ) {
+		if(scaleX > scaleY) {
 			scale = scaleY;
-			shiftX = ( width - ( mapWidth * scale ) ) / 2;
+			shiftX = (width - (mapWidth * scale)) / 2;
 		} else {
 			scale = scaleX;
-			shiftY = ( height - ( mapHeight * scale ) ) / 2;
+			shiftY = (height - (mapHeight * scale)) / 2;
 		}
 		screenTransform.setToTranslation(
 			-(extent.getMinX() * scale) + shiftX,
@@ -188,17 +164,13 @@ public class MapPane implements ThemeChangedListener {
 		staticBufferDirty = true;
 	}
 
-	/**
-	 * Sets the background color of the map.
-	 * @param color new color for the backgound.
-	 */
-	public void setBackground( Color color ) {
+	/** Set the background color of the map */
+	public void setBackground(Color color) {
 		backgroundColor = color;
 	}
 
-	/** Update the staticBuffer */
-	private void updateStaticBuffer() {
-		if(staticBuffer == null) return;
+	/** Update the static buffer */
+	protected void updateStaticBuffer() {
 		Graphics2D g = staticBuffer.createGraphics();
 		g.setBackground(backgroundColor);
 		g.clearRect(0, 0, staticBuffer.getWidth(),
@@ -206,21 +178,20 @@ public class MapPane implements ThemeChangedListener {
 		g.transform(screenTransform);
 		if(antialiased) {
 			g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-			RenderingHints.VALUE_ANTIALIAS_ON);
+				RenderingHints.VALUE_ANTIALIAS_ON);
 		}
 		Iterator it = staticThemes.iterator();
-		while(it.hasNext()) {
+		while(it.hasNext())
 			((Theme)it.next()).paint(g);
-		}
 		g.dispose();
 		staticBufferDirty = false;
 	}
 
 	/** Update the screen buffer */
 	protected void updateScreenBuffer() {
-		if(screenBuffer == null) return;
 		Graphics2D g = screenBuffer.createGraphics();
-		if(staticBufferDirty) updateStaticBuffer();
+		if(staticBufferDirty)
+			updateStaticBuffer();
 		g.drawImage(staticBuffer, 0, 0, null);
 		g.transform(screenTransform);
 		if(antialiased) {
@@ -228,29 +199,29 @@ public class MapPane implements ThemeChangedListener {
 				RenderingHints.VALUE_ANTIALIAS_ON);
 		}
 		Iterator it = themes.iterator();
-		while(it.hasNext()) {
+		while(it.hasNext())
 			((Theme)it.next()).paint(g);
-		}
 		g.dispose();
 		bufferDirty = false;
 	}
 
+	/** Get the current image for the map panel */
 	public BufferedImage getImage() {
-		if ( bufferDirty || staticBufferDirty ) {
+		if(bufferDirty || staticBufferDirty)
 			updateScreenBuffer();
-		}
 		return screenBuffer;
 	}
 
+	/** Change a theme on the map panel */
 	public void themeChanged(final ThemeChangedEvent event) {
 		switch(event.getReason()) {
 			case ThemeChangedEvent.DATA:
 			case ThemeChangedEvent.SHADE:
 				Theme theme = (Theme)event.getSource();
-				if(!(theme.layer instanceof DynamicLayer)) {
+				if(theme.layer instanceof DynamicLayer)
+					bufferDirty = true;
+				else
 					staticBufferDirty = true;
-				}
-				bufferDirty = true;
 				break;
 			case ThemeChangedEvent.SELECTION:
 				break;
@@ -269,7 +240,8 @@ public class MapPane implements ThemeChangedListener {
 		Iterator it = themes.iterator();
 		while(it.hasNext()) {
 			Theme t = (Theme)it.next();
-			if(name.equals(t.layer.getName())) return t;
+			if(name.equals(t.layer.getName()))
+				return t;
 		}
 		return null;
 	}
@@ -278,7 +250,7 @@ public class MapPane implements ThemeChangedListener {
 	 * Notify all registered MapChangedListeners that the map image has
 	 * changed.
 	 */
-	private void notifyMapChangedListeners() {
+	protected void notifyMapChangedListeners() {
 		Iterator it = listeners.iterator();
 		while(it.hasNext()) {
 			MapChangedListener l = (MapChangedListener)it.next();

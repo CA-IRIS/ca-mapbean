@@ -333,9 +333,8 @@ public class MapBean extends JComponent implements MapChangedListener {
 	protected void rescale() {
 		mapPane.setSize(this.getSize());
 		panBuffer = null;
-		if(this.isShowing()) {
+		if(this.isShowing())
 			repaint();
-		}
 	}
 
 	/**
