@@ -29,6 +29,8 @@ import java.awt.RenderingHints;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
@@ -81,6 +83,14 @@ public class MapBean extends JComponent implements MapChangedListener {
 			}
 		});
 		setMouseMode(new SelectMouseMode());
+		addMouseWheelListener(new MouseWheelListener() {
+			public void mouseWheelMoved(MouseWheelEvent e) {
+				if(e.getWheelRotation() < 0)
+					zoomIn(e.getPoint());
+				else
+					zoomOut(e.getPoint());
+			}
+		});
 	}
 
 	/** Set the background color of the Map */
@@ -283,13 +293,26 @@ public class MapBean extends JComponent implements MapChangedListener {
 			extent.getWidth(), extent.getHeight());
 	}
 
+	/** Zoom in from the current extent */
+	protected void zoomIn(Point p) {
+		Point2D c = transformPoint(p);
+		Rectangle2D e = mapPane.getExtent();
+		double x = c.getX() - 0.8 * (c.getX() - e.getX());
+		double y = c.getY() - 0.8 * (c.getY() - e.getY());
+		double w = e.getWidth() * 0.8;
+		double h = e.getHeight() * 0.8;
+		setExtent(x, y, w, h);
+	}
+
 	/** Zoom out from the current extent */
-	public void zoomOut(Point center) {
-		// FIXME: SHOULD CENTER THE VIEW AT THE POINT OF CLICK
-		Rectangle2D extent = mapPane.getExtent();
-		setExtent(extent.getX() - extent.getWidth() / 2,
-			extent.getY() - extent.getHeight() / 2,
-			extent.getWidth() * 2, extent.getHeight() * 2);
+	public void zoomOut(Point p) {
+		Point2D c = transformPoint(p);
+		Rectangle2D e = mapPane.getExtent();
+		double x = c.getX() - 1.2 * (c.getX() - e.getX());
+		double y = c.getY() - 1.2 * (c.getY() - e.getY());
+		double w = e.getWidth() * 1.2;
+		double h = e.getHeight() * 1.2;
+		setExtent(x, y, w, h);
 	}
 
 	/**
