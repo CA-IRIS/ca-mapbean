@@ -218,8 +218,6 @@ public class MapPane implements ThemeChangedListener {
 				else
 					staticBufferDirty = true;
 				break;
-			case ThemeChangedEvent.SELECTION:
-				break;
 			default:
 				break;
 		}
