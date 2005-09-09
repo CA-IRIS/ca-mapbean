@@ -114,6 +114,32 @@ public class MapBean extends JComponent implements MapChangedListener {
 		return mouseMode;
 	}
 
+	/** Register a theme with the mouse listener */
+	protected void registerWithMouseListener(Theme theme) {
+		if(theme.layer instanceof DynamicLayer) {
+			MapMouseMode m = mouseMode;
+			MapMouseListener l = theme.getMapMouseListener();
+			if(m != null && l != null &&
+				l.listensToMouseMode(m.getID()))
+			{
+				m.addMapMouseListener(l);
+			}
+		}
+	}
+
+	/** Unregister a theme with the mouse listener */
+	protected void unregisterWithMouseListener(Theme theme) {
+		if(theme.layer instanceof DynamicLayer) {
+			MapMouseMode m = mouseMode;
+			MapMouseListener l = theme.getMapMouseListener();
+			if(m != null && l != null &&
+				l.listensToMouseMode(m.getID()))
+			{
+				m.removeMapMouseListener(l);
+			}
+		}
+	}
+
 	/** Add a new theme to the map */
 	public void addTheme(Theme theme) {
 		mapPane.addTheme(theme);
@@ -140,19 +166,6 @@ public class MapBean extends JComponent implements MapChangedListener {
 		}
 	}
 
-	/** Register a theme with the mouse listener */
-	protected void registerWithMouseListener(Theme theme) {
-		if(theme.layer instanceof DynamicLayer) {
-			MapMouseMode m = mouseMode;
-			MapMouseListener l = theme.getMapMouseListener();
-			if(m != null && l != null &&
-				l.listensToMouseMode(m.getID()))
-			{
-				m.addMapMouseListener(l);
-			}
-		}
-	}
-
 	/** Remove a theme from the map */
 	public void removeTheme(String name) {
 		Theme theme = mapPane.getTheme(name);
@@ -164,19 +177,6 @@ public class MapBean extends JComponent implements MapChangedListener {
 	protected void removeTheme(Theme theme) {
 		mapPane.removeTheme(theme);
 		unregisterWithMouseListener(theme);
-	}
-
-	/** Unregister a theme with the mouse listener */
-	protected void unregisterWithMouseListener(Theme theme) {
-		if(theme.layer instanceof DynamicLayer) {
-			MapMouseMode m = mouseMode;
-			MapMouseListener l = theme.getMapMouseListener();
-			if(m != null && l != null &&
-				l.listensToMouseMode(m.getID()))
-			{
-				m.removeMapMouseListener(l);
-			}
-		}
 	}
 
 	/**
@@ -229,6 +229,7 @@ public class MapBean extends JComponent implements MapChangedListener {
 		return null;
 	}
 
+	/** Create a tooltip for the map */
 	public JToolTip createToolTip() {
 		return new MapToolTip();
 	}
@@ -253,6 +254,7 @@ public class MapBean extends JComponent implements MapChangedListener {
 		});
 	}
 
+	/** Get the extent of the map */
 	public Rectangle2D getExtent() {
 		return mapPane.getExtent();
 	}
@@ -277,6 +279,7 @@ public class MapBean extends JComponent implements MapChangedListener {
 		g.dispose();
 	}
 
+	/** Finish panning the map */
 	public void finishPan( Point2D start, Point2D end ) {
 		AffineTransform transform = mapPane.getTransform();
 		try {
@@ -292,6 +295,7 @@ public class MapBean extends JComponent implements MapChangedListener {
 			extent.getWidth(), extent.getHeight());
 	}
 
+	/** Zoom out from the current extent */
 	public void zoomOut( Point center ) {
 		// FIXME: SHOULD CENTER THE VIEW AT THE POINT OF CLICK
 		Rectangle2D extent = mapPane.getExtent();
@@ -324,6 +328,7 @@ public class MapBean extends JComponent implements MapChangedListener {
 		setExtent(x, y, width, height);
 	}
 
+	/** Zoom to the specified extent */
 	public void zoomTo( Rectangle2D extent ) {
 		setExtent(extent.getX(), extent.getY(),
 			extent.getWidth(), extent.getHeight());
@@ -345,6 +350,7 @@ public class MapBean extends JComponent implements MapChangedListener {
 		return mapPane.getTransform();
 	}
 
+	/** Paint the map */
 	protected void paint(Graphics2D g) {
 		Image image = mapPane.getImage();
 		if(image == null) return;
@@ -362,12 +368,14 @@ public class MapBean extends JComponent implements MapChangedListener {
 		}
 	}
 
+	/** Paint the map component */
 	public void paintComponent(Graphics g) {
 		setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 		paint((Graphics2D)g);
 		setCursor(mouseMode.getCursor());
 	}
 
+	/** When map changes, MapPane updates all change listeners */
 	public void mapChanged() {
 		repaint();
 	}
