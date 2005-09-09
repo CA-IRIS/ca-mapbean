@@ -51,11 +51,8 @@ public class MapPane implements ThemeChangedListener {
 	/** Buffer for map */
 	protected BufferedImage screenBuffer;
 
-	/** List of dynamic themes */
+	/** List of all themes */
 	protected final List themes = new ArrayList();
-
-	/** List of static themes */
-	protected final List staticThemes = new ArrayList();
 
 	/** Transformation to draw shapes on the map */
 	protected final AffineTransform screenTransform = new AffineTransform();
@@ -91,9 +88,7 @@ public class MapPane implements ThemeChangedListener {
 
 	/** Get the list of themes contained in the MapPane */
 	public List getThemes() {
-		ArrayList result = new ArrayList(staticThemes);
-		result.addAll(themes);
-		return result;
+		return new ArrayList(themes);
 	}
 
 	/** Set the pixel size of the map panel */
@@ -119,20 +114,14 @@ public class MapPane implements ThemeChangedListener {
 
 	/** Add a new theme to the map */
 	public void addTheme(Theme theme) {
-		if(theme.layer instanceof DynamicLayer)
-			themes.add(theme);
-		else
-			staticThemes.add(theme);
+		themes.add(theme);
 		theme.addThemeChangedListener(this);
 		theme.layer.addLayerChangedListener(theme);
 	}
 
 	/** Remove a theme from the map */
 	public void removeTheme(Theme theme) {
-		if(theme.layer instanceof DynamicLayer)
-			themes.remove(theme);
-		else
-			staticThemes.remove(theme);
+		themes.remove(theme);
 		theme.removeThemeChangedListener(this);
 		theme.layer.removeLayerChangedListener(theme);
 	}
@@ -180,9 +169,12 @@ public class MapPane implements ThemeChangedListener {
 			g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 				RenderingHints.VALUE_ANTIALIAS_ON);
 		}
-		Iterator it = staticThemes.iterator();
-		while(it.hasNext())
-			((Theme)it.next()).paint(g);
+		Iterator it = themes.iterator();
+		while(it.hasNext()) {
+			Theme t = (Theme)it.next();
+			if(!(t.layer instanceof DynamicLayer))
+				t.paint(g);
+		}
 		g.dispose();
 		staticBufferDirty = false;
 	}
@@ -199,8 +191,11 @@ public class MapPane implements ThemeChangedListener {
 				RenderingHints.VALUE_ANTIALIAS_ON);
 		}
 		Iterator it = themes.iterator();
-		while(it.hasNext())
-			((Theme)it.next()).paint(g);
+		while(it.hasNext()) {
+			Theme t = (Theme)it.next();
+			if(t.layer instanceof DynamicLayer)
+				t.paint(g);
+		}
 		g.dispose();
 		bufferDirty = false;
 	}
