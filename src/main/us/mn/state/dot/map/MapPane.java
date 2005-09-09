@@ -23,6 +23,7 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -54,8 +55,11 @@ public class MapPane implements ThemeChangedListener {
 	/** List of all themes */
 	protected final List themes = new ArrayList();
 
-	/** Transformation to draw shapes on the map */
-	protected final AffineTransform screenTransform = new AffineTransform();
+	/** Transform from world to screen coordinates */
+	protected final AffineTransform transform = new AffineTransform();
+
+	/** Transform from screen to world coordinates */
+	protected AffineTransform inverseTransform = new AffineTransform();
 
 	/** Bounding box */
 	protected final Rectangle2D extent = new Rectangle2D.Double();
@@ -144,11 +148,15 @@ public class MapPane implements ThemeChangedListener {
 			scale = scaleX;
 			shiftY = (height - (mapHeight * scale)) / 2;
 		}
-		screenTransform.setToTranslation(
+		transform.setToTranslation(
 			-(extent.getMinX() * scale) + shiftX,
 			(extent.getMaxY() * scale) + shiftY
 		);
-		screenTransform.scale(scale, -scale);
+		transform.scale(scale, -scale);
+		try { inverseTransform = transform.createInverse(); }
+		catch(NoninvertibleTransformException e) {
+			e.printStackTrace();
+		}
 		bufferDirty = true;
 		staticBufferDirty = true;
 	}
@@ -164,7 +172,7 @@ public class MapPane implements ThemeChangedListener {
 		g.setBackground(backgroundColor);
 		g.clearRect(0, 0, staticBuffer.getWidth(),
 			staticBuffer.getHeight());
-		g.transform(screenTransform);
+		g.transform(transform);
 		if(antialiased) {
 			g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 				RenderingHints.VALUE_ANTIALIAS_ON);
@@ -185,7 +193,7 @@ public class MapPane implements ThemeChangedListener {
 		if(staticBufferDirty)
 			updateStaticBuffer();
 		g.drawImage(staticBuffer, 0, 0, null);
-		g.transform(screenTransform);
+		g.transform(transform);
 		if(antialiased) {
 			g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 				RenderingHints.VALUE_ANTIALIAS_ON);
@@ -251,9 +259,14 @@ public class MapPane implements ThemeChangedListener {
 		}
 	}
 
-	/** Get the AffineTransform of the map */
+	/** Get the transform from world to screen coordinates */
 	public AffineTransform getTransform() {
-		return screenTransform;
+		return transform;
+	}
+
+	/** Get the transform from screen to world coordinates */
+	public AffineTransform getInverseTransform() {
+		return inverseTransform;
 	}
 
 	/** Get the extent of the map */

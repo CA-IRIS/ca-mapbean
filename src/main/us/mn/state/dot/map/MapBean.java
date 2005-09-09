@@ -30,7 +30,6 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.Iterator;
@@ -203,15 +202,8 @@ public class MapBean extends JComponent implements MapChangedListener {
 
 	/** Transform a point from screen to world coordinates */
 	public Point2D transformPoint(Point p) {
-		try {
-			AffineTransform t =
-				mapPane.getTransform().createInverse();
-			return t.transform(p, null);
-		}
-		catch(NoninvertibleTransformException e) {
-			e.printStackTrace();
-			return null;
-		}
+		AffineTransform t = mapPane.getInverseTransform();
+		return t.transform(p, null);
 	}
 
 	/** Get the tooltip text for the given mouse event */
@@ -281,13 +273,9 @@ public class MapBean extends JComponent implements MapChangedListener {
 
 	/** Finish panning the map */
 	public void finishPan(Point2D start, Point2D end) {
-		AffineTransform transform = mapPane.getTransform();
-		try {
-			transform.inverseTransform(start, start);
-			transform.inverseTransform(end, end);
-		} catch(NoninvertibleTransformException ex) {
-			ex.printStackTrace();
-		}
+		AffineTransform t = mapPane.getInverseTransform();
+		t.transform(start, start);
+		t.transform(end, end);
 		double newX = start.getX() - end.getX();
 		double newY = start.getY() - end.getY();
 		Rectangle2D extent = mapPane.getExtent();
@@ -314,13 +302,9 @@ public class MapBean extends JComponent implements MapChangedListener {
 			mapSpace.getMinY());
 		Point2D lowerRight = new Point2D.Double(mapSpace.getMaxX(),
 			mapSpace.getMaxY());
-		AffineTransform transform = mapPane.getTransform();
-		try {
-			transform.inverseTransform(upperLeft, upperLeft);
-			transform.inverseTransform(lowerRight, lowerRight);
-		} catch(NoninvertibleTransformException e) {
-			e.printStackTrace();
-		}
+		AffineTransform t = mapPane.getInverseTransform();
+		t.transform(upperLeft, upperLeft);
+		t.transform(lowerRight, lowerRight);
 		double x = Math.min(upperLeft.getX(), lowerRight.getX());
 		double y = Math.min(upperLeft.getY(), lowerRight.getY());
 		double width = Math.abs(upperLeft.getX() - lowerRight.getX());
