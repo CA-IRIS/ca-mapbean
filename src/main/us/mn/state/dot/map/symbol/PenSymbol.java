@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000-2004  Minnesota Department of Transportation
+ * Copyright (C) 2000-2005  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -41,7 +41,8 @@ public class PenSymbol extends AbstractSymbol {
 	public void draw(Graphics2D g, MapObject o) {
 		AffineTransform ot = o.getTransform();
 		AffineTransform gt = g.getTransform();
-		if(ot != null) g.transform(ot);
+		if(ot != null)
+			g.transform(ot);
 		Shape s = o.getShape();
 		if(fill_color != null) {
 			g.setColor(fill_color);
@@ -52,6 +53,7 @@ public class PenSymbol extends AbstractSymbol {
 			g.setStroke(outline.stroke);
 			g.draw(s);
 		}
-		if(ot != null) g.setTransform(gt);
+		if(ot != null)
+			g.setTransform(gt);
 	}
 }
