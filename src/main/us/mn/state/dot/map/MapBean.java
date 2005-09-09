@@ -286,11 +286,11 @@ public class MapBean extends JComponent implements MapChangedListener {
 		AffineTransform t = mapPane.getInverseTransform();
 		t.transform(start, start);
 		t.transform(end, end);
-		double newX = start.getX() - end.getX();
-		double newY = start.getY() - end.getY();
-		Rectangle2D extent = mapPane.getExtent();
-		setExtent(extent.getX() + newX, extent.getY() + newY,
-			extent.getWidth(), extent.getHeight());
+		double x = start.getX() - end.getX();
+		double y = start.getY() - end.getY();
+		Rectangle2D e = mapPane.getExtent();
+		setExtent(e.getX() + x, e.getY() + y,
+			e.getWidth(), e.getHeight());
 	}
 
 	/** Zoom in from the current extent */
@@ -305,7 +305,7 @@ public class MapBean extends JComponent implements MapChangedListener {
 	}
 
 	/** Zoom out from the current extent */
-	public void zoomOut(Point p) {
+	protected void zoomOut(Point p) {
 		Point2D c = transformPoint(p);
 		Rectangle2D e = mapPane.getExtent();
 		double x = c.getX() - 1.2 * (c.getX() - e.getX());
@@ -315,30 +315,9 @@ public class MapBean extends JComponent implements MapChangedListener {
 		setExtent(x, y, w, h);
 	}
 
-	/**
-	 * Increase the size of this MapPane so that the mapSpace will fill the
-	 * viewerSpace
-	 * @param mapSpace seleted region to zoom to
-	 */
-	public void zoom(Rectangle2D mapSpace) {
-		Point2D upperLeft = new Point2D.Double(mapSpace.getMinX(),
-			mapSpace.getMinY());
-		Point2D lowerRight = new Point2D.Double(mapSpace.getMaxX(),
-			mapSpace.getMaxY());
-		AffineTransform t = mapPane.getInverseTransform();
-		t.transform(upperLeft, upperLeft);
-		t.transform(lowerRight, lowerRight);
-		double x = Math.min(upperLeft.getX(), lowerRight.getX());
-		double y = Math.min(upperLeft.getY(), lowerRight.getY());
-		double width = Math.abs(upperLeft.getX() - lowerRight.getX());
-		double height = Math.abs(upperLeft.getY() - lowerRight.getY());
-		setExtent(x, y, width, height);
-	}
-
 	/** Zoom to the specified extent */
-	public void zoomTo(Rectangle2D extent) {
-		setExtent(extent.getX(), extent.getY(),
-			extent.getWidth(), extent.getHeight());
+	public void zoomTo(Rectangle2D e) {
+		setExtent(e.getX(), e.getY(), e.getWidth(), e.getHeight());
 	}
 
 	/** Called when the map is resized or the extent is changed */

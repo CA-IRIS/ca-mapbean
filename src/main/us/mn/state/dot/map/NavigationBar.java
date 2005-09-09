@@ -30,7 +30,6 @@ import javax.swing.JToolBar;
 import us.mn.state.dot.map.event.MapMouseMode;
 import us.mn.state.dot.map.event.PanMouseMode;
 import us.mn.state.dot.map.event.SelectMouseMode;
-import us.mn.state.dot.map.event.ZoomMouseMode;
 
 /**
  * ToolBar that supplies Navigation buttons for map.
@@ -42,7 +41,6 @@ public class NavigationBar extends JToolBar {
 
 	protected final MapBean map;
 
-	private final MapMouseMode zoomMode = new ZoomMouseMode();
 	private final MapMouseMode panMode = new PanMouseMode();
 	private final MapMouseMode selectMode = new SelectMouseMode();
 
@@ -54,7 +52,6 @@ public class NavigationBar extends JToolBar {
 		ButtonGroup bgToolbar = new ButtonGroup();
 		addSeparator();
 		addButton(getSelectButton(bgToolbar));
-		addButton(getZoomButton(bgToolbar));
 		addButton(getPanButton(bgToolbar));
 		addSeparator();
 	}
@@ -73,19 +70,6 @@ public class NavigationBar extends JToolBar {
 		b.addActionListener(new ActionListener() {
 			public void actionPerformed( ActionEvent e ) {
 				map.setMouseMode( selectMode );
-			}
-		});
-		bgToolbar.add(b);
-		return b;
-	}
-
-	protected JToggleButton getZoomButton(ButtonGroup bgToolbar) {
-		JToggleButton b = new JToggleButton("Zoom",
-			getImage("/images/zoom.png"));
-		b.setToolTipText("Zoom Map");
-		b.addActionListener(new ActionListener() {
-			public void actionPerformed( ActionEvent e ) {
-				map.setMouseMode( zoomMode );
 			}
 		});
 		bgToolbar.add(b);
