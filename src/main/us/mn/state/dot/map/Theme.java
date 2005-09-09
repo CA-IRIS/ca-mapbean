@@ -159,9 +159,8 @@ public class Theme implements LayerChangedListener {
 
 	/** Paint the theme */
 	public void paint(Graphics2D g) {
-		if(visible) {
+		if(visible)
 			layer.paint(g, renderer);
-		}
 	}
 
 	/** Paint the selections for the theme */
@@ -178,7 +177,8 @@ public class Theme implements LayerChangedListener {
 	public String getTip(Point2D p) {
 		if(layer instanceof DynamicLayer) {
 			MapObject o = layer.search(p);
-			if(o != null) return renderer.getTip(o);
+			if(o != null)
+				return renderer.getTip(o);
 		}
 		return null;
 	}
@@ -198,9 +198,8 @@ public class Theme implements LayerChangedListener {
 
 	/** Add a ThemeChangedListener to the listeners of this theme */
 	public void addThemeChangedListener(ThemeChangedListener listener) {
-		if(!listeners.contains(listener)) {
+		if(!listeners.contains(listener))
 			listeners.add(listener);
-		}
 	}
 
 	/** Remove a ThemeChangedListener from the listeners of this theme */
