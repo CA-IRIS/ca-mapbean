@@ -111,9 +111,6 @@ public class MapBean extends JComponent implements MapChangedListener {
 				finishPan(e.getPoint());
 				cancelPan();
 			}
-			public void mouseExited(MouseEvent e) {
-				cancelPan();
-			}
 		});
 		addMouseMotionListener(new MouseMotionAdapter() {
 			public void mouseDragged(MouseEvent e) {
