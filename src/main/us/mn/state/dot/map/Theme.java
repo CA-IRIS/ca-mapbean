@@ -19,14 +19,15 @@
 package us.mn.state.dot.map;
 
 import java.awt.Graphics2D;
+import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.Iterator;
 import java.util.List;
 import java.util.LinkedList;
+import javax.swing.SwingUtilities;
 import us.mn.state.dot.map.event.LayerChangedEvent;
 import us.mn.state.dot.map.event.LayerChangedListener;
-import us.mn.state.dot.map.event.MapMouseListener;
 import us.mn.state.dot.map.event.ThemeChangedEvent;
 import us.mn.state.dot.map.event.ThemeChangedListener;
 
@@ -226,11 +227,27 @@ public class Theme implements LayerChangedListener {
 		return layer;
 	}
 
-	/**
-	 * Themes that wish to respond to mouse events should override this
-	 * method.
-	 */
-	public MapMouseListener getMapMouseListener() {
-		return null;
+	/** Process a left click on a map object */
+	protected void doLeftClick(MouseEvent e, MapObject o) {}
+
+	/** Process a right click on a map object */
+	protected void doRightClick(MouseEvent e, MapObject o) {}
+
+	/** Process a mouse click for the theme */
+	public boolean doMouseClicked(MouseEvent e, Point2D p) {
+		if(visible && layer instanceof DynamicLayer) {
+			MapObject o = layer.search(p);
+			if(o != null) {
+				MapObject[] selections = { o };
+				setSelections(selections);
+				if(SwingUtilities.isLeftMouseButton(e))
+					doLeftClick(e, o);
+				if(SwingUtilities.isRightMouseButton(e))
+					doRightClick(e, o);
+				return true;
+			} else
+				clearSelections();
+		}
+		return false;
 	}
 }

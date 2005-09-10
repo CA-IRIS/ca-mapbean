@@ -29,6 +29,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
 import us.mn.state.dot.map.event.MapChangedListener;
 import us.mn.state.dot.map.event.ThemeChangedEvent;
@@ -128,6 +129,22 @@ public class MapPane implements ThemeChangedListener {
 		themes.remove(theme);
 		theme.removeThemeChangedListener(this);
 		theme.layer.removeLayerChangedListener(theme);
+	}
+
+	/** Get a list iterator for themes */
+	public ListIterator getThemeIterator() {
+		return themes.listIterator(themes.size());
+	}
+
+	/** Get the theme with the specified name */
+	public Theme getTheme(String name) {
+		Iterator it = themes.iterator();
+		while(it.hasNext()) {
+			Theme t = (Theme)it.next();
+			if(name.equals(t.layer.getName()))
+				return t;
+		}
+		return null;
 	}
 
 	/** Change the scale of the map panel */
@@ -230,21 +247,6 @@ public class MapPane implements ThemeChangedListener {
 				break;
 		}
 		notifyMapChangedListeners();
-	}
-
-	/**
-	 * Get the theme with the specified name.
-	 * @param name the name of layer to return.
-	 * @return Theme or null if not found.
-	 */
-	public Theme getTheme(String name) {
-		Iterator it = themes.iterator();
-		while(it.hasNext()) {
-			Theme t = (Theme)it.next();
-			if(name.equals(t.layer.getName()))
-				return t;
-		}
-		return null;
 	}
 
 	/**

@@ -17,7 +17,7 @@
   Requirements
   ------------
 
-  -JDK1.333r above http://www.javasoft.com
+  -JDK1.4 or above http://www.javasoft.com
   
    
   Distribution

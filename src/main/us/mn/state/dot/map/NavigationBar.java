@@ -22,14 +22,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URL;
 import javax.swing.AbstractButton;
-import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
-import us.mn.state.dot.map.event.MapMouseMode;
-import us.mn.state.dot.map.event.PanMouseMode;
-import us.mn.state.dot.map.event.SelectMouseMode;
 
 /**
  * ToolBar that supplies Navigation buttons for map.
@@ -41,18 +36,11 @@ public class NavigationBar extends JToolBar {
 
 	protected final MapBean map;
 
-	private final MapMouseMode panMode = new PanMouseMode();
-	private final MapMouseMode selectMode = new SelectMouseMode();
-
 	/** Create a new NavigationBar */
 	public NavigationBar(MapBean m) {
 		super();
 		map = m;
 		putClientProperty("JToolBar.isRollover", Boolean.TRUE);
-		ButtonGroup bgToolbar = new ButtonGroup();
-		addSeparator();
-		addButton(getSelectButton(bgToolbar));
-		addButton(getPanButton(bgToolbar));
 		addSeparator();
 	}
 
@@ -60,33 +48,6 @@ public class NavigationBar extends JToolBar {
 		URL url = this.getClass().getResource( path );
 		ImageIcon img = new ImageIcon( url );
 		return img;
-	}
-
-	protected JToggleButton getSelectButton(ButtonGroup bgToolbar) {
-		JToggleButton b = new JToggleButton("Select",
-			getImage("/images/arrow.png"));
-		b.setSelected(true);
-		b.setToolTipText("Select Map Item");
-		b.addActionListener(new ActionListener() {
-			public void actionPerformed( ActionEvent e ) {
-				map.setMouseMode( selectMode );
-			}
-		});
-		bgToolbar.add(b);
-		return b;
-	}
-
-	protected JToggleButton getPanButton(ButtonGroup bgToolbar) {
-		JToggleButton b = new JToggleButton("Pan",
-			getImage("/images/pan.png"));
-		b.setToolTipText("Pan Map");
-		b.addActionListener(new ActionListener() {
-			public void actionPerformed( ActionEvent e ) {
-				map.setMouseMode( panMode );
-			}
-		});
-		bgToolbar.add(b);
-		return b;
 	}
 
 	public JButton createHomeButton() {

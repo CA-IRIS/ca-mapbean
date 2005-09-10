@@ -26,9 +26,12 @@ import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
+import java.awt.Toolkit;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
@@ -37,15 +40,12 @@ import java.awt.geom.Rectangle2D;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
-
+import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JToolTip;
 import javax.swing.SwingUtilities;
 
 import us.mn.state.dot.map.event.MapChangedListener;
-import us.mn.state.dot.map.event.MapMouseListener;
-import us.mn.state.dot.map.event.MapMouseMode;
-import us.mn.state.dot.map.event.SelectMouseMode;
 
 /**
  * The MapBean class is a container for a MapPane which allows the pane to be
@@ -58,17 +58,32 @@ import us.mn.state.dot.map.event.SelectMouseMode;
  */
 public class MapBean extends JComponent implements MapChangedListener {
 
+	/** Minimum number of pixels to pan the map */
+	static protected final int PAN_THRESHOLD = 5;
+
+	/** Cursor for panning the map */
+	static protected final Cursor PAN_CURSOR;
+	static {
+		ImageIcon i = new ImageIcon(MapBean.class.getResource(
+                        "/images/pan.png"));
+		PAN_CURSOR = Toolkit.getDefaultToolkit().createCustomCursor(
+                        i.getImage(), new Point(6, 6), "Pan");
+	}
+
+	/** Start point of a map pan */
+	protected Point start_pan = null;
+
 	/** Buffer used to pan the map */
 	protected transient Image panBuffer = null;
 
 	/** Home extents */
 	protected final Rectangle2D extentHome = new Rectangle2D.Double();
 
-	/** current mouse mode */
-	protected MapMouseMode mouseMode = null;
-
 	/** MapPane that will create the map */
 	protected final MapPane mapPane;
+
+	/** Current mouse cursor */
+	protected Cursor cursor = null;
 
 	/** Create a new map */
 	public MapBean(boolean a) {
@@ -82,7 +97,29 @@ public class MapBean extends JComponent implements MapChangedListener {
 				rescale();
 			}
 		});
-		setMouseMode(new SelectMouseMode());
+		addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				doMouseClicked(e);
+			}
+			public void mousePressed(MouseEvent e) {
+				if(SwingUtilities.isLeftMouseButton(e))
+					startPan(e.getPoint());
+				else
+					cancelPan();
+			}
+			public void mouseReleased(MouseEvent e) {
+				finishPan(e.getPoint());
+				cancelPan();
+			}
+			public void mouseExited(MouseEvent e) {
+				cancelPan();
+			}
+		});
+		addMouseMotionListener(new MouseMotionAdapter() {
+			public void mouseDragged(MouseEvent e) {
+				doPan(e.getPoint());
+			}
+		});
 		addMouseWheelListener(new MouseWheelListener() {
 			public void mouseWheelMoved(MouseWheelEvent e) {
 				if(e.getWheelRotation() < 0)
@@ -93,66 +130,29 @@ public class MapBean extends JComponent implements MapChangedListener {
 		});
 	}
 
-	/** Set the background color of the Map */
+	/** Set the background color */
 	public void setBackground(Color c) {
 		super.setBackground(c);
 		mapPane.setBackground(c);
 	}
 
-	/** Set the action occuring on mouse events */
-	public void setMouseMode(MapMouseMode mode) {
-		if(mouseMode != null) {
-			removeMouseListener(mouseMode);
-			removeMouseMotionListener(mouseMode);
-			mouseMode.removeAllMapMouseListeners();
-		}
-		mouseMode = mode;
-		setCursor(mouseMode.getCursor());
-		addMouseListener(mode);
-		addMouseMotionListener(mode);
-		ListIterator it = mapPane.getThemes().listIterator(
-			mapPane.getThemes().size());
+	/** Process a mouse click event */
+	protected void doMouseClicked(MouseEvent e) {
+		boolean consumed = false;
+		Point2D p = transformPoint(e.getPoint());
+		ListIterator it = mapPane.getThemeIterator();
 		while(it.hasPrevious()) {
 			Theme t = (Theme)it.previous();
-			registerWithMouseListener(t);
-		}
-	}
-
-	/** Gets the action occuring on mouse events */
-	public MapMouseMode getMouseMode() {
-		return mouseMode;
-	}
-
-	/** Register a theme with the mouse listener */
-	protected void registerWithMouseListener(Theme theme) {
-		if(theme.layer instanceof DynamicLayer) {
-			MapMouseMode m = mouseMode;
-			MapMouseListener l = theme.getMapMouseListener();
-			if(m != null && l != null &&
-				l.listensToMouseMode(m.getID()))
-			{
-				m.addMapMouseListener(l);
-			}
-		}
-	}
-
-	/** Unregister a theme with the mouse listener */
-	protected void unregisterWithMouseListener(Theme theme) {
-		if(theme.layer instanceof DynamicLayer) {
-			MapMouseMode m = mouseMode;
-			MapMouseListener l = theme.getMapMouseListener();
-			if(m != null && l != null &&
-				l.listensToMouseMode(m.getID()))
-			{
-				m.removeMapMouseListener(l);
-			}
+			if(consumed)
+				t.clearSelections();
+			else
+				consumed = t.doMouseClicked(e, p);
 		}
 	}
 
 	/** Add a new theme to the map */
 	public void addTheme(Theme theme) {
 		mapPane.addTheme(theme);
-		registerWithMouseListener(theme);
 	}
 
 	/**
@@ -185,7 +185,6 @@ public class MapBean extends JComponent implements MapChangedListener {
 	/** Remove a theme from the map */
 	protected void removeTheme(Theme theme) {
 		mapPane.removeTheme(theme);
-		unregisterWithMouseListener(theme);
 	}
 
 	/**
@@ -219,8 +218,7 @@ public class MapBean extends JComponent implements MapChangedListener {
 	/** Get the tooltip text for the given mouse event */
 	public String getToolTipText(MouseEvent e) {
 		Point2D p = transformPoint(e.getPoint());
-		ListIterator it = mapPane.getThemes().listIterator(
-			mapPane.getThemes().size());
+		ListIterator it = mapPane.getThemeIterator();
 		while(it.hasPrevious()) {
 			Theme t = (Theme)it.previous();
 			if(t.isVisible()) {
@@ -262,19 +260,33 @@ public class MapBean extends JComponent implements MapChangedListener {
 		return mapPane.getExtent();
 	}
 
-	/**
-	 * Pan the map.
-	 * @param distanceX number of pixels to move in the X coordinate.
-	 * @param distanceY number of pixels to move in the Y coordinate.
-	 */
-	public void pan(int distanceX, int distanceY) {
+	/** Start a pan of the map */
+	protected void startPan(Point p) {
+		start_pan = p;
+		cursor = PAN_CURSOR;
+		setCursor(cursor);
+	}
+
+	/** Cancel a pan of the map */
+	protected void cancelPan() {
+		start_pan = null;
+		cursor = null;
+		setCursor(null);
+	}
+
+	/** Pan the map */
+	protected void doPan(Point p) {
+		if(start_pan == null)
+			return;
+		int x = (int)(p.getX() - start_pan.getX());
+		int y = (int)(p.getY() - start_pan.getY());
 		Rectangle bounds = getBounds();
 		if(panBuffer == null)
 			panBuffer = createImage(bounds.width, bounds.height);
 		Graphics pb = panBuffer.getGraphics();
 		pb.setColor(getBackground());
 		pb.fillRect(0, 0, bounds.width, bounds.height);
-		pb.drawImage(mapPane.getImage(), distanceX, distanceY, this);
+		pb.drawImage(mapPane.getImage(), x, y, this);
 		pb.dispose();
 		Graphics g = getGraphics();
 		g.drawImage(panBuffer, 0, 0, this);
@@ -282,12 +294,18 @@ public class MapBean extends JComponent implements MapChangedListener {
 	}
 
 	/** Finish panning the map */
-	public void finishPan(Point2D start, Point2D end) {
+	protected void finishPan(Point2D end) {
+		Point start = start_pan;
+		if(start == null)
+			return;
+		if(Math.abs(start.getX() - end.getX()) < PAN_THRESHOLD &&
+		   Math.abs(start.getY() - end.getY()) < PAN_THRESHOLD)
+			return;
 		AffineTransform t = mapPane.getInverseTransform();
-		t.transform(start, start);
+		t.transform(start_pan, start_pan);
 		t.transform(end, end);
-		double x = start.getX() - end.getX();
-		double y = start.getY() - end.getY();
+		double x = start_pan.getX() - end.getX();
+		double y = start_pan.getY() - end.getY();
 		Rectangle2D e = mapPane.getExtent();
 		setExtent(e.getX() + x, e.getY() + y,
 			e.getWidth(), e.getHeight());
@@ -295,6 +313,7 @@ public class MapBean extends JComponent implements MapChangedListener {
 
 	/** Zoom in from the current extent */
 	protected void zoomIn(Point p) {
+		// FIXME: limit zooming in to some maximum value
 		Point2D c = transformPoint(p);
 		Rectangle2D e = mapPane.getExtent();
 		double x = c.getX() - 0.8 * (c.getX() - e.getX());
@@ -306,6 +325,7 @@ public class MapBean extends JComponent implements MapChangedListener {
 
 	/** Zoom out from the current extent */
 	protected void zoomOut(Point p) {
+		// FIXME: do not allow zooming out more than largest extent
 		Point2D c = transformPoint(p);
 		Rectangle2D e = mapPane.getExtent();
 		double x = c.getX() - 1.2 * (c.getX() - e.getX());
@@ -328,14 +348,6 @@ public class MapBean extends JComponent implements MapChangedListener {
 			repaint();
 	}
 
-	/**
-	 * Get the transform that the map uses to convert from map coordinates
-	 * to screen coordinates.
-	 */
-	public AffineTransform getTransform() {
-		return mapPane.getTransform();
-	}
-
 	/** Paint the map */
 	protected void paint(Graphics2D g) {
 		Image image = mapPane.getImage();
@@ -347,8 +359,7 @@ public class MapBean extends JComponent implements MapChangedListener {
 			g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 				RenderingHints.VALUE_ANTIALIAS_ON);
 		}
-		List themes = mapPane.getThemes();
-		ListIterator li = themes.listIterator(themes.size());
+		ListIterator li = mapPane.getThemeIterator();
 		while(li.hasPrevious()) {
 			Theme t = (Theme)li.previous();
 			t.paintSelections(g);
@@ -359,7 +370,7 @@ public class MapBean extends JComponent implements MapChangedListener {
 	public void paintComponent(Graphics g) {
 		setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 		paint((Graphics2D)g);
-		setCursor(mouseMode.getCursor());
+		setCursor(cursor);
 	}
 
 	/** When map changes, MapPane updates all change listeners */
