@@ -164,7 +164,6 @@ public class DbaseInputStream {
 						return new Integer(value);
 					else
 						return new Double(value);
-					break;
 				case 'L':
 					return parseBoolean(value);
 			}
