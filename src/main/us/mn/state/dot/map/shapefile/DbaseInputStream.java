@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000-2004  Minnesota Department of Transportation
+ * Copyright (C) 2000-2005  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -181,8 +181,10 @@ public class DbaseInputStream {
 			switch( tempChar ){
 				case 'Y': case 'y': case 'T': case 't':
 					result = true;
+					break;
 				case 'N': case 'n': case 'F': case 'f':
 					result = false;
+					break;
 				default:
 					result = false; //Shouldn't happen.
 			}
