@@ -34,6 +34,11 @@ import javax.swing.JToolBar;
  */
 public class NavigationBar extends JToolBar {
 
+	static protected ImageIcon getImage(String path) {
+		URL url = NavigationBar.class.getResource(path);
+		return new ImageIcon(url);
+	}
+
 	protected final MapBean map;
 
 	/** Create a new NavigationBar */
@@ -42,12 +47,6 @@ public class NavigationBar extends JToolBar {
 		map = m;
 		putClientProperty("JToolBar.isRollover", Boolean.TRUE);
 		addSeparator();
-	}
-
-	protected ImageIcon getImage(String path) {
-		URL url = this.getClass().getResource( path );
-		ImageIcon img = new ImageIcon( url );
-		return img;
 	}
 
 	public JButton createHomeButton() {

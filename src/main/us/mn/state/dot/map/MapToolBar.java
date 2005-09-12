@@ -42,7 +42,8 @@ public class MapToolBar extends NavigationBar {
 		LayerRenderer r = theme.getCurrentLayerRenderer();
 		LegendMenu legend = new LegendMenu(r);
 		JComboBox combo = createRendererCombo(theme, legend);
-		if(combo != null) b.add(combo);
+		if(combo != null)
+			b.add(combo);
 		b.add(legend);
 		add(b, 0);
 	}
@@ -53,10 +54,10 @@ public class MapToolBar extends NavigationBar {
 	{
 		final JComboBox combo = new JComboBox();
 		Iterator it = theme.getLayerRenderers().iterator();
-		while(it.hasNext()) {
+		while(it.hasNext())
 			combo.addItem(it.next());
-		}
-		if(combo.getItemCount() < 2) return null;
+		if(combo.getItemCount() < 2)
+			return null;
 		combo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				LayerRenderer r =
