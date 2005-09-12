@@ -37,12 +37,8 @@ public class PenSymbol extends AbstractSymbol {
 		super(l, o, f);
 	}
 
-	/** Draw a shape on map with the pen symbol */
-	public void draw(Graphics2D g, MapObject o) {
-		AffineTransform ot = o.getTransform();
-		AffineTransform gt = g.getTransform();
-		if(ot != null)
-			g.transform(ot);
+	/** Draw a shape on a graphics context */
+	protected void doDraw(Graphics2D g, MapObject o) {
 		Shape s = o.getShape();
 		if(fill_color != null) {
 			g.setColor(fill_color);
@@ -53,7 +49,17 @@ public class PenSymbol extends AbstractSymbol {
 			g.setStroke(outline.stroke);
 			g.draw(s);
 		}
-		if(ot != null)
+	}
+
+	/** Draw a shape on map with the pen symbol */
+	public void draw(Graphics2D g, MapObject o) {
+		AffineTransform ot = o.getTransform();
+		if(ot != null) {
+			AffineTransform gt = g.getTransform();
+			g.transform(ot);
+			doDraw(g, o);
 			g.setTransform(gt);
+		} else
+			doDraw(g, o);
 	}
 }
