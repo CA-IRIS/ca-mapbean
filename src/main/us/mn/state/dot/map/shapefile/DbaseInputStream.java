@@ -51,41 +51,41 @@ public class DbaseInputStream {
 	 */
 
 	/** Number of records in file */
-	private final int records;
+	protected final int records;
 
 	/** Number of fields per record */
-	private final short fieldCount;
+	protected final short fieldCount;
 
 	/** List of field names */
-	private final List fields = new ArrayList();
+	protected final List fields = new ArrayList();
 
 	/** Index of the last record read from file */
-	private int lastRecord = 0;
+	protected int lastRecord = 0;
 
-	private ShapeDataInputStream in;
+	protected ShapeDataInputStream in;
 
 	/** Create a new DbaseInputStream from the supplied file name */
-	public DbaseInputStream( String name ) throws IOException {
-		this( new FileInputStream( name ) );
+	public DbaseInputStream(String name) throws IOException {
+		this(new FileInputStream(name));
 	}
 
-	public DbaseInputStream( URL url ) throws IOException {
-		this( url.openStream() );
+	public DbaseInputStream(URL url) throws IOException {
+		this(url.openStream());
 	}
 
 	/** Create a DbaseInputStream from the supplied InputStream */
-	public DbaseInputStream( InputStream inputStream ) throws IOException {
-		in = new ShapeDataInputStream( inputStream );
-		in.skipBytes( 4 );
+	public DbaseInputStream(InputStream inputStream) throws IOException {
+		in = new ShapeDataInputStream(inputStream);
+		// FIXME: check for proper version number
+		in.skipBytes(4);
 		records = in.readLittleInt();
 		short headSize = in.readLittleShort();
 		in.readLittleShort(); // skip recordSize
-		fieldCount = ( short )( ( ( headSize - 1 ) / 32 ) - 1 );
-		in.skipBytes( 20 );
-		for ( int i = 0; i < fieldCount; i++ ) {
-			fields.add( new ShapeField( in ) );
-		}
-		in.skipBytes( 1 );
+		fieldCount = (short)(((headSize - 1) / 32) - 1);
+		in.skipBytes(20);
+		for(int i = 0; i < fieldCount; i++)
+			fields.add(new ShapeField(in));
+		in.skipBytes(1);
 	}
 
 	/** Are there more records to read? */
@@ -96,19 +96,18 @@ public class DbaseInputStream {
 	/** Read the nextRecord in the database file */
 	public Map nextRecord() throws IOException {
 		HashMap map = new HashMap();
-		in.skipBytes( 1 );
+		in.skipBytes(1);
 		Iterator it = fields.iterator();
-		while ( it.hasNext() ) {
-			ShapeField field = ( ShapeField ) it.next();
+		while(it.hasNext()) {
+			ShapeField field = (ShapeField)it.next();
 			Object key = null;
 			Object value = null;
 			try {
 				key = field.getName();
-				value = field.readData( in );
-				map.put( key, value );
-			} catch ( NumberFormatException nfe ) {
-
-				map.put( key, null );
+				value = field.readData(in);
+				map.put(key, value);
+			} catch(NumberFormatException nfe) {
+				map.put(key, null);
 			}
 		}
 		lastRecord++;
@@ -133,62 +132,61 @@ public class DbaseInputStream {
 	 *	17	decimal			byte	1
 	 *	18	Reserved			14
 	 */
-	private class ShapeField {
+	protected class ShapeField {
 
-		private String name = "";
+		protected String name = "";
 
-		private int length = 0;
+		protected int length = 0;
 
-		private char type;
+		protected char type;
 
-		private int decimal;
+		protected int decimal;
 
-		public ShapeField( ShapeDataInputStream in ) throws IOException {
-			name = in.readString( 11 ).trim();
-			type = in.readString( 1 ).charAt( 0 );
-			in.skipBytes( 4 );
+		public ShapeField(ShapeDataInputStream in) throws IOException {
+			name = in.readString(11).trim();
+			type = in.readString(1).charAt(0);
+			in.skipBytes(4);
 			length = in.readByte();
 			decimal = in.readByte();
-			in.skipBytes( 14 );
+			in.skipBytes(14);
 		}
 
-		public Object readData( ShapeDataInputStream in ) throws IOException {
-			String value = in.readString( length );
-			Object result = null;
-			switch ( type ) {
-				case 'C': case 'D':
-					result = value;
-					break;
+		public Object readData(ShapeDataInputStream in)
+			throws IOException
+		{
+			String value = in.readString(length);
+			switch(type) {
+				case 'C':
+				case 'D':
+					return value;
 				case 'N':
-					if ( decimal == 0 ) {
-						result = new Integer( value );
-					} else {
-						result = new Double( value );
-					}
+					if(decimal == 0)
+						return new Integer(value);
+					else
+						return new Double(value);
 					break;
 				case 'L':
-					result = new Boolean( parseBoolean( value ) );
-					break;
-				default:
-				    result = null; //Shouldn't happen.
+					return parseBoolean(value);
 			}
-			return result;
+			// Should not reach here
+			return null;
 		}
 
-		private boolean parseBoolean( String value ) {
-			boolean result = false;
-			char tempChar = value.charAt( 0 );
-			switch( tempChar ){
-				case 'Y': case 'y': case 'T': case 't':
-					result = true;
-					break;
-				case 'N': case 'n': case 'F': case 'f':
-					result = false;
-					break;
-				default:
-					result = false; //Shouldn't happen.
+		protected Boolean parseBoolean(String value) {
+			switch(value.charAt(0)) {
+				case 'Y':
+				case 'y':
+				case 'T':
+				case 't':
+					return new Boolean(true);
+				case 'N':
+				case 'n':
+				case 'F':
+				case 'f':
+					return new Boolean(false);
 			}
-			return result;
+			// Should not reach here
+			return null;
 		}
 
 		public String getName() {
