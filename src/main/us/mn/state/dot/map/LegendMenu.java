@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000-2004  Minnesota Department of Transportation
+ * Copyright (C) 2000-2005  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -42,9 +42,9 @@ public class LegendMenu extends JMenu {
 	public void setMapRenderer(LayerRenderer r) {
 		removeAll();
 		Component[] legend = r.getLegend();
-		if(legend == null) return;
-		for(int i = 0; i < legend.length; i++) {
+		if(legend == null)
+			return;
+		for(int i = 0; i < legend.length; i++)
 			add(legend[i]);
-		}
 	}
 }

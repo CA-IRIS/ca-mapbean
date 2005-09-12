@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000-2004  Minnesota Department of Transportation
+ * Copyright (C) 2000-2005  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -60,9 +60,8 @@ abstract public class AbstractLayer implements Layer {
 
 	/** Add a LayerListener that is notified when the layer data changes */
 	public void addLayerChangedListener(LayerChangedListener l) {
-		if(!layerChangedListeners.contains(l)) {
+		if(!layerChangedListeners.contains(l))
 			layerChangedListeners.add(l);
-		}
 	}
 
 	/** Remove a LayerListener from the layer */
@@ -73,9 +72,8 @@ abstract public class AbstractLayer implements Layer {
 	/** Notify listeners that the layer has changed */
 	public void notifyLayerChangedListeners(LayerChangedEvent event) {
 		Iterator it = layerChangedListeners.iterator();
-		while(it.hasNext()) {
+		while(it.hasNext())
 			((LayerChangedListener)it.next()).layerChanged(event);
-		}
 	}
 
 	/** Get the theme to use for this layer */

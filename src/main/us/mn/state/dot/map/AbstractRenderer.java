@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2004  Minnesota Department of Transportation
+ * Copyright (C) 2004-2005  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -37,8 +37,10 @@ abstract public class AbstractRenderer implements LayerRenderer {
 
 	/** Get a string representation of the renderer */
 	public String toString() {
-		if(name == null) return super.toString();
-		else return name;
+		if(name == null)
+			return super.toString();
+		else
+			return name;
 	}
 
 	/** Get the symbol for the specified map object */
@@ -47,7 +49,8 @@ abstract public class AbstractRenderer implements LayerRenderer {
 	/** Render a map object on the map */
 	public void render(Graphics2D g, MapObject o) {
 		Symbol s = getSymbol(o);
-		if(s != null) s.draw(g, o);
+		if(s != null)
+			s.draw(g, o);
 	}
 
 	/** Get tooltip text for the specified map object */
