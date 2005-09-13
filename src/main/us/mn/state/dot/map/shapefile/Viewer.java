@@ -121,7 +121,7 @@ public class Viewer extends JFrame {
 	private void addLayer(File file) {
 		try {
 			Layer l = new ShapeLayer(file.toURL(), getName(file));
-			map.addTheme(l.getTheme());
+			map.addTheme(l.createTheme());
 			map.setHomeExtent(l.getExtent());
 		} catch(IOException ioe) {
 			ioe.printStackTrace();

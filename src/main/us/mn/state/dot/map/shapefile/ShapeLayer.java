@@ -120,8 +120,8 @@ public class ShapeLayer extends AbstractLayer {
 		return null;
 	}
 
-	/** Get the theme to use for this layer */
-	public Theme getTheme() {
+	/** Create the default theme */
+	public Theme createTheme() {
 		return new Theme(this, new DefaultRenderer(getSymbol()));
 	}
 

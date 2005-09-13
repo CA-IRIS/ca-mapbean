@@ -162,7 +162,7 @@ public class MapBean extends JComponent implements MapChangedListener {
 			Object o = it.next();
 			if(o instanceof Layer) {
 				Layer l = (Layer)o;
-				addTheme(l.getTheme());
+				addTheme(l.createTheme());
 			} else if(o instanceof Theme) {
 				addTheme((Theme)o);
 			} else {

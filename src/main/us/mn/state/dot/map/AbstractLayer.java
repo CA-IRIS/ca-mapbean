@@ -76,6 +76,6 @@ abstract public class AbstractLayer implements Layer {
 			((LayerChangedListener)it.next()).layerChanged(event);
 	}
 
-	/** Get the theme to use for this layer */
-	abstract public Theme getTheme();
+	/** Create the default theme */
+	abstract public Theme createTheme();
 }
