@@ -155,10 +155,9 @@ public class ShapeFile {
 	}
 
 	/** Read the shapes from the file */
-	protected void readShapes(ShapeDataInputStream in) throws IOException
-	{
+	protected void readShapes(ShapeDataInputStream in) throws IOException {
 		while(moreShapes())
-			shapes.add(new ShapeObject(nextShape(in)));
+			shapes.add(nextShape(in));
 	}
 
 	/** Check if the file contains more shapes */
@@ -214,7 +213,9 @@ public class ShapeFile {
 	protected int record = 0;
 
 	/** Read a geometric shape from a shape input stream */
-	protected Shape nextShape(ShapeDataInputStream in) throws IOException {
+	protected ShapeObject nextShape(ShapeDataInputStream in)
+		throws IOException
+	{
 		int r = in.readInt();
 		if(r != ++record) {
 			throw new ParseException("Record (" + r +
@@ -229,7 +230,7 @@ public class ShapeFile {
 		word += 6;
 		GeneralPath path = new GeneralPath(GeneralPath.WIND_EVEN_ODD);
 		path.append(readPath(in), false);
-		return path;
+		return new ShapeObject(path);
 	}
 
 	/** Read a path iterator from a shape input stream */
