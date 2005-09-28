@@ -18,8 +18,6 @@
  */
 package us.mn.state.dot.map.shapefile;
 
-import java.awt.Shape;
-import java.awt.geom.GeneralPath;
 import java.awt.geom.PathIterator;
 import java.awt.geom.Rectangle2D;
 import java.io.File;
@@ -228,8 +226,7 @@ public class ShapeFile {
 				") does not match header (" + shapeType + ")");
 		}
 		word += 6;
-		GeneralPath path = new GeneralPath(GeneralPath.WIND_EVEN_ODD);
-		path.append(readPath(in), false);
+		PathIterator path = readPath(in);
 		return new ShapeObject(path);
 	}
 

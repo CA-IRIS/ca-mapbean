@@ -20,6 +20,8 @@ package us.mn.state.dot.map.shapefile;
 
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.GeneralPath;
+import java.awt.geom.PathIterator;
 import java.util.HashMap;
 import java.util.Map;
 import us.mn.state.dot.map.MapObject;
@@ -39,8 +41,10 @@ public class ShapeObject implements MapObject {
 	protected Map fields = null;
 
 	/** Create a new shape object */
-	public ShapeObject(Shape s) {
-		shape = s;
+	public ShapeObject(PathIterator p) {
+		GeneralPath path = new GeneralPath(GeneralPath.WIND_EVEN_ODD);
+		path.append(p, false);
+		shape = path;
 	}
 
 	/** Get the shape to draw this object */
