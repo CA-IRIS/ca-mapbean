@@ -51,6 +51,7 @@ public class Viewer extends JFrame {
 		this.getContentPane().setLayout(new BorderLayout());
 		this.getContentPane().add(map, BorderLayout.CENTER);
 		NavigationBar toolbar = new NavigationBar(map);
+		toolbar.addButton(toolbar.createHomeButton());
 		toolbar.setFloatable(false);
 		this.getContentPane().add(toolbar, BorderLayout.NORTH);
                 addWindowListener(new WindowAdapter() {
@@ -102,9 +103,7 @@ public class Viewer extends JFrame {
 				JFileChooser dialog = new JFileChooser();
 				dialog.setDialogTitle("Load ShapeFile");
 				dialog.setDialogType(JFileChooser.OPEN_DIALOG);
-				javax.swing.filechooser.FileFilter shp =
-					new ShapeFileFilter();
-				dialog.setFileFilter(shp);
+				dialog.setFileFilter(new ShapeFileFilter());
 				int returnVal = dialog.showOpenDialog(frame);
 				if(returnVal == JFileChooser.APPROVE_OPTION) {
 					File file = dialog.getSelectedFile();
@@ -128,7 +127,7 @@ public class Viewer extends JFrame {
 		}
 	}
 
-	private String getName(File file) {
+	static protected String getName(File file) {
 		String fileName = file.getName();
 		int index = fileName.lastIndexOf('.');
 		return fileName.substring(0, index);
