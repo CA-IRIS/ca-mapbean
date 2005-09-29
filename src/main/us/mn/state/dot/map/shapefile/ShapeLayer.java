@@ -24,8 +24,10 @@ import java.awt.Shape;
 import java.awt.geom.Point2D;
 import java.io.IOException;
 import java.io.FileNotFoundException;
+import java.io.PrintStream;
 import java.net.URL;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import us.mn.state.dot.map.AbstractLayer;
 import us.mn.state.dot.map.DefaultRenderer;
@@ -44,6 +46,9 @@ import us.mn.state.dot.map.symbol.PenSymbol;
   */
 public class ShapeLayer extends AbstractLayer {
 
+	/** List of fields in the Dbase file */
+	protected final LinkedList fields;
+
 	/** List of shapes from the shapefile */
 	protected final List shapes;
 
@@ -51,37 +56,70 @@ public class ShapeLayer extends AbstractLayer {
 	protected final int shapeType;
 
 	/** Create a new ShapeLayer from the specified filename */
-	public ShapeLayer(String f, String layerName)
-		throws IOException
-	{
-		this(ShapeLayer.class.getResource("/" + f + ".shp"), layerName);
+	public ShapeLayer(String f, String layerName) throws IOException {
+		this(ShapeLayer.class.getResource("/" + f + ".shp"), layerName,
+			false);
 	}
 
 	/** Create a new shape layer */
-	public ShapeLayer(URL url, String layerName) throws IOException {
+	public ShapeLayer(URL url, String layerName, boolean verbose)
+		throws IOException
+	{
 		super(layerName);
 		String f = url.toExternalForm();
 		if(!f.endsWith(".shp"))
 			throw new IOException("URL must be a '.shp' file");
-		ShapeFile s = new ShapeFile(url);
+		ShapeFile s = new ShapeFile(url, verbose);
 		shapeType = s.getShapeType();
 		extent = s.getExtent();
 		shapes = s.getShapeList();
-		readDbaseFile(f);
+		fields = readDbaseFile(f);
+		if(verbose)
+			fields.add("path");
+	}
+
+	public void write(PrintStream out) {
+		boolean first = true;
+		Iterator it = fields.iterator();
+		while(it.hasNext()) {
+			if(first)
+				first = false;
+			else
+				out.print(',');
+			out.print(it.next());
+		}
+		out.println();
+		Iterator shit = shapes.iterator();
+		while(shit.hasNext()) {
+			ShapeObject shape = (ShapeObject)shit.next();
+			first = true;
+			it = fields.iterator();
+			while(it.hasNext()) {
+				if(first)
+					first = false;
+				else
+					out.print(',');
+				out.print(shape.getValue(it.next().toString()));
+			}
+			out.println();
+		}
 	}
 
 	/** Read the Dbase file for the shape file */
-	protected void readDbaseFile(String f) throws IOException {
+	protected LinkedList readDbaseFile(String f) throws IOException {
 		URL url = new URL(f.substring(0, f.length() - 4) + ".dbf");
 		try {
 			DbaseInputStream in = new DbaseInputStream(url);
-			try { readDbase(in); }
+			try {
+				readDbase(in);
+				return in.getFields();
+			}
 			finally {
 				in.close();
 			}
 		}
 		catch(FileNotFoundException e) {
-			// Ignore
+			return new LinkedList();
 		}
 	}
 

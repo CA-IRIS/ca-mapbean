@@ -51,6 +51,9 @@ public class ShapeFile {
 		}
 	}
 
+	/** Flag if verbose path information should be created */
+	protected final boolean verbose;
+
 	/** Shape type code */
 	protected int shapeType;
 
@@ -82,12 +85,13 @@ public class ShapeFile {
 	protected final List shapes = new LinkedList();
 
 	/** Create a ShapeFile object from the specified file name */
-	public ShapeFile( String name ) throws IOException {
+/*	public ShapeFile( String name ) throws IOException {
 		this(new File(name).toURL());
-	}
+	} */
 
 	/** Create a ShapeFile object from the specified URL */
-	public ShapeFile(URL url) throws IOException {
+	public ShapeFile(URL url, boolean verbose) throws IOException {
+		this.verbose = verbose;
 		ShapeDataInputStream in = new ShapeDataInputStream(
 			url.openStream());
 		try {
@@ -227,7 +231,10 @@ public class ShapeFile {
 		}
 		word += 6;
 		PathIterator path = readPath(in);
-		return new ShapeObject(path);
+		ShapeObject shape = new ShapeObject(path);
+		if(verbose)
+			shape.addField("path", path.toString());
+		return shape;
 	}
 
 	/** Read a path iterator from a shape input stream */
@@ -286,6 +293,14 @@ public class ShapeFile {
 		protected final double x;
 		protected final double y;
 		protected boolean done = false;
+
+		public String toString() {
+			StringBuffer b = new StringBuffer();
+			b.append(x);
+			b.append(',');
+			b.append(y);
+			return b.toString();
+		}
 
 		public Point(ShapeDataInputStream in) throws IOException {
 			x = in.readLittleDouble();

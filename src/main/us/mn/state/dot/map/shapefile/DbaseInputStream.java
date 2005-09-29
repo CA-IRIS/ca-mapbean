@@ -22,9 +22,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -57,7 +57,7 @@ public class DbaseInputStream {
 	protected final short fieldCount;
 
 	/** List of field names */
-	protected final List fields = new ArrayList();
+	protected final List fields = new LinkedList();
 
 	/** Index of the last record read from file */
 	protected int lastRecord = 0;
@@ -86,6 +86,15 @@ public class DbaseInputStream {
 		for(int i = 0; i < fieldCount; i++)
 			fields.add(new ShapeField(in));
 		in.skipBytes(1);
+	}
+
+	/** Get a list of the fields */
+	public LinkedList getFields() {
+		LinkedList l = new LinkedList();
+		Iterator it = fields.iterator();
+		while(it.hasNext())
+			l.add(it.next().toString());
+		return l;
 	}
 
 	/** Are there more records to read? */
@@ -134,13 +143,13 @@ public class DbaseInputStream {
 	 */
 	protected class ShapeField {
 
-		protected String name = "";
+		protected final String name;
 
-		protected int length = 0;
+		protected final char type;
 
-		protected char type;
+		protected final int length;
 
-		protected int decimal;
+		protected final int decimal;
 
 		public ShapeField(ShapeDataInputStream in) throws IOException {
 			name = in.readString(11).trim();
@@ -149,6 +158,10 @@ public class DbaseInputStream {
 			length = in.readByte();
 			decimal = in.readByte();
 			in.skipBytes(14);
+		}
+
+		public String toString() {
+			return name;
 		}
 
 		public Object readData(ShapeDataInputStream in)

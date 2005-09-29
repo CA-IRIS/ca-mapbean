@@ -59,7 +59,10 @@ public class ShapeObject implements MapObject {
 
 	/** Set the field mapping */
 	public void setFields(Map f) {
-		fields = f;
+		if(fields == null)
+			fields = f;
+		else
+			fields.putAll(f);
 	}
 
 	/** Add a field mapping */

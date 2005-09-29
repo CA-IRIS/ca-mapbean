@@ -12,7 +12,7 @@
 	<property file="${basedir}/default.properties"/>
 
 	<property name="name" value="MapBean"/>
-	<property name="version" value="3.1" />
+	<property name="version" value="3.2" />
 	<property name="src.images.dir" value="src/images" />
 	<property name="src.dir" value="src/main" />
 	<property name="build.dir" value="build" />
