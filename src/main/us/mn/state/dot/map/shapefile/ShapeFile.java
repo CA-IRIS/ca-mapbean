@@ -225,7 +225,7 @@ public class ShapeFile {
 		}
 		int r_words = in.readInt();
 		int t = in.readLittleInt();
-		if(t != shapeType) {
+		if(t != shapeType && t != 0) {
 			throw new ParseException("Shape type (" + t +
 				") does not match header (" + shapeType + ")");
 		}
