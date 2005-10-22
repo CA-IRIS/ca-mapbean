@@ -19,7 +19,6 @@
 package us.mn.state.dot.map;
 
 import java.awt.Component;
-import javax.swing.BorderFactory;
 import javax.swing.JMenu;
 
 /**
@@ -31,10 +30,8 @@ import javax.swing.JMenu;
 public class LegendMenu extends JMenu {
 
   	/** Create a new LegendMenu */
- 	public LegendMenu(LayerRenderer r) {
-		super("Legend");
-		setBorder(BorderFactory.createEtchedBorder());
-		setBorderPainted(true);
+ 	public LegendMenu(String name, LayerRenderer r) {
+		super(name);
 		setMapRenderer(r);
 	}
 

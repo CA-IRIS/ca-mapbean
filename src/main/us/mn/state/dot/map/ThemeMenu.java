@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000-2004  Minnesota Department of Transportation
+ * Copyright (C) 2000-2005  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,12 +18,10 @@
  */
 package us.mn.state.dot.map;
 
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Iterator;
 import java.util.List;
-import javax.swing.BorderFactory;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 
@@ -38,12 +36,9 @@ public class ThemeMenu extends JMenu {
   	/** Create a new theme menu */
   	public ThemeMenu(List themes) {
 		super("Themes");
-		setMargin(new Insets(0, 0, 0, 0));
-		setBorder(BorderFactory.createEtchedBorder());
 		Iterator it = themes.iterator();
-		while(it.hasNext()) {
+		while(it.hasNext())
 			add(new ThemeMenuItem((Theme)it.next()));
-		}
   	}
 
 	/** MenuItem for displaying a theme.  When a check box is selected the

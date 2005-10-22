@@ -137,7 +137,7 @@ public class ShapeLayer extends AbstractLayer {
 		switch(shapeType) {
 			case ShapeFile.POINT:
 				return new PenSymbol("Point",
-					Outline.createSolid(Color.BLACK, 20),
+					Outline.createSolid(Color.GREEN, 40),
 					Color.WHITE);
 			case ShapeFile.POINT_Z:
 				return new PenSymbol("PointZ",

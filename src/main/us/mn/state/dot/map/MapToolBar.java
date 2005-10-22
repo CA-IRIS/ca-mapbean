@@ -23,6 +23,7 @@ import java.awt.event.ActionListener;
 import java.util.Iterator;
 import javax.swing.JComboBox;
 import javax.swing.JMenuBar;
+import javax.swing.JMenu;
 
 /**
  * Toolbar used for MapBean.
@@ -32,20 +33,33 @@ import javax.swing.JMenuBar;
  */
 public class MapToolBar extends NavigationBar {
 
+	/** Menu bar */
+	protected final JMenuBar menu = new JMenuBar();
+
+	/** Legend menu */
+	protected final JMenu legend = new JMenu("Legend");
+
 	/** Create a new MapToolBar */
-	public MapToolBar(MapBean m, Theme theme) {
+	public MapToolBar(MapBean m) {
 		super(m);
-		JMenuBar b = new JMenuBar();
-		b.setBorderPainted(false);
-		b.setAlignmentY(.5f);
-		b.add(new ThemeMenu(map.getThemes()));
+		menu.setBorderPainted(false);
+		menu.setAlignmentY(.5f);
+		menu.add(new ThemeMenu(map.getThemes()));
+		menu.add(legend);
+		add(menu, 0);
+	}
+
+	/** Add a theme legend to the tool bar */
+	public void addThemeLegend(Theme theme) {
+		String name = theme.getLayer().getName();
 		LayerRenderer r = theme.getCurrentLayerRenderer();
-		LegendMenu legend = new LegendMenu(r);
-		JComboBox combo = createRendererCombo(theme, legend);
-		if(combo != null)
-			b.add(combo);
-		b.add(legend);
-		add(b, 0);
+		LegendMenu l = new LegendMenu(name, r);
+		JComboBox combo = createRendererCombo(theme, l);
+		if(combo != null) {
+			menu.add(combo);
+			legend.add(l);
+		} else if(l.getItemCount() > 1)
+			legend.add(l);
 	}
 
 	/** Get the renderer selector combo box */
