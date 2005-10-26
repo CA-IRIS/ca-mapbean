@@ -19,6 +19,8 @@
 package us.mn.state.dot.map;
 
 import java.awt.Graphics2D;
+import java.util.List;
+import java.util.LinkedList;
 
 /**
  * Abstract layer renderer
@@ -29,6 +31,9 @@ abstract public class AbstractRenderer implements LayerRenderer {
 
 	/** Name of renderer */
 	protected final String name;
+
+	/** List of all symbols to render */
+	protected final LinkedList symbols = new LinkedList();
 
 	/** Create a new abstract renderer */
 	protected AbstractRenderer(String n) {
@@ -41,6 +46,11 @@ abstract public class AbstractRenderer implements LayerRenderer {
 			return super.toString();
 		else
 			return name;
+	}
+
+	/** Get a list of all symbols */
+	public List getSymbols() {
+		return symbols;
 	}
 
 	/** Get the symbol for the specified map object */

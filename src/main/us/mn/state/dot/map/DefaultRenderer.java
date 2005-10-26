@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000-2004  Minnesota Department of Transportation
+ * Copyright (C) 2000-2005  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,13 +18,11 @@
  */
 package us.mn.state.dot.map;
 
-import java.awt.Component;
-
 /**
  * The default implementation of LayerRenderer.
  * Shapes are all rendered with the same symbol.
  *
- * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
+ * @author Erik Engstrom
  * @author Douglas Lau
  */
 public class DefaultRenderer extends AbstractRenderer {
@@ -36,11 +34,7 @@ public class DefaultRenderer extends AbstractRenderer {
 	public DefaultRenderer(Symbol s) {
 		super(s.getLabel());
 		symbol = s;
-	}
-
-	/** Get components to display the legend */
-	public Component[] getLegend() {
-		return new Component[] { symbol.getLegend() };
+		symbols.add(symbol);
 	}
 
 	/** Get the symbol for the specified map object */

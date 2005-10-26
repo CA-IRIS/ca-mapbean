@@ -18,10 +18,8 @@
  */
 package us.mn.state.dot.map.shapefile;
 
-import java.awt.Component;
 import java.util.Iterator;
 import java.util.LinkedList;
-
 import us.mn.state.dot.map.AbstractRenderer;
 import us.mn.state.dot.map.MapObject;
 import us.mn.state.dot.map.Symbol;
@@ -31,7 +29,7 @@ import us.mn.state.dot.map.symbol.PenSymbol;
  * A renderer that renders objects base on a numeric field and a set of
  * class breaks.
  *
- * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
+ * @author Erik Engstrom
  * @author Douglas Lau
  */
 abstract public class ClassBreaksRenderer extends AbstractRenderer {
@@ -62,17 +60,7 @@ abstract public class ClassBreaksRenderer extends AbstractRenderer {
 	public void addBreak(double v, PenSymbol s) {
 		ClassBreak b = new ClassBreak(v, s);
 		classBreaks.add(b);
-	}
-
-	/** Get components to display the legend */
-	public Component[] getLegend() {
-		LinkedList legend = new LinkedList();
-		Iterator it = classBreaks.iterator();
-		while(it.hasNext()) {
-			ClassBreak b = (ClassBreak)it.next();
-			legend.add(b.symbol.getLegend());
-		}
-		return (Component [])legend.toArray(new Component[0]);
+		symbols.add(s);
 	}
 
 	/** Get the symbol for the specified map object */

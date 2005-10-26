@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000-2004  Minnesota Department of Transportation
+ * Copyright (C) 2000-2005  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,10 +22,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-
 import javax.swing.Icon;
-import javax.swing.JLabel;
-
 import us.mn.state.dot.map.MapObject;
 import us.mn.state.dot.map.Outline;
 import us.mn.state.dot.map.Symbol;
@@ -33,13 +30,16 @@ import us.mn.state.dot.map.Symbol;
 /**
  * Base class for Symbol implementations.
  *
- * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
+ * @author Erik Engstrom
  * @author Douglas Lau
  */
 abstract public class AbstractSymbol implements Symbol {
 
 	/** Symbol label */
 	protected final String label;
+
+	/** Legend icon */
+	protected final Icon legend = new LegendIcon();
 
 	/** Fill color */
 	protected final Color fill_color;
@@ -62,14 +62,9 @@ abstract public class AbstractSymbol implements Symbol {
 		return label;
 	}
 
-	/** Get the legend component for the symbol */
-	public Component getLegend() {
-		JLabel l = new JLabel();
-		if(label != null && (!label.equals(""))) {
-			l.setText(label);
-			l.setIcon(new LegendIcon());
-		}
-		return l;
+	/** Get the legend icon */
+	public Icon getLegend() {
+		return legend;
 	}
 
 	/** Inner class for icon displayed on the legend */

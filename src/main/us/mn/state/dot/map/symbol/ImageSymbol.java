@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000-2004  Minnesota Department of Transportation
+ * Copyright (C) 2000-2005  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,38 +18,29 @@
  */
 package us.mn.state.dot.map.symbol;
 
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
-
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
-import javax.swing.JLabel;
-
 import us.mn.state.dot.map.MapObject;
 import us.mn.state.dot.map.Symbol;
 
 /**
  * Symol for painting MapObjects as images.
  *
- * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
+ * @author Erik Engstrom
  * @author Douglas Lau
  */
 public class ImageSymbol implements Symbol {
 
 	protected final String label;
 
-	private ImageIcon icon;
+	protected final ImageIcon icon;
 
-	private Dimension size;
+	protected Dimension size;
 
-	protected boolean drawFullSize = true;
-
-	/** Create a new ImageSymbol */
-	public ImageSymbol(ImageIcon icon) {
-		this(icon, "");
-	}
-
+	/** Create a new image symbol */
 	public ImageSymbol(ImageIcon icon, String label) {
 		this(icon, label, null);
 	}
@@ -58,36 +49,11 @@ public class ImageSymbol implements Symbol {
 		this.icon = icon;
 		this.label = label;
 		this.size = size;
-		if(size != null) {
-			drawFullSize = false;
-		}
-	}
-
-	public void setIcon( ImageIcon icon ) {
-		this.icon = icon;
-	}
-
-	public ImageIcon getIcon( ImageIcon icon ) {
-		return icon;
 	}
 
 	public void setSize(Dimension size) {
 		this.size = size;
 	}
-
-/*	public void setColor(Color color) {
-	}
-
-	public Color getColor() {
-		return null;
-	}
-
-	public void setOutlineColor(Color color) {
-	}
-
-	public Color getOutlineColor() {
-		return null;
-	} */
 
 	public String getLabel() {
 		return label;
@@ -106,7 +72,7 @@ public class ImageSymbol implements Symbol {
 		int height = icon.getIconHeight(); */
 		AffineTransform t = o.getTransform();
 		g.drawImage(icon.getImage(), t, null);
-/*		if(!drawFullSize) {
+/*		if(size != null) {
 			width = (int)size.getWidth();
 			height = (int)size.getHeight();
 		} else {
@@ -132,7 +98,7 @@ public class ImageSymbol implements Symbol {
 		return size;
 	}
 
-	public Component getLegend() {
-		return new JLabel( icon );
+	public Icon getLegend() {
+		return icon;
 	}
 }

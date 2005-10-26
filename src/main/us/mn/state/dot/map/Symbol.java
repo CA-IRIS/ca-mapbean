@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000-2004  Minnesota Department of Transportation
+ * Copyright (C) 2000-2005  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,20 +18,23 @@
  */
 package us.mn.state.dot.map;
 
-import java.awt.Component;
 import java.awt.Graphics2D;
+import javax.swing.Icon;
 
 /**
  * Interface for symbols used by themes to draw layer data.
  *
- * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
+ * @author Erik Engstrom
  * @author Douglas Lau
  */
 public interface Symbol {
 
+	/** Get the symbol label */
 	public String getLabel();
 
-	public Component getLegend();
+	/** Get an icon to use for the legend */
+	public Icon getLegend();
 
+	/** Draw the symbol for the specified map object */
 	public void draw(Graphics2D g, MapObject o);
 }
