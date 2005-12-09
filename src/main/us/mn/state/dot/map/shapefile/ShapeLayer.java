@@ -183,4 +183,8 @@ public class ShapeLayer extends AbstractLayer {
 		}
 		return null;
 	}
+	
+	public List getShapes(){
+		return shapes;
+	}
 }
