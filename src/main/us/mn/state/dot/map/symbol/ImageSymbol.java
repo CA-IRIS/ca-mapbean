@@ -20,9 +20,13 @@ package us.mn.state.dot.map.symbol;
 
 import java.awt.Dimension;
 import java.awt.Graphics2D;
+import java.awt.Shape;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Rectangle2D;
+
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+
 import us.mn.state.dot.map.MapObject;
 import us.mn.state.dot.map.Symbol;
 
@@ -34,6 +38,10 @@ import us.mn.state.dot.map.Symbol;
  */
 public class ImageSymbol implements Symbol {
 
+	/** Flag indicating if the image should be rotated when drawn 
+	 * on the Graphics context */
+	protected boolean rotate = true;
+	
 	protected final String label;
 
 	protected final ImageIcon icon;
@@ -59,39 +67,28 @@ public class ImageSymbol implements Symbol {
 		return label;
 	}
 
+	public void setRotate(boolean rotate){
+		this.rotate = rotate;
+	}
+	
 	/**
 	 * Draw the ImageSymbol.
 	 * If size == null then the image is drawn at full size.
 	 */
 	public void draw(Graphics2D g, MapObject o) {
-/*		Shape shape = o.getShape();
-		Rectangle2D rect = shape.getBounds2D();
-		double xCoord = rect.getX();
-		double yCoord = rect.getY();
-		int width = icon.getIconWidth();
-		int height = icon.getIconHeight(); */
-		AffineTransform t = o.getTransform();
-		g.drawImage(icon.getImage(), t, null);
-/*		if(size != null) {
-			width = (int)size.getWidth();
-			height = (int)size.getHeight();
-		} else {
-			try {
-				AffineTransform transform = g.getTransform();
-				Point2D p1 = new Point2D.Double(0, 0);
-				Point2D p2 = new Point2D.Double(width, height);
-				p1 = transform.inverseTransform(p1, p1);
-				p2 = transform.inverseTransform(p2, p2);
-				width = (int)(p2.getX() - p1.getX());
-				height = (int)(p2.getY() - p1.getY());
-			} catch(NoninvertibleTransformException e) {
-				e.printStackTrace();
-				return;
-			}
+		AffineTransform t = (AffineTransform)o.getTransform().clone();
+		if(!rotate){
+			t.setToTranslation(t.getTranslateX(), t.getTranslateY());
 		}
-		g.drawImage( icon.getImage(), ( ( int ) xCoord - width / 2 ),
-			( ( int ) yCoord - height / 2 ), width, height,
-			icon.getImageObserver() ); */
+		int width = icon.getIconWidth();
+		int height = icon.getIconHeight();
+		if(size != null) {
+			width = (int)size.getWidth();
+			height = -1 * (int)size.getHeight();
+		}
+		t.scale( width, height );
+		t.translate( icon.getIconWidth()/-2, icon.getIconHeight()/-2 );
+		g.drawImage(icon.getImage(), t, null);
 	}
 
 	public Dimension getSize() {
