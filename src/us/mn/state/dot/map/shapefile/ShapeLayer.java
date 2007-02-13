@@ -162,10 +162,9 @@ public class ShapeLayer extends AbstractLayer {
 
 	/** Search for a shape which contains the specified point */
 	public MapObject search(Point2D p) {
-		for(ShapeObject so: shapes) {
-			Shape s = so.getShape();
-			if(s != null && s.contains(p))
-				return so;
+		for(ShapeObject s: shapes) {
+			if(s.getShape().contains(p))
+				return s;
 		}
 		return null;
 	}
