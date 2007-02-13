@@ -21,7 +21,7 @@ import us.mn.state.dot.map.event.LayerChangedEvent;
 import us.mn.state.dot.map.event.LayerChangedListener;
 
 /**
- * A layer is a grouping of similar elements which are painted on the map
+ * A layer is a grouping of similar elements which are painted on the map.
  *
  * @author Erik Engstrom
  * @author Douglas Lau

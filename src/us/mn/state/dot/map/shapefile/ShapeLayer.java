@@ -73,6 +73,7 @@ public class ShapeLayer extends AbstractLayer {
 			fields.add("path");
 	}
 
+	/** Write the shape object data to a print stream */
 	public void write(PrintStream out) {
 		boolean first = true;
 		for(String f: fields) {
