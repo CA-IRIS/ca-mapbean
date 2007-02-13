@@ -65,9 +65,9 @@ abstract public class AbstractLayer implements Layer {
 	}
 
 	/** Notify listeners that the layer has changed */
-	public void notifyLayerChangedListeners(LayerChangedEvent event) {
+	protected void notifyLayerChangedListeners(LayerChangedEvent ev) {
 		for(LayerChangedListener l: listeners)
-			l.layerChanged(event);
+			l.layerChanged(ev);
 	}
 
 	/** Create the default theme */

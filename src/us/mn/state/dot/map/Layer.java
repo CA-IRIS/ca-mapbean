@@ -46,9 +46,6 @@ public interface Layer {
 	/** Remove a LayerChangedListener from the layer */
 	void removeLayerChangedListener(LayerChangedListener listener);
 
-	/** Notify all LayerChangedListeners that the layer has changed */
-	void notifyLayerChangedListeners(LayerChangedEvent event);
-
 	/** Search the layer for a MapObject which is located at or near the
 	 * specified point */
 	MapObject search(Point2D p);
