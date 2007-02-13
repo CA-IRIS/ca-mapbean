@@ -21,7 +21,7 @@
 	<property name="build.javadocs" value="${build.dir}/javadocs" />
 	<property name="dist.dir" value="${name}-${version}" />
 	<property name="packages" value="us.mn.state.dot.map.*" />
-	<property name="manifest" value="src/etc/MANIFEST.MF" />
+	<property name="manifest" value="etc/MANIFEST.MF" />
 	<property name="build.compiler" value="modern" />
 
 	<!-- =============================================== -->
