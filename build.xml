@@ -13,7 +13,7 @@
 
 	<property name="name" value="MapBean"/>
 	<property name="version" value="3.5" />
-	<property name="src.images.dir" value="src/images" />
+	<property name="images.dir" value="images" />
 	<property name="src.dir" value="src/main" />
 	<property name="build.dir" value="build" />
 	<property name="build.lib" value="${build.dir}/lib" />
@@ -30,7 +30,7 @@
 	<target name="prepare"
 		description="Prepare the build directory for this project.">
 		<copy todir="${build.classes}/images">
-			<fileset dir="${src.images.dir}" />
+			<fileset dir="${images.dir}" />
 		</copy>
 	</target>
 
