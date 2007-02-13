@@ -26,11 +26,11 @@ import javax.swing.Icon;
 public interface Symbol {
 
 	/** Get the symbol label */
-	public String getLabel();
+	String getLabel();
 
 	/** Get an icon to use for the legend */
-	public Icon getLegend();
+	Icon getLegend();
 
 	/** Draw the symbol for the specified map object */
-	public void draw(Graphics2D g, MapObject o);
+	void draw(Graphics2D g, MapObject o);
 }
