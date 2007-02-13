@@ -168,11 +168,10 @@ public class Theme implements LayerChangedListener {
 
 	/** Paint the selections for the theme */
 	public void paintSelections(Graphics2D g) {
-		MapObject[] s = selections;
-		if(visible && s != null && selectionRenderer != null) {
-			for(int i = 0; i < s.length; i++) {
-				selectionRenderer.render(g, s[i]);
-			}
+		MapObject[] sel = selections;
+		if(visible && selectionRenderer != null) {
+			for(MapObject s: sel)
+				selectionRenderer.render(g, s);
 		}
 	}
 
@@ -235,8 +234,7 @@ public class Theme implements LayerChangedListener {
 		if(visible && layer instanceof DynamicLayer) {
 			MapObject o = layer.search(p);
 			if(o != null) {
-				MapObject[] selections = { o };
-				setSelections(selections);
+				setSelections(new MapObject[] { o });
 				if(SwingUtilities.isLeftMouseButton(e))
 					doLeftClick(e, o);
 				if(SwingUtilities.isRightMouseButton(e))
