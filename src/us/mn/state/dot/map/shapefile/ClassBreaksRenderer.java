@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000-2005  Minnesota Department of Transportation
+ * Copyright (C) 2000-2007  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -11,14 +11,9 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package us.mn.state.dot.map.shapefile;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 import us.mn.state.dot.map.AbstractRenderer;
 import us.mn.state.dot.map.MapObject;
@@ -48,7 +43,8 @@ abstract public class ClassBreaksRenderer extends AbstractRenderer {
 	protected final String field;
 
 	/** List of class breaks for the renderer */
-	protected final LinkedList classBreaks = new LinkedList();
+	protected final LinkedList<ClassBreak> breaks =
+		new LinkedList<ClassBreak>();
 
 	/** Create a new class breaks renderer */
 	public ClassBreaksRenderer(String field, String name) {
@@ -59,7 +55,7 @@ abstract public class ClassBreaksRenderer extends AbstractRenderer {
 	/** Add a break to this renderer */
 	public void addBreak(double v, PenSymbol s) {
 		ClassBreak b = new ClassBreak(v, s);
-		classBreaks.add(b);
+		breaks.add(b);
 		symbols.add(s);
 	}
 
@@ -70,9 +66,7 @@ abstract public class ClassBreaksRenderer extends AbstractRenderer {
 		if(number == null)
 			return null;
 		double value = number.doubleValue();
-		Iterator it = classBreaks.iterator();
-		while(it.hasNext()) {
-			ClassBreak b = (ClassBreak)it.next();
+		for(ClassBreak b: breaks) {
 			if(value <= b.value)
 				return b.symbol;
 		}

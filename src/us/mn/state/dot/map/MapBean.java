@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000-2005  Minnesota Department of Transportation
+ * Copyright (C) 2000-2007  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -11,10 +11,6 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package us.mn.state.dot.map;
 
@@ -52,7 +48,7 @@ import us.mn.state.dot.map.event.MapChangedListener;
  * scrolled and zoomed.  It has several convenience methods giving access to
  * the internal MapPane.
  *
- * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
+ * @author Erik Engstrom
  * @author Douglas Lau
  * @see us.mn.state.dot.map.MapPane
  */
@@ -137,9 +133,9 @@ public class MapBean extends JComponent implements MapChangedListener {
 	protected void doMouseClicked(MouseEvent e) {
 		boolean consumed = false;
 		Point2D p = transformPoint(e.getPoint());
-		ListIterator it = mapPane.getThemeIterator();
+		ListIterator<Theme> it = mapPane.getThemeIterator();
 		while(it.hasPrevious()) {
-			Theme t = (Theme)it.previous();
+			Theme t = it.previous();
 			if(consumed)
 				t.clearSelections();
 			else
@@ -197,7 +193,7 @@ public class MapBean extends JComponent implements MapChangedListener {
 	 * Returns a List of the themes contained by this Map.
 	 * @return List of current themes contained by this Map
 	 */
-	public List getThemes() {
+	public List<Theme> getThemes() {
 		return mapPane.getThemes();
 	}
 
@@ -215,9 +211,9 @@ public class MapBean extends JComponent implements MapChangedListener {
 	/** Get the tooltip text for the given mouse event */
 	public String getToolTipText(MouseEvent e) {
 		Point2D p = transformPoint(e.getPoint());
-		ListIterator it = mapPane.getThemeIterator();
+		ListIterator<Theme> it = mapPane.getThemeIterator();
 		while(it.hasPrevious()) {
-			Theme t = (Theme)it.previous();
+			Theme t = it.previous();
 			if(t.isVisible()) {
 				String tip = t.getTip(p);
 				if(tip != null)
@@ -356,9 +352,9 @@ public class MapBean extends JComponent implements MapChangedListener {
 			g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 				RenderingHints.VALUE_ANTIALIAS_ON);
 		}
-		ListIterator li = mapPane.getThemeIterator();
+		ListIterator<Theme> li = mapPane.getThemeIterator();
 		while(li.hasPrevious()) {
-			Theme t = (Theme)li.previous();
+			Theme t = li.previous();
 			t.paintSelections(g);
 		}
 	}
@@ -377,12 +373,6 @@ public class MapBean extends JComponent implements MapChangedListener {
 
 	/** Dispose of the map */
 	public void dispose() {
-		List list = mapPane.getThemes();
-		Iterator it = list.iterator();
-		while(it.hasNext()) {
-			Theme theme = (Theme)it.next();
-			removeTheme(theme);
-			theme.dispose();
-		}
+		mapPane.dispose();
 	}
 }

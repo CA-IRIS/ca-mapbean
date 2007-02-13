@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000-2005  Minnesota Department of Transportation
+ * Copyright (C) 2000-2007  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -11,10 +11,6 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package us.mn.state.dot.map;
 
@@ -22,9 +18,10 @@ import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import java.util.Iterator;
-import java.util.List;
+import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 import javax.swing.SwingUtilities;
 import us.mn.state.dot.map.event.LayerChangedEvent;
 import us.mn.state.dot.map.event.LayerChangedListener;
@@ -35,7 +32,7 @@ import us.mn.state.dot.map.event.ThemeChangedListener;
  * A theme is associated with one layer and one active layer renderer.
  * It can be made invisible and can listen for mouse actions.
  *
- * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
+ * @author Erik Engstrom
  * @author Douglas Lau
  */
 public class Theme implements LayerChangedListener {
@@ -47,7 +44,8 @@ public class Theme implements LayerChangedListener {
 	public final Layer layer;
 
 	/** List of available renderers for theme */
-	protected final List layerRenderers = new LinkedList();
+	protected final List<LayerRenderer> renderers =
+		new LinkedList<LayerRenderer>();
 
 	/** The LayerRenderer used to paint this theme's layer */
 	protected LayerRenderer renderer;
@@ -62,7 +60,8 @@ public class Theme implements LayerChangedListener {
 	protected boolean visible = true;
 
 	/** ThemeChangedListeners that listen to this theme */
-	protected final List listeners = new LinkedList();
+	protected final Set<ThemeChangedListener> listeners =
+		new HashSet<ThemeChangedListener>();
 
 	/**
 	 * Create a new theme based on the layer parameter. It will have
@@ -101,20 +100,20 @@ public class Theme implements LayerChangedListener {
 
 	/** Dispose of the theme */
 	public void dispose() {
-		layerRenderers.clear();
+		renderers.clear();
 		listeners.clear();
 		selectionRenderer = null;
 	}
 
 	/** Add a LayerRenderer to this themes list of available renderers */
 	public void addLayerRenderer(LayerRenderer renderer) {
-		layerRenderers.add(renderer);
+		renderers.add(renderer);
 	}
 
 	/** Get a List containing all of the renderers that have been
 	 * added to the theme */
-	public List getLayerRenderers() {
-		return layerRenderers;
+	public List<LayerRenderer> getLayerRenderers() {
+		return renderers;
 	}
 
 	/** Set the current LayerRenderer */
@@ -125,6 +124,7 @@ public class Theme implements LayerChangedListener {
 		}
 	}
 
+	/** Get the current layer renderer */
 	public LayerRenderer getCurrentLayerRenderer() {
 		return renderer;
 	}
@@ -199,8 +199,7 @@ public class Theme implements LayerChangedListener {
 
 	/** Add a ThemeChangedListener to the listeners of this theme */
 	public void addThemeChangedListener(ThemeChangedListener listener) {
-		if(!listeners.contains(listener))
-			listeners.add(listener);
+		listeners.add(listener);
 	}
 
 	/** Remove a ThemeChangedListener from the listeners of this theme */
@@ -211,12 +210,8 @@ public class Theme implements LayerChangedListener {
 	/** Notify all listeners that this theme has changed */
 	protected void notifyThemeChangedListeners(int reason) {
 		ThemeChangedEvent e = new ThemeChangedEvent(this, reason);
-		Iterator it = listeners.iterator();
-		while(it.hasNext()) {
-			ThemeChangedListener l =
-				(ThemeChangedListener)it.next();
+		for(ThemeChangedListener l: listeners)
 			l.themeChanged(e);
-		}
 	}
 
 	public void layerChanged(LayerChangedEvent e) {

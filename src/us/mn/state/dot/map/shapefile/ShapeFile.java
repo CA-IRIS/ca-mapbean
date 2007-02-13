@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000-2005  Minnesota Department of Transportation
+ * Copyright (C) 2000-2007  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -11,10 +11,6 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package us.mn.state.dot.map.shapefile;
 
@@ -34,7 +30,7 @@ import java.util.List;
  * http://www.esri.com/library/whitepapers/pdfs/shapefile.pdf
  *
  * @author Douglas Lau
- * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
+ * @author Erik Engstrom
  */
 public class ShapeFile {
 
@@ -82,12 +78,8 @@ public class ShapeFile {
 	}
 
 	/** List of shapes in the ShapeFile */
-	protected final List shapes = new LinkedList();
-
-	/** Create a ShapeFile object from the specified file name */
-/*	public ShapeFile( String name ) throws IOException {
-		this(new File(name).toURL());
-	} */
+	protected final List<ShapeObject> shapes =
+		new LinkedList<ShapeObject>();
 
 	/** Create a ShapeFile object from the specified URL */
 	public ShapeFile(URL url, boolean verbose) throws IOException {
@@ -168,7 +160,7 @@ public class ShapeFile {
 	}
 
 	/** Get the list of all shapes from the file */
-	public List getShapeList() {
+	public List<ShapeObject> getShapeList() {
 		return shapes;
 	}
 

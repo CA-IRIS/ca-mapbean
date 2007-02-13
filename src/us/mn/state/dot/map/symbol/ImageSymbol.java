@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000-2006  Minnesota Department of Transportation
+ * Copyright (C) 2000-2007  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -63,7 +63,7 @@ public class ImageSymbol implements Symbol {
 		return label;
 	}
 
-	public void setRotate(boolean rotate){
+	public void setRotate(boolean rotate) {
 		this.rotate = rotate;
 	}
 	
@@ -73,17 +73,19 @@ public class ImageSymbol implements Symbol {
 	 */
 	public void draw(Graphics2D g, MapObject o) {
 		AffineTransform t = (AffineTransform)o.getTransform().clone();
-		if(!rotate){
-			t.setToTranslation(t.getTranslateX(), t.getTranslateY());
+		if(!rotate) {
+			t.setToTranslation(t.getTranslateX(),
+				t.getTranslateY());
 		}
 		int width = icon.getIconWidth();
 		int height = icon.getIconHeight();
 		if(size != null) {
 			width = (int)size.getWidth();
-			height = -1 * (int)size.getHeight();
+			height = -(int)size.getHeight();
 		}
-		t.scale( width, height );
-		t.translate( icon.getIconWidth()/-2, icon.getIconHeight()/-2 );
+		t.scale(width, height);
+		t.translate(icon.getIconWidth() / -2,
+			icon.getIconHeight() / -2);
 		g.drawImage(icon.getImage(), t, null);
 	}
 

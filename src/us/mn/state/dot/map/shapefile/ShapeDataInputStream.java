@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000-2004  Minnesota Department of Transportation
+ * Copyright (C) 2000-2007  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -11,10 +11,6 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package us.mn.state.dot.map.shapefile;
 
@@ -26,7 +22,7 @@ import java.io.InputStream;
 /**
  * Adds little endian double and integer reading to DataInputStream.
  *
- * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
+ * @author Erik Engstrom
  */
 public class ShapeDataInputStream extends DataInputStream {
 
@@ -46,9 +42,8 @@ public class ShapeDataInputStream extends DataInputStream {
 	/** Read a little endian integer */
 	public int readLittleInt() throws EOFException, IOException {
 		int result = 0;
-		for(int i = 0; i < 4; i++) {
+		for(int i = 0; i < 4; i++)
 			result += ((readByte() & 0xff) << (i * 8));
-		}
 		return result;
 	}
 
@@ -64,9 +59,8 @@ public class ShapeDataInputStream extends DataInputStream {
 	/** Read a string */
 	public String readString(int length) throws EOFException, IOException {
 		byte[] buffer = new byte[length];
-		for(int i = 0; i < length; i++) {
+		for(int i = 0; i < length; i++)
 			buffer[i] = readByte();
-		}
 		return new String(buffer).trim();
 	}
 }

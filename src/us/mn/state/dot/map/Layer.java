@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000-2005  Minnesota Department of Transportation
+ * Copyright (C) 2000-2007  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -11,50 +11,45 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package us.mn.state.dot.map;
 
 import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-
 import us.mn.state.dot.map.event.LayerChangedEvent;
 import us.mn.state.dot.map.event.LayerChangedListener;
 
 /**
  * A layer is a grouping of similar elements which are painted on the map
  *
- * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
+ * @author Erik Engstrom
  * @author Douglas Lau
  */
 public interface Layer {
 
 	/** Get the name of this layer */
-	public String getName();
+	String getName();
 
 	/** Create the default theme */
-	public Theme createTheme();
+	Theme createTheme();
 
 	/** Get the extent of the layer */
-	public Rectangle2D getExtent();
+	Rectangle2D getExtent();
 
 	/** Paint the layer */
-	public void paint(Graphics2D g, LayerRenderer r);
+	void paint(Graphics2D g, LayerRenderer r);
 
 	/** Register a LayerChangedListener with the layer */
-	public void addLayerChangedListener(LayerChangedListener listener);
+	void addLayerChangedListener(LayerChangedListener listener);
 
 	/** Remove a LayerChangedListener from the layer */
-	public void removeLayerChangedListener(LayerChangedListener listener);
+	void removeLayerChangedListener(LayerChangedListener listener);
 
 	/** Notify all LayerChangedListeners that the layer has changed */
-	public void notifyLayerChangedListeners(LayerChangedEvent event);
+	void notifyLayerChangedListeners(LayerChangedEvent event);
 
 	/** Search the layer for a MapObject which is located at or near the
 	 * specified point */
-	public MapObject search(Point2D p);
+	MapObject search(Point2D p);
 }

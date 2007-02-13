@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000-2005  Minnesota Department of Transportation
+ * Copyright (C) 2000-2007  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -11,10 +11,6 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package us.mn.state.dot.map.shapefile;
 
@@ -26,7 +22,6 @@ import java.io.IOException;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
 import java.net.URL;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import us.mn.state.dot.map.AbstractLayer;
@@ -42,15 +37,15 @@ import us.mn.state.dot.map.symbol.PenSymbol;
  * ShapeLayer is a class for drawing ESRI shape files.
  *
  * @author Douglas Lau
- * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
+ * @author Erik Engstrom
   */
 public class ShapeLayer extends AbstractLayer {
 
 	/** List of fields in the Dbase file */
-	protected final LinkedList fields;
+	protected final LinkedList<String> fields;
 
 	/** List of shapes from the shapefile */
-	protected final List shapes;
+	protected final List<ShapeObject> shapes;
 
 	/** The type of the shape file */
 	protected final int shapeType;
@@ -80,33 +75,31 @@ public class ShapeLayer extends AbstractLayer {
 
 	public void write(PrintStream out) {
 		boolean first = true;
-		Iterator it = fields.iterator();
-		while(it.hasNext()) {
+		for(String f: fields) {
 			if(first)
 				first = false;
 			else
 				out.print(',');
-			out.print(it.next());
+			out.print(f);
 		}
 		out.println();
-		Iterator shit = shapes.iterator();
-		while(shit.hasNext()) {
-			ShapeObject shape = (ShapeObject)shit.next();
+		for(ShapeObject shape: shapes) {
 			first = true;
-			it = fields.iterator();
-			while(it.hasNext()) {
+			for(String f: fields) {
 				if(first)
 					first = false;
 				else
 					out.print(',');
-				out.print(shape.getValue(it.next().toString()));
+				out.print(shape.getValue(f));
 			}
 			out.println();
 		}
 	}
 
 	/** Read the Dbase file for the shape file */
-	protected LinkedList readDbaseFile(String f) throws IOException {
+	protected LinkedList<String> readDbaseFile(String f)
+		throws IOException
+	{
 		URL url = new URL(f.substring(0, f.length() - 4) + ".dbf");
 		try {
 			DbaseInputStream in = new DbaseInputStream(url);
@@ -119,17 +112,14 @@ public class ShapeLayer extends AbstractLayer {
 			}
 		}
 		catch(FileNotFoundException e) {
-			return new LinkedList();
+			return new LinkedList<String>();
 		}
 	}
 
 	/** Read the contents of the Dbase file */
 	protected void readDbase(DbaseInputStream in) throws IOException {
-		Iterator it = shapes.iterator();
-		while(in.hasNext() && it.hasNext()) {
-			ShapeObject s = (ShapeObject)it.next();
+		for(ShapeObject s: shapes)
 			s.setFields(in.nextRecord());
-		}
 	}
 
 	/** Get the symbol to draw the shape layer */
@@ -165,26 +155,22 @@ public class ShapeLayer extends AbstractLayer {
 
 	/** Paint the layer */
 	public void paint(Graphics2D g, LayerRenderer renderer) {
-		Iterator it = shapes.iterator();
-		while(it.hasNext()) {
-			ShapeObject shape = (ShapeObject)it.next();
-			renderer.render(g, shape);
-		}
+		for(ShapeObject s: shapes)
+			renderer.render(g, s);
 	}
 
 	/** Search for a shape which contains the specified point */
 	public MapObject search(Point2D p) {
-		Iterator it = shapes.iterator();
-		while(it.hasNext()) {
-			MapObject o = (MapObject)it.next();
-			Shape s = o.getShape();
+		for(ShapeObject so: shapes) {
+			Shape s = so.getShape();
 			if(s != null && s.contains(p))
-				return o;
+				return so;
 		}
 		return null;
 	}
-	
-	public List getShapes(){
+
+	/** Get a list of all shape objects on the layer */
+	public List<ShapeObject> getShapes() {
 		return shapes;
 	}
 }

@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000-2005  Minnesota Department of Transportation
+ * Copyright (C) 2000-2007  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -11,10 +11,6 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package us.mn.state.dot.map.shapefile;
 
@@ -23,7 +19,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -57,7 +52,7 @@ public class DbaseInputStream {
 	protected final short fieldCount;
 
 	/** List of field names */
-	protected final List fields = new LinkedList();
+	protected final List<ShapeField> fields = new LinkedList<ShapeField>();
 
 	/** Index of the last record read from file */
 	protected int lastRecord = 0;
@@ -88,12 +83,11 @@ public class DbaseInputStream {
 		in.skipBytes(1);
 	}
 
-	/** Get a list of the fields */
-	public LinkedList getFields() {
-		LinkedList l = new LinkedList();
-		Iterator it = fields.iterator();
-		while(it.hasNext())
-			l.add(it.next().toString());
+	/** Get a list of the field names */
+	public LinkedList<String> getFields() {
+		LinkedList<String> l = new LinkedList<String>();
+		for(ShapeField f: fields)
+			l.add(f.getName());
 		return l;
 	}
 
@@ -103,13 +97,11 @@ public class DbaseInputStream {
 	}
 
 	/** Read the nextRecord in the database file */
-	public Map nextRecord() throws IOException {
-		HashMap map = new HashMap();
+	public Map<String, Object> nextRecord() throws IOException {
+		HashMap<String, Object> map = new HashMap<String, Object>();
 		in.skipBytes(1);
-		Iterator it = fields.iterator();
-		while(it.hasNext()) {
-			ShapeField field = (ShapeField)it.next();
-			Object key = null;
+		for(ShapeField field: fields) {
+			String key = null;
 			Object value = null;
 			try {
 				key = field.getName();

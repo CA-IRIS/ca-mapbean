@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000-2005  Minnesota Department of Transportation
+ * Copyright (C) 2000-2007  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -11,10 +11,6 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package us.mn.state.dot.map.shapefile;
 
@@ -29,7 +25,7 @@ import us.mn.state.dot.map.MapObject;
 /**
  * A ShapeObject represents a record from an ESRI shape file.
  *
- * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
+ * @author Erik Engstrom
  * @author Douglas Lau
  */
 public class ShapeObject implements MapObject {
@@ -38,7 +34,7 @@ public class ShapeObject implements MapObject {
 	protected final Shape shape;
 
 	/** Fields attached to the shape */
-	protected Map fields = null;
+	protected Map<String, Object> fields = null;
 
 	/** Create a new shape object */
 	public ShapeObject(PathIterator p) {
@@ -58,7 +54,7 @@ public class ShapeObject implements MapObject {
 	}
 
 	/** Set the field mapping */
-	public void setFields(Map f) {
+	public void setFields(Map<String, Object> f) {
 		if(fields == null)
 			fields = f;
 		else
@@ -68,7 +64,7 @@ public class ShapeObject implements MapObject {
 	/** Add a field mapping */
 	public void addField(String key, Object value) {
 		if(fields == null)
-			fields = new HashMap();
+			fields = new HashMap<String, Object>();
 		fields.put(key, value);
 	}
 

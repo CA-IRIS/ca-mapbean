@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000-2005  Minnesota Department of Transportation
+ * Copyright (C) 2000-2007  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -11,10 +11,6 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package us.mn.state.dot.map;
 
@@ -26,10 +22,11 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Set;
 
 import us.mn.state.dot.map.event.MapChangedListener;
 import us.mn.state.dot.map.event.ThemeChangedEvent;
@@ -39,7 +36,7 @@ import us.mn.state.dot.map.event.ThemeChangedListener;
  * This class can be used to generate map graphics when access to the graphics
  * subsystem is not available.
  *
- * @author <a href="mailto:erik.engstrom@dot.state.mn.us">Erik Engstrom</a>
+ * @author Erik Engstrom
  * @author Douglas Lau
  */
 public class MapPane implements ThemeChangedListener {
@@ -54,7 +51,7 @@ public class MapPane implements ThemeChangedListener {
 	protected BufferedImage screenBuffer;
 
 	/** List of all themes */
-	protected final List themes = new ArrayList();
+	protected final List<Theme> themes = new LinkedList<Theme>();
 
 	/** Transform from world to screen coordinates */
 	protected final AffineTransform transform = new AffineTransform();
@@ -75,7 +72,8 @@ public class MapPane implements ThemeChangedListener {
 	protected Color backgroundColor = Color.GRAY;
 
 	/** Listeners for map changed events */
-	protected List listeners = new ArrayList();
+	protected Set<MapChangedListener> listeners =
+		new HashSet<MapChangedListener>();
 
 	/** Draw map antialiased */
 	public final boolean antialiased;
@@ -92,8 +90,8 @@ public class MapPane implements ThemeChangedListener {
 	}
 
 	/** Get the list of themes contained in the MapPane */
-	public List getThemes() {
-		return new ArrayList(themes);
+	public List<Theme> getThemes() {
+		return new LinkedList<Theme>(themes);
 	}
 
 	/** Set the pixel size of the map panel */
@@ -132,19 +130,27 @@ public class MapPane implements ThemeChangedListener {
 	}
 
 	/** Get a list iterator for themes */
-	public ListIterator getThemeIterator() {
+	public ListIterator<Theme> getThemeIterator() {
 		return themes.listIterator(themes.size());
 	}
 
 	/** Get the theme with the specified name */
 	public Theme getTheme(String name) {
-		Iterator it = themes.iterator();
-		while(it.hasNext()) {
-			Theme t = (Theme)it.next();
+		for(Theme t: themes) {
 			if(name.equals(t.layer.getName()))
 				return t;
 		}
 		return null;
+	}
+
+	/** Dispose of the map pane */
+	public void dispose() {
+		for(Theme t: themes) {
+			t.removeThemeChangedListener(this);
+			t.layer.removeLayerChangedListener(t);
+			t.dispose();
+		}
+		themes.clear();
 	}
 
 	/** Change the scale of the map panel */
@@ -194,9 +200,7 @@ public class MapPane implements ThemeChangedListener {
 			g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 				RenderingHints.VALUE_ANTIALIAS_ON);
 		}
-		Iterator it = themes.iterator();
-		while(it.hasNext()) {
-			Theme t = (Theme)it.next();
+		for(Theme t: themes) {
 			if(!(t.layer instanceof DynamicLayer))
 				t.paint(g);
 		}
@@ -215,9 +219,7 @@ public class MapPane implements ThemeChangedListener {
 			g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 				RenderingHints.VALUE_ANTIALIAS_ON);
 		}
-		Iterator it = themes.iterator();
-		while(it.hasNext()) {
-			Theme t = (Theme)it.next();
+		for(Theme t: themes) {
 			if(t.layer instanceof DynamicLayer)
 				t.paint(g);
 		}
@@ -254,11 +256,8 @@ public class MapPane implements ThemeChangedListener {
 	 * changed.
 	 */
 	protected void notifyMapChangedListeners() {
-		Iterator it = listeners.iterator();
-		while(it.hasNext()) {
-			MapChangedListener l = (MapChangedListener)it.next();
+		for(MapChangedListener l: listeners)
 			l.mapChanged();
-		}
 	}
 
 	/** Get the transform from world to screen coordinates */
