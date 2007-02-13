@@ -150,22 +150,11 @@ public class MapBean extends JComponent implements MapChangedListener {
 
 	/**
 	 * Add a List of themes to the Map
-	 * @param themes List of themes (or layers) to be added to the map
+	 * @param themes List of themes to be added to the map
 	 */
-	public void addThemes(List themes) {
-		Iterator it = themes.iterator();
-		while(it.hasNext()) {
-			Object o = it.next();
-			if(o instanceof Layer) {
-				Layer l = (Layer)o;
-				addTheme(l.createTheme());
-			} else if(o instanceof Theme) {
-				addTheme((Theme)o);
-			} else {
-				throw new IllegalArgumentException(
-					"Must be Layer or Theme");
-			}
-		}
+	public void addThemes(List<Theme> themes) {
+		for(Theme t: themes)
+			addTheme(t);
 	}
 
 	/** Remove a theme from the map */
