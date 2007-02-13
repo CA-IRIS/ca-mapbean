@@ -98,10 +98,12 @@ public class Theme implements LayerChangedListener {
 		this.renderer = renderer;
 		this.visible = visible;
 		selectionRenderer = null;
+		layer.addLayerChangedListener(this);
 	}
 
 	/** Dispose of the theme */
 	public void dispose() {
+		layer.removeLayerChangedListener(this);
 		renderers.clear();
 		listeners.clear();
 		selectionRenderer = null;
@@ -199,13 +201,13 @@ public class Theme implements LayerChangedListener {
 	}
 
 	/** Add a ThemeChangedListener to the listeners of this theme */
-	public void addThemeChangedListener(ThemeChangedListener listener) {
-		listeners.add(listener);
+	public void addThemeChangedListener(ThemeChangedListener l) {
+		listeners.add(l);
 	}
 
 	/** Remove a ThemeChangedListener from the listeners of this theme */
-	public void removeThemeChangedListener(ThemeChangedListener listener) {
-		listeners.remove(listener);
+	public void removeThemeChangedListener(ThemeChangedListener l) {
+		listeners.remove(l);
 	}
 
 	/** Notify all listeners that this theme has changed */
@@ -219,6 +221,7 @@ public class Theme implements LayerChangedListener {
 		notifyThemeChangedListeners(e.getReason());
 	}
 
+	/** Get the layer for this theme */
 	public Layer getLayer() {
 		return layer;
 	}

@@ -69,7 +69,7 @@ public class MapPane implements ThemeChangedListener {
 	protected boolean staticBufferDirty = true;
 
 	/** Background color of map */
-	protected Color backgroundColor = Color.GRAY;
+	protected Color background = Color.GRAY;
 
 	/** Listeners for map changed events */
 	protected Set<MapChangedListener> listeners =
@@ -119,14 +119,12 @@ public class MapPane implements ThemeChangedListener {
 	public void addTheme(Theme theme) {
 		themes.add(theme);
 		theme.addThemeChangedListener(this);
-		theme.layer.addLayerChangedListener(theme);
 	}
 
 	/** Remove a theme from the map */
 	public void removeTheme(Theme theme) {
 		themes.remove(theme);
 		theme.removeThemeChangedListener(this);
-		theme.layer.removeLayerChangedListener(theme);
 	}
 
 	/** Get a list iterator for themes */
@@ -145,11 +143,8 @@ public class MapPane implements ThemeChangedListener {
 
 	/** Dispose of the map pane */
 	public void dispose() {
-		for(Theme t: themes) {
-			t.removeThemeChangedListener(this);
-			t.layer.removeLayerChangedListener(t);
+		for(Theme t: themes)
 			t.dispose();
-		}
 		themes.clear();
 	}
 
@@ -186,13 +181,13 @@ public class MapPane implements ThemeChangedListener {
 
 	/** Set the background color of the map */
 	public void setBackground(Color color) {
-		backgroundColor = color;
+		background = color;
 	}
 
 	/** Update the static buffer */
 	protected void updateStaticBuffer() {
 		Graphics2D g = staticBuffer.createGraphics();
-		g.setBackground(backgroundColor);
+		g.setBackground(background);
 		g.clearRect(0, 0, staticBuffer.getWidth(),
 			staticBuffer.getHeight());
 		g.transform(transform);
