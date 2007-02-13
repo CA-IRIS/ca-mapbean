@@ -29,7 +29,9 @@ import us.mn.state.dot.map.event.ThemeChangedEvent;
 import us.mn.state.dot.map.event.ThemeChangedListener;
 
 /**
- * A theme is associated with one layer and one active layer renderer.
+ * A theme is the rendering state for one layer on a map. Multiple themes can
+ * share the same underlying layer for separate map components.
+ * 
  * It can be made invisible and can listen for mouse actions.
  *
  * @author Erik Engstrom
@@ -43,6 +45,10 @@ public class Theme implements LayerChangedListener {
 	/** Layer controlled by the theme */
 	public final Layer layer;
 
+	/** ThemeChangedListeners that listen to this theme */
+	protected final Set<ThemeChangedListener> listeners =
+		new HashSet<ThemeChangedListener>();
+
 	/** List of available renderers for theme */
 	protected final List<LayerRenderer> renderers =
 		new LinkedList<LayerRenderer>();
@@ -53,15 +59,11 @@ public class Theme implements LayerChangedListener {
 	/** Selection renderer which paints object selections for the theme */
 	protected SelectionRenderer selectionRenderer;
 
-	/** Currently selected shapes */
-	protected MapObject[] selections = new MapObject[0];
+	/** Currently selected map objects */
+	protected MapObject[] selections = NO_SELECTION;
 
 	/** Visibility flag for this theme */
 	protected boolean visible = true;
-
-	/** ThemeChangedListeners that listen to this theme */
-	protected final Set<ThemeChangedListener> listeners =
-		new HashSet<ThemeChangedListener>();
 
 	/**
 	 * Create a new theme based on the layer parameter. It will have
