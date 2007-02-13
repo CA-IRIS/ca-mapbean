@@ -87,6 +87,7 @@ public class MapBean extends JComponent implements MapChangedListener {
 		mapPane.addMapChangedListener(this);
 		mapPane.setBackground(getBackground());
 		setOpaque(true);
+		setDoubleBuffered(false);
 		setToolTipText(" ");
 		addComponentListener(new ComponentAdapter() {
 			public void componentResized(ComponentEvent e) {
@@ -252,24 +253,30 @@ public class MapBean extends JComponent implements MapChangedListener {
 		start_pan = null;
 		cursor = null;
 		setCursor(null);
+		panBuffer = null;
 	}
 
 	/** Pan the map */
 	protected void doPan(Point p) {
-		if(start_pan == null)
+		Point start = start_pan;
+		if(start == null)
 			return;
-		int x = (int)(p.getX() - start_pan.getX());
-		int y = (int)(p.getY() - start_pan.getY());
-		Rectangle bounds = getBounds();
 		if(panBuffer == null)
-			panBuffer = createImage(bounds.width, bounds.height);
-		Graphics pb = panBuffer.getGraphics();
-		pb.setColor(getBackground());
-		pb.fillRect(0, 0, bounds.width, bounds.height);
-		pb.drawImage(mapPane.getImage(), x, y, this);
-		pb.dispose();
+			panBuffer = mapPane.getImage();
+		int x = (int)(p.getX() - start.getX());
+		int y = (int)(p.getY() - start.getY());
+		Rectangle bounds = getBounds();
 		Graphics g = getGraphics();
-		g.drawImage(panBuffer, 0, 0, this);
+		g.drawImage(panBuffer, x, y, this);
+		g.setColor(getBackground());
+		if(x >= 0)
+			g.fillRect(0, 0, x, bounds.height);
+		else  
+			g.fillRect(bounds.width + x, 0, -x, bounds.height);
+		if(y >= 0)
+			g.fillRect(0, 0, bounds.width, y);
+		else  
+			g.fillRect(0, bounds.height + y, bounds.width, -y);
 		g.dispose();
 	}
 
@@ -278,14 +285,15 @@ public class MapBean extends JComponent implements MapChangedListener {
 		Point start = start_pan;
 		if(start == null)
 			return;
+		panBuffer = null;
 		if(Math.abs(start.getX() - end.getX()) < PAN_THRESHOLD &&
 		   Math.abs(start.getY() - end.getY()) < PAN_THRESHOLD)
 			return;
 		AffineTransform t = mapPane.getInverseTransform();
-		t.transform(start_pan, start_pan);
+		t.transform(start, start);
 		t.transform(end, end);
-		double x = start_pan.getX() - end.getX();
-		double y = start_pan.getY() - end.getY();
+		double x = start.getX() - end.getX();
+		double y = start.getY() - end.getY();
 		Rectangle2D e = mapPane.getExtent();
 		setExtent(e.getX() + x, e.getY() + y,
 			e.getWidth(), e.getHeight());
@@ -323,7 +331,6 @@ public class MapBean extends JComponent implements MapChangedListener {
 	/** Called when the map is resized or the extent is changed */
 	protected void rescale() {
 		mapPane.setSize(getSize());
-		panBuffer = null;
 		if(isShowing())
 			repaint();
 	}
@@ -348,6 +355,8 @@ public class MapBean extends JComponent implements MapChangedListener {
 
 	/** Paint the map component */
 	public void paintComponent(Graphics g) {
+		if(panBuffer != null)
+			return;
 		setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 		paint((Graphics2D)g);
 		setCursor(cursor);
