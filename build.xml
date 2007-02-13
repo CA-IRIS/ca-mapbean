@@ -14,7 +14,7 @@
 	<property name="name" value="MapBean"/>
 	<property name="version" value="3.5" />
 	<property name="images.dir" value="images" />
-	<property name="src.dir" value="src/main" />
+	<property name="src.dir" value="src" />
 	<property name="build.dir" value="build" />
 	<property name="build.lib" value="${build.dir}/lib" />
 	<property name="build.classes" value="${build.dir}/classes" />
