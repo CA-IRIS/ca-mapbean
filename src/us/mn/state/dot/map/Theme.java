@@ -217,6 +217,7 @@ public class Theme implements LayerChangedListener {
 			l.themeChanged(e);
 	}
 
+	/** Deal with a layer changed event */
 	public void layerChanged(LayerChangedEvent e) {
 		notifyThemeChangedListeners(e.getReason());
 	}
