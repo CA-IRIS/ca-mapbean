@@ -179,7 +179,7 @@ public class Theme implements LayerChangedListener {
 
 	/** Get the appropriate tool tip text for the specified point */
 	public String getTip(Point2D p) {
-		if(layer instanceof DynamicLayer) {
+		if(isSearchable()) {
 			MapObject o = layer.search(p);
 			if(o != null)
 				return renderer.getTip(o);
@@ -190,6 +190,11 @@ public class Theme implements LayerChangedListener {
 	/** Get the visibility flag */
 	public boolean isVisible() {
 		return visible;
+	}
+
+	/** Check if the theme is currently searchable */
+	protected boolean isSearchable() {
+		return visible && layer instanceof DynamicLayer;
 	}
 
 	/** Set the visibility of the theme */
@@ -235,7 +240,7 @@ public class Theme implements LayerChangedListener {
 
 	/** Process a mouse click for the theme */
 	public boolean doMouseClicked(MouseEvent e, Point2D p) {
-		if(visible && layer instanceof DynamicLayer) {
+		if(isSearchable()) {
 			MapObject o = layer.search(p);
 			if(o != null) {
 				setSelections(new MapObject[] { o });

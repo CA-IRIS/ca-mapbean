@@ -203,11 +203,9 @@ public class MapBean extends JComponent implements MapChangedListener {
 		ListIterator<Theme> it = mapPane.getThemeIterator();
 		while(it.hasPrevious()) {
 			Theme t = it.previous();
-			if(t.isVisible()) {
-				String tip = t.getTip(p);
-				if(tip != null)
-					return tip;
-			}
+			String tip = t.getTip(p);
+			if(tip != null)
+				return tip;
 		}
 		return null;
 	}
