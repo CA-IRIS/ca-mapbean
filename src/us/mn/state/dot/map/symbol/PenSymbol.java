@@ -17,7 +17,6 @@ package us.mn.state.dot.map.symbol;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Shape;
-import java.awt.geom.AffineTransform;
 import us.mn.state.dot.map.MapObject;
 import us.mn.state.dot.map.Outline;
 
@@ -48,16 +47,6 @@ public class PenSymbol extends AbstractSymbol {
 
 	/** Draw a shape on map with the pen symbol */
 	public void draw(Graphics2D g, MapObject o) {
-		Shape s = o.getShape();
-		if(s != null) {
-			AffineTransform ot = o.getTransform();
-			if(ot != null) {
-				AffineTransform gt = g.getTransform();
-				g.transform(ot);
-				doDraw(g, s);
-				g.setTransform(gt);
-			} else
-				doDraw(g, s);
-		}
+		doDraw(g, o.getShape());
 	}
 }
