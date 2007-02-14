@@ -255,7 +255,7 @@ public class MapBean extends JComponent implements MapChangedListener {
 			return buffer != null;
 		}
 
-		protected void start() {
+		protected void initialize() {
 			setCursor(PAN_CURSOR);
 			buffer = mapPane.getImage();
 			AffineTransform t = mapPane.getTransform();
@@ -292,26 +292,27 @@ public class MapBean extends JComponent implements MapChangedListener {
 		/** Drag the map pan */
 		protected void drag(Point p) {
 			if(!isStarted())
-				start();
+				initialize();
 			setPan(p);
+			repaint();
+		}
+
+		/** Render the panning map */
+		protected void renderMap(Graphics2D g) {
 			Rectangle bounds = getBounds();
-			synchronized(map) {
-				Graphics g = getGraphics();
-				g.drawImage(buffer, xpan, ypan, map);
-				g.setColor(getBackground());
-				if(xpan >= 0)
-					g.fillRect(0, 0, xpan, bounds.height);
-				else { 
-					g.fillRect(bounds.width + xpan, 0,
-						-xpan, bounds.height);
-				}
-				if(ypan >= 0)
-					g.fillRect(0, 0, bounds.width, ypan);
-				else { 
-					g.fillRect(0, bounds.height + ypan,
-						 bounds.width,-ypan);
-				}
-				g.dispose();
+			g.drawImage(buffer, xpan, ypan, map);
+			g.setColor(getBackground());
+			if(xpan >= 0)
+				g.fillRect(0, 0, xpan, bounds.height);
+			else { 
+				g.fillRect(bounds.width + xpan, 0,
+					-xpan, bounds.height);
+			}
+			if(ypan >= 0)
+				g.fillRect(0, 0, bounds.width, ypan);
+			else { 
+				g.fillRect(0, bounds.height + ypan,
+					 bounds.width,-ypan);
 			}
 		}
 
@@ -389,40 +390,38 @@ public class MapBean extends JComponent implements MapChangedListener {
 			repaint();
 	}
 
-	/** Paint the map */
-	protected void paint(Graphics2D g) {
+	/** Render the map */
+	protected void renderMap(Graphics2D g) {
 		Image image = mapPane.getImage();
 		if(image == null)
 			return;
-		synchronized(map) {
-			g.drawImage(image, 0, 0, this);
-			g.transform(mapPane.getTransform());
-			if(mapPane.antialiased) {
-				g.setRenderingHint(
-					RenderingHints.KEY_ANTIALIASING,
-					RenderingHints.VALUE_ANTIALIAS_ON);
-			}
-			ListIterator<Theme> li = mapPane.getThemeIterator();
-			while(li.hasPrevious()) {
-				Theme t = li.previous();
-				t.paintSelections(g);
-			}
+		g.drawImage(image, 0, 0, this);
+		g.transform(mapPane.getTransform());
+		if(mapPane.antialiased) {
+			g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+				RenderingHints.VALUE_ANTIALIAS_ON);
+		}
+		ListIterator<Theme> li = mapPane.getThemeIterator();
+		while(li.hasPrevious()) {
+			Theme t = li.previous();
+			t.paintSelections(g);
 		}
 	}
 
 	/** Paint the map component */
 	public void paintComponent(Graphics g) {
-		if(pan != null)
-			return;
-		setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-		paint((Graphics2D)g);
-		setCursor(null);
+		if(pan == null) {
+			setCursor(Cursor.getPredefinedCursor(
+				Cursor.WAIT_CURSOR));
+			renderMap((Graphics2D)g);
+			setCursor(null);
+		} else
+			pan.renderMap((Graphics2D)g);
 	}
 
 	/** When map changes, MapPane updates all change listeners */
 	public void mapChanged() {
-		if(pan == null)
-			repaint();
+		repaint();
 	}
 
 	/** Dispose of the map */
