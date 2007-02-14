@@ -223,12 +223,20 @@ public class MapBean extends JComponent implements MapChangedListener {
 	protected void setExtent(final double x, final double y,
 		final double width, final double height)
 	{
-		SwingUtilities.invokeLater(new Runnable() {
+		/* NOTE: this trick allows us to call this method from any
+		   thread, but doesn't show any painting glitches (in panning)
+		   if called from the event dispatch thread. It's better
+		   than using invokeAndWait. */
+		Runnable echanger = new Runnable() {
 			public void run() {
 				mapPane.setExtent(x, y, width, height);
 				repaint();
 			}
-		});
+		};
+		if(SwingUtilities.isEventDispatchThread())
+			echanger.run();
+		else 
+			SwingUtilities.invokeLater(echanger);
 	}
 
 	/** Get the extent of the map */
