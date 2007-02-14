@@ -32,8 +32,8 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
+import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Rectangle2D;
-import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import javax.swing.ImageIcon;
@@ -54,8 +54,8 @@ import us.mn.state.dot.map.event.MapChangedListener;
  */
 public class MapBean extends JComponent implements MapChangedListener {
 
-	/** Minimum number of pixels to pan the map */
-	static protected final int PAN_THRESHOLD = 5;
+	/** Minimum size of zoomed in map */
+	static protected final int ZOOM_THRESHOLD = 1000;
 
 	/** Cursor for panning the map */
 	static protected final Cursor PAN_CURSOR;
@@ -66,23 +66,21 @@ public class MapBean extends JComponent implements MapChangedListener {
                         i.getImage(), new Point(6, 6), "Pan");
 	}
 
-	/** Start point of a map pan */
-	protected Point start_pan = null;
-
-	/** Buffer used to pan the map */
-	protected transient Image panBuffer = null;
-
 	/** Home extents */
 	protected final Rectangle2D extentHome = new Rectangle2D.Double();
 
 	/** MapPane that will create the map */
 	protected final MapPane mapPane;
 
-	/** Current mouse cursor */
-	protected Cursor cursor = null;
+	/** MapBean reference for PanState inner class */
+	protected final MapBean map;
+
+	/** Current panning state */
+	protected PanState pan = null;
 
 	/** Create a new map */
 	public MapBean(boolean a) {
+		map = this;
 		mapPane = new MapPane(a);
 		mapPane.addMapChangedListener(this);
 		mapPane.setBackground(getBackground());
@@ -101,12 +99,9 @@ public class MapBean extends JComponent implements MapChangedListener {
 			public void mousePressed(MouseEvent e) {
 				if(SwingUtilities.isLeftMouseButton(e))
 					startPan(e.getPoint());
-				else
-					cancelPan();
 			}
 			public void mouseReleased(MouseEvent e) {
 				finishPan(e.getPoint());
-				cancelPan();
 			}
 		});
 		addMouseMotionListener(new MouseMotionAdapter() {
@@ -241,69 +236,129 @@ public class MapBean extends JComponent implements MapChangedListener {
 		return mapPane.getExtent();
 	}
 
-	/** Start a pan of the map */
-	protected void startPan(Point p) {
-		start_pan = p;
-		cursor = PAN_CURSOR;
-		setCursor(cursor);
+	static protected int limit(int min, int val, int max) {
+		return Math.min(Math.max(val, min), max);
 	}
 
-	/** Cancel a pan of the map */
-	protected void cancelPan() {
-		start_pan = null;
-		cursor = null;
-		setCursor(null);
-		panBuffer = null;
+	/** State of map panning action */
+	protected class PanState {
+		protected final Point start;
+		protected Image buffer;
+		protected int xpan, xmin, xmax, ypan, ymin, ymax;
+		protected AffineTransform transform;
+
+		protected PanState(Point s) {
+			start = s;
+		}
+
+		protected boolean isStarted() {
+			return buffer != null;
+		}
+
+		protected void start() {
+			setCursor(PAN_CURSOR);
+			buffer = mapPane.getImage();
+			AffineTransform t = mapPane.getTransform();
+			transform = AffineTransform.getScaleInstance(
+				t.getScaleX(), t.getScaleY());
+			calculateLimits();
+		}
+
+		protected void calculateLimits() {
+			Rectangle2D e = mapPane.getExtent();
+			Rectangle2D te = mapPane.getThemeExtent();
+			Point2D b = new Point2D.Double(e.getX() - te.getX(),
+				e.getY() - te.getY());
+			transform.transform(b, b);
+			xmax = (int)b.getX();
+			ymin = (int)b.getY();
+			b = new Point2D.Double(te.getWidth() - e.getWidth(),
+				te.getHeight() - e.getHeight());
+			transform.transform(b, b);
+			xmin = xmax - (int)b.getX();
+			ymax = ymin - (int)b.getY();
+			xpan = 0;
+			ypan = 0;
+		}
+
+		/** Set the X and Y pan values */
+		protected void setPan(Point2D end) {
+			int x = (int)(end.getX() - start.getX());
+			xpan = limit(xmin, x, xmax);
+			int y = (int)(end.getY() - start.getY());
+			ypan = limit(ymin, y, ymax);
+		}
+
+		/** Drag the map pan */
+		protected void drag(Point p) {
+			if(!isStarted())
+				start();
+			setPan(p);
+			Rectangle bounds = getBounds();
+			synchronized(map) {
+				Graphics g = getGraphics();
+				g.drawImage(buffer, xpan, ypan, map);
+				g.setColor(getBackground());
+				if(xpan >= 0)
+					g.fillRect(0, 0, xpan, bounds.height);
+				else { 
+					g.fillRect(bounds.width + xpan, 0,
+						-xpan, bounds.height);
+				}
+				if(ypan >= 0)
+					g.fillRect(0, 0, bounds.width, ypan);
+				else { 
+					g.fillRect(0, bounds.height + ypan,
+						 bounds.width,-ypan);
+				}
+				g.dispose();
+			}
+		}
+
+		/** Finish panning the map */
+		protected void finish(Point2D end) {
+			setPan(end);
+			Point p = new Point(xpan, ypan);
+			try {
+				transform.inverseTransform(p, p);
+			}
+			catch(NoninvertibleTransformException e) {
+				e.printStackTrace();
+			}
+			setCursor(null);
+			Rectangle2D e = mapPane.getExtent();
+			setExtent(e.getX() - p.getX(), e.getY() - p.getY(),
+				e.getWidth(), e.getHeight());
+		}
+	}
+
+	/** Start a pan of the map */
+	protected void startPan(Point p) {
+		pan = new PanState(p);
 	}
 
 	/** Pan the map */
 	protected void doPan(Point p) {
-		Point start = start_pan;
-		if(start == null)
-			return;
-		if(panBuffer == null)
-			panBuffer = mapPane.getImage();
-		int x = (int)(p.getX() - start.getX());
-		int y = (int)(p.getY() - start.getY());
-		Rectangle bounds = getBounds();
-		Graphics g = getGraphics();
-		g.drawImage(panBuffer, x, y, this);
-		g.setColor(getBackground());
-		if(x >= 0)
-			g.fillRect(0, 0, x, bounds.height);
-		else  
-			g.fillRect(bounds.width + x, 0, -x, bounds.height);
-		if(y >= 0)
-			g.fillRect(0, 0, bounds.width, y);
-		else  
-			g.fillRect(0, bounds.height + y, bounds.width, -y);
-		g.dispose();
+		if(pan != null)
+			pan.drag(p);
 	}
 
 	/** Finish panning the map */
 	protected void finishPan(Point2D end) {
-		Point start = start_pan;
-		if(start == null)
-			return;
-		panBuffer = null;
-		if(Math.abs(start.getX() - end.getX()) < PAN_THRESHOLD &&
-		   Math.abs(start.getY() - end.getY()) < PAN_THRESHOLD)
-			return;
-		AffineTransform t = mapPane.getInverseTransform();
-		t.transform(start, start);
-		t.transform(end, end);
-		double x = start.getX() - end.getX();
-		double y = start.getY() - end.getY();
-		Rectangle2D e = mapPane.getExtent();
-		setExtent(e.getX() + x, e.getY() + y,
-			e.getWidth(), e.getHeight());
+		if(pan != null) {
+			if(pan.isStarted())
+				pan.finish(end);
+			pan = null;
+		}
 	}
 
 	/** Zoom in from the current extent */
 	protected void zoomIn(Point p) {
-		// FIXME: limit zooming in to some maximum value
 		Point2D c = transformPoint(p);
 		Rectangle2D e = mapPane.getExtent();
+		if(e.getWidth() < ZOOM_THRESHOLD ||
+		   e.getHeight() < ZOOM_THRESHOLD)
+			return;
 		double x = c.getX() - 0.8 * (c.getX() - e.getX());
 		double y = c.getY() - 0.8 * (c.getY() - e.getY());
 		double w = e.getWidth() * 0.8;
@@ -313,7 +368,6 @@ public class MapBean extends JComponent implements MapChangedListener {
 
 	/** Zoom out from the current extent */
 	protected void zoomOut(Point p) {
-		// FIXME: do not allow zooming out more than largest extent
 		Point2D c = transformPoint(p);
 		Rectangle2D e = mapPane.getExtent();
 		double x = c.getX() - 1.2 * (c.getX() - e.getX());
@@ -340,31 +394,35 @@ public class MapBean extends JComponent implements MapChangedListener {
 		Image image = mapPane.getImage();
 		if(image == null)
 			return;
-		g.drawImage(image, 0, 0, this);
-		g.transform(mapPane.getTransform());
-		if(mapPane.antialiased) {
-			g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-				RenderingHints.VALUE_ANTIALIAS_ON);
-		}
-		ListIterator<Theme> li = mapPane.getThemeIterator();
-		while(li.hasPrevious()) {
-			Theme t = li.previous();
-			t.paintSelections(g);
+		synchronized(map) {
+			g.drawImage(image, 0, 0, this);
+			g.transform(mapPane.getTransform());
+			if(mapPane.antialiased) {
+				g.setRenderingHint(
+					RenderingHints.KEY_ANTIALIASING,
+					RenderingHints.VALUE_ANTIALIAS_ON);
+			}
+			ListIterator<Theme> li = mapPane.getThemeIterator();
+			while(li.hasPrevious()) {
+				Theme t = li.previous();
+				t.paintSelections(g);
+			}
 		}
 	}
 
 	/** Paint the map component */
 	public void paintComponent(Graphics g) {
-		if(panBuffer != null)
+		if(pan != null)
 			return;
 		setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 		paint((Graphics2D)g);
-		setCursor(cursor);
+		setCursor(null);
 	}
 
 	/** When map changes, MapPane updates all change listeners */
 	public void mapChanged() {
-		repaint();
+		if(pan == null)
+			repaint();
 	}
 
 	/** Dispose of the map */

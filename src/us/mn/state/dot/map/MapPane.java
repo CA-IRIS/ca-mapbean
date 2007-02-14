@@ -309,6 +309,20 @@ public class MapPane extends Thread implements ThemeChangedListener {
 		return extent;
 	}
 
+	/** Get the full extent of all themes */
+	public Rectangle2D getThemeExtent() {
+		Rectangle2D extent = null;
+		for(Theme t: themes) {
+			Rectangle2D e = t.getExtent();
+			if(extent == null) {
+				extent = new Rectangle2D.Double();
+				extent.setRect(e);
+			} else
+				Rectangle2D.union(extent, e, extent);
+		}
+		return extent;
+	}
+
 	/**
 	 * Set the bounding box for display
 	 * @param x the new x-coordinate for the map.
@@ -317,7 +331,12 @@ public class MapPane extends Thread implements ThemeChangedListener {
 	 * @param height the new height for the map.
 	 */
 	public void setExtent(double x, double y, double width, double height) {
-		extent.setFrame(x, y, width, height);
-		rescale();
+		Rectangle2D.Double e = new Rectangle2D.Double(x, y, width,
+			height);
+		Rectangle2D.intersect(e, getThemeExtent(), e);
+		if(!e.equals(extent)) {
+			extent.setRect(e);
+			rescale();
+		}
 	}
 }
