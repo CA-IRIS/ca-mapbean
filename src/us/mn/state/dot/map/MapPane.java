@@ -27,7 +27,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
-
+import javax.swing.SwingUtilities;
 import us.mn.state.dot.map.event.MapChangedListener;
 import us.mn.state.dot.map.event.ThemeChangedEvent;
 import us.mn.state.dot.map.event.ThemeChangedListener;
@@ -39,7 +39,7 @@ import us.mn.state.dot.map.event.ThemeChangedListener;
  * @author Erik Engstrom
  * @author Douglas Lau
  */
-public class MapPane implements ThemeChangedListener {
+public class MapPane extends Thread implements ThemeChangedListener {
 
 	/** Minimum width/height of map pane */
 	static protected final int MIN_SIZE = 1;
@@ -82,6 +82,25 @@ public class MapPane implements ThemeChangedListener {
 	public MapPane(boolean a) {
 		antialiased = a;
 		setSize(new Dimension(MIN_SIZE, MIN_SIZE));
+		start();
+	}
+
+	/** Thread running flag */
+	protected boolean running = true;
+
+	/** Thread run method */
+	public void run() {
+		while(running) {
+			if(staticBufferDirty) {
+				staticBufferDirty = false;
+				updateStaticBuffer();
+			} else {
+				try {
+					Thread.sleep(250);
+				}
+				catch(InterruptedException e) {	}
+			}
+		}
 	}
 
 	/** Add a MapChangedListener to the MapPane */
@@ -146,6 +165,8 @@ public class MapPane implements ThemeChangedListener {
 		for(Theme t: themes)
 			t.dispose();
 		themes.clear();
+		listeners.clear();
+		running = false;
 	}
 
 	/** Change the scale of the map panel */
@@ -171,7 +192,9 @@ public class MapPane implements ThemeChangedListener {
 			(extent.getMaxY() * scale) + shiftY
 		);
 		transform.scale(scale, -scale);
-		try { inverseTransform = transform.createInverse(); }
+		try {
+			inverseTransform = transform.createInverse();
+		}
 		catch(NoninvertibleTransformException e) {
 			e.printStackTrace();
 		}
@@ -186,29 +209,42 @@ public class MapPane implements ThemeChangedListener {
 
 	/** Update the static buffer */
 	protected void updateStaticBuffer() {
-		Graphics2D g = staticBuffer.createGraphics();
+		BufferedImage sbuffer = staticBuffer;
+		Graphics2D g = sbuffer.createGraphics();
 		g.setBackground(background);
-		g.clearRect(0, 0, staticBuffer.getWidth(),
-			staticBuffer.getHeight());
+		g.clearRect(0, 0, sbuffer.getWidth(), sbuffer.getHeight());
 		g.transform(transform);
 		if(antialiased) {
 			g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 				RenderingHints.VALUE_ANTIALIAS_ON);
 		}
 		for(Theme t: themes) {
+			if(staticBufferDirty)
+				break;
 			if(!(t.layer instanceof DynamicLayer))
 				t.paint(g);
 		}
 		g.dispose();
-		staticBufferDirty = false;
+		if(!staticBufferDirty) {
+			bufferDirty = true;
+			SwingUtilities.invokeLater(new Runnable() {
+				public void run() {
+					notifyMapChangedListeners();
+				}
+			});
+		}
 	}
 
 	/** Update the screen buffer */
-	protected void updateScreenBuffer() {
-		Graphics2D g = screenBuffer.createGraphics();
-		if(staticBufferDirty)
-			updateStaticBuffer();
-		g.drawImage(staticBuffer, 0, 0, null);
+	protected BufferedImage updateScreenBuffer() {
+		BufferedImage sbuffer = screenBuffer;
+		Graphics2D g = sbuffer.createGraphics();
+		if(staticBufferDirty) {
+			g.setBackground(background);
+			g.clearRect(0, 0, sbuffer.getWidth(),
+				sbuffer.getHeight());
+		} else
+			g.drawImage(staticBuffer, 0, 0, null);
 		g.transform(transform);
 		if(antialiased) {
 			g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
@@ -220,13 +256,16 @@ public class MapPane implements ThemeChangedListener {
 		}
 		g.dispose();
 		bufferDirty = false;
+		return sbuffer;
 	}
 
 	/** Get the current image for the map panel */
 	public BufferedImage getImage() {
-		if(bufferDirty || staticBufferDirty)
-			updateScreenBuffer();
-		return screenBuffer;
+		BufferedImage sbuffer = screenBuffer;
+		if(bufferDirty)
+			return updateScreenBuffer();
+		else
+			return sbuffer;
 	}
 
 	/** Change a theme on the map panel */
