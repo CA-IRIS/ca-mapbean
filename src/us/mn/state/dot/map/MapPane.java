@@ -82,6 +82,7 @@ public class MapPane extends Thread implements ThemeChangedListener {
 	public MapPane(boolean a) {
 		antialiased = a;
 		setSize(new Dimension(MIN_SIZE, MIN_SIZE));
+		setDaemon(true);
 		start();
 	}
 
