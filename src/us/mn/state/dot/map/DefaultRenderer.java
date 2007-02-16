@@ -14,6 +14,8 @@
  */
 package us.mn.state.dot.map;
 
+import java.awt.Graphics2D;
+
 /**
  * The default implementation of LayerRenderer.
  * Shapes are all rendered with the same symbol.
@@ -33,8 +35,8 @@ public class DefaultRenderer extends AbstractRenderer {
 		symbols.add(symbol);
 	}
 
-	/** Get the symbol for the specified map object */
-	protected Symbol getSymbol(MapObject o) {
-		return symbol;
+	/** Render a map object on the map */
+	public void render(Graphics2D g, MapObject o) {
+		symbol.draw(g, o);
 	}
 }

@@ -49,15 +49,8 @@ abstract public class AbstractRenderer implements LayerRenderer {
 		return symbols;
 	}
 
-	/** Get the symbol for the specified map object */
-	abstract protected Symbol getSymbol(MapObject o);
-
 	/** Render a map object on the map */
-	public void render(Graphics2D g, MapObject o) {
-		Symbol s = getSymbol(o);
-		if(s != null)
-			s.draw(g, o);
-	}
+	abstract public void render(Graphics2D g, MapObject o);
 
 	/** Get tooltip text for the specified map object */
 	public String getTip(MapObject o) {

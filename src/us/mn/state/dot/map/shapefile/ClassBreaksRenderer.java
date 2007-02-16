@@ -14,6 +14,7 @@
  */
 package us.mn.state.dot.map.shapefile;
 
+import java.awt.Graphics2D;
 import java.util.LinkedList;
 import us.mn.state.dot.map.AbstractRenderer;
 import us.mn.state.dot.map.MapObject;
@@ -62,14 +63,22 @@ abstract public class ClassBreaksRenderer extends AbstractRenderer {
 	/** Get the symbol for the specified map object */
 	protected Symbol getSymbol(MapObject o) {
 		ShapeObject shapeObject = (ShapeObject)o;
-		Number number = (Number)shapeObject.getValue(field);
-		if(number == null)
-			return null;
-		double value = number.doubleValue();
-		for(ClassBreak b: breaks) {
-			if(value <= b.value)
-				return b.symbol;
+		Object value = shapeObject.getValue(field);
+		if(value instanceof Number) {
+			Number number = (Number)value;
+			double v = number.doubleValue();
+			for(ClassBreak b: breaks) {
+				if(v <= b.value)
+					return b.symbol;
+			}
 		}
 		return null;
+	}
+
+	/** Render a map object on the map */
+	public void render(Graphics2D g, MapObject o) {
+		Symbol s = getSymbol(o);
+		if(s != null)
+			s.draw(g, o);
 	}
 }
