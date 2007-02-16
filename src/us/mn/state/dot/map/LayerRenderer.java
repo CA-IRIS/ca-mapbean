@@ -18,7 +18,8 @@ import java.awt.Graphics2D;
 import java.util.List;
 
 /**
- * A LayerRenderer renders a layer on the map.
+ * A LayerRenderer contains a list of symbols which are used to draw object
+ * on the map.
  *
  * @author Erik Engstrom
  * @author Douglas Lau

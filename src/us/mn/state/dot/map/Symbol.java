@@ -18,7 +18,9 @@ import java.awt.Graphics2D;
 import javax.swing.Icon;
 
 /**
- * Interface for symbols used by themes to draw layer data.
+ * A symbol is an object which renders map objects onto a map. A layer
+ * renderer is responsible for selecting which symbol to use for a particular
+ * map object.
  *
  * @author Erik Engstrom
  * @author Douglas Lau
