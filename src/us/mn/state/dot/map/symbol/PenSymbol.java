@@ -15,21 +15,50 @@
 package us.mn.state.dot.map.symbol;
 
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Shape;
+import javax.swing.Icon;
 import us.mn.state.dot.map.MapObject;
 import us.mn.state.dot.map.Outline;
+import us.mn.state.dot.map.Symbol;
 
 /**
- * A pen symbol can stroke/fill any arbitrary map objects
+ * A pen symbol which can stroke/fill map objects.
  *
+ * @author Erik Engstrom
  * @author Douglas Lau
  */
-public class PenSymbol extends AbstractSymbol {
+public class PenSymbol implements Symbol {
+
+	/** Symbol label */
+	protected final String label;
+
+	/** Legend icon */
+	protected final Icon legend = new LegendIcon();
+
+	/** Fill color */
+	protected final Color fill_color;
+
+	/** Symbol outline */
+	protected final Outline outline;
 
 	/** Create a new pen symbol with given label, outline and fill color */
 	public PenSymbol(String l, Outline o, Color f) {
-		super(l, o, f);
+		label = l;
+		outline = o;
+		fill_color = f;
+	}
+
+	/** Get the symbol label */
+	public String getLabel() {
+		return label;
+	}
+
+	/** Get the legend icon */
+	public Icon getLegend() {
+		return legend;
 	}
 
 	/** Draw a shape on a graphics context */
@@ -45,8 +74,40 @@ public class PenSymbol extends AbstractSymbol {
 		}
 	}
 
-	/** Draw a shape on map with the pen symbol */
+	/** Draw a map object with the pen symbol */
 	public void draw(Graphics2D g, MapObject o) {
 		doDraw(g, o.getShape());
+	}
+
+	/** Inner class for icon displayed on the legend */
+	protected class LegendIcon implements Icon {
+
+		/** Width of icon */
+		static public final int WIDTH = 25;
+
+		/** Height of icon */
+		static public final int HEIGHT = 15;
+
+		/** Paint the icon onto the given component */
+		public void paintIcon(Component c, Graphics g, int x, int y) {
+			if(fill_color != null) {
+				g.setColor(fill_color);
+				g.fillRect(x + 1, y + 1, WIDTH - 2, HEIGHT - 2);
+			}
+			if(outline != null) {
+				g.setColor(outline.color);
+				g.drawRect(x, y, WIDTH - 1, HEIGHT - 1);
+			}
+		}
+
+		/** Get the icon width */
+		public int getIconWidth() {
+			return WIDTH;
+		}
+
+		/** Get the icon height */
+		public int getIconHeight() {
+			return HEIGHT;
+		}
 	}
 }
