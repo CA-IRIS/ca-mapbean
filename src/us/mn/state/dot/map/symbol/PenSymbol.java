@@ -51,6 +51,11 @@ public class PenSymbol implements Symbol {
 		fill_color = f;
 	}
 
+	/** Create a new pen symbol with no outline */
+	public PenSymbol(String l, Color f) {
+		this(l, null, f);
+	}
+
 	/** Get the symbol label */
 	public String getLabel() {
 		return label;
