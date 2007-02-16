@@ -28,13 +28,10 @@ import us.mn.state.dot.map.event.LayerChangedListener;
  */
 public interface Layer {
 
-	/** Get the name of this layer */
+	/** Get the name */
 	String getName();
 
-	/** Create the default theme */
-	Theme createTheme();
-
-	/** Get the extent of the layer */
+	/** Get the extent */
 	Rectangle2D getExtent();
 
 	/** Paint the layer */
@@ -49,4 +46,7 @@ public interface Layer {
 	/** Search the layer for a MapObject which is located at or near the
 	 * specified point */
 	MapObject search(Point2D p);
+
+	/** Create a new layer state */
+	LayerState createState();
 }

@@ -39,17 +39,17 @@ public class MapToolBar extends NavigationBar {
 		super(m);
 		menu.setBorderPainted(false);
 		menu.setAlignmentY(.5f);
-		menu.add(new ThemeMenu(map.getThemes()));
+		menu.add(new LayerMenu(map.getLayers()));
 		menu.add(legend);
 		add(menu, 0);
 	}
 
 	/** Add a theme legend to the tool bar */
-	public void addThemeLegend(Theme theme) {
-		String name = theme.getLayer().getName();
-		LayerRenderer r = theme.getCurrentLayerRenderer();
+	public void addThemeLegend(LayerState lstate) {
+		String name = lstate.getLayer().getName();
+		LayerRenderer r = lstate.getCurrentLayerRenderer();
 		LegendMenu l = new LegendMenu(name, r);
-		JComboBox combo = createRendererCombo(theme, l);
+		JComboBox combo = createRendererCombo(lstate, l);
 		if(combo != null) {
 			menu.add(combo);
 			legend.add(l);
@@ -58,11 +58,11 @@ public class MapToolBar extends NavigationBar {
 	}
 
 	/** Get the renderer selector combo box */
-	protected JComboBox createRendererCombo(final Theme theme,
+	protected JComboBox createRendererCombo(final LayerState lstate,
 		final LegendMenu legend)
 	{
 		final JComboBox combo = new JComboBox();
-		for(LayerRenderer r: theme.getLayerRenderers())
+		for(LayerRenderer r: lstate.getLayerRenderers())
 			combo.addItem(r);
 		if(combo.getItemCount() < 2)
 			return null;
@@ -70,7 +70,7 @@ public class MapToolBar extends NavigationBar {
 			public void actionPerformed(ActionEvent e) {
 				LayerRenderer r =
 					(LayerRenderer)combo.getSelectedItem();
-				theme.setCurrentLayerRenderer(r);
+				lstate.setCurrentLayerRenderer(r);
 				legend.setMapRenderer(r);
 			}
 		});

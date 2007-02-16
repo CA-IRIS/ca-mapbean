@@ -29,8 +29,8 @@ import java.util.ListIterator;
 import java.util.Set;
 import javax.swing.SwingUtilities;
 import us.mn.state.dot.map.event.MapChangedListener;
-import us.mn.state.dot.map.event.ThemeChangedEvent;
-import us.mn.state.dot.map.event.ThemeChangedListener;
+import us.mn.state.dot.map.event.LayerChangedEvent;
+import us.mn.state.dot.map.event.LayerChangedListener;
 
 /**
  * This class can be used to generate map graphics when access to the graphics
@@ -39,19 +39,19 @@ import us.mn.state.dot.map.event.ThemeChangedListener;
  * @author Erik Engstrom
  * @author Douglas Lau
  */
-public class MapPane extends Thread implements ThemeChangedListener {
+public class MapPane extends Thread implements LayerChangedListener {
 
 	/** Minimum width/height of map pane */
 	static protected final int MIN_SIZE = 1;
 
-	/** Buffer for static themes in map */
+	/** Buffer for static layers on map */
 	protected BufferedImage staticBuffer;
 
 	/** Buffer for map */
 	protected BufferedImage screenBuffer;
 
-	/** List of all themes */
-	protected final List<Theme> themes = new LinkedList<Theme>();
+	/** List of all layers */
+	protected final List<LayerState> lstates = new LinkedList<LayerState>();
 
 	/** Transform from world to screen coordinates */
 	protected final AffineTransform transform = new AffineTransform();
@@ -109,9 +109,9 @@ public class MapPane extends Thread implements ThemeChangedListener {
 		listeners.add(l);
 	}
 
-	/** Get the list of themes contained in the MapPane */
-	public List<Theme> getThemes() {
-		return new LinkedList<Theme>(themes);
+	/** Get the list of layer states contained in the MapPane */
+	public List<LayerState> getLayers() {
+		return new LinkedList<LayerState>(lstates);
 	}
 
 	/** Set the pixel size of the map panel */
@@ -135,37 +135,37 @@ public class MapPane extends Thread implements ThemeChangedListener {
 			screenBuffer.getHeight());
 	}
 
-	/** Add a new theme to the map */
-	public void addTheme(Theme theme) {
-		themes.add(theme);
-		theme.addThemeChangedListener(this);
+	/** Add a new layer to the map */
+	public void addLayer(LayerState lstate) {
+		lstates.add(lstate);
+		lstate.addLayerChangedListener(this);
 	}
 
-	/** Remove a theme from the map */
-	public void removeTheme(Theme theme) {
-		themes.remove(theme);
-		theme.removeThemeChangedListener(this);
+	/** Remove a layer from the map */
+	public void removeLayer(LayerState lstate) {
+		lstates.remove(lstate);
+		lstate.removeLayerChangedListener(this);
 	}
 
-	/** Get a list iterator for themes */
-	public ListIterator<Theme> getThemeIterator() {
-		return themes.listIterator(themes.size());
+	/** Get a list iterator for layers */
+	public ListIterator<LayerState> getLayerIterator() {
+		return lstates.listIterator(lstates.size());
 	}
 
-	/** Get the theme with the specified name */
-	public Theme getTheme(String name) {
-		for(Theme t: themes) {
-			if(name.equals(t.layer.getName()))
-				return t;
+	/** Get the layer with the specified name */
+	public LayerState getLayer(String name) {
+		for(LayerState s: lstates) {
+			if(name.equals(s.layer.getName()))
+				return s;
 		}
 		return null;
 	}
 
 	/** Dispose of the map pane */
 	public void dispose() {
-		for(Theme t: themes)
-			t.dispose();
-		themes.clear();
+		for(LayerState s: lstates)
+			s.dispose();
+		lstates.clear();
 		listeners.clear();
 		running = false;
 	}
@@ -219,11 +219,11 @@ public class MapPane extends Thread implements ThemeChangedListener {
 			g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 				RenderingHints.VALUE_ANTIALIAS_ON);
 		}
-		for(Theme t: themes) {
+		for(LayerState s: lstates) {
 			if(staticBufferDirty)
 				break;
-			if(!(t.layer instanceof DynamicLayer))
-				t.paint(g);
+			if(!(s.layer instanceof DynamicLayer))
+				s.paint(g);
 		}
 		g.dispose();
 		if(!staticBufferDirty) {
@@ -251,9 +251,9 @@ public class MapPane extends Thread implements ThemeChangedListener {
 			g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 				RenderingHints.VALUE_ANTIALIAS_ON);
 		}
-		for(Theme t: themes) {
-			if(t.layer instanceof DynamicLayer)
-				t.paint(g);
+		for(LayerState s: lstates) {
+			if(s.layer instanceof DynamicLayer)
+				s.paint(g);
 		}
 		g.dispose();
 		bufferDirty = false;
@@ -269,13 +269,14 @@ public class MapPane extends Thread implements ThemeChangedListener {
 			return sbuffer;
 	}
 
-	/** Change a theme on the map panel */
-	public void themeChanged(final ThemeChangedEvent event) {
+	/** Change a layer on the map panel */
+	public void layerChanged(final LayerChangedEvent event) {
 		switch(event.getReason()) {
-			case ThemeChangedEvent.DATA:
-			case ThemeChangedEvent.SHADE:
-				Theme theme = (Theme)event.getSource();
-				if(theme.layer instanceof DynamicLayer)
+			case LayerChangedEvent.DATA:
+			case LayerChangedEvent.SHADE:
+				LayerState lstate =
+					(LayerState)event.getSource();
+				if(lstate.layer instanceof DynamicLayer)
 					bufferDirty = true;
 				else
 					staticBufferDirty = true;
@@ -310,11 +311,11 @@ public class MapPane extends Thread implements ThemeChangedListener {
 		return extent;
 	}
 
-	/** Get the full extent of all themes */
-	public Rectangle2D getThemeExtent() {
+	/** Get the full extent of all layers */
+	public Rectangle2D getLayerExtent() {
 		Rectangle2D extent = null;
-		for(Theme t: themes) {
-			Rectangle2D e = t.getExtent();
+		for(LayerState s: lstates) {
+			Rectangle2D e = s.getExtent();
 			if(extent == null) {
 				extent = new Rectangle2D.Double();
 				extent.setRect(e);
@@ -334,7 +335,7 @@ public class MapPane extends Thread implements ThemeChangedListener {
 	public void setExtent(double x, double y, double width, double height) {
 		Rectangle2D.Double e = new Rectangle2D.Double(x, y, width,
 			height);
-		Rectangle2D.intersect(e, getThemeExtent(), e);
+		Rectangle2D.intersect(e, getLayerExtent(), e);
 		if(!e.equals(extent)) {
 			extent.setRect(e);
 			rescale();

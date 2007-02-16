@@ -70,6 +70,6 @@ abstract public class AbstractLayer implements Layer {
 			l.layerChanged(ev);
 	}
 
-	/** Create the default theme */
-	abstract public Theme createTheme();
+	/** Create a new layer state */
+	abstract public LayerState createState();
 }

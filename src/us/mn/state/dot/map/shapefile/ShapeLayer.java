@@ -27,10 +27,10 @@ import java.util.List;
 import us.mn.state.dot.map.AbstractLayer;
 import us.mn.state.dot.map.DefaultRenderer;
 import us.mn.state.dot.map.LayerRenderer;
+import us.mn.state.dot.map.LayerState;
 import us.mn.state.dot.map.MapObject;
 import us.mn.state.dot.map.Outline;
 import us.mn.state.dot.map.Symbol;
-import us.mn.state.dot.map.Theme;
 import us.mn.state.dot.map.symbol.PenSymbol;
 
 /**
@@ -149,9 +149,9 @@ public class ShapeLayer extends AbstractLayer {
 		return null;
 	}
 
-	/** Create the default theme */
-	public Theme createTheme() {
-		return new Theme(this, new DefaultRenderer(getSymbol()));
+	/** Create a new layer state */
+	public LayerState createState() {
+		return new LayerState(this, new DefaultRenderer(getSymbol()));
 	}
 
 	/** Paint the layer */

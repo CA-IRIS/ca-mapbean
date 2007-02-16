@@ -25,75 +25,71 @@ import java.util.Set;
 import javax.swing.SwingUtilities;
 import us.mn.state.dot.map.event.LayerChangedEvent;
 import us.mn.state.dot.map.event.LayerChangedListener;
-import us.mn.state.dot.map.event.ThemeChangedEvent;
-import us.mn.state.dot.map.event.ThemeChangedListener;
 
 /**
- * A theme is the rendering state for one layer on a map. Multiple themes can
- * share the same underlying layer for separate map components.
+ * Layer state is the rendering state for one layer on a map. Multiple layer
+ * states can share the same underlying layer for separate map components.
  * 
- * It can be made invisible and can listen for mouse actions.
+ * The layer state can be made invisible and can listen for mouse actions.
  *
  * @author Erik Engstrom
  * @author Douglas Lau
  */
-public class Theme implements LayerChangedListener {
+public class LayerState implements LayerChangedListener {
 
 	/** Empty selection special case (for equality comparisons) */
 	static protected final MapObject[] NO_SELECTION = new MapObject[0];
 
-	/** Layer controlled by the theme */
+	/** Layer this state is for */
 	public final Layer layer;
 
-	/** ThemeChangedListeners that listen to this theme */
-	protected final Set<ThemeChangedListener> listeners =
-		new HashSet<ThemeChangedListener>();
+	/** Listeners that listen to this layer state */
+	protected final Set<LayerChangedListener> listeners =
+		new HashSet<LayerChangedListener>();
 
-	/** List of available renderers for theme */
+	/** List of available layer renderers */
 	protected final List<LayerRenderer> renderers =
 		new LinkedList<LayerRenderer>();
 
-	/** The LayerRenderer used to paint this theme's layer */
+	/** Current LayerRenderer */
 	protected LayerRenderer renderer;
 
-	/** Selection renderer which paints object selections for the theme */
+	/** Selection renderer which paints object selections */
 	protected SelectionRenderer selectionRenderer;
 
 	/** Currently selected map objects */
 	protected MapObject[] selections = NO_SELECTION;
 
-	/** Visibility flag for this theme */
+	/** Visibility flag */
 	protected boolean visible = true;
 
 	/**
-	 * Create a new theme based on the layer parameter. It will have
-	 * no name and all shapes will be painted grey.
-	 * @param layer Layer this theme is base upon.
+	 * Create a new layer state.
+	 *
+	 * @param layer Layer this state is based upon.
 	 */
-	public Theme(Layer layer) {
+	public LayerState(Layer layer) {
 		this(layer, null, true);
 	}
 
 	/**
-	 * Create a new theme based on the layer parameter.  The LayerRenderer
-	 * referenced in the renderer parameter will be used to paint the theme.
+	 * Create a new layer state.
 	 *
-	 * @param layer Layer this theme is base upon.
+	 * @param layer Layer this state is based upon.
 	 * @param renderer LayerRenderer used to paint the layer.
 	 */
-	public Theme(Layer layer, LayerRenderer renderer) {
+	public LayerState(Layer layer, LayerRenderer renderer) {
 		this(layer, renderer, true);
 	}
 
 	/**
-	 * Create a new theme based on the layer parameter.  The LayerRenderer
-	 * referenced in the renderer parameter will be used to paint the theme.
+	 * Create a new layer state.
 	 *
-	 * @param layer Layer this theme is base upon.
+	 * @param layer Layer this state is based upon.
 	 * @param renderer LayerRenderer used to paint the layer.
-	 * @param visible Sets the visible flag of this theme.
+	 * @param visible The visible flag.
 	 */
-	public Theme(Layer layer, LayerRenderer renderer, boolean visible) {
+	public LayerState(Layer layer, LayerRenderer renderer, boolean visible) {
 		this.layer = layer;
 		this.renderer = renderer;
 		this.visible = visible;
@@ -101,7 +97,7 @@ public class Theme implements LayerChangedListener {
 		layer.addLayerChangedListener(this);
 	}
 
-	/** Dispose of the theme */
+	/** Dispose of the layer state */
 	public void dispose() {
 		layer.removeLayerChangedListener(this);
 		renderers.clear();
@@ -109,13 +105,13 @@ public class Theme implements LayerChangedListener {
 		selectionRenderer = null;
 	}
 
-	/** Add a LayerRenderer to this themes list of available renderers */
+	/** Add a LayerRenderer to this states list of available renderers */
 	public void addLayerRenderer(LayerRenderer renderer) {
 		renderers.add(renderer);
 	}
 
 	/** Get a List containing all of the renderers that have been
-	 * added to the theme */
+	 * added to the layer state */
 	public List<LayerRenderer> getLayerRenderers() {
 		return renderers;
 	}
@@ -124,7 +120,7 @@ public class Theme implements LayerChangedListener {
 	public void setCurrentLayerRenderer(LayerRenderer r) {
 		if(r != renderer) {
 			renderer = r;
-			notifyThemeChangedListeners(ThemeChangedEvent.SHADE);
+			notifyLayerChangedListeners(LayerChangedEvent.SHADE);
 		}
 	}
 
@@ -142,8 +138,8 @@ public class Theme implements LayerChangedListener {
 	public void setSelections(MapObject[] s) {
 		if(s != selections) {
 			selections = s;
-			notifyThemeChangedListeners(
-				ThemeChangedEvent.SELECTION);
+			notifyLayerChangedListeners(
+				LayerChangedEvent.SELECTION);
 		}
 	}
 
@@ -157,18 +153,18 @@ public class Theme implements LayerChangedListener {
 		return selections;
 	}
 
-	/** Get the extent of this theme */
+	/** Get the layer extent */
 	public Rectangle2D getExtent() {
 		return layer.getExtent();
 	}
 
-	/** Paint the theme */
+	/** Paint the layer */
 	public void paint(Graphics2D g) {
 		if(visible)
 			layer.paint(g, renderer);
 	}
 
-	/** Paint the selections for the theme */
+	/** Paint the selections for the layer */
 	public void paintSelections(Graphics2D g) {
 		MapObject[] sel = selections;
 		if(visible && selectionRenderer != null) {
@@ -192,42 +188,42 @@ public class Theme implements LayerChangedListener {
 		return visible;
 	}
 
-	/** Check if the theme is currently searchable */
+	/** Check if the layer is currently searchable */
 	protected boolean isSearchable() {
 		return visible && layer instanceof DynamicLayer;
 	}
 
-	/** Set the visibility of the theme */
+	/** Set the visibility of the layer */
 	public void setVisible(boolean v) {
 		if(v != visible) {
 			visible = v;
-			notifyThemeChangedListeners(ThemeChangedEvent.DATA);
+			notifyLayerChangedListeners(LayerChangedEvent.DATA);
 		}
 	}
 
-	/** Add a ThemeChangedListener to the listeners of this theme */
-	public void addThemeChangedListener(ThemeChangedListener l) {
+	/** Add a layer changed listener to this layer state */
+	public void addLayerChangedListener(LayerChangedListener l) {
 		listeners.add(l);
 	}
 
-	/** Remove a ThemeChangedListener from the listeners of this theme */
-	public void removeThemeChangedListener(ThemeChangedListener l) {
+	/** Remove a layer changed listener from this layer state */
+	public void removeLayerChangedListener(LayerChangedListener l) {
 		listeners.remove(l);
 	}
 
-	/** Notify all listeners that this theme has changed */
-	protected void notifyThemeChangedListeners(int reason) {
-		ThemeChangedEvent e = new ThemeChangedEvent(this, reason);
-		for(ThemeChangedListener l: listeners)
-			l.themeChanged(e);
+	/** Notify all listeners that this layer state has changed */
+	protected void notifyLayerChangedListeners(int reason) {
+		LayerChangedEvent e = new LayerChangedEvent(this, reason);
+		for(LayerChangedListener l: listeners)
+			l.layerChanged(e);
 	}
 
 	/** Deal with a layer changed event */
 	public void layerChanged(LayerChangedEvent e) {
-		notifyThemeChangedListeners(e.getReason());
+		notifyLayerChangedListeners(e.getReason());
 	}
 
-	/** Get the layer for this theme */
+	/** Get the layer */
 	public Layer getLayer() {
 		return layer;
 	}
@@ -238,7 +234,7 @@ public class Theme implements LayerChangedListener {
 	/** Process a right click on a map object */
 	protected void doRightClick(MouseEvent e, MapObject o) {}
 
-	/** Process a mouse click for the theme */
+	/** Process a mouse click for the layer */
 	public boolean doMouseClicked(MouseEvent e, Point2D p) {
 		if(isSearchable()) {
 			MapObject o = layer.search(p);

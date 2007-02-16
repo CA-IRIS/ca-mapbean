@@ -21,34 +21,36 @@ import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 
 /**
- * Menu for displaying a list of themes.
+ * Menu for displaying a list of layers.
  *
  * @author Erik Engstrom
  * @author Douglas Lau
  */
-public class ThemeMenu extends JMenu {
+public class LayerMenu extends JMenu {
 
-  	/** Create a new theme menu */
-  	public ThemeMenu(List<Theme> themes) {
-		super("Themes");
-		for(Theme t: themes)
-			add(new ThemeMenuItem(t));
+  	/** Create a new layer menu */
+  	public LayerMenu(List<LayerState> layers) {
+		super("Layers");
+		for(LayerState s: layers)
+			add(new LayerMenuItem(s));
   	}
 
-	/** MenuItem for displaying a theme.  When a check box is selected the
-	 * Theme is made visible.  If it is deselected then the Theme is made
+	/** MenuItem for displaying a layer.  When a check box is selected the
+	 * layer is made visible.  If it is deselected then the layer is made
 	 * invisible. */
-	protected class ThemeMenuItem extends JCheckBoxMenuItem {
+	protected class LayerMenuItem extends JCheckBoxMenuItem {
 
-		protected final Theme theme;
+		/** Layer state */
+		protected final LayerState lstate;
 
-		public ThemeMenuItem(Theme t) {
-			super(t.getLayer().getName());
-			theme = t;
-			setSelected(theme.isVisible());
+		/** Create a new layer menu item */
+		public LayerMenuItem(LayerState s) {
+			super(s.getLayer().getName());
+			lstate = s;
+			setSelected(lstate.isVisible());
 			addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					theme.setVisible(!theme.isVisible());
+					lstate.setVisible(!lstate.isVisible());
 				}
 			});
 		}

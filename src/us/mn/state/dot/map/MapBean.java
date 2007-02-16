@@ -129,57 +129,47 @@ public class MapBean extends JComponent implements MapChangedListener {
 	protected void doMouseClicked(MouseEvent e) {
 		boolean consumed = false;
 		Point2D p = transformPoint(e.getPoint());
-		ListIterator<Theme> it = mapPane.getThemeIterator();
+		ListIterator<LayerState> it = mapPane.getLayerIterator();
 		while(it.hasPrevious()) {
-			Theme t = it.previous();
+			LayerState s = it.previous();
 			if(consumed)
-				t.clearSelections();
+				s.clearSelections();
 			else
-				consumed = t.doMouseClicked(e, p);
+				consumed = s.doMouseClicked(e, p);
 		}
 	}
 
-	/** Add a new theme to the map */
-	public void addTheme(Theme theme) {
-		mapPane.addTheme(theme);
+	/** Add a new layer to the map */
+	public void addLayer(LayerState s) {
+		mapPane.addLayer(s);
 	}
 
-	/**
-	 * Add a List of themes to the Map
-	 * @param themes List of themes to be added to the map
-	 */
-	public void addThemes(List<Theme> themes) {
-		for(Theme t: themes)
-			addTheme(t);
+	/** Add a List of layers to the map */
+	public void addLayers(List<LayerState> layers) {
+		for(LayerState s: layers)
+			addLayer(s);
 	}
 
-	/** Remove a theme from the map */
-	public void removeTheme(String name) {
-		Theme theme = mapPane.getTheme(name);
-		if(theme != null)
-			removeTheme(theme);
+	/** Remove a layer from the map */
+	public void removeLayer(String name) {
+		LayerState s = mapPane.getLayer(name);
+		if(s != null)
+			removeLayer(s);
 	}
 
-	/** Remove a theme from the map */
-	protected void removeTheme(Theme theme) {
-		mapPane.removeTheme(theme);
+	/** Remove a layer from the map */
+	protected void removeLayer(LayerState s) {
+		mapPane.removeLayer(s);
 	}
 
-	/**
-	 * Gets the theme with the name name from the Map.
-	 * @param name the string containing the Name of layer to return.
-	 * @return Theme or null if not found.
-	 */
-	public Theme getTheme(String name) {
-		return mapPane.getTheme(name);
+	/** Get the layer with the matching name from the Map */
+	public LayerState getLayer(String name) {
+		return mapPane.getLayer(name);
 	}
 
-	/**
-	 * Returns a List of the themes contained by this Map.
-	 * @return List of current themes contained by this Map
-	 */
-	public List<Theme> getThemes() {
-		return mapPane.getThemes();
+	/** Get a list of the layers contained by this Map */
+	public List<LayerState> getLayers() {
+		return mapPane.getLayers();
 	}
 
 	/** Sets extent to home coordinates */
@@ -196,9 +186,9 @@ public class MapBean extends JComponent implements MapChangedListener {
 	/** Get the tooltip text for the given mouse event */
 	public String getToolTipText(MouseEvent e) {
 		Point2D p = transformPoint(e.getPoint());
-		ListIterator<Theme> it = mapPane.getThemeIterator();
+		ListIterator<LayerState> it = mapPane.getLayerIterator();
 		while(it.hasPrevious()) {
-			Theme t = it.previous();
+			LayerState t = it.previous();
 			String tip = t.getTip(p);
 			if(tip != null)
 				return tip;
@@ -274,7 +264,7 @@ public class MapBean extends JComponent implements MapChangedListener {
 
 		protected void calculateLimits() {
 			Rectangle2D e = mapPane.getExtent();
-			Rectangle2D te = mapPane.getThemeExtent();
+			Rectangle2D te = mapPane.getLayerExtent();
 			Point2D b = new Point2D.Double(e.getX() - te.getX(),
 				e.getY() - te.getY());
 			transform.transform(b, b);
@@ -409,10 +399,10 @@ public class MapBean extends JComponent implements MapChangedListener {
 			g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 				RenderingHints.VALUE_ANTIALIAS_ON);
 		}
-		ListIterator<Theme> li = mapPane.getThemeIterator();
+		ListIterator<LayerState> li = mapPane.getLayerIterator();
 		while(li.hasPrevious()) {
-			Theme t = li.previous();
-			t.paintSelections(g);
+			LayerState s = li.previous();
+			s.paintSelections(g);
 		}
 	}
 
