@@ -47,8 +47,8 @@ public class MapToolBar extends NavigationBar {
 	/** Add a theme legend to the tool bar */
 	public void addThemeLegend(LayerState lstate) {
 		String name = lstate.getLayer().getName();
-		LayerRenderer r = lstate.getCurrentLayerRenderer();
-		LegendMenu l = new LegendMenu(name, r);
+		Theme t = lstate.getTheme();
+		LegendMenu l = new LegendMenu(name, t);
 		JComboBox combo = createRendererCombo(lstate, l);
 		if(combo != null) {
 			menu.add(combo);
@@ -62,16 +62,15 @@ public class MapToolBar extends NavigationBar {
 		final LegendMenu legend)
 	{
 		final JComboBox combo = new JComboBox();
-		for(LayerRenderer r: lstate.getLayerRenderers())
-			combo.addItem(r);
+		for(Theme t: lstate.getThemes())
+			combo.addItem(t);
 		if(combo.getItemCount() < 2)
 			return null;
 		combo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				LayerRenderer r =
-					(LayerRenderer)combo.getSelectedItem();
-				lstate.setCurrentLayerRenderer(r);
-				legend.setMapRenderer(r);
+				Theme t = (Theme)combo.getSelectedItem();
+				lstate.setTheme(t);
+				legend.setTheme(t);
 			}
 		});
 		return combo;

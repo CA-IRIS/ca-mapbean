@@ -35,7 +35,7 @@ public interface Layer {
 	Rectangle2D getExtent();
 
 	/** Paint the layer */
-	void paint(Graphics2D g, LayerRenderer r);
+	void paint(Graphics2D g, Theme t);
 
 	/** Register a LayerChangedListener with the layer */
 	void addLayerChangedListener(LayerChangedListener listener);

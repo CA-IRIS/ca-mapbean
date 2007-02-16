@@ -47,12 +47,11 @@ public class LayerState implements LayerChangedListener {
 	protected final Set<LayerChangedListener> listeners =
 		new HashSet<LayerChangedListener>();
 
-	/** List of available layer renderers */
-	protected final List<LayerRenderer> renderers =
-		new LinkedList<LayerRenderer>();
+	/** List of available themes */
+	protected final List<Theme> themes = new LinkedList<Theme>();
 
-	/** Current LayerRenderer */
-	protected LayerRenderer renderer;
+	/** Current theme */
+	protected Theme theme;
 
 	/** Selection renderer which paints object selections */
 	protected SelectionRenderer selectionRenderer;
@@ -76,22 +75,22 @@ public class LayerState implements LayerChangedListener {
 	 * Create a new layer state.
 	 *
 	 * @param layer Layer this state is based upon.
-	 * @param renderer LayerRenderer used to paint the layer.
+	 * @param theme Theme used to paint the layer.
 	 */
-	public LayerState(Layer layer, LayerRenderer renderer) {
-		this(layer, renderer, true);
+	public LayerState(Layer layer, Theme theme) {
+		this(layer, theme, true);
 	}
 
 	/**
 	 * Create a new layer state.
 	 *
 	 * @param layer Layer this state is based upon.
-	 * @param renderer LayerRenderer used to paint the layer.
+	 * @param theme Theme used to paint the layer.
 	 * @param visible The visible flag.
 	 */
-	public LayerState(Layer layer, LayerRenderer renderer, boolean visible) {
+	public LayerState(Layer layer, Theme theme, boolean visible) {
 		this.layer = layer;
-		this.renderer = renderer;
+		this.theme = theme;
 		this.visible = visible;
 		selectionRenderer = null;
 		layer.addLayerChangedListener(this);
@@ -100,33 +99,32 @@ public class LayerState implements LayerChangedListener {
 	/** Dispose of the layer state */
 	public void dispose() {
 		layer.removeLayerChangedListener(this);
-		renderers.clear();
+		themes.clear();
 		listeners.clear();
 		selectionRenderer = null;
 	}
 
-	/** Add a LayerRenderer to this states list of available renderers */
-	public void addLayerRenderer(LayerRenderer renderer) {
-		renderers.add(renderer);
+	/** Add a theme to this layer state */
+	public void addTheme(Theme t) {
+		themes.add(t);
 	}
 
-	/** Get a List containing all of the renderers that have been
-	 * added to the layer state */
-	public List<LayerRenderer> getLayerRenderers() {
-		return renderers;
+	/** Get a list of all themes for this layer state */
+	public List<Theme> getThemes() {
+		return themes;
 	}
 
-	/** Set the current LayerRenderer */
-	public void setCurrentLayerRenderer(LayerRenderer r) {
-		if(r != renderer) {
-			renderer = r;
+	/** Set the theme */
+	public void setTheme(Theme t) {
+		if(t != theme) {
+			theme = t;
 			notifyLayerChangedListeners(LayerChangedEvent.SHADE);
 		}
 	}
 
-	/** Get the current layer renderer */
-	public LayerRenderer getCurrentLayerRenderer() {
-		return renderer;
+	/** Get the theme */
+	public Theme getTheme() {
+		return theme;
 	}
 
 	/** Set the selection renderer */
@@ -161,7 +159,7 @@ public class LayerState implements LayerChangedListener {
 	/** Paint the layer */
 	public void paint(Graphics2D g) {
 		if(visible)
-			layer.paint(g, renderer);
+			layer.paint(g, theme);
 	}
 
 	/** Paint the selections for the layer */
@@ -178,7 +176,7 @@ public class LayerState implements LayerChangedListener {
 		if(isSearchable()) {
 			MapObject o = layer.search(p);
 			if(o != null)
-				return renderer.getTip(o);
+				return theme.getTip(o);
 		}
 		return null;
 	}

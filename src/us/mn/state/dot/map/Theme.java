@@ -14,29 +14,28 @@
  */
 package us.mn.state.dot.map;
 
-import java.awt.Graphics2D;
 import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Abstract layer renderer
+ * A theme is a list of symbols for one layer of a map.
  *
  * @author Douglas Lau
  */
-abstract public class AbstractRenderer implements LayerRenderer {
+abstract public class Theme {
 
-	/** Name of renderer */
+	/** Name of theme */
 	protected final String name;
 
 	/** List of all symbols to render */
 	protected final LinkedList<Symbol> symbols = new LinkedList<Symbol>();
 
-	/** Create a new abstract renderer */
-	protected AbstractRenderer(String n) {
+	/** Create a new theme */
+	protected Theme(String n) {
 		name = n;
 	}
 
-	/** Get a string representation of the renderer */
+	/** Get a string representation of the theme */
 	public String toString() {
 		if(name == null)
 			return super.toString();
@@ -49,10 +48,10 @@ abstract public class AbstractRenderer implements LayerRenderer {
 		return symbols;
 	}
 
-	/** Render a map object on the map */
-	abstract public void render(Graphics2D g, MapObject o);
+	/** Get the symbol to draw a given map object */
+	abstract public Symbol getSymbol(MapObject o);
 
-	/** Get tooltip text for the specified map object */
+	/** Get tooltip text for the given map object */
 	public String getTip(MapObject o) {
 		return o.toString();
 	}

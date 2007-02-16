@@ -18,7 +18,7 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 
 /**
- * JMenu for displaying the Legend for a LayerRenderer.
+ * JMenu for displaying the Legend for a theme.
  *
  * @author Erik Engstrom
  * @author Douglas Lau
@@ -26,15 +26,15 @@ import javax.swing.JMenu;
 public class LegendMenu extends JMenu {
 
   	/** Create a new LegendMenu */
- 	public LegendMenu(String name, LayerRenderer r) {
+ 	public LegendMenu(String name, Theme t) {
 		super(name);
-		setMapRenderer(r);
+		setTheme(t);
 	}
 
-	/** Set the LayerRenderer that this menu displays */
-	public void setMapRenderer(LayerRenderer r) {
+	/** Set the theme that this menu displays */
+	public void setTheme(Theme t) {
 		removeAll();
-		for(Symbol s: r.getSymbols()) {
+		for(Symbol s: t.getSymbols()) {
 			JLabel l = new JLabel(s.getLabel());
 			l.setIcon(s.getLegend());
 			add(l);

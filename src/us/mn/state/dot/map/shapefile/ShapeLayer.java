@@ -25,12 +25,12 @@ import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
 import us.mn.state.dot.map.AbstractLayer;
-import us.mn.state.dot.map.DefaultRenderer;
-import us.mn.state.dot.map.LayerRenderer;
 import us.mn.state.dot.map.LayerState;
 import us.mn.state.dot.map.MapObject;
 import us.mn.state.dot.map.Outline;
+import us.mn.state.dot.map.SimpleTheme;
 import us.mn.state.dot.map.Symbol;
+import us.mn.state.dot.map.Theme;
 import us.mn.state.dot.map.symbol.PenSymbol;
 
 /**
@@ -151,13 +151,16 @@ public class ShapeLayer extends AbstractLayer {
 
 	/** Create a new layer state */
 	public LayerState createState() {
-		return new LayerState(this, new DefaultRenderer(getSymbol()));
+		return new LayerState(this, new SimpleTheme(getSymbol()));
 	}
 
 	/** Paint the layer */
-	public void paint(Graphics2D g, LayerRenderer renderer) {
-		for(ShapeObject s: shapes)
-			renderer.render(g, s);
+	public void paint(Graphics2D g, Theme theme) {
+		for(ShapeObject s: shapes) {
+			Symbol symbol = theme.getSymbol(s);
+			if(symbol != null)
+				symbol.draw(g, s);
+		}
 	}
 
 	/** Search for a shape which contains the specified point */

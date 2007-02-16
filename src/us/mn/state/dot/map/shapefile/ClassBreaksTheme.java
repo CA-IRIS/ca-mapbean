@@ -14,21 +14,20 @@
  */
 package us.mn.state.dot.map.shapefile;
 
-import java.awt.Graphics2D;
 import java.util.LinkedList;
-import us.mn.state.dot.map.AbstractRenderer;
 import us.mn.state.dot.map.MapObject;
 import us.mn.state.dot.map.Symbol;
+import us.mn.state.dot.map.Theme;
 import us.mn.state.dot.map.symbol.PenSymbol;
 
 /**
- * A renderer that renders objects base on a numeric field and a set of
- * class breaks.
+ * A theme that selects a symbol based on a numeric field and a set of class
+ * breaks.
  *
  * @author Erik Engstrom
  * @author Douglas Lau
  */
-abstract public class ClassBreaksRenderer extends AbstractRenderer {
+abstract public class ClassBreaksTheme extends Theme {
 
 	/** A field value and symbol together make up a class break */
 	class ClassBreak {
@@ -43,12 +42,12 @@ abstract public class ClassBreaksRenderer extends AbstractRenderer {
 	/** Field used to define the breaks */
 	protected final String field;
 
-	/** List of class breaks for the renderer */
+	/** List of class breaks */
 	protected final LinkedList<ClassBreak> breaks =
 		new LinkedList<ClassBreak>();
 
-	/** Create a new class breaks renderer */
-	public ClassBreaksRenderer(String field, String name) {
+	/** Create a new class breaks theme */
+	public ClassBreaksTheme(String field, String name) {
 		super(name);
 		this.field = field;
 	}
@@ -61,7 +60,7 @@ abstract public class ClassBreaksRenderer extends AbstractRenderer {
 	}
 
 	/** Get the symbol for the specified map object */
-	protected Symbol getSymbol(MapObject o) {
+	public Symbol getSymbol(MapObject o) {
 		ShapeObject shapeObject = (ShapeObject)o;
 		Object value = shapeObject.getValue(field);
 		if(value instanceof Number) {
@@ -73,12 +72,5 @@ abstract public class ClassBreaksRenderer extends AbstractRenderer {
 			}
 		}
 		return null;
-	}
-
-	/** Render a map object on the map */
-	public void render(Graphics2D g, MapObject o) {
-		Symbol s = getSymbol(o);
-		if(s != null)
-			s.draw(g, o);
 	}
 }
