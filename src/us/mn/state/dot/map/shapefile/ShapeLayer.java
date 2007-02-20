@@ -15,9 +15,6 @@
 package us.mn.state.dot.map.shapefile;
 
 import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.Shape;
-import java.awt.geom.Point2D;
 import java.io.IOException;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
@@ -27,10 +24,10 @@ import java.util.List;
 import us.mn.state.dot.map.Layer;
 import us.mn.state.dot.map.LayerState;
 import us.mn.state.dot.map.MapObject;
+import us.mn.state.dot.map.MapSearcher;
 import us.mn.state.dot.map.Outline;
 import us.mn.state.dot.map.SimpleTheme;
 import us.mn.state.dot.map.Symbol;
-import us.mn.state.dot.map.Theme;
 import us.mn.state.dot.map.symbol.PenSymbol;
 
 /**
@@ -154,20 +151,11 @@ public class ShapeLayer extends Layer {
 		return new LayerState(this, new SimpleTheme(getSymbol()));
 	}
 
-	/** Draw the layer */
-	public void draw(Graphics2D g, Theme theme) {
-		for(ShapeObject s: shapes) {
-			Symbol symbol = theme.getSymbol(s);
-			if(symbol != null)
-				symbol.draw(g, s);
-		}
-	}
-
-	/** Search for a shape which contains the specified point */
-	public MapObject search(Point2D p) {
-		for(ShapeObject s: shapes) {
-			if(s.getShape().contains(p))
-				return s;
+	/** Iterate through the shapes in the layer */
+	public MapObject forEach(MapSearcher s) {
+		for(ShapeObject o: shapes) {
+			if(s.next(o))
+				return o;
 		}
 		return null;
 	}

@@ -157,9 +157,17 @@ public class LayerState implements LayerChangedListener {
 	}
 
 	/** Paint the layer */
-	public void paint(Graphics2D g) {
-		if(visible)
-			layer.draw(g, theme);
+	public void paint(final Graphics2D g) {
+		if(visible) {
+			layer.forEach(new MapSearcher() {
+				public boolean next(MapObject o) {
+					Symbol s = theme.getSymbol(o);
+					if(s != null)
+						s.draw(g, o);
+					return false;
+				}
+			});
+		}
 	}
 
 	/** Paint the selections for the layer */
@@ -171,10 +179,19 @@ public class LayerState implements LayerChangedListener {
 		}
 	}
 
+	/** Search for an object which contains the specified point */
+	protected MapObject search(final Point2D p) {
+		return layer.forEach(new MapSearcher() {
+			public boolean next(MapObject o) {
+				return o.getShape().contains(p);
+			}
+		});
+	}
+
 	/** Get the appropriate tool tip text for the specified point */
 	public String getTip(Point2D p) {
 		if(isSearchable()) {
-			MapObject o = layer.search(p);
+			MapObject o = search(p);
 			if(o != null)
 				return theme.getTip(o);
 		}
@@ -235,7 +252,7 @@ public class LayerState implements LayerChangedListener {
 	/** Process a mouse click for the layer */
 	public boolean doMouseClicked(MouseEvent e, Point2D p) {
 		if(isSearchable()) {
-			MapObject o = layer.search(p);
+			MapObject o = search(p);
 			if(o != null) {
 				setSelections(new MapObject[] { o });
 				if(SwingUtilities.isLeftMouseButton(e))

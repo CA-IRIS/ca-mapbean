@@ -14,8 +14,6 @@
  */
 package us.mn.state.dot.map;
 
-import java.awt.Graphics2D;
-import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.HashSet;
 import java.util.Set;
@@ -74,10 +72,6 @@ abstract public class Layer {
 	/** Create a new layer state */
 	abstract public LayerState createState();
 
-	/** Draw the layer using the specified theme */
-	abstract public void draw(Graphics2D g, Theme t);
-
-	/** Search the layer for a MapObject which is located at or near the
-	 * specified point */
-	abstract public MapObject search(Point2D p);
+	/** Call the specified callback for each map object in the layer */
+	abstract public MapObject forEach(MapSearcher s);
 }
