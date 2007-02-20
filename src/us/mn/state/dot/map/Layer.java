@@ -17,6 +17,8 @@ package us.mn.state.dot.map;
 import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.util.HashSet;
+import java.util.Set;
 import us.mn.state.dot.map.event.LayerChangedEvent;
 import us.mn.state.dot.map.event.LayerChangedListener;
 
@@ -26,27 +28,56 @@ import us.mn.state.dot.map.event.LayerChangedListener;
  * @author Erik Engstrom
  * @author Douglas Lau
  */
-public interface Layer {
+abstract public class Layer {
 
-	/** Get the name */
-	String getName();
+	/** Layer name */
+	protected final String name;
 
-	/** Get the extent */
-	Rectangle2D getExtent();
+	/** Extent of layer */
+	protected final Rectangle2D extent = new Rectangle2D.Double();
 
-	/** Paint the layer */
-	void paint(Graphics2D g, Theme t);
+	/** Layer change listeners */
+	protected final Set<LayerChangedListener> listeners =
+		new HashSet<LayerChangedListener>();
 
-	/** Register a LayerChangedListener with the layer */
-	void addLayerChangedListener(LayerChangedListener listener);
+	/** Create a new layer */
+	public Layer(String n) {
+		name = n;
+	}
+
+	/** Get the name of the layer */
+	public String getName() {
+		return name;
+	}
+
+	/** Get the extent of the layer */
+	public Rectangle2D getExtent() {
+		return extent;
+	}
+
+	/** Add a listener that is notified when the layer changes */
+	public void addLayerChangedListener(LayerChangedListener l) {
+		listeners.add(l);
+	}
 
 	/** Remove a LayerChangedListener from the layer */
-	void removeLayerChangedListener(LayerChangedListener listener);
+	public void removeLayerChangedListener(LayerChangedListener l) {
+		listeners.remove(l);
+	}
+
+	/** Notify listeners that the layer has changed */
+	protected void notifyLayerChangedListeners(LayerChangedEvent e) {
+		for(LayerChangedListener l: listeners)
+			l.layerChanged(e);
+	}
+
+	/** Create a new layer state */
+	abstract public LayerState createState();
+
+	/** Draw the layer using the specified theme */
+	abstract public void draw(Graphics2D g, Theme t);
 
 	/** Search the layer for a MapObject which is located at or near the
 	 * specified point */
-	MapObject search(Point2D p);
-
-	/** Create a new layer state */
-	LayerState createState();
+	abstract public MapObject search(Point2D p);
 }

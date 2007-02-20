@@ -159,7 +159,7 @@ public class LayerState implements LayerChangedListener {
 	/** Paint the layer */
 	public void paint(Graphics2D g) {
 		if(visible)
-			layer.paint(g, theme);
+			layer.draw(g, theme);
 	}
 
 	/** Paint the selections for the layer */

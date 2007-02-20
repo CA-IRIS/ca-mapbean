@@ -24,7 +24,7 @@ import java.io.PrintStream;
 import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
-import us.mn.state.dot.map.AbstractLayer;
+import us.mn.state.dot.map.Layer;
 import us.mn.state.dot.map.LayerState;
 import us.mn.state.dot.map.MapObject;
 import us.mn.state.dot.map.Outline;
@@ -39,7 +39,7 @@ import us.mn.state.dot.map.symbol.PenSymbol;
  * @author Douglas Lau
  * @author Erik Engstrom
   */
-public class ShapeLayer extends AbstractLayer {
+public class ShapeLayer extends Layer {
 
 	/** List of fields in the Dbase file */
 	protected final LinkedList<String> fields;
@@ -66,7 +66,7 @@ public class ShapeLayer extends AbstractLayer {
 			throw new IOException("URL must be a '.shp' file");
 		ShapeFile s = new ShapeFile(url, verbose);
 		shapeType = s.getShapeType();
-		extent = s.getExtent();
+		extent.setRect(s.getExtent());
 		shapes = s.getShapeList();
 		fields = readDbaseFile(f);
 		if(verbose)
@@ -154,8 +154,8 @@ public class ShapeLayer extends AbstractLayer {
 		return new LayerState(this, new SimpleTheme(getSymbol()));
 	}
 
-	/** Paint the layer */
-	public void paint(Graphics2D g, Theme theme) {
+	/** Draw the layer */
+	public void draw(Graphics2D g, Theme theme) {
 		for(ShapeObject s: shapes) {
 			Symbol symbol = theme.getSymbol(s);
 			if(symbol != null)

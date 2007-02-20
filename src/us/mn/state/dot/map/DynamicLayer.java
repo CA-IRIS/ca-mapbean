@@ -22,5 +22,5 @@ package us.mn.state.dot.map;
  *
  * @author Douglas Lau
  */
-public interface DynamicLayer extends Layer {
+public interface DynamicLayer {
 }
