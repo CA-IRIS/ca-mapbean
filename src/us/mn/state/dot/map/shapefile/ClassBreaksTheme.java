@@ -17,7 +17,6 @@ package us.mn.state.dot.map.shapefile;
 import java.util.LinkedList;
 import us.mn.state.dot.map.MapObject;
 import us.mn.state.dot.map.Symbol;
-import us.mn.state.dot.map.Theme;
 import us.mn.state.dot.map.symbol.PenSymbol;
 
 /**
@@ -27,7 +26,7 @@ import us.mn.state.dot.map.symbol.PenSymbol;
  * @author Erik Engstrom
  * @author Douglas Lau
  */
-abstract public class ClassBreaksTheme extends Theme {
+abstract public class ClassBreaksTheme extends ShapeTheme {
 
 	/** A field value and symbol together make up a class break */
 	class ClassBreak {
@@ -42,14 +41,18 @@ abstract public class ClassBreaksTheme extends Theme {
 	/** Field used to define the breaks */
 	protected final String field;
 
+	/** Default symbol */
+	protected final Symbol symbol;
+
 	/** List of class breaks */
 	protected final LinkedList<ClassBreak> breaks =
 		new LinkedList<ClassBreak>();
 
 	/** Create a new class breaks theme */
-	public ClassBreaksTheme(String field, String name) {
-		super(name);
-		this.field = field;
+	public ClassBreaksTheme(String name, String f, Symbol s) {
+		super(name, s);
+		field = f;
+		symbol = s;
 	}
 
 	/** Add a break to this renderer */
@@ -71,6 +74,6 @@ abstract public class ClassBreaksTheme extends Theme {
 					return b.symbol;
 			}
 		}
-		return null;
+		return symbol;
 	}
 }

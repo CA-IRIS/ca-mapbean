@@ -30,4 +30,7 @@ public interface MapObject {
 
 	/** Get the map object transform */
 	public AffineTransform getTransform();
+
+	/** Get the inverse map object transform */
+	public AffineTransform getInverseTransform();
 }

@@ -14,6 +14,10 @@
  */
 package us.mn.state.dot.map;
 
+import java.awt.Graphics2D;
+import java.awt.Shape;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Point2D;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -27,12 +31,16 @@ abstract public class Theme {
 	/** Name of theme */
 	protected final String name;
 
+	/** Shape to draw with symbols */
+	protected final Shape shape;
+
 	/** List of all symbols to render */
 	protected final LinkedList<Symbol> symbols = new LinkedList<Symbol>();
 
 	/** Create a new theme */
-	protected Theme(String n) {
+	protected Theme(String n, Shape s) {
 		name = n;
+		shape = s;
 	}
 
 	/** Get a string representation of the theme */
@@ -47,6 +55,26 @@ abstract public class Theme {
 
 	/** Get the symbol to draw a given map object */
 	abstract public Symbol getSymbol(MapObject o);
+
+	/** Draw the specified map object */
+	public void draw(Graphics2D g, MapObject o) {
+		AffineTransform t = g.getTransform();
+		if(o.getTransform() != null)
+			g.transform(o.getTransform());
+		getSymbol(o).draw(g, shape);
+		g.setTransform(t);
+	}
+
+	/** Search a layer for a map object containing the given point */
+	public MapObject search(Layer layer, final Point2D p) {
+		return layer.forEach(new MapSearcher() {
+			public boolean next(MapObject o) {
+				AffineTransform t = o.getInverseTransform();
+				Point2D ip = t.transform(p, null);
+				return shape.contains(ip);
+			}
+		});
+	}
 
 	/** Get tooltip text for the given map object */
 	public String getTip(MapObject o) {

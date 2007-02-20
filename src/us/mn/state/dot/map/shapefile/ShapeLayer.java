@@ -26,7 +26,6 @@ import us.mn.state.dot.map.LayerState;
 import us.mn.state.dot.map.MapObject;
 import us.mn.state.dot.map.MapSearcher;
 import us.mn.state.dot.map.Outline;
-import us.mn.state.dot.map.SimpleTheme;
 import us.mn.state.dot.map.Symbol;
 import us.mn.state.dot.map.symbol.PenSymbol;
 
@@ -157,6 +156,6 @@ public class ShapeLayer extends Layer {
 
 	/** Create a new layer state */
 	public LayerState createState() {
-		return new LayerState(this, new SimpleTheme(getSymbol()));
+		return new LayerState(this, new ShapeTheme(getSymbol()));
 	}
 }

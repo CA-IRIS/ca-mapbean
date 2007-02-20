@@ -15,6 +15,7 @@
 package us.mn.state.dot.map;
 
 import java.awt.Graphics2D;
+import java.awt.Shape;
 import javax.swing.Icon;
 
 /**
@@ -33,6 +34,9 @@ public interface Symbol {
 	/** Get an icon to use for the legend */
 	Icon getLegend();
 
-	/** Draw the symbol for the specified map object */
+	/** Draw the symbol for the specified shape */
+	void draw(Graphics2D g, Shape s);
+
+	/** Draw the symbol for the specified shape */
 	void draw(Graphics2D g, MapObject o);
 }

@@ -67,7 +67,7 @@ public class PenSymbol implements Symbol {
 	}
 
 	/** Draw a shape on a graphics context */
-	protected void doDraw(Graphics2D g, Shape s) {
+	public void draw(Graphics2D g, Shape s) {
 		if(fill_color != null) {
 			g.setColor(fill_color);
 			g.fill(s);
@@ -81,7 +81,9 @@ public class PenSymbol implements Symbol {
 
 	/** Draw a map object with the pen symbol */
 	public void draw(Graphics2D g, MapObject o) {
-		doDraw(g, o.getShape());
+		Shape s = o.getShape();
+		if(s != null)
+			draw(g, s);
 	}
 
 	/** Inner class for icon displayed on the legend */

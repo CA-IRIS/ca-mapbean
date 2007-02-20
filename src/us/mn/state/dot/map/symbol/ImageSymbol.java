@@ -66,6 +66,9 @@ public class ImageSymbol implements Symbol {
 	public void setRotate(boolean rotate) {
 		this.rotate = rotate;
 	}
+
+	public void draw(Graphics2D g, Shape s) {
+	}
 	
 	/**
 	 * Draw the ImageSymbol.

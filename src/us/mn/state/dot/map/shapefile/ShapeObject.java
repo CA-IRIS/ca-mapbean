@@ -53,6 +53,11 @@ public class ShapeObject implements MapObject {
 		return null;
 	}
 
+	/** Get the inverse coordinate transform */
+	public AffineTransform getInverseTransform() {
+		return null;
+	}
+
 	/** Set the field mapping */
 	public void setFields(Map<String, Object> f) {
 		if(fields == null)
