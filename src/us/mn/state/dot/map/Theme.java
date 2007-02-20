@@ -37,10 +37,7 @@ abstract public class Theme {
 
 	/** Get a string representation of the theme */
 	public String toString() {
-		if(name == null)
-			return super.toString();
-		else
-			return name;
+		return name;
 	}
 
 	/** Get a list of all symbols */
