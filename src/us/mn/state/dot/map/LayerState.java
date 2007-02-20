@@ -17,6 +17,7 @@ package us.mn.state.dot.map;
 import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.event.MouseEvent;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.HashSet;
@@ -159,10 +160,12 @@ public class LayerState implements LayerChangedListener {
 
 	/** Paint the layer */
 	public void paint(final Graphics2D g) {
+		final AffineTransform t = g.getTransform();
 		if(visible) {
 			layer.forEach(new MapSearcher() {
 				public boolean next(MapObject o) {
 					theme.draw(g, o);
+					g.setTransform(t);
 					return false;
 				}
 			});

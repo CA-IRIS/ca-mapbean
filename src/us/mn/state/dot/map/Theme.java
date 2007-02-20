@@ -58,11 +58,8 @@ abstract public class Theme {
 
 	/** Draw the specified map object */
 	public void draw(Graphics2D g, MapObject o) {
-		AffineTransform t = g.getTransform();
-		if(o.getTransform() != null)
-			g.transform(o.getTransform());
+		g.transform(o.getTransform());
 		getSymbol(o).draw(g, shape);
-		g.setTransform(t);
 	}
 
 	/** Search a layer for a map object containing the given point */
