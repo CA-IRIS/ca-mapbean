@@ -146,11 +146,6 @@ public class ShapeLayer extends Layer {
 		return null;
 	}
 
-	/** Create a new layer state */
-	public LayerState createState() {
-		return new LayerState(this, new SimpleTheme(getSymbol()));
-	}
-
 	/** Iterate through the shapes in the layer */
 	public MapObject forEach(MapSearcher s) {
 		for(ShapeObject o: shapes) {
@@ -160,8 +155,8 @@ public class ShapeLayer extends Layer {
 		return null;
 	}
 
-	/** Get a list of all shape objects on the layer */
-	public List<ShapeObject> getShapes() {
-		return shapes;
+	/** Create a new layer state */
+	public LayerState createState() {
+		return new LayerState(this, new SimpleTheme(getSymbol()));
 	}
 }

@@ -21,7 +21,7 @@ import us.mn.state.dot.map.event.LayerChangedEvent;
 import us.mn.state.dot.map.event.LayerChangedListener;
 
 /**
- * A layer is a grouping of similar elements which are painted on the map.
+ * A layer is a grouping of similar MapObjects.
  *
  * @author Erik Engstrom
  * @author Douglas Lau
@@ -69,9 +69,9 @@ abstract public class Layer {
 			l.layerChanged(e);
 	}
 
-	/** Create a new layer state */
-	abstract public LayerState createState();
-
 	/** Call the specified callback for each map object in the layer */
 	abstract public MapObject forEach(MapSearcher s);
+
+	/** Create a new layer state */
+	abstract public LayerState createState();
 }
