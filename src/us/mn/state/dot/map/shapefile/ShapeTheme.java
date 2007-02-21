@@ -61,13 +61,11 @@ public class ShapeTheme extends Theme {
 	/** Draw a selected map object */
 	public void drawSelected(Graphics2D g, MapObject o) {
 		Shape shape = o.getShape();
-		float thickness = getThickness(shape);
-		Outline outline = Outline.createDashed(Color.WHITE,
-			thickness / 4);
+		Outline outline = Outline.createDashed(Color.WHITE, 20);
 		g.setColor(outline.color);
 		g.setStroke(outline.stroke);
 		g.draw(shape);
-		outline = Outline.createSolid(Color.WHITE, thickness);
+		outline = Outline.createSolid(Color.WHITE, getThickness(shape));
 		Shape ellipse = createEllipse(shape);
 		g.setStroke(outline.stroke);
 		g.draw(ellipse);
