@@ -14,12 +14,16 @@
  */
 package us.mn.state.dot.map;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.util.LinkedList;
 import java.util.List;
+import us.mn.state.dot.map.symbol.PenSymbol;
 
 /**
  * A theme is a list of symbols for one layer of a map.
@@ -60,6 +64,45 @@ abstract public class Theme {
 	public void draw(Graphics2D g, MapObject o) {
 		g.transform(o.getTransform());
 		getSymbol(o).draw(g, shape);
+	}
+
+	/** Get the width to use for the selected outline */
+	protected float getSelectedWidth(MapObject o) {
+		Symbol symbol = getSymbol(o);
+		if(symbol instanceof PenSymbol) {
+			PenSymbol ps = (PenSymbol)symbol;
+			if(ps.outline != null)
+				return 9 * ps.outline.width / 10;
+		}
+		return 25;
+	}
+
+	/** Get the thickness of the ellipse */
+	protected float getThickness(Shape s) {
+		Rectangle2D r = s.getBounds2D();
+		return (float)Math.min(r.getHeight(), r.getWidth()) / 2;
+	}
+
+	/** Create an ellipse around the given shape */
+	protected Shape createEllipse(Shape s) {
+		Rectangle2D r = s.getBounds2D();
+		return new Ellipse2D.Double(r.getCenterX() - r.getWidth(),
+			r.getCenterY() - r.getHeight(), r.getWidth() * 2,
+			r.getHeight() * 2);
+	}
+
+	/** Draw a selected map object */
+	public void drawSelected(Graphics2D g, MapObject o) {
+		g.transform(o.getTransform());
+		Outline outline = Outline.createDashed(Color.WHITE,
+			getSelectedWidth(o));
+		g.setColor(outline.color);
+		g.setStroke(outline.stroke);
+		g.draw(shape);
+		outline = Outline.createSolid(Color.WHITE, getThickness(shape));
+		Shape ellipse = createEllipse(shape);
+		g.setStroke(outline.stroke);
+		g.draw(ellipse);
 	}
 
 	/** Search a layer for a map object containing the given point */

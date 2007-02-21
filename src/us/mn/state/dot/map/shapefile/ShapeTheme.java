@@ -14,6 +14,7 @@
  */
 package us.mn.state.dot.map.shapefile;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.Shape;
@@ -21,6 +22,7 @@ import java.awt.geom.Point2D;
 import us.mn.state.dot.map.Layer;
 import us.mn.state.dot.map.MapObject;
 import us.mn.state.dot.map.MapSearcher;
+import us.mn.state.dot.map.Outline;
 import us.mn.state.dot.map.Symbol;
 import us.mn.state.dot.map.Theme;
 
@@ -54,6 +56,21 @@ public class ShapeTheme extends Theme {
 	/** Draw the specified map object */
 	public void draw(Graphics2D g, MapObject o) {
 		getSymbol(o).draw(g, o.getShape());
+	}
+
+	/** Draw a selected map object */
+	public void drawSelected(Graphics2D g, MapObject o) {
+		Shape shape = o.getShape();
+		float thickness = getThickness(shape);
+		Outline outline = Outline.createDashed(Color.WHITE,
+			thickness / 4);
+		g.setColor(outline.color);
+		g.setStroke(outline.stroke);
+		g.draw(shape);
+		outline = Outline.createSolid(Color.WHITE, thickness);
+		Shape ellipse = createEllipse(shape);
+		g.setStroke(outline.stroke);
+		g.draw(ellipse);
 	}
 
 	/** Search a layer for a map object containing the given point */

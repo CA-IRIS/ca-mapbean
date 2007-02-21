@@ -42,7 +42,7 @@ public class PenSymbol implements Symbol {
 	protected final Color fill_color;
 
 	/** Symbol outline */
-	protected final Outline outline;
+	public final Outline outline;
 
 	/** Create a new pen symbol with given label, outline and fill color */
 	public PenSymbol(String l, Outline o, Color f) {

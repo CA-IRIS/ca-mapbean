@@ -55,9 +55,6 @@ public class LayerState implements LayerChangedListener {
 	/** Current theme */
 	protected Theme theme;
 
-	/** Selection renderer which paints object selections */
-	protected SelectionRenderer selectionRenderer;
-
 	/** Currently selected map objects */
 	protected MapObject[] selections = NO_SELECTION;
 
@@ -94,7 +91,6 @@ public class LayerState implements LayerChangedListener {
 		this.layer = layer;
 		this.theme = theme;
 		this.visible = visible;
-		selectionRenderer = null;
 		layer.addLayerChangedListener(this);
 	}
 
@@ -103,7 +99,6 @@ public class LayerState implements LayerChangedListener {
 		layer.removeLayerChangedListener(this);
 		themes.clear();
 		listeners.clear();
-		selectionRenderer = null;
 	}
 
 	/** Add a theme to this layer state */
@@ -127,11 +122,6 @@ public class LayerState implements LayerChangedListener {
 	/** Get the theme */
 	public Theme getTheme() {
 		return theme;
-	}
-
-	/** Set the selection renderer */
-	public void setSelectionRenderer(SelectionRenderer r) {
-		selectionRenderer = r;
 	}
 
 	/** Set the selected map objects */
@@ -160,8 +150,8 @@ public class LayerState implements LayerChangedListener {
 
 	/** Paint the layer */
 	public void paint(final Graphics2D g) {
-		final AffineTransform t = g.getTransform();
 		if(visible) {
+			final AffineTransform t = g.getTransform();
 			layer.forEach(new MapSearcher() {
 				public boolean next(MapObject o) {
 					theme.draw(g, o);
@@ -174,10 +164,13 @@ public class LayerState implements LayerChangedListener {
 
 	/** Paint the selections for the layer */
 	public void paintSelections(Graphics2D g) {
-		MapObject[] sel = selections;
-		if(visible && selectionRenderer != null) {
-			for(MapObject s: sel)
-				selectionRenderer.render(g, s);
+		if(visible) {
+			AffineTransform t = g.getTransform();
+			MapObject[] sel = selections;
+			for(MapObject o: sel) {
+				theme.drawSelected(g, o);
+				g.setTransform(t);
+			}
 		}
 	}
 

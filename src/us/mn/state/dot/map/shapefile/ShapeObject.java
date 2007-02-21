@@ -30,6 +30,10 @@ import us.mn.state.dot.map.MapObject;
  */
 public class ShapeObject implements MapObject {
 
+	/** Identity transform */
+	static protected final AffineTransform IDENTITY_TRANSFORM =
+		new AffineTransform();
+
 	/** Geometric shape data */
 	protected final Shape shape;
 
@@ -50,12 +54,12 @@ public class ShapeObject implements MapObject {
 
 	/** Get the coordinate transform */
 	public AffineTransform getTransform() {
-		return null;
+		return IDENTITY_TRANSFORM;
 	}
 
 	/** Get the inverse coordinate transform */
 	public AffineTransform getInverseTransform() {
-		return null;
+		return IDENTITY_TRANSFORM;
 	}
 
 	/** Set the field mapping */
