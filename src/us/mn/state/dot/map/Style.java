@@ -12,7 +12,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  */
-package us.mn.state.dot.map.symbol;
+package us.mn.state.dot.map;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -20,19 +20,16 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Shape;
 import javax.swing.Icon;
-import us.mn.state.dot.map.MapObject;
-import us.mn.state.dot.map.Outline;
-import us.mn.state.dot.map.Symbol;
 
 /**
- * A pen symbol which can stroke/fill map objects.
+ * A style for stroke/fill of map objects.
  *
- * @author Erik Engstrom
  * @author Douglas Lau
+ * @author Erik Engstrom
  */
-public class PenSymbol implements Symbol {
+public class Style {
 
-	/** Symbol label */
+	/** Style label */
 	protected final String label;
 
 	/** Legend icon */
@@ -41,22 +38,22 @@ public class PenSymbol implements Symbol {
 	/** Fill color */
 	protected final Color fill_color;
 
-	/** Symbol outline */
+	/** Outline style */
 	public final Outline outline;
 
-	/** Create a new pen symbol with given label, outline and fill color */
-	public PenSymbol(String l, Outline o, Color f) {
+	/** Create a style with given label, outline and fill color */
+	public Style(String l, Outline o, Color f) {
 		label = l;
 		outline = o;
 		fill_color = f;
 	}
 
-	/** Create a new pen symbol with no outline */
-	public PenSymbol(String l, Color f) {
+	/** Create a new style with no outline */
+	public Style(String l, Color f) {
 		this(l, null, f);
 	}
 
-	/** Get the symbol label */
+	/** Get the style label */
 	public String getLabel() {
 		return label;
 	}

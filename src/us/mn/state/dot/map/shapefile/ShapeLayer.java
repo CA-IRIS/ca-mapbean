@@ -26,8 +26,7 @@ import us.mn.state.dot.map.LayerState;
 import us.mn.state.dot.map.MapObject;
 import us.mn.state.dot.map.MapSearcher;
 import us.mn.state.dot.map.Outline;
-import us.mn.state.dot.map.Symbol;
-import us.mn.state.dot.map.symbol.PenSymbol;
+import us.mn.state.dot.map.Style;
 
 /**
  * ShapeLayer is a class for drawing ESRI shape files.
@@ -119,27 +118,27 @@ public class ShapeLayer extends Layer {
 			s.setFields(in.nextRecord());
 	}
 
-	/** Get the symbol to draw the shape layer */
-	protected Symbol getSymbol() {
+	/** Get the style to draw the shape layer */
+	protected Style getStyle() {
 		switch(shapeType) {
 			case ShapeFile.POINT:
-				return new PenSymbol("Point",
+				return new Style("Point",
 					Outline.createSolid(Color.GREEN, 40),
 					Color.WHITE);
 			case ShapeFile.POINT_Z:
-				return new PenSymbol("PointZ",
+				return new Style("PointZ",
 					Outline.createSolid(Color.BLACK, 20),
 					Color.WHITE);
 			case ShapeFile.POLYLINE:
-				return new PenSymbol("PolyLine",
+				return new Style("PolyLine",
 					Outline.createSolid(Color.BLACK, 20),
 					null);
 			case ShapeFile.POLYLINE_M:
-				return new PenSymbol("PolyLineZ",
+				return new Style("PolyLineZ",
 					Outline.createSolid(Color.BLACK, 20),
 					null);
 			case ShapeFile.POLYGON:
-				return new PenSymbol("Polygon", null,
+				return new Style("Polygon", null,
 					Color.BLACK);
 		}
 		return null;
@@ -156,6 +155,6 @@ public class ShapeLayer extends Layer {
 
 	/** Create a new layer state */
 	public LayerState createState() {
-		return new LayerState(this, new ShapeTheme(getSymbol()));
+		return new LayerState(this, new ShapeTheme(getStyle()));
 	}
 }

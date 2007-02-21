@@ -23,10 +23,9 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.LinkedList;
 import java.util.List;
-import us.mn.state.dot.map.symbol.PenSymbol;
 
 /**
- * A theme is a list of symbols for one layer of a map.
+ * A theme is a collection of symbols for one layer of a map.
  *
  * @author Douglas Lau
  */
@@ -35,11 +34,11 @@ abstract public class Theme {
 	/** Name of theme */
 	protected final String name;
 
-	/** Shape to draw with symbols */
+	/** Default shape */
 	protected final Shape shape;
 
-	/** List of all symbols to render */
-	protected final LinkedList<Symbol> symbols = new LinkedList<Symbol>();
+	/** List of all styles */
+	protected final LinkedList<Style> styles = new LinkedList<Style>();
 
 	/** Create a new theme */
 	protected Theme(String n, Shape s) {
@@ -52,28 +51,25 @@ abstract public class Theme {
 		return name;
 	}
 
-	/** Get a list of all symbols */
-	public List<Symbol> getSymbols() {
-		return symbols;
+	/** Get a list of all styles */
+	public List<Style> getStyles() {
+		return styles;
 	}
 
-	/** Get the symbol to draw a given map object */
-	abstract public Symbol getSymbol(MapObject o);
+	/** Get the style to draw a given map object */
+	abstract public Style getStyle(MapObject o);
 
 	/** Draw the specified map object */
 	public void draw(Graphics2D g, MapObject o) {
 		g.transform(o.getTransform());
-		getSymbol(o).draw(g, shape);
+		getStyle(o).draw(g, shape);
 	}
 
 	/** Get the width to use for the selected outline */
 	protected float getSelectedWidth(MapObject o) {
-		Symbol symbol = getSymbol(o);
-		if(symbol instanceof PenSymbol) {
-			PenSymbol ps = (PenSymbol)symbol;
-			if(ps.outline != null)
-				return 9 * ps.outline.width / 10;
-		}
+		Style style = getStyle(o);
+		if(style.outline != null)
+			return 9 * style.outline.width / 10;
 		return 25;
 	}
 

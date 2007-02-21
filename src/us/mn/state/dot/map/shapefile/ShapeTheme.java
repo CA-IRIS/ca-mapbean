@@ -23,7 +23,7 @@ import us.mn.state.dot.map.Layer;
 import us.mn.state.dot.map.MapObject;
 import us.mn.state.dot.map.MapSearcher;
 import us.mn.state.dot.map.Outline;
-import us.mn.state.dot.map.Symbol;
+import us.mn.state.dot.map.Style;
 import us.mn.state.dot.map.Theme;
 
 /**
@@ -33,31 +33,31 @@ import us.mn.state.dot.map.Theme;
  */
 public class ShapeTheme extends Theme {
 
-	/** Symbol to render */
-	protected final Symbol symbol;
+	/** Style to draw map objects */
+	protected final Style style;
 
 	/** Create a new shape theme */
-	public ShapeTheme(String name, Symbol sym, Shape s) {
+	public ShapeTheme(String name, Style sty, Shape s) {
 		super(name, s);
-		symbol = sym;
-		symbols.add(symbol);
+		style = sty;
+		styles.add(style);
 	}
 
 	/** Create a new shape theme */
-	public ShapeTheme(String name, Symbol sym) {
-		this(name, sym, new Rectangle(0, 0, 200, 200));
+	public ShapeTheme(String name, Style sty) {
+		this(name, sty, new Rectangle(0, 0, 200, 200));
 	}
 
 	/** Create a new shape theme */
-	public ShapeTheme(Symbol sym) {
-		this(sym.getLabel(), sym);
+	public ShapeTheme(Style sty) {
+		this(sty.getLabel(), sty);
 	}
 
 	/** Draw the specified map object */
 	public void draw(Graphics2D g, MapObject o) {
 		if(o instanceof ShapeObject) {
 			ShapeObject so = (ShapeObject)o;
-			getSymbol(so).draw(g, so.getShape());
+			getStyle(so).draw(g, so.getShape());
 		}
 	}
 
@@ -87,8 +87,8 @@ public class ShapeTheme extends Theme {
 		});
 	}
 
-	/** Get the symbol to draw a given map object */
-	public Symbol getSymbol(MapObject o) {
-		return symbol;
+	/** Get the style to draw a given map object */
+	public Style getStyle(MapObject o) {
+		return style;
 	}
 }

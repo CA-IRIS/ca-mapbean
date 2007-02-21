@@ -16,8 +16,7 @@ package us.mn.state.dot.map.shapefile;
 
 import java.util.LinkedList;
 import us.mn.state.dot.map.MapObject;
-import us.mn.state.dot.map.Symbol;
-import us.mn.state.dot.map.symbol.PenSymbol;
+import us.mn.state.dot.map.Style;
 
 /**
  * A theme that selects a symbol based on a numeric field and a set of class
@@ -28,52 +27,52 @@ import us.mn.state.dot.map.symbol.PenSymbol;
  */
 abstract public class ClassBreaksTheme extends ShapeTheme {
 
-	/** A field value and symbol together make up a class break */
+	/** A field value and style together make up a class break */
 	class ClassBreak {
 		public final double value;
-		public final PenSymbol symbol;
-		public ClassBreak(double v, PenSymbol s) {
+		public final Style style;
+		public ClassBreak(double v, Style s) {
 			value = v;
-			symbol = s;
+			style = s;
 		}
 	}
 
 	/** Field used to define the breaks */
 	protected final String field;
 
-	/** Default symbol */
-	protected final Symbol symbol;
+	/** Default style */
+	protected final Style style;
 
 	/** List of class breaks */
 	protected final LinkedList<ClassBreak> breaks =
 		new LinkedList<ClassBreak>();
 
 	/** Create a new class breaks theme */
-	public ClassBreaksTheme(String name, String f, Symbol s) {
+	public ClassBreaksTheme(String name, String f, Style s) {
 		super(name, s);
 		field = f;
-		symbol = s;
+		style = s;
 	}
 
 	/** Add a break to this renderer */
-	public void addBreak(double v, PenSymbol s) {
+	public void addBreak(double v, Style s) {
 		ClassBreak b = new ClassBreak(v, s);
 		breaks.add(b);
-		symbols.add(s);
+		styles.add(s);
 	}
 
-	/** Get the symbol for the specified map object */
-	public Symbol getSymbol(MapObject o) {
-		ShapeObject shapeObject = (ShapeObject)o;
-		Object value = shapeObject.getValue(field);
+	/** Get the style for the specified map object */
+	public Style getStyle(MapObject o) {
+		ShapeObject so = (ShapeObject)o;
+		Object value = so.getValue(field);
 		if(value instanceof Number) {
 			Number number = (Number)value;
 			double v = number.doubleValue();
 			for(ClassBreak b: breaks) {
 				if(v <= b.value)
-					return b.symbol;
+					return b.style;
 			}
 		}
-		return symbol;
+		return style;
 	}
 }
