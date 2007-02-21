@@ -51,18 +51,24 @@ abstract public class Theme {
 		return name;
 	}
 
-	/** Get a list of all styles */
-	public List<Style> getStyles() {
-		return styles;
+	/** Get a list of all symbols */
+	public List<Symbol> getSymbols() {
+		LinkedList<Symbol> symbols = new LinkedList<Symbol>();
+		for(Style s: styles)
+			symbols.add(new VectorSymbol(s, shape));
+		return symbols;
 	}
 
 	/** Get the style to draw a given map object */
 	abstract public Style getStyle(MapObject o);
 
+	/** Get the symbol to draw a given map object */
+	abstract public Symbol getSymbol(MapObject o);
+
 	/** Draw the specified map object */
 	public void draw(Graphics2D g, MapObject o) {
 		g.transform(o.getTransform());
-		getStyle(o).draw(g, shape);
+		getSymbol(o).draw(g);
 	}
 
 	/** Get the width to use for the selected outline */

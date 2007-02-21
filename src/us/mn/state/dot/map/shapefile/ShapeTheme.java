@@ -24,7 +24,9 @@ import us.mn.state.dot.map.MapObject;
 import us.mn.state.dot.map.MapSearcher;
 import us.mn.state.dot.map.Outline;
 import us.mn.state.dot.map.Style;
+import us.mn.state.dot.map.Symbol;
 import us.mn.state.dot.map.Theme;
+import us.mn.state.dot.map.VectorSymbol;
 
 /**
  * A simple theme which uses one symbol to draw all shape objects.
@@ -53,29 +55,19 @@ public class ShapeTheme extends Theme {
 		this(sty.getLabel(), sty);
 	}
 
-	/** Draw the specified map object */
-	public void draw(Graphics2D g, MapObject o) {
-		if(o instanceof ShapeObject) {
-			ShapeObject so = (ShapeObject)o;
-			getStyle(so).draw(g, so.getShape());
-		}
-	}
-
 	/** Draw a selected map object */
 	public void drawSelected(Graphics2D g, MapObject o) {
-		if(o instanceof ShapeObject) {
-			ShapeObject so = (ShapeObject)o;
-			Shape shape = so.getShape();
-			Outline outline = Outline.createDashed(Color.WHITE, 20);
-			g.setColor(outline.color);
-			g.setStroke(outline.stroke);
-			g.draw(shape);
-			outline = Outline.createSolid(Color.WHITE,
-				getThickness(shape));
-			Shape ellipse = createEllipse(shape);
-			g.setStroke(outline.stroke);
-			g.draw(ellipse);
-		}
+		ShapeObject so = (ShapeObject)o;
+		Shape shape = so.getShape();
+		Outline outline = Outline.createDashed(Color.WHITE, 20);
+		g.setColor(outline.color);
+		g.setStroke(outline.stroke);
+		g.draw(shape);
+		outline = Outline.createSolid(Color.WHITE,
+			getThickness(shape));
+		Shape ellipse = createEllipse(shape);
+		g.setStroke(outline.stroke);
+		g.draw(ellipse);
 	}
 
 	/** Search a layer for a map object containing the given point */
@@ -90,5 +82,11 @@ public class ShapeTheme extends Theme {
 	/** Get the style to draw a given map object */
 	public Style getStyle(MapObject o) {
 		return style;
+	}
+
+	/** Get a symbol to draw a given map object */
+	public Symbol getSymbol(MapObject o) {
+		ShapeObject so = (ShapeObject)o;
+		return new VectorSymbol(getStyle(o), so.getShape());
 	}
 }

@@ -15,31 +15,22 @@
 package us.mn.state.dot.map;
 
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Shape;
-import javax.swing.Icon;
 
 /**
  * A style for stroke/fill of map objects.
  *
  * @author Douglas Lau
- * @author Erik Engstrom
  */
 public class Style {
 
 	/** Style label */
 	protected final String label;
 
-	/** Legend icon */
-	protected final Icon legend = new LegendIcon();
-
-	/** Fill color */
-	protected final Color fill_color;
-
 	/** Outline style */
 	public final Outline outline;
+
+	/** Fill color */
+	public final Color fill_color;
 
 	/** Create a style with given label, outline and fill color */
 	public Style(String l, Outline o, Color f) {
@@ -56,55 +47,5 @@ public class Style {
 	/** Get the style label */
 	public String getLabel() {
 		return label;
-	}
-
-	/** Get the legend icon */
-	public Icon getLegend() {
-		return legend;
-	}
-
-	/** Draw a shape on a graphics context */
-	public void draw(Graphics2D g, Shape s) {
-		if(fill_color != null) {
-			g.setColor(fill_color);
-			g.fill(s);
-		}
-		if(outline != null) {
-			g.setColor(outline.color);
-			g.setStroke(outline.stroke);
-			g.draw(s);
-		}
-	}
-
-	/** Inner class for icon displayed on the legend */
-	protected class LegendIcon implements Icon {
-
-		/** Width of icon */
-		static public final int WIDTH = 25;
-
-		/** Height of icon */
-		static public final int HEIGHT = 15;
-
-		/** Paint the icon onto the given component */
-		public void paintIcon(Component c, Graphics g, int x, int y) {
-			if(fill_color != null) {
-				g.setColor(fill_color);
-				g.fillRect(x + 1, y + 1, WIDTH - 2, HEIGHT - 2);
-			}
-			if(outline != null) {
-				g.setColor(outline.color);
-				g.drawRect(x, y, WIDTH - 1, HEIGHT - 1);
-			}
-		}
-
-		/** Get the icon width */
-		public int getIconWidth() {
-			return WIDTH;
-		}
-
-		/** Get the icon height */
-		public int getIconHeight() {
-			return HEIGHT;
-		}
 	}
 }

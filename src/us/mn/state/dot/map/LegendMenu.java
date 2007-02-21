@@ -34,7 +34,7 @@ public class LegendMenu extends JMenu {
 	/** Set the theme that this menu displays */
 	public void setTheme(Theme t) {
 		removeAll();
-		for(Style s: t.getStyles()) {
+		for(Symbol s: t.getSymbols()) {
 			JLabel l = new JLabel(s.getLabel());
 			l.setIcon(s.getLegend());
 			add(l);
