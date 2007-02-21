@@ -12,90 +12,74 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  */
-package us.mn.state.dot.map.symbol;
+package us.mn.state.dot.map;
 
 import java.awt.Dimension;
 import java.awt.Graphics2D;
-import java.awt.Shape;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.Rectangle2D;
-
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
-import us.mn.state.dot.map.MapObject;
-import us.mn.state.dot.map.Symbol;
-
 /**
- * Symol for painting MapObjects as images.
+ * Symol for drawing MapObjects as raster images.
  *
  * @author Erik Engstrom
  * @author Douglas Lau
  */
-public class ImageSymbol implements Symbol {
+public class RasterSymbol implements Symbol {
 
-	/** Flag indicating if the image should be rotated when drawn 
-	 * on the Graphics context */
-	protected boolean rotate = true;
-	
+	/** Symbol label */
 	protected final String label;
 
+	/** Image icon raster graphic */
 	protected final ImageIcon icon;
 
+	/** Symbol size */
 	protected Dimension size;
 
-	/** Create a new image symbol */
-	public ImageSymbol(ImageIcon icon, String label) {
+	/** Create a new raster symbol */
+	public RasterSymbol(ImageIcon icon, String label) {
 		this(icon, label, null);
 	}
 
-	public ImageSymbol(ImageIcon icon, String label, Dimension size) {
+	/** Create a new raster symbol */
+	public RasterSymbol(ImageIcon icon, String label, Dimension size) {
 		this.icon = icon;
 		this.label = label;
 		this.size = size;
 	}
 
+	/** Set the size of the raster symbol */
 	public void setSize(Dimension size) {
 		this.size = size;
 	}
 
+	/** Get the size of the raster symbol */
+	public Dimension getSize() {
+		return size;
+	}
+
+	/** Get the symbol label */
 	public String getLabel() {
 		return label;
 	}
 
-	public void setRotate(boolean rotate) {
-		this.rotate = rotate;
-	}
-
-	public void draw(Graphics2D g, Shape s) {
-	}
-	
-	/**
-	 * Draw the ImageSymbol.
-	 * If size == null then the image is drawn at full size.
-	 */
-	public void draw(Graphics2D g, MapObject o) {
-		AffineTransform t = (AffineTransform)o.getTransform().clone();
-		if(!rotate) {
-			t.setToTranslation(t.getTranslateX(),
-				t.getTranslateY());
-		}
+	/** Draw the raster symbol */
+	public void draw(Graphics2D g) {
 		int width = icon.getIconWidth();
 		int height = icon.getIconHeight();
 		if(size != null) {
 			width = (int)size.getWidth();
 			height = -(int)size.getHeight();
 		}
+		AffineTransform t = new AffineTransform();
 		t.scale(width, height);
 		t.translate(icon.getIconWidth() / -2,
 			icon.getIconHeight() / -2);
 		g.drawImage(icon.getImage(), t, null);
 	}
 
-	public Dimension getSize() {
-		return size;
-	}
-
+	/** Get the symbol legend */
 	public Icon getLegend() {
 		return icon;
 	}

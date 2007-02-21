@@ -15,25 +15,23 @@
 package us.mn.state.dot.map;
 
 import java.awt.Graphics2D;
-import java.awt.Shape;
 import javax.swing.Icon;
 
 /**
- * A symbol is an object which renders map objects onto a map. A layer
- * renderer is responsible for selecting which symbol to use for a particular
- * map object.
+ * A symbol is a graphical representaion of a map object.  A theme is
+ * responsible for selecting which symbol to use for a particular map object.
  *
- * @author Erik Engstrom
  * @author Douglas Lau
+ * @author Erik Engstrom
  */
 public interface Symbol {
 
 	/** Get the symbol label */
 	String getLabel();
 
-	/** Get an icon to use for the legend */
+	/** Get the legend icon */
 	Icon getLegend();
 
-	/** Draw the symbol for the specified shape */
-	void draw(Graphics2D g, Shape s);
+	/** Draw the symbol */
+	void draw(Graphics2D g);
 }
