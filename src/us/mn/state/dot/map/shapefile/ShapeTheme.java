@@ -55,27 +55,34 @@ public class ShapeTheme extends Theme {
 
 	/** Draw the specified map object */
 	public void draw(Graphics2D g, MapObject o) {
-		getSymbol(o).draw(g, o.getShape());
+		if(o instanceof ShapeObject) {
+			ShapeObject so = (ShapeObject)o;
+			getSymbol(so).draw(g, so.getShape());
+		}
 	}
 
 	/** Draw a selected map object */
 	public void drawSelected(Graphics2D g, MapObject o) {
-		Shape shape = o.getShape();
-		Outline outline = Outline.createDashed(Color.WHITE, 20);
-		g.setColor(outline.color);
-		g.setStroke(outline.stroke);
-		g.draw(shape);
-		outline = Outline.createSolid(Color.WHITE, getThickness(shape));
-		Shape ellipse = createEllipse(shape);
-		g.setStroke(outline.stroke);
-		g.draw(ellipse);
+		if(o instanceof ShapeObject) {
+			ShapeObject so = (ShapeObject)o;
+			Shape shape = so.getShape();
+			Outline outline = Outline.createDashed(Color.WHITE, 20);
+			g.setColor(outline.color);
+			g.setStroke(outline.stroke);
+			g.draw(shape);
+			outline = Outline.createSolid(Color.WHITE,
+				getThickness(shape));
+			Shape ellipse = createEllipse(shape);
+			g.setStroke(outline.stroke);
+			g.draw(ellipse);
+		}
 	}
 
 	/** Search a layer for a map object containing the given point */
 	public MapObject search(Layer layer, final Point2D p) {
 		return layer.forEach(new MapSearcher() {
 			public boolean next(MapObject o) {
-				return o.getShape().contains(p);
+				return ((ShapeObject)o).getShape().contains(p);
 			}
 		});
 	}

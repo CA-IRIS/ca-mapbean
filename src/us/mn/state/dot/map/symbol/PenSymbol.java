@@ -79,13 +79,6 @@ public class PenSymbol implements Symbol {
 		}
 	}
 
-	/** Draw a map object with the pen symbol */
-	public void draw(Graphics2D g, MapObject o) {
-		Shape s = o.getShape();
-		if(s != null)
-			draw(g, s);
-	}
-
 	/** Inner class for icon displayed on the legend */
 	protected class LegendIcon implements Icon {
 

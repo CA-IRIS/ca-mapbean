@@ -36,7 +36,4 @@ public interface Symbol {
 
 	/** Draw the symbol for the specified shape */
 	void draw(Graphics2D g, Shape s);
-
-	/** Draw the symbol for the specified shape */
-	void draw(Graphics2D g, MapObject o);
 }

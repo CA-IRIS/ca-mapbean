@@ -14,7 +14,6 @@
  */
 package us.mn.state.dot.map;
 
-import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 
 /**
@@ -24,9 +23,6 @@ import java.awt.geom.AffineTransform;
  * @author Douglas Lau
  */
 public interface MapObject {
-
-	/** Get the map object shape */
-	public Shape getShape();
 
 	/** Get the map object transform */
 	public AffineTransform getTransform();
