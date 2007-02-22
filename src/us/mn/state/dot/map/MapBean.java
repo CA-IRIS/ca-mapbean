@@ -408,13 +408,14 @@ public class MapBean extends JComponent implements MapChangedListener {
 
 	/** Paint the map component */
 	public void paintComponent(Graphics g) {
-		if(pan == null) {
+		if(pan != null && pan.isStarted())
+			pan.renderMap((Graphics2D)g);
+		else {
 			setCursor(Cursor.getPredefinedCursor(
 				Cursor.WAIT_CURSOR));
 			renderMap((Graphics2D)g);
 			setCursor(null);
-		} else
-			pan.renderMap((Graphics2D)g);
+		}
 	}
 
 	/** When map changes, MapPane updates all change listeners */
