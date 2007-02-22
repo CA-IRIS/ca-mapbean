@@ -31,10 +31,10 @@ import javax.swing.Icon;
 public class VectorSymbol implements Symbol {
 
 	/** Style to draw symbol */
-	protected final Style style;
+	public final Style style;
 
 	/** Shape to draw symbol */
-	protected final Shape shape;
+	protected Shape shape;
 
 	/** Create a new vector symbol */
 	public VectorSymbol(Style sty, Shape shp) {
@@ -45,6 +45,11 @@ public class VectorSymbol implements Symbol {
 	/** Get the symbol label */
 	public String getLabel() {
 		return style.getLabel();
+	}
+
+	/** Set the shape of the symbol */
+	public void setShape(Shape shp) {
+		shape = shp;
 	}
 
 	/** Draw the symbol */

@@ -58,7 +58,7 @@ abstract public class ClassBreaksTheme extends ShapeTheme {
 	public void addBreak(double v, Style s) {
 		ClassBreak b = new ClassBreak(v, s);
 		breaks.add(b);
-		styles.add(s);
+		addStyle(s);
 	}
 
 	/** Get the style for the specified map object */

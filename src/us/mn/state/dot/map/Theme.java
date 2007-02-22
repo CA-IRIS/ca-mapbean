@@ -14,15 +14,15 @@
  */
 package us.mn.state.dot.map;
 
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeSet;
 
 /**
  * A theme is a collection of symbols for one layer of a map.
@@ -37,8 +37,12 @@ abstract public class Theme {
 	/** Default shape */
 	protected final Shape shape;
 
-	/** List of all styles */
-	protected final LinkedList<Style> styles = new LinkedList<Style>();
+	/** Default symbol */
+	protected Symbol dsymbol;
+
+	/** Mapping of symbols */
+	protected final Map<String, Symbol> sym_map =
+		new HashMap<String, Symbol>();
 
 	/** Create a new theme */
 	protected Theme(String n, Shape s) {
@@ -51,16 +55,35 @@ abstract public class Theme {
 		return name;
 	}
 
+	/** Add a symbol to the theme */
+	protected void addSymbol(Symbol sym) {
+		sym_map.put(sym.getLabel(), sym);
+		if(dsymbol == null)
+			dsymbol = sym;
+	}
+
+	/** Get a symbol by label */
+	protected Symbol getSymbol(String label) {
+		Symbol sym = sym_map.get(label);
+		if(sym != null)
+			return sym;
+		else
+			return dsymbol;
+	}
+
 	/** Get a list of all symbols */
 	public List<Symbol> getSymbols() {
 		LinkedList<Symbol> symbols = new LinkedList<Symbol>();
-		for(Style s: styles)
-			symbols.add(new VectorSymbol(s, shape));
+		TreeSet<String> keys = new TreeSet<String>(sym_map.keySet());
+		for(String key: keys)
+			symbols.add(sym_map.get(key));
 		return symbols;
 	}
 
-	/** Get the style to draw a given map object */
-	abstract public Style getStyle(MapObject o);
+	/** Get the shape to draw a given map object */
+	protected Shape getShape(MapObject o) {
+		return shape;
+	}
 
 	/** Get the symbol to draw a given map object */
 	abstract public Symbol getSymbol(MapObject o);
@@ -71,41 +94,8 @@ abstract public class Theme {
 		getSymbol(o).draw(g);
 	}
 
-	/** Get the width to use for the selected outline */
-	protected float getSelectedWidth(MapObject o) {
-		Style style = getStyle(o);
-		if(style.outline != null)
-			return 9 * style.outline.width / 10;
-		return 25;
-	}
-
-	/** Get the thickness of the ellipse */
-	protected float getThickness(Shape s) {
-		Rectangle2D r = s.getBounds2D();
-		return (float)Math.min(r.getHeight(), r.getWidth()) / 2;
-	}
-
-	/** Create an ellipse around the given shape */
-	protected Shape createEllipse(Shape s) {
-		Rectangle2D r = s.getBounds2D();
-		return new Ellipse2D.Double(r.getCenterX() - r.getWidth(),
-			r.getCenterY() - r.getHeight(), r.getWidth() * 2,
-			r.getHeight() * 2);
-	}
-
 	/** Draw a selected map object */
-	public void drawSelected(Graphics2D g, MapObject o) {
-		g.transform(o.getTransform());
-		Outline outline = Outline.createDashed(Color.WHITE,
-			getSelectedWidth(o));
-		g.setColor(outline.color);
-		g.setStroke(outline.stroke);
-		g.draw(shape);
-		outline = Outline.createSolid(Color.WHITE, getThickness(shape));
-		Shape ellipse = createEllipse(shape);
-		g.setStroke(outline.stroke);
-		g.draw(ellipse);
-	}
+	abstract public void drawSelected(Graphics2D g, MapObject o);
 
 	/** Search a layer for a map object containing the given point */
 	public MapObject search(Layer layer, final Point2D p) {
@@ -113,7 +103,7 @@ abstract public class Theme {
 			public boolean next(MapObject o) {
 				AffineTransform t = o.getInverseTransform();
 				Point2D ip = t.transform(p, null);
-				return shape.contains(ip);
+				return getShape(o).contains(ip);
 			}
 		});
 	}

@@ -25,7 +25,7 @@ import us.mn.state.dot.map.MapSearcher;
 import us.mn.state.dot.map.Outline;
 import us.mn.state.dot.map.Style;
 import us.mn.state.dot.map.Symbol;
-import us.mn.state.dot.map.Theme;
+import us.mn.state.dot.map.StyledTheme;
 import us.mn.state.dot.map.VectorSymbol;
 
 /**
@@ -33,16 +33,20 @@ import us.mn.state.dot.map.VectorSymbol;
  *
  * @author Douglas Lau
  */
-public class ShapeTheme extends Theme {
+public class ShapeTheme extends StyledTheme {
 
 	/** Style to draw map objects */
 	protected final Style style;
+
+	/** Symbol to draw map objects */
+	protected final Symbol symbol;
 
 	/** Create a new shape theme */
 	public ShapeTheme(String name, Style sty, Shape s) {
 		super(name, s);
 		style = sty;
-		styles.add(style);
+		addStyle(sty);
+		symbol = new VectorSymbol(style, s);
 	}
 
 	/** Create a new shape theme */
@@ -55,10 +59,15 @@ public class ShapeTheme extends Theme {
 		this(sty.getLabel(), sty);
 	}
 
+	/** Get the shape to draw a given map object */
+	protected Shape getShape(MapObject o) {
+		ShapeObject so = (ShapeObject)o;
+		return so.getShape();
+	}
+
 	/** Draw a selected map object */
 	public void drawSelected(Graphics2D g, MapObject o) {
-		ShapeObject so = (ShapeObject)o;
-		Shape shape = so.getShape();
+		Shape shape = getShape(o);
 		Outline outline = Outline.createDashed(Color.WHITE, 20);
 		g.setColor(outline.color);
 		g.setStroke(outline.stroke);
@@ -74,7 +83,7 @@ public class ShapeTheme extends Theme {
 	public MapObject search(Layer layer, final Point2D p) {
 		return layer.forEach(new MapSearcher() {
 			public boolean next(MapObject o) {
-				return ((ShapeObject)o).getShape().contains(p);
+				return getShape(o).contains(p);
 			}
 		});
 	}
@@ -86,7 +95,8 @@ public class ShapeTheme extends Theme {
 
 	/** Get a symbol to draw a given map object */
 	public Symbol getSymbol(MapObject o) {
-		ShapeObject so = (ShapeObject)o;
-		return new VectorSymbol(getStyle(o), so.getShape());
+		VectorSymbol sym = (VectorSymbol)super.getSymbol(o);
+		sym.setShape(((ShapeObject)o).getShape());
+		return sym;
 	}
 }
