@@ -38,15 +38,10 @@ public class ShapeTheme extends StyledTheme {
 	/** Style to draw map objects */
 	protected final Style style;
 
-	/** Symbol to draw map objects */
-	protected final Symbol symbol;
-
 	/** Create a new shape theme */
 	public ShapeTheme(String name, Style sty, Shape s) {
 		super(name, s);
 		style = sty;
-		addStyle(sty);
-		symbol = new VectorSymbol(style, s);
 	}
 
 	/** Create a new shape theme */

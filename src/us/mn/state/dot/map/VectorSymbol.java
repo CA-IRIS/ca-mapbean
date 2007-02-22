@@ -34,12 +34,16 @@ public class VectorSymbol implements Symbol {
 	public final Style style;
 
 	/** Shape to draw symbol */
-	protected Shape shape;
+	protected final Shape shape;
+
+	/** Temporary shape to draw */
+	protected Shape tshape;
 
 	/** Create a new vector symbol */
 	public VectorSymbol(Style sty, Shape shp) {
 		style = sty;
 		shape = shp;
+		tshape = shp;
 	}
 
 	/** Get the symbol label */
@@ -49,19 +53,19 @@ public class VectorSymbol implements Symbol {
 
 	/** Set the shape of the symbol */
 	public void setShape(Shape shp) {
-		shape = shp;
+		tshape = shp;
 	}
 
 	/** Draw the symbol */
 	public void draw(Graphics2D g) {
 		if(style.fill_color != null) {
 			g.setColor(style.fill_color);
-			g.fill(shape);
+			g.fill(tshape);
 		}
 		if(style.outline != null) {
 			g.setColor(style.outline.color);
 			g.setStroke(style.outline.stroke);
-			g.draw(shape);
+			g.draw(tshape);
 		}
 	}
 
@@ -94,6 +98,7 @@ public class VectorSymbol implements Symbol {
 
 		/** Paint the icon onto the given component */
 		public void paintIcon(Component c, Graphics g, int x, int y) {
+			setShape(shape);
 			Graphics2D g2 = (Graphics2D)g;
 			AffineTransform t = g2.getTransform();
 			g2.transform(transform);
