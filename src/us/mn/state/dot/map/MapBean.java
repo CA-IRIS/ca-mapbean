@@ -78,6 +78,9 @@ public class MapBean extends JComponent implements MapChangedListener {
 	/** Current panning state */
 	protected PanState pan = null;
 
+	/** Current point selector */
+	protected PointSelector pselect = null;
+
 	/** Create a new map */
 	public MapBean(boolean a) {
 		map = this;
@@ -125,10 +128,39 @@ public class MapBean extends JComponent implements MapChangedListener {
 		mapPane.setBackground(c);
 	}
 
+	/** Add a point selector */
+	public void addPointSelector(PointSelector ps) {
+		pselect = ps;
+		setCursor();
+	}
+
+	/** Select a point with the mouse pointer */
+	protected boolean selectPoint(Point2D p) {
+		PointSelector ps = pselect;
+		if(ps != null) {
+			ps.selectPoint(p);
+			pselect = null;
+			setCursor();
+			return true;
+		}
+		return false;
+	}
+
+	/** Set the mouse cursor */
+	protected void setCursor() {
+		if(pselect == null)
+			setCursor(null);
+		else
+			setCursor(Cursor.getPredefinedCursor(
+				Cursor.CROSSHAIR_CURSOR));
+	}
+
 	/** Process a mouse click event */
 	protected void doMouseClicked(MouseEvent e) {
 		boolean consumed = false;
 		Point2D p = transformPoint(e.getPoint());
+		if(selectPoint(p))
+			return;
 		ListIterator<LayerState> it = mapPane.getLayerIterator();
 		while(it.hasPrevious()) {
 			LayerState s = it.previous();
@@ -289,8 +321,10 @@ public class MapBean extends JComponent implements MapChangedListener {
 
 		/** Drag the map pan */
 		protected void drag(Point p) {
-			if(!isStarted())
+			if(!isStarted()) {
+				pselect = null;
 				initialize();
+			}
 			setPan(p);
 			repaint();
 		}
@@ -324,7 +358,7 @@ public class MapBean extends JComponent implements MapChangedListener {
 			catch(NoninvertibleTransformException e) {
 				e.printStackTrace();
 			}
-			setCursor(null);
+			setCursor();
 			Rectangle2D e = mapPane.getExtent();
 			setExtent(e.getX() - p.getX(), e.getY() - p.getY(),
 				e.getWidth(), e.getHeight());
@@ -414,7 +448,7 @@ public class MapBean extends JComponent implements MapChangedListener {
 			setCursor(Cursor.getPredefinedCursor(
 				Cursor.WAIT_CURSOR));
 			renderMap((Graphics2D)g);
-			setCursor(null);
+			setCursor();
 		}
 	}
 
