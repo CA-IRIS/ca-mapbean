@@ -389,7 +389,7 @@ public class MapBean extends JComponent implements MapChangedListener {
 	protected void zoomIn(Point p) {
 		Point2D c = transformPoint(p);
 		Rectangle2D e = mapPane.getExtent();
-		if(e.getWidth() < ZOOM_THRESHOLD ||
+		if(e.getWidth() < ZOOM_THRESHOLD &&
 		   e.getHeight() < ZOOM_THRESHOLD)
 			return;
 		double x = c.getX() - 0.8 * (c.getX() - e.getX());
