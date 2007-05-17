@@ -28,7 +28,6 @@
 	COPYING.txt		      The GPL license that covers this software.
 	bin/
   	        mapBean.jar         The binaries for MapBean.
-  	docs/ 			      The sparse documentation for the MapBean source code.
   	src/ 			      The source code for the distribution.
 	
 
