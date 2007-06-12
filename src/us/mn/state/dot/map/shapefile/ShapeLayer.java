@@ -56,9 +56,8 @@ public class ShapeLayer extends Layer {
 		throws IOException
 	{
 		super(layerName);
-		if(url == null){
-			throw new IOException("Shape file not found");
-		}
+		if(url == null)
+			throw new FileNotFoundException();
 		String f = url.toExternalForm();
 		if(!f.endsWith(".shp"))
 			throw new IOException("URL must be a '.shp' file");
