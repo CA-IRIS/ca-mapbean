@@ -5,14 +5,9 @@
 <!-- ================================================== -->
 <project name="MapBean" default="jar" basedir=".">
 
-	<!-- Give user a chance to override without editing this file
-	     (and without typing -D each time he compiles it) -->
-	<property file=".ant.properties"/>
+	<property file="project.properties"/>
 	<property file="${user.home}/.ant.properties"/>
-	<property file="${basedir}/default.properties"/>
 
-	<property name="name" value="MapBean"/>
-	<property name="version" value="4.2.1"/>
 	<property name="images.dir" value="images" />
 	<property name="src.dir" value="src" />
 	<property name="build.dir" value="build" />
@@ -20,7 +15,6 @@
 	<property name="build.classes" value="${build.dir}/classes" />
 	<property name="build.javadocs" value="${build.dir}/javadocs" />
 	<property name="dist.dir" value="${name}-${version}" />
-	<property name="packages" value="us.mn.state.dot.map.*" />
 	<property name="manifest" value="etc/MANIFEST.MF" />
 	<property name="build.compiler" value="modern" />
 
@@ -42,9 +36,8 @@
 	        description="Compile all of the source code for this project.">
 		<javac srcdir="${src.dir}"
 		       destdir="${build.classes}"
-		       debug="off"
+		       debug="${debug}"
 		       deprecation="on"
-		       optimize="on"
 		       source="1.5"
 		       target="1.5">
 		</javac>
