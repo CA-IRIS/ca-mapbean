@@ -94,9 +94,10 @@ public class ShapeObject implements MapObject {
 		StringBuilder r=new StringBuilder("(ShapeObject: ");
 		for (Iterator iter = fields.entrySet().iterator(); iter.hasNext();) {
 			Map.Entry entry = (Map.Entry)iter.next();
-			r.append(entry.getKey().toString());
+			if (entry==null) continue;
+			r.append(entry.getKey()==null ? "null" : entry.getKey().toString());
 			r.append("=");
-			r.append(entry.getValue().toString());
+			r.append(entry.getValue()==null ? "null" : entry.getValue().toString());
 			if (iter.hasNext())
 		    		r.append(", ");
 		}
