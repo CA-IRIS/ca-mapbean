@@ -1,2 +1,10 @@
-(^|/)CVS($|/)
-(^|/)\.hg($|/)
+syntax: glob
+*.class
+*~
+*.jar
+*.war
+*.tgz
+*.gz
+*.zip
+*.txt
+build
