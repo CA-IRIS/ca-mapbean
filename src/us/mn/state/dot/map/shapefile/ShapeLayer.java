@@ -143,6 +143,7 @@ public class ShapeLayer extends Layer {
 				return new Style("Polygon", null,
 					Color.BLACK);
 		}
+		assert false : "Unknown shape type:"+shapeType;
 		return null;
 	}
 
