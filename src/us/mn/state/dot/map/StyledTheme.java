@@ -33,8 +33,9 @@ abstract public class StyledTheme extends Theme {
 	protected final LinkedList<Style> styles = new LinkedList<Style>();
 
 	/** Create a new styled theme */
-	protected StyledTheme(String n, Shape s) {
+	protected StyledTheme(String n, Style sty, Shape s) {
 		super(n, s);
+		addStyle(sty);
 	}
 
 	/** Add a new style to the theme */

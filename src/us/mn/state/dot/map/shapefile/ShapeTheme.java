@@ -40,7 +40,7 @@ public class ShapeTheme extends StyledTheme {
 
 	/** Create a new shape theme */
 	public ShapeTheme(String name, Style sty, Shape s) {
-		super(name, s);
+		super(name, sty, s);
 		style = sty;
 	}
 
