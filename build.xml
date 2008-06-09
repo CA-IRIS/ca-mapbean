@@ -69,7 +69,7 @@
 			<fileset dir="${build.lib}" />
 		</copy>
 		<copy file="README.txt" todir="${dist.dir}"/>
-		<copy file="LICENSE.txt" todir="${dist.dir}"/>
+		<copy file="COPYING" todir="${dist.dir}"/>
 	</target>
 
 	<!-- ================================================= -->
