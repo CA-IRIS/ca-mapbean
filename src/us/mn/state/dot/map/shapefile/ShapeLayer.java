@@ -56,11 +56,12 @@ public class ShapeLayer extends Layer {
 		throws IOException
 	{
 		super(layerName);
-		if(url == null)
-			throw new FileNotFoundException();
+		if(url == null) 
+			throw new FileNotFoundException("for layer "+layerName);
 		String f = url.toExternalForm();
+		System.err.println("ShapeLayer.ShapeLayer(): opening file "+f);
 		if(!f.endsWith(".shp"))
-			throw new IOException("URL must be a '.shp' file");
+			throw new IOException("URL ("+f+") must be a '.shp' file");
 		ShapeFile s = new ShapeFile(url, verbose);
 		shapeType = s.getShapeType();
 		extent.setRect(s.getExtent());
