@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2007  Minnesota Department of Transportation
+ * Copyright (C) 2007-2008  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -40,7 +40,8 @@ public class ShapeTheme extends StyledTheme {
 
 	/** Create a new shape theme */
 	public ShapeTheme(String name, Style sty, Shape s) {
-		super(name, sty, s);
+		super(name, s);
+		addStyle(sty);
 		style = sty;
 	}
 

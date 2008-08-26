@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2007  Minnesota Department of Transportation
+ * Copyright (C) 2007-2008  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,9 +33,8 @@ abstract public class StyledTheme extends Theme {
 	protected final LinkedList<Style> styles = new LinkedList<Style>();
 
 	/** Create a new styled theme */
-	protected StyledTheme(String n, Style sty, Shape s) {
+	protected StyledTheme(String n, Shape s) {
 		super(n, s);
-		addStyle(sty);
 	}
 
 	/** Add a new style to the theme */
