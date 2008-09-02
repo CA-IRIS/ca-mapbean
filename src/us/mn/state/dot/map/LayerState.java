@@ -239,15 +239,12 @@ public class LayerState implements LayerChangedListener {
 	public boolean doMouseClicked(MouseEvent e, Point2D p) {
 		if(isSearchable()) {
 			MapObject o = theme.search(layer, p);
-			if(o != null) {
-				setSelections(new MapObject[] { o });
-				if(SwingUtilities.isLeftMouseButton(e))
-					doLeftClick(e, o);
-				if(SwingUtilities.isRightMouseButton(e))
-					doRightClick(e, o);
+			if(SwingUtilities.isLeftMouseButton(e))
+				doLeftClick(e, o);
+			if(SwingUtilities.isRightMouseButton(e))
+				doRightClick(e, o);
+			if(o != null)
 				return true;
-			} else
-				clearSelections();
 		}
 		return false;
 	}
