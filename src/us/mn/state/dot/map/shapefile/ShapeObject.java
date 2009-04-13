@@ -80,9 +80,6 @@ public class ShapeObject implements MapObject {
 
 	/** Get the value of the specified field */
 	public Object getValue(String key) {
-		// FIXME: added by mtod, D10 specific, 05/06/08
-                if( key.equals("STA")) key="STATION";
-
 		if(fields == null)
 			return null;
 		else
