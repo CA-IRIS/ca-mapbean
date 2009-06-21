@@ -242,6 +242,11 @@ public class MapBean extends JComponent implements MapChangedListener {
 	}
 
 	/** Set the extent of the map */
+	protected void setExtent(Rectangle2D r) {
+		setExtent(r.getX(), r.getY(), r.getWidth(), r.getHeight());
+	}
+
+	/** Set the extent of the map */
 	protected void setExtent(final double x, final double y,
 		final double width, final double height)
 	{
@@ -385,29 +390,50 @@ public class MapBean extends JComponent implements MapChangedListener {
 		}
 	}
 
+	/** Zoom in or out from the current extent. */
+	public void zoom(boolean zoomin) {
+		final double ZOOM_IN_RATIO = .6;
+		setExtent(zoomRect(getMapCenter(), zoomin, ZOOM_IN_RATIO));
+	}
+
+	/** Get the center of the map panel in map coordinates. */
+	protected Point2D getMapCenter() {
+		Rectangle2D e = mapPane.getExtent();
+		double cx = e.getX() + e.getWidth() / 2;
+		double cy = e.getY() + e.getHeight() / 2;
+		return new Point2D.Double(cx, cy);
+	}
+
+	/** Return a new rectangle that is zoomed relative to the 
+	 *  specified point. 
+	 *  @param c Cursor position in map coordinates. 
+	 *  @param zoomin True to zoom in else false to zoom out.
+	 *  @param zoomInRatio Zoom ratio > 0 and < 1. */
+	protected Rectangle2D zoomRect(Point2D c, boolean zoomin, 
+		final double zoomInRatio) 
+	{
+		Rectangle2D e = mapPane.getExtent();
+		if(zoomin && e.getWidth() < ZOOM_THRESHOLD &&
+			e.getHeight() < ZOOM_THRESHOLD)
+				return e;
+		double zratio = (zoomin ? zoomInRatio : 1 / zoomInRatio);
+		double x = c.getX() - zratio * (c.getX() - e.getX());
+		double y = c.getY() - zratio * (c.getY() - e.getY());
+		double w = e.getWidth() * zratio;
+		double h = e.getHeight() * zratio;
+		return new Rectangle2D.Double(x, y, w, h);
+	}
+
 	/** Zoom in from the current extent */
 	protected void zoomIn(Point p) {
-		Point2D c = transformPoint(p);
-		Rectangle2D e = mapPane.getExtent();
-		if(e.getWidth() < ZOOM_THRESHOLD &&
-		   e.getHeight() < ZOOM_THRESHOLD)
-			return;
-		double x = c.getX() - 0.8 * (c.getX() - e.getX());
-		double y = c.getY() - 0.8 * (c.getY() - e.getY());
-		double w = e.getWidth() * 0.8;
-		double h = e.getHeight() * 0.8;
-		setExtent(x, y, w, h);
+		final double ZOOM_IN_RATIO = .8;
+		setExtent(zoomRect(transformPoint(p), true, ZOOM_IN_RATIO));
 	}
 
 	/** Zoom out from the current extent */
 	protected void zoomOut(Point p) {
-		Point2D c = transformPoint(p);
-		Rectangle2D e = mapPane.getExtent();
-		double x = c.getX() - 1.2 * (c.getX() - e.getX());
-		double y = c.getY() - 1.2 * (c.getY() - e.getY());
-		double w = e.getWidth() * 1.2;
-		double h = e.getHeight() * 1.2;
-		setExtent(x, y, w, h);
+		final double ZOOM_IN_RATIO = .8;
+		setExtent(zoomRect(transformPoint(p), false, ZOOM_IN_RATIO));
 	}
 
 	/** Zoom to the specified extent */
