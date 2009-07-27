@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000-2007  Minnesota Department of Transportation
+ * Copyright (C) 2000-2009  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,14 +15,15 @@
 package us.mn.state.dot.map.event;
 
 /**
- * MapChangedListeners that are registered with a MapBean are notified whenever
+ * MapChangedListeners registered with a map model are notified whenever
  * any of the layers change.
  *
  * @author Erik Engstrom
+ * @author Douglas Lau
  */
 public interface MapChangedListener {
 
-	/** Called by the MapBean when any layers are called */
-	public void mapChanged();
+	/** Map model has changed */
+	void mapChanged(boolean full);
 }
 

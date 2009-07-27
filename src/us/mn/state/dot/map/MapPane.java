@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000-2007  Minnesota Department of Transportation
+ * Copyright (C) 2000-2009  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,15 +22,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Set;
-import javax.swing.SwingUtilities;
 import us.mn.state.dot.map.event.MapChangedListener;
-import us.mn.state.dot.map.event.LayerChangedEvent;
-import us.mn.state.dot.map.event.LayerChangedListener;
 
 /**
  * This class can be used to generate map graphics when access to the graphics
@@ -39,7 +31,7 @@ import us.mn.state.dot.map.event.LayerChangedListener;
  * @author Erik Engstrom
  * @author Douglas Lau
  */
-public class MapPane extends Thread implements LayerChangedListener {
+class MapPane extends Thread implements MapChangedListener {
 
 	/** Minimum width/height of map pane */
 	static protected final int MIN_SIZE = 1;
@@ -50,17 +42,11 @@ public class MapPane extends Thread implements LayerChangedListener {
 	/** Buffer for map */
 	protected BufferedImage screenBuffer;
 
-	/** List of all layers */
-	protected final List<LayerState> lstates = new LinkedList<LayerState>();
-
 	/** Transform from world to screen coordinates */
 	protected final AffineTransform transform = new AffineTransform();
 
 	/** Transform from screen to world coordinates */
 	protected AffineTransform inverseTransform = new AffineTransform();
-
-	/** Bounding box */
-	protected final Rectangle2D extent = new Rectangle2D.Double();
 
 	/** Does the buffer need to be updated? */
 	protected boolean bufferDirty = true;
@@ -71,15 +57,15 @@ public class MapPane extends Thread implements LayerChangedListener {
 	/** Background color of map */
 	protected Color background = Color.GRAY;
 
-	/** Listeners for map changed events */
-	protected Set<MapChangedListener> listeners =
-		new HashSet<MapChangedListener>();
+	/** Map bean */
+	protected final MapBean mapbean;
 
 	/** Draw map antialiased */
 	public final boolean antialiased;
 
 	/** Create a new map pane */
-	public MapPane(boolean a) {
+	public MapPane(MapBean b, boolean a) {
+		mapbean = b;
 		antialiased = a;
 		setSize(new Dimension(MIN_SIZE, MIN_SIZE));
 		setDaemon(true);
@@ -104,16 +90,6 @@ public class MapPane extends Thread implements LayerChangedListener {
 		}
 	}
 
-	/** Add a MapChangedListener to the MapPane */
-	public void addMapChangedListener(MapChangedListener l) {
-		listeners.add(l);
-	}
-
-	/** Get the list of layer states contained in the MapPane */
-	public List<LayerState> getLayers() {
-		return new LinkedList<LayerState>(lstates);
-	}
-
 	/** Set the pixel size of the map panel */
 	public void setSize(Dimension d) {
 		screenBuffer = createImage(d.width, d.height);
@@ -135,43 +111,14 @@ public class MapPane extends Thread implements LayerChangedListener {
 			screenBuffer.getHeight());
 	}
 
-	/** Add a new layer to the map */
-	public void addLayer(LayerState lstate) {
-		lstates.add(lstate);
-		lstate.addLayerChangedListener(this);
-	}
-
-	/** Remove a layer from the map */
-	public void removeLayer(LayerState lstate) {
-		lstates.remove(lstate);
-		lstate.removeLayerChangedListener(this);
-	}
-
-	/** Get a list iterator for layers */
-	public ListIterator<LayerState> getLayerIterator() {
-		return lstates.listIterator(lstates.size());
-	}
-
-	/** Get the layer with the specified name */
-	public LayerState getLayer(String name) {
-		for(LayerState s: lstates) {
-			if(name.equals(s.layer.getName()))
-				return s;
-		}
-		return null;
-	}
-
 	/** Dispose of the map pane */
 	public void dispose() {
-		for(LayerState s: lstates)
-			s.dispose();
-		lstates.clear();
-		listeners.clear();
 		running = false;
 	}
 
 	/** Change the scale of the map panel */
 	protected void rescale() {
+		Rectangle2D extent = mapbean.getExtent();
 		int height = screenBuffer.getHeight();
 		int width = screenBuffer.getWidth();
 		double mapWidth = Math.max(extent.getWidth(), MIN_SIZE);
@@ -219,7 +166,7 @@ public class MapPane extends Thread implements LayerChangedListener {
 			g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 				RenderingHints.VALUE_ANTIALIAS_ON);
 		}
-		for(LayerState s: lstates) {
+		for(LayerState s: mapbean.getLayers()) {
 			if(staticBufferDirty)
 				break;
 			if(!(s.layer instanceof DynamicLayer))
@@ -228,11 +175,7 @@ public class MapPane extends Thread implements LayerChangedListener {
 		g.dispose();
 		if(!staticBufferDirty) {
 			bufferDirty = true;
-			SwingUtilities.invokeLater(new Runnable() {
-				public void run() {
-					notifyMapChangedListeners();
-				}
-			});
+			mapbean.repaint();
 		}
 	}
 
@@ -251,7 +194,7 @@ public class MapPane extends Thread implements LayerChangedListener {
 			g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 				RenderingHints.VALUE_ANTIALIAS_ON);
 		}
-		for(LayerState s: lstates) {
+		for(LayerState s: mapbean.getLayers()) {
 			if(s.layer instanceof DynamicLayer)
 				s.paint(g);
 		}
@@ -269,31 +212,12 @@ public class MapPane extends Thread implements LayerChangedListener {
 			return sbuffer;
 	}
 
-	/** Change a layer on the map panel */
-	public void layerChanged(final LayerChangedEvent event) {
-		switch(event.getReason()) {
-			case LayerChangedEvent.DATA:
-			case LayerChangedEvent.SHADE:
-				LayerState lstate =
-					(LayerState)event.getSource();
-				if(lstate.layer instanceof DynamicLayer)
-					bufferDirty = true;
-				else
-					staticBufferDirty = true;
-				break;
-			default:
-				break;
-		}
-		notifyMapChangedListeners();
-	}
-
-	/**
-	 * Notify all registered MapChangedListeners that the map image has
-	 * changed.
-	 */
-	protected void notifyMapChangedListeners() {
-		for(MapChangedListener l: listeners)
-			l.mapChanged();
+	/** Map model has changed */
+	public void mapChanged(boolean full) {
+		if(full)
+			staticBufferDirty = true;
+		else
+			bufferDirty = true;
 	}
 
 	/** Get the transform from world to screen coordinates */
@@ -304,41 +228,5 @@ public class MapPane extends Thread implements LayerChangedListener {
 	/** Get the transform from screen to world coordinates */
 	public AffineTransform getInverseTransform() {
 		return inverseTransform;
-	}
-
-	/** Get the extent of the map */
-	public Rectangle2D getExtent() {
-		return extent;
-	}
-
-	/** Get the full extent of all layers */
-	public Rectangle2D getLayerExtent() {
-		Rectangle2D extent = null;
-		for(LayerState s: lstates) {
-			Rectangle2D e = s.getExtent();
-			if(extent == null) {
-				extent = new Rectangle2D.Double();
-				extent.setRect(e);
-			} else
-				Rectangle2D.union(extent, e, extent);
-		}
-		return extent;
-	}
-
-	/**
-	 * Set the bounding box for display
-	 * @param x the new x-coordinate for the map.
-	 * @param y the new y-coordinate for the map.
-	 * @param width the new width for the map.
-	 * @param height the new height for the map.
-	 */
-	public void setExtent(double x, double y, double width, double height) {
-		Rectangle2D.Double e = new Rectangle2D.Double(x, y, width,
-			height);
-		Rectangle2D.intersect(e, getLayerExtent(), e);
-		if(!e.equals(extent)) {
-			extent.setRect(e);
-			rescale();
-		}
 	}
 }

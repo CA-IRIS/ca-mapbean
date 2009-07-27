@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000-2007  Minnesota Department of Transportation
+ * Copyright (C) 2000-2009  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -69,6 +69,21 @@ public class MapBean extends JComponent implements MapChangedListener {
 	/** Home extents */
 	protected final Rectangle2D extentHome = new Rectangle2D.Double();
 
+	/** Map model */
+	protected MapModel model = new MapModel();
+
+	/** Set the map model */
+	public void setModel(MapModel m) {
+		model.removeMapChangedListener(this);
+		model = m;
+		model.addMapChangedListener(this);
+	}
+
+	/** Get the map model */
+	public MapModel getModel() {
+		return model;
+	}
+
 	/** MapPane that will create the map */
 	protected final MapPane mapPane;
 
@@ -84,9 +99,9 @@ public class MapBean extends JComponent implements MapChangedListener {
 	/** Create a new map */
 	public MapBean(boolean a) {
 		map = this;
-		mapPane = new MapPane(a);
-		mapPane.addMapChangedListener(this);
+		mapPane = new MapPane(this, a);
 		mapPane.setBackground(getBackground());
+		model.addMapChangedListener(this);
 		setOpaque(true);
 		setDoubleBuffered(false);
 		setToolTipText(" ");
@@ -161,7 +176,7 @@ public class MapBean extends JComponent implements MapChangedListener {
 		Point2D p = transformPoint(e.getPoint());
 		if(selectPoint(p))
 			return;
-		ListIterator<LayerState> it = mapPane.getLayerIterator();
+		ListIterator<LayerState> it = model.getLayerIterator();
 		while(it.hasPrevious()) {
 			LayerState s = it.previous();
 			if(consumed)
@@ -171,37 +186,9 @@ public class MapBean extends JComponent implements MapChangedListener {
 		}
 	}
 
-	/** Add a new layer to the map */
-	public void addLayer(LayerState s) {
-		mapPane.addLayer(s);
-	}
-
-	/** Add a List of layers to the map */
-	public void addLayers(List<LayerState> layers) {
-		for(LayerState s: layers)
-			addLayer(s);
-	}
-
-	/** Remove a layer from the map */
-	public void removeLayer(String name) {
-		LayerState s = mapPane.getLayer(name);
-		if(s != null)
-			removeLayer(s);
-	}
-
-	/** Remove a layer from the map */
-	protected void removeLayer(LayerState s) {
-		mapPane.removeLayer(s);
-	}
-
-	/** Get the layer with the matching name from the Map */
-	public LayerState getLayer(String name) {
-		return mapPane.getLayer(name);
-	}
-
 	/** Get a list of the layers contained by this Map */
 	public List<LayerState> getLayers() {
-		return mapPane.getLayers();
+		return model.getLayers();
 	}
 
 	/** Sets extent to home coordinates */
@@ -218,7 +205,7 @@ public class MapBean extends JComponent implements MapChangedListener {
 	/** Get the tooltip text for the given mouse event */
 	public String getToolTipText(MouseEvent e) {
 		Point2D p = transformPoint(e.getPoint());
-		ListIterator<LayerState> it = mapPane.getLayerIterator();
+		ListIterator<LayerState> it = model.getLayerIterator();
 		while(it.hasPrevious()) {
 			LayerState t = it.previous();
 			String tip = t.getTip(p);
@@ -256,8 +243,8 @@ public class MapBean extends JComponent implements MapChangedListener {
 		   than using invokeAndWait. */
 		Runnable echanger = new Runnable() {
 			public void run() {
-				mapPane.setExtent(x, y, width, height);
-				repaint();
+				model.setExtent(x, y, width, height);
+				mapPane.rescale();
 			}
 		};
 		if(SwingUtilities.isEventDispatchThread())
@@ -268,7 +255,7 @@ public class MapBean extends JComponent implements MapChangedListener {
 
 	/** Get the extent of the map */
 	public Rectangle2D getExtent() {
-		return mapPane.getExtent();
+		return model.getExtent();
 	}
 
 	static protected int limit(int min, int val, int max) {
@@ -300,8 +287,8 @@ public class MapBean extends JComponent implements MapChangedListener {
 		}
 
 		protected void calculateLimits() {
-			Rectangle2D e = mapPane.getExtent();
-			Rectangle2D te = mapPane.getLayerExtent();
+			Rectangle2D e = model.getExtent();
+			Rectangle2D te = model.getLayerExtent();
 			Point2D b = new Point2D.Double(e.getX() - te.getX(),
 				e.getY() - te.getY());
 			transform.transform(b, b);
@@ -364,7 +351,7 @@ public class MapBean extends JComponent implements MapChangedListener {
 				e.printStackTrace();
 			}
 			setCursor();
-			Rectangle2D e = mapPane.getExtent();
+			Rectangle2D e = model.getExtent();
 			setExtent(e.getX() - p.getX(), e.getY() - p.getY(),
 				e.getWidth(), e.getHeight());
 		}
@@ -398,7 +385,7 @@ public class MapBean extends JComponent implements MapChangedListener {
 
 	/** Get the center of the map panel in map coordinates. */
 	protected Point2D getMapCenter() {
-		Rectangle2D e = mapPane.getExtent();
+		Rectangle2D e = model.getExtent();
 		double cx = e.getX() + e.getWidth() / 2;
 		double cy = e.getY() + e.getHeight() / 2;
 		return new Point2D.Double(cx, cy);
@@ -412,7 +399,7 @@ public class MapBean extends JComponent implements MapChangedListener {
 	protected Rectangle2D zoomRect(Point2D c, boolean zoomin, 
 		final double zoomInRatio) 
 	{
-		Rectangle2D e = mapPane.getExtent();
+		Rectangle2D e = model.getExtent();
 		if(zoomin && e.getWidth() < ZOOM_THRESHOLD &&
 			e.getHeight() < ZOOM_THRESHOLD)
 				return e;
@@ -459,7 +446,7 @@ public class MapBean extends JComponent implements MapChangedListener {
 			g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 				RenderingHints.VALUE_ANTIALIAS_ON);
 		}
-		ListIterator<LayerState> li = mapPane.getLayerIterator();
+		ListIterator<LayerState> li = model.getLayerIterator();
 		while(li.hasPrevious()) {
 			LayerState s = li.previous();
 			s.paintSelections(g);
@@ -478,13 +465,15 @@ public class MapBean extends JComponent implements MapChangedListener {
 		}
 	}
 
-	/** When map changes, MapPane updates all change listeners */
-	public void mapChanged() {
+	/** When map changes, the map model updates all change listeners */
+	public void mapChanged(boolean full) {
+		mapPane.mapChanged(full);
 		repaint();
 	}
 
 	/** Dispose of the map */
 	public void dispose() {
 		mapPane.dispose();
+		model.dispose();
 	}
 }
