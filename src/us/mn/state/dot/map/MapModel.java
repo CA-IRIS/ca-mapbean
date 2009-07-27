@@ -112,7 +112,9 @@ public class MapModel implements LayerChangedListener {
 	public void setExtent(double x, double y, double width, double height) {
 		Rectangle2D.Double e = new Rectangle2D.Double(x, y, width,
 			height);
-		Rectangle2D.intersect(e, getLayerExtent(), e);
+		Rectangle2D le = getLayerExtent();
+		if(le != null)
+			Rectangle2D.intersect(e, le, e);
 		if(!e.equals(extent)) {
 			extent.setRect(e);
 			notifyMapChangedListeners(true);
