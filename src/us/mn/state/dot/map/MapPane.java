@@ -22,7 +22,9 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
-import us.mn.state.dot.map.event.MapChangedListener;
+import us.mn.state.dot.map.event.LayerChange;
+import us.mn.state.dot.map.event.LayerChangedEvent;
+import us.mn.state.dot.map.event.LayerChangedListener;
 
 /**
  * This class can be used to generate map graphics when access to the graphics
@@ -31,7 +33,7 @@ import us.mn.state.dot.map.event.MapChangedListener;
  * @author Erik Engstrom
  * @author Douglas Lau
  */
-class MapPane extends Thread implements MapChangedListener {
+class MapPane extends Thread implements LayerChangedListener {
 
 	/** Minimum width/height of map pane */
 	static protected final int MIN_SIZE = 1;
@@ -213,11 +215,14 @@ class MapPane extends Thread implements MapChangedListener {
 	}
 
 	/** Map model has changed */
-	public void mapChanged(boolean full) {
-		if(full)
-			staticBufferDirty = true;
-		else
+	public void layerChanged(LayerChangedEvent ev) {
+		Object source = ev.getSource();
+		if(source instanceof DynamicLayer)
 			bufferDirty = true;
+		else
+			staticBufferDirty = true;
+		if(ev.getReason() == LayerChange.extent)
+			rescale();
 	}
 
 	/** Get the transform from world to screen coordinates */

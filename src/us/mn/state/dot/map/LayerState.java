@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000-2007  Minnesota Department of Transportation
+ * Copyright (C) 2000-2009  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,6 +25,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import javax.swing.SwingUtilities;
+import us.mn.state.dot.map.event.LayerChange;
 import us.mn.state.dot.map.event.LayerChangedEvent;
 import us.mn.state.dot.map.event.LayerChangedListener;
 
@@ -115,7 +116,7 @@ public class LayerState implements LayerChangedListener {
 	public void setTheme(Theme t) {
 		if(t != theme) {
 			theme = t;
-			notifyLayerChangedListeners(LayerChangedEvent.SHADE);
+			notifyLayerChangedListeners(LayerChange.status);
 		}
 	}
 
@@ -128,8 +129,7 @@ public class LayerState implements LayerChangedListener {
 	public void setSelections(MapObject[] s) {
 		if(s != selections) {
 			selections = s;
-			notifyLayerChangedListeners(
-				LayerChangedEvent.SELECTION);
+			notifyLayerChangedListeners(LayerChange.selection);
 		}
 	}
 
@@ -198,7 +198,7 @@ public class LayerState implements LayerChangedListener {
 	public void setVisible(boolean v) {
 		if(v != visible) {
 			visible = v;
-			notifyLayerChangedListeners(LayerChangedEvent.DATA);
+			notifyLayerChangedListeners(LayerChange.visibility);
 		}
 	}
 
@@ -213,7 +213,7 @@ public class LayerState implements LayerChangedListener {
 	}
 
 	/** Notify all listeners that this layer state has changed */
-	protected void notifyLayerChangedListeners(int reason) {
+	protected void notifyLayerChangedListeners(LayerChange reason) {
 		LayerChangedEvent e = new LayerChangedEvent(this, reason);
 		for(LayerChangedListener l: listeners)
 			l.layerChanged(e);

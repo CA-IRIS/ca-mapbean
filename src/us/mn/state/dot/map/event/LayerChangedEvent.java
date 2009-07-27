@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000-2007  Minnesota Department of Transportation
+ * Copyright (C) 2000-2009  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,38 +21,21 @@ import java.util.EventObject;
  * changed.
  *
  * @author Erik Engstrom
+ * @author Douglas Lau
  */
 public class LayerChangedEvent extends EventObject {
 
-	/** Reason code for geography change */
-	static public final int GEOGRAPHY = 1 << 0;
-
-	/** Reason code for data change */
-	static public final int DATA = 1 << 1;
-
-	/** Reason code for shade change */
-	static public final int SHADE = 1 << 2;
-
-	/** Reason code for highlight change */
-	static public final int HIGHLIGHT = 1 << 3;
-
-	/** Reason code for animation change */
-	static public final int ANIMATION = 1 << 4;
-
-	/** Reason code for selection change */
-	static public final int SELECTION = 1 << 5;
-
 	/** Reason code for layer change */
-	protected int reason;
+	protected LayerChange reason;
 
 	/** Create a new LayerChangedEvent */
-	public LayerChangedEvent(Object source, int why) {
+	public LayerChangedEvent(Object source, LayerChange why) {
 		super(source);
 		reason = why;
 	}
 
 	/** Get the reason the Layer changed */
-	public int getReason() {
+	public LayerChange getReason() {
 		return reason;
 	}
 }

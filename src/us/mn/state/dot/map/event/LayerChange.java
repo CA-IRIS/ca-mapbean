@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000-2009  Minnesota Department of Transportation
+ * Copyright (C) 2009  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,15 +15,10 @@
 package us.mn.state.dot.map.event;
 
 /**
- * MapChangedListeners registered with a map model are notified whenever
- * any of the layers change.
+ * A LayerChange is an enum of changes to a map layer.
  *
- * @author Erik Engstrom
  * @author Douglas Lau
  */
-public interface MapChangedListener {
-
-	/** Map model has changed */
-	void mapChanged(boolean full);
+public enum LayerChange {
+	extent, geometry, status, visibility, selection;
 }
-

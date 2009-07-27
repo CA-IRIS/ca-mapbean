@@ -40,8 +40,9 @@ import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JToolTip;
 import javax.swing.SwingUtilities;
-
-import us.mn.state.dot.map.event.MapChangedListener;
+import us.mn.state.dot.map.event.LayerChange;
+import us.mn.state.dot.map.event.LayerChangedEvent;
+import us.mn.state.dot.map.event.LayerChangedListener;
 
 /**
  * The MapBean class is a container for a MapPane which allows the pane to be
@@ -52,7 +53,7 @@ import us.mn.state.dot.map.event.MapChangedListener;
  * @author Douglas Lau
  * @see us.mn.state.dot.map.MapPane
  */
-public class MapBean extends JComponent implements MapChangedListener {
+public class MapBean extends JComponent implements LayerChangedListener {
 
 	/** Minimum size of zoomed in map */
 	static protected final int ZOOM_THRESHOLD = 1000;
@@ -74,9 +75,10 @@ public class MapBean extends JComponent implements MapChangedListener {
 
 	/** Set the map model */
 	public void setModel(MapModel m) {
-		model.removeMapChangedListener(this);
+		model.removeLayerChangedListener(this);
 		model = m;
-		model.addMapChangedListener(this);
+		model.addLayerChangedListener(this);
+		layerChanged(new LayerChangedEvent(this, LayerChange.extent));
 	}
 
 	/** Get the map model */
@@ -101,7 +103,7 @@ public class MapBean extends JComponent implements MapChangedListener {
 		map = this;
 		mapPane = new MapPane(this, a);
 		mapPane.setBackground(getBackground());
-		model.addMapChangedListener(this);
+		model.addLayerChangedListener(this);
 		setOpaque(true);
 		setDoubleBuffered(false);
 		setToolTipText(" ");
@@ -244,7 +246,6 @@ public class MapBean extends JComponent implements MapChangedListener {
 		Runnable echanger = new Runnable() {
 			public void run() {
 				model.setExtent(x, y, width, height);
-				mapPane.rescale();
 			}
 		};
 		if(SwingUtilities.isEventDispatchThread())
@@ -466,8 +467,8 @@ public class MapBean extends JComponent implements MapChangedListener {
 	}
 
 	/** When map changes, the map model updates all change listeners */
-	public void mapChanged(boolean full) {
-		mapPane.mapChanged(full);
+	public void layerChanged(LayerChangedEvent ev) {
+		mapPane.layerChanged(ev);
 		repaint();
 	}
 

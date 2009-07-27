@@ -20,9 +20,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
+import us.mn.state.dot.map.event.LayerChange;
 import us.mn.state.dot.map.event.LayerChangedEvent;
 import us.mn.state.dot.map.event.LayerChangedListener;
-import us.mn.state.dot.map.event.MapChangedListener;
 
 /**
  * The map model is a collection of LayerStates and the current extent of the
@@ -33,40 +33,34 @@ import us.mn.state.dot.map.event.MapChangedListener;
 public class MapModel implements LayerChangedListener {
 
 	/** Listeners for map changed events */
-	protected Set<MapChangedListener> listeners =
-		new HashSet<MapChangedListener>();
+	protected Set<LayerChangedListener> listeners =
+		new HashSet<LayerChangedListener>();
 
-	/** Add a MapChangedListener to the map model */
-	public void addMapChangedListener(MapChangedListener l) {
+	/** Add a LayerChangedListener to the map model */
+	public void addLayerChangedListener(LayerChangedListener l) {
 		listeners.add(l);
 	}
 
-	/** Remove a MapChangedListener from the map model */
-	public void removeMapChangedListener(MapChangedListener l) {
+	/** Remove a LayerChangedListener from the map model */
+	public void removeLayerChangedListener(LayerChangedListener l) {
 		listeners.remove(l);
 	}
 
 	/** Change a layer in the map model */
 	public void layerChanged(LayerChangedEvent event) {
-		boolean full = false;
-		switch(event.getReason()) {
-		case LayerChangedEvent.DATA:
-		case LayerChangedEvent.SHADE:
-			LayerState lstate = (LayerState)event.getSource();
-			if(lstate.layer instanceof DynamicLayer)
-				break;
-			else {
-				full = true;
-				break;
-			}
-		}
-		notifyMapChangedListeners(full);
+		notifyLayerChangedListeners(event);
 	}
 
-	/** Notify registered MapChangedListeners that the map has changed */
-	protected void notifyMapChangedListeners(boolean full) {
-		for(MapChangedListener l: listeners)
-			l.mapChanged(full);
+	/** Notify registered LayerChangedListeners that a layer has changed */
+	protected void notifyLayerChangedListeners(LayerChange reason) {
+		notifyLayerChangedListeners(new LayerChangedEvent(this,
+			reason));
+	}
+
+	/** Notify registered LayerChangedListeners that a layer has changed */
+	protected void notifyLayerChangedListeners(LayerChangedEvent event) {
+		for(LayerChangedListener l: listeners)
+			l.layerChanged(event);
 	}
 
 	/** List of all layers */
@@ -117,7 +111,7 @@ public class MapModel implements LayerChangedListener {
 			Rectangle2D.intersect(e, le, e);
 		if(!e.equals(extent)) {
 			extent.setRect(e);
-			notifyMapChangedListeners(true);
+			notifyLayerChangedListeners(LayerChange.extent);
 		}
 	}
 

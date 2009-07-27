@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000-2007  Minnesota Department of Transportation
+ * Copyright (C) 2000-2009  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@ package us.mn.state.dot.map.event;
 import java.util.EventListener;
 
 /**
- * A LayerChangedListener can be registered with a Layer to recieve
+ * A LayerChangedListener can be registered with a Layer to receive
  * notifications when the layer's data changes.
  *
  * @author Erik Engstrom
@@ -25,5 +25,5 @@ import java.util.EventListener;
 public interface LayerChangedListener extends EventListener {
 
 	/** Called by the Layer when the layers data is changed */
-	public void layerChanged(LayerChangedEvent event);
+	void layerChanged(LayerChangedEvent event);
 }
