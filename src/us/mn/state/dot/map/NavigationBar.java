@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000-2007  Minnesota Department of Transportation
+ * Copyright (C) 2000-2009  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,14 +30,16 @@ import javax.swing.JToolBar;
  */
 public class NavigationBar extends JToolBar {
 
+	/** Lookup an image resource */
 	static protected ImageIcon getImage(String path) {
 		URL url = NavigationBar.class.getResource(path);
 		return new ImageIcon(url);
 	}
 
+	/** Map associated with the navigation bar */
 	protected final MapBean map;
 
-	/** Create a new NavigationBar */
+	/** Create a new navigation bar */
 	public NavigationBar(MapBean m) {
 		super();
 		map = m;
@@ -45,6 +47,7 @@ public class NavigationBar extends JToolBar {
 		addSeparator();
 	}
 
+	/** Create a "home" button */
 	public JButton createHomeButton() {
 		JButton b = new JButton("Home", getImage("/images/globe.png"));
 		b.setToolTipText("Set view to home extent");
