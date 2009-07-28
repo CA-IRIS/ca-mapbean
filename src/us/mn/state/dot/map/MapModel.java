@@ -104,8 +104,11 @@ public class MapModel implements LayerChangedListener {
 	 * @param height the new height for the map.
 	 */
 	public void setExtent(double x, double y, double width, double height) {
-		Rectangle2D.Double e = new Rectangle2D.Double(x, y, width,
-			height);
+		setExtent(new Rectangle2D.Double(x, y, width, height));
+	}
+
+	/** Set the map extent */
+	protected void setExtent(Rectangle2D e) {
 		Rectangle2D le = getLayerExtent();
 		if(le != null)
 			Rectangle2D.intersect(e, le, e);
@@ -118,8 +121,8 @@ public class MapModel implements LayerChangedListener {
 	/** Get the full extent of all layers */
 	public Rectangle2D getLayerExtent() {
 		Rectangle2D le = null;
-		for(LayerState s: lstates) {
-			Rectangle2D e = s.getExtent();
+		for(LayerState ls: lstates) {
+			Rectangle2D e = ls.getExtent();
 			if(le == null) {
 				le = new Rectangle2D.Double();
 				le.setRect(e);
