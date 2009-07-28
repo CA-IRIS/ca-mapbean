@@ -16,7 +16,6 @@ package us.mn.state.dot.map;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.List;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 
@@ -29,11 +28,14 @@ import javax.swing.JMenu;
 public class LayerMenu extends JMenu {
 
   	/** Create a new layer menu */
-  	public LayerMenu(List<LayerState> layers) {
+  	public LayerMenu() {
 		super("Layers");
-		for(LayerState ls: layers)
-			add(new LayerMenuItem(ls));
-  	}
+	}
+
+	/** Add a layer to the menu */
+	public void addLayer(LayerState ls) {
+		add(new LayerMenuItem(ls));
+	}
 
 	/** MenuItem for displaying a layer.  When a check box is selected the
 	 * layer is made visible.  If it is deselected then the layer is made

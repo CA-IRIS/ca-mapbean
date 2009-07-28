@@ -35,6 +35,9 @@ public class MapToolBar extends NavigationBar implements LayerChangedListener {
 	/** Menu bar */
 	protected final JMenuBar menu = new JMenuBar();
 
+	/** Layer menu */
+	protected final LayerMenu layers = new LayerMenu();
+
 	/** Legend menu */
 	protected final JMenu legend = new JMenu("Legend");
 
@@ -46,7 +49,7 @@ public class MapToolBar extends NavigationBar implements LayerChangedListener {
 		super(m);
 		menu.setBorderPainted(false);
 		menu.setAlignmentY(.5f);
-		menu.add(new LayerMenu(map.getLayers()));
+		menu.add(layers);
 		menu.add(legend);
 		menu.add(themes);
 		add(menu, 0);
@@ -56,9 +59,12 @@ public class MapToolBar extends NavigationBar implements LayerChangedListener {
 	/** Called by the Layer when the layers data is changed */
 	public void layerChanged(LayerChangedEvent ev) {
 		if(ev.getReason() == LayerChange.model) {
+			layers.removeAll();
 			legend.removeAll();
-			for(LayerState ls: map.getLayers())
+			for(LayerState ls: map.getLayers()) {
+				layers.addLayer(ls);
 				addThemeLegend(ls);
+			}
 		}
 	}
 
@@ -74,7 +80,7 @@ public class MapToolBar extends NavigationBar implements LayerChangedListener {
 
 	/** Create the theme combo box model */
 	protected void createThemeModel(final LayerState ls,
-		final LegendMenu legend)
+		final LegendMenu lm)
 	{
 		final DefaultComboBoxModel model = new DefaultComboBoxModel();
 		for(Theme t: ls.getThemes())
@@ -87,7 +93,7 @@ public class MapToolBar extends NavigationBar implements LayerChangedListener {
 				if(obj instanceof Theme) {
 					Theme t = (Theme)obj;
 					ls.setTheme(t);
-					legend.setTheme(t);
+					lm.setTheme(t);
 				}
 			}
 		});
