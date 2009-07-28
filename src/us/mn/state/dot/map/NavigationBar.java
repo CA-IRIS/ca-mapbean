@@ -14,6 +14,7 @@
  */
 package us.mn.state.dot.map;
 
+import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URL;
@@ -41,10 +42,8 @@ public class NavigationBar extends JToolBar {
 
 	/** Create a new navigation bar */
 	public NavigationBar(MapBean m) {
-		super();
+		setLayout(new BorderLayout());
 		map = m;
-		putClientProperty("JToolBar.isRollover", Boolean.TRUE);
-		addSeparator();
 	}
 
 	/** Create a "home" button */
@@ -57,10 +56,5 @@ public class NavigationBar extends JToolBar {
 			}
 		});
 		return b;
-	}
-
-	/** Add a button to the toolbar */
-	public void addButton(AbstractButton b) {
-		add(b);
 	}
 }

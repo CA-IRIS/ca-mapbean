@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000-2008  Minnesota Department of Transportation
+ * Copyright (C) 2000-2009  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -47,7 +47,7 @@ public class Viewer extends JFrame {
 		this.getContentPane().setLayout(new BorderLayout());
 		this.getContentPane().add(map, BorderLayout.CENTER);
 		NavigationBar toolbar = new NavigationBar(map);
-		toolbar.addButton(toolbar.createHomeButton());
+		toolbar.add(toolbar.createHomeButton());
 		toolbar.setFloatable(false);
 		this.getContentPane().add(toolbar, BorderLayout.NORTH);
                 addWindowListener(new WindowAdapter() {

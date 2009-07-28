@@ -14,6 +14,7 @@
  */
 package us.mn.state.dot.map;
 
+import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.DefaultComboBoxModel;
@@ -52,7 +53,7 @@ public class MapToolBar extends NavigationBar implements LayerChangedListener {
 		menu.add(layers);
 		menu.add(legend);
 		menu.add(themes);
-		add(menu, 0);
+		add(menu, BorderLayout.LINE_START);
 		map.addLayerChangedListener(this);
 	}
 
