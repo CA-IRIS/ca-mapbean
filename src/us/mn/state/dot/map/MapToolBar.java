@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000-2007  Minnesota Department of Transportation
+ * Copyright (C) 2000-2009  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +16,13 @@ package us.mn.state.dot.map;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
+import us.mn.state.dot.map.event.LayerChange;
+import us.mn.state.dot.map.event.LayerChangedEvent;
+import us.mn.state.dot.map.event.LayerChangedListener;
 
 /**
  * Toolbar used for MapBean.
@@ -26,13 +30,16 @@ import javax.swing.JMenu;
  * @author Erik Engstrom
  * @author Douglas Lau
  */
-public class MapToolBar extends NavigationBar {
+public class MapToolBar extends NavigationBar implements LayerChangedListener {
 
 	/** Menu bar */
 	protected final JMenuBar menu = new JMenuBar();
 
 	/** Legend menu */
 	protected final JMenu legend = new JMenu("Legend");
+
+	/** Theme selection combo box */
+	protected final JComboBox themes = new JComboBox();
 
 	/** Create a new MapToolBar */
 	public MapToolBar(MapBean m) {
@@ -41,38 +48,49 @@ public class MapToolBar extends NavigationBar {
 		menu.setAlignmentY(.5f);
 		menu.add(new LayerMenu(map.getLayers()));
 		menu.add(legend);
+		menu.add(themes);
 		add(menu, 0);
+		map.addLayerChangedListener(this);
+	}
+
+	/** Called by the Layer when the layers data is changed */
+	public void layerChanged(LayerChangedEvent ev) {
+		if(ev.getReason() == LayerChange.model) {
+			legend.removeAll();
+			for(LayerState ls: map.getLayers())
+				addThemeLegend(ls);
+		}
 	}
 
 	/** Add a theme legend to the tool bar */
-	public void addThemeLegend(LayerState lstate) {
-		String name = lstate.getLayer().getName();
-		Theme t = lstate.getTheme();
-		LegendMenu l = new LegendMenu(name, t);
-		JComboBox combo = createRendererCombo(lstate, l);
-		if(combo != null) {
-			menu.add(combo);
-			legend.add(l);
-		} else if(l.getItemCount() > 1)
-			legend.add(l);
+	protected void addThemeLegend(LayerState ls) {
+		String name = ls.getLayer().getName();
+		LegendMenu lm = new LegendMenu(name, ls.getTheme());
+		if(lm.getItemCount() > 1) {
+			legend.add(lm);
+			createThemeModel(ls, lm);
+		}
 	}
 
-	/** Get the renderer selector combo box */
-	protected JComboBox createRendererCombo(final LayerState lstate,
+	/** Create the theme combo box model */
+	protected void createThemeModel(final LayerState ls,
 		final LegendMenu legend)
 	{
-		final JComboBox combo = new JComboBox();
-		for(Theme t: lstate.getThemes())
-			combo.addItem(t);
-		if(combo.getItemCount() < 2)
-			return null;
-		combo.addActionListener(new ActionListener() {
+		final DefaultComboBoxModel model = new DefaultComboBoxModel();
+		for(Theme t: ls.getThemes())
+			model.addElement(t);
+		if(model.getSize() < 2)
+			return;
+		themes.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Theme t = (Theme)combo.getSelectedItem();
-				lstate.setTheme(t);
-				legend.setTheme(t);
+				Object obj = themes.getSelectedItem();
+				if(obj instanceof Theme) {
+					Theme t = (Theme)obj;
+					ls.setTheme(t);
+					legend.setTheme(t);
+				}
 			}
 		});
-		return combo;
+		themes.setModel(model);
 	}
 }

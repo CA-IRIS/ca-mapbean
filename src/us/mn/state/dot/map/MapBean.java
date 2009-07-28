@@ -34,8 +34,10 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Rectangle2D;
+import java.util.HashSet;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Set;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JToolTip;
@@ -70,6 +72,26 @@ public class MapBean extends JComponent implements LayerChangedListener {
 	/** Home extents */
 	protected final Rectangle2D extentHome = new Rectangle2D.Double();
 
+	/** Listeners for map changed events */
+	protected Set<LayerChangedListener> listeners =
+		new HashSet<LayerChangedListener>();
+
+	/** Add a LayerChangedListener to the map model */
+	public void addLayerChangedListener(LayerChangedListener l) {
+		listeners.add(l);
+	}
+
+	/** Remove a LayerChangedListener from the map model */
+	public void removeLayerChangedListener(LayerChangedListener l) {
+		listeners.remove(l);
+	}
+
+	/** Notify registered LayerChangedListeners that a layer has changed */
+	protected void notifyLayerChangedListeners(LayerChangedEvent event) {
+		for(LayerChangedListener l: listeners)
+			l.layerChanged(event);
+	}
+
 	/** Map model */
 	protected MapModel model = new MapModel();
 
@@ -78,7 +100,7 @@ public class MapBean extends JComponent implements LayerChangedListener {
 		model.removeLayerChangedListener(this);
 		model = m;
 		model.addLayerChangedListener(this);
-		layerChanged(new LayerChangedEvent(this, LayerChange.extent));
+		layerChanged(new LayerChangedEvent(this, LayerChange.model));
 	}
 
 	/** Get the map model */
@@ -468,6 +490,7 @@ public class MapBean extends JComponent implements LayerChangedListener {
 
 	/** When map changes, the map model updates all change listeners */
 	public void layerChanged(LayerChangedEvent ev) {
+		notifyLayerChangedListeners(ev);
 		mapPane.layerChanged(ev);
 		repaint();
 	}
@@ -476,5 +499,6 @@ public class MapBean extends JComponent implements LayerChangedListener {
 	public void dispose() {
 		mapPane.dispose();
 		model.dispose();
+		listeners.clear();
 	}
 }

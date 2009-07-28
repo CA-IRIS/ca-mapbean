@@ -20,5 +20,5 @@ package us.mn.state.dot.map.event;
  * @author Douglas Lau
  */
 public enum LayerChange {
-	extent, geometry, status, visibility, selection;
+	model, extent, geometry, status, visibility, selection;
 }

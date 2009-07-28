@@ -221,8 +221,11 @@ class MapPane extends Thread implements LayerChangedListener {
 			bufferDirty = true;
 		else
 			staticBufferDirty = true;
-		if(ev.getReason() == LayerChange.extent)
+		switch(ev.getReason()) {
+		case model:
+		case extent:
 			rescale();
+		}
 	}
 
 	/** Get the transform from world to screen coordinates */
