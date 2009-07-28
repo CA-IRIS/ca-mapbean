@@ -47,8 +47,12 @@ public class MapModel implements LayerChangedListener {
 	}
 
 	/** Change a layer in the map model */
-	public void layerChanged(LayerChangedEvent event) {
-		notifyLayerChangedListeners(event);
+	public void layerChanged(LayerChangedEvent ev) {
+		if(ev.getSource() == lstates.peekLast()) {
+			if(ev.getReason() == LayerChange.extent)
+				setExtent(lstates.peekLast().getExtent());
+		}
+		notifyLayerChangedListeners(ev);
 	}
 
 	/** Notify registered LayerChangedListeners that a layer has changed */
@@ -64,7 +68,8 @@ public class MapModel implements LayerChangedListener {
 	}
 
 	/** List of all layers */
-	protected final List<LayerState> lstates = new LinkedList<LayerState>();
+	protected final LinkedList<LayerState> lstates =
+		new LinkedList<LayerState>();
 
 	/** Add a new layer to the map model */
 	public void addLayer(LayerState lstate) {
