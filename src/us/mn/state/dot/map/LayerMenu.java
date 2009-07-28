@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000-2007  Minnesota Department of Transportation
+ * Copyright (C) 2000-2009  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,8 +31,8 @@ public class LayerMenu extends JMenu {
   	/** Create a new layer menu */
   	public LayerMenu(List<LayerState> layers) {
 		super("Layers");
-		for(LayerState s: layers)
-			add(new LayerMenuItem(s));
+		for(LayerState ls: layers)
+			add(new LayerMenuItem(ls));
   	}
 
 	/** MenuItem for displaying a layer.  When a check box is selected the
@@ -40,17 +40,13 @@ public class LayerMenu extends JMenu {
 	 * invisible. */
 	protected class LayerMenuItem extends JCheckBoxMenuItem {
 
-		/** Layer state */
-		protected final LayerState lstate;
-
 		/** Create a new layer menu item */
-		public LayerMenuItem(LayerState s) {
-			super(s.getLayer().getName());
-			lstate = s;
-			setSelected(lstate.isVisible());
+		public LayerMenuItem(final LayerState ls) {
+			super(ls.getLayer().getName());
+			setSelected(ls.isVisible());
 			addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					lstate.setVisible(!lstate.isVisible());
+					ls.setVisible(!ls.isVisible());
 				}
 			});
 		}
