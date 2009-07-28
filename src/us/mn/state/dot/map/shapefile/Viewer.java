@@ -47,14 +47,14 @@ public class Viewer extends JFrame {
 		this.getContentPane().setLayout(new BorderLayout());
 		this.getContentPane().add(map, BorderLayout.CENTER);
 		NavigationBar toolbar = new NavigationBar(map);
-		toolbar.add(toolbar.createHomeButton());
+		toolbar.addHomeButton();
 		toolbar.setFloatable(false);
 		this.getContentPane().add(toolbar, BorderLayout.NORTH);
-                addWindowListener(new WindowAdapter() {
-                        public void windowClosing(WindowEvent evt) {
-                                quit();
-                        }
-                });
+		addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent evt) {
+				quit();
+			}
+		});
 	}
 
 	protected void quit() {

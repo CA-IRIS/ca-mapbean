@@ -15,12 +15,15 @@
 package us.mn.state.dot.map;
 
 import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URL;
 import javax.swing.AbstractButton;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JPanel;
 import javax.swing.JToolBar;
 
 /**
@@ -40,14 +43,18 @@ public class NavigationBar extends JToolBar {
 	/** Map associated with the navigation bar */
 	protected final MapBean map;
 
+	/** Button panel */
+	protected final JPanel buttons = new JPanel(new FlowLayout());
+
 	/** Create a new navigation bar */
 	public NavigationBar(MapBean m) {
 		setLayout(new BorderLayout());
 		map = m;
+		add(buttons, BorderLayout.LINE_END);
 	}
 
-	/** Create a "home" button */
-	public JButton createHomeButton() {
+	/** Add a "home" button */
+	public void addHomeButton() {
 		JButton b = new JButton("Home", getImage("/images/globe.png"));
 		b.setToolTipText("Set view to home extent");
 		b.addActionListener(new ActionListener() {
@@ -55,6 +62,12 @@ public class NavigationBar extends JToolBar {
 				map.home();
 			}
 		});
-		return b;
+		addButton(b);
+	}
+
+	/** Add a button to the toolbar */
+	public void addButton(AbstractButton b) {
+		b.setMargin(new Insets(1, 1, 1, 1));
+		buttons.add(b);
 	}
 }
