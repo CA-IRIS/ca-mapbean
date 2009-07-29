@@ -48,9 +48,9 @@ public class MapModel implements LayerChangedListener {
 
 	/** Change a layer in the map model */
 	public void layerChanged(LayerChangedEvent ev) {
-		if(ev.getSource() == lstates.peekLast()) {
+		if(ev.getSource() == home_layer) {
 			if(ev.getReason() == LayerChange.extent)
-				setExtent(lstates.peekLast().getExtent());
+				setExtent(home_layer.getExtent());
 		}
 		notifyLayerChangedListeners(ev);
 	}
@@ -91,6 +91,14 @@ public class MapModel implements LayerChangedListener {
 	/** Get a list iterator for layers */
 	public ListIterator<LayerState> getLayerIterator() {
 		return lstates.listIterator(lstates.size());
+	}
+
+	/** Home layer */
+	protected LayerState home_layer;
+
+	/** Set the home layer */
+	public void setHomeLayer(LayerState ls) {
+		home_layer = ls;
 	}
 
 	/** Current extent (bounding box) */
