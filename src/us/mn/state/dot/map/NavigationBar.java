@@ -51,6 +51,27 @@ public class NavigationBar extends JToolBar {
 		setLayout(new BorderLayout());
 		map = m;
 		add(buttons, BorderLayout.LINE_END);
+		addZoomButtons();
+	}
+
+	/** Add the zoom buttons */
+	protected void addZoomButtons() {
+		JButton b = new JButton(" + ");
+		b.setToolTipText("Zoom map view in");
+		b.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				map.zoom(true);
+			}
+		});
+		addButton(b);
+		b = new JButton(" - ");
+		b.setToolTipText("Zoom map view out");
+		b.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				map.zoom(false);
+			}
+		});
+		addButton(b);
 	}
 
 	/** Add a "home" button */
