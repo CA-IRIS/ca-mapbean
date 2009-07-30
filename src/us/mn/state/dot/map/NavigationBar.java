@@ -15,15 +15,15 @@
 package us.mn.state.dot.map;
 
 import java.awt.BorderLayout;
-import java.awt.FlowLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URL;
+import java.util.TreeMap;
 import javax.swing.AbstractButton;
+import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JPanel;
 import javax.swing.JToolBar;
 
 /**
@@ -43,14 +43,18 @@ public class NavigationBar extends JToolBar {
 	/** Map associated with the navigation bar */
 	protected final MapBean map;
 
-	/** Button panel */
-	protected final JPanel buttons = new JPanel(new FlowLayout());
+	/** Button mapping */
+	protected final TreeMap<String, AbstractButton> buttons =
+		new TreeMap<String, AbstractButton>();
+
+	/** Button box */
+	protected final Box b_box = Box.createHorizontalBox();
 
 	/** Create a new navigation bar */
 	public NavigationBar(MapBean m) {
 		setLayout(new BorderLayout());
 		map = m;
-		add(buttons, BorderLayout.LINE_END);
+		add(b_box, BorderLayout.LINE_END);
 		addZoomButtons();
 	}
 
@@ -89,6 +93,22 @@ public class NavigationBar extends JToolBar {
 	/** Add a button to the toolbar */
 	public void addButton(AbstractButton b) {
 		b.setMargin(new Insets(1, 1, 1, 1));
-		buttons.add(b);
+		buttons.put(b.getText(), b);
+		rebuildButtonBox();
+	}
+
+	/** Remove a button from the toolbar */
+	public void removeButton(AbstractButton b) {
+		buttons.remove(b.getText());
+		rebuildButtonBox();
+	}
+
+	/** Rebuild the button box */
+	protected void rebuildButtonBox() {
+		b_box.removeAll();
+		for(AbstractButton b: buttons.values()) {
+			b_box.add(Box.createHorizontalStrut(4));
+			b_box.add(b);
+		}
 	}
 }
