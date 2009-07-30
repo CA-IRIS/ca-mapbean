@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000-2007  Minnesota Department of Transportation
+ * Copyright (C) 2000-2009  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -59,7 +59,6 @@ public class ShapeLayer extends Layer {
 		if(url == null) 
 			throw new FileNotFoundException("for layer "+layerName);
 		String f = url.toExternalForm();
-		System.err.println("ShapeLayer.ShapeLayer(): opening file "+f);
 		if(!f.endsWith(".shp"))
 			throw new IOException("URL ("+f+") must be a '.shp' file");
 		ShapeFile s = new ShapeFile(url, verbose);
