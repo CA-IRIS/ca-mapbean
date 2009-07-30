@@ -99,7 +99,13 @@ public class MapModel implements LayerChangedListener {
 	/** Set the home layer */
 	public void setHomeLayer(LayerState ls) {
 		home_layer = ls;
-		setExtent(home_layer.getExtent());
+		home();
+	}
+
+	/** Set the extents to the home layer extends */
+	public void home() {
+		if(home_layer != null) 
+			setExtent(home_layer.getExtent());
 	}
 
 	/** Current extent (bounding box) */

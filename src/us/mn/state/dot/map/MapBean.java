@@ -69,9 +69,6 @@ public class MapBean extends JComponent implements LayerChangedListener {
                         i.getImage(), new Point(6, 6), "Pan");
 	}
 
-	/** Home extents */
-	protected final Rectangle2D extentHome = new Rectangle2D.Double();
-
 	/** Listeners for map changed events */
 	protected Set<LayerChangedListener> listeners =
 		new HashSet<LayerChangedListener>();
@@ -217,7 +214,7 @@ public class MapBean extends JComponent implements LayerChangedListener {
 
 	/** Sets extent to home coordinates */
 	public void home() {
-		setHomeExtent(extentHome);
+		model.home();
 	}
 
 	/** Transform a point from screen to world coordinates */
@@ -242,14 +239,6 @@ public class MapBean extends JComponent implements LayerChangedListener {
 	/** Create a tooltip for the map */
 	public JToolTip createToolTip() {
 		return new MapToolTip();
-	}
-
-	/** Set the home extents */
-	public void setHomeExtent(Rectangle2D r) {
-		extentHome.setFrame(r.getMinX(), r.getMinY(), r.getWidth(),
-			r.getHeight());
-		setExtent(r.getMinX(), r.getMinY(), r.getWidth(),
-			r.getHeight());
 	}
 
 	/** Set the extent of the map */

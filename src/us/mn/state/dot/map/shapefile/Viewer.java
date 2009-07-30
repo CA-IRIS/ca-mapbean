@@ -27,6 +27,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import us.mn.state.dot.map.Layer;
+import us.mn.state.dot.map.LayerState;
 import us.mn.state.dot.map.MapBean;
 import us.mn.state.dot.map.NavigationBar;
 
@@ -118,8 +119,10 @@ public class Viewer extends JFrame {
 			ShapeLayer l = new ShapeLayer(file.toURI().toURL(),
 				getName(file), false);
 //			l.write(System.out);
-			map.getModel().addLayer(l.createState());
-			map.setHomeExtent(l.getExtent());
+			LayerState ls = l.createState();
+			map.getModel().addLayer(ls);
+			map.getModel().setHomeLayer(ls);
+			map.home();
 		} catch(IOException ioe) {
 			ioe.printStackTrace();
 		}
