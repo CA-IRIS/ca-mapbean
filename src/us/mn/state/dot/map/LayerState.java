@@ -44,7 +44,12 @@ public class LayerState implements LayerChangedListener {
 	static protected final MapObject[] NO_SELECTION = new MapObject[0];
 
 	/** Layer this state is for */
-	public final Layer layer;
+	protected final Layer layer;
+
+	/** Get the layer */
+	public Layer getLayer() {
+		return layer;
+	}
 
 	/** Listeners that listen to this layer state */
 	protected final Set<LayerChangedListener> listeners =
@@ -174,24 +179,9 @@ public class LayerState implements LayerChangedListener {
 		}
 	}
 
-	/** Get the appropriate tool tip text for the specified point */
-	public String getTip(Point2D p) {
-		if(isSearchable()) {
-			MapObject o = theme.search(layer, p);
-			if(o != null)
-				return theme.getTip(o);
-		}
-		return null;
-	}
-
 	/** Get the visibility flag */
 	public boolean isVisible() {
 		return visible;
-	}
-
-	/** Check if the layer is currently searchable */
-	protected boolean isSearchable() {
-		return visible && layer instanceof DynamicLayer;
 	}
 
 	/** Set the visibility of the layer */
@@ -224,16 +214,15 @@ public class LayerState implements LayerChangedListener {
 		notifyLayerChangedListeners(e.getReason());
 	}
 
-	/** Get the layer */
-	public Layer getLayer() {
-		return layer;
+	/** Get the appropriate tool tip text for the specified point */
+	public String getTip(Point2D p) {
+		if(isSearchable()) {
+			MapObject o = theme.search(layer, p);
+			if(o != null)
+				return theme.getTip(o);
+		}
+		return null;
 	}
-
-	/** Process a left click on a map object */
-	protected void doLeftClick(MouseEvent e, MapObject o) {}
-
-	/** Process a right click on a map object */
-	protected void doRightClick(MouseEvent e, MapObject o) {}
 
 	/** Process a mouse click for the layer */
 	public boolean doMouseClicked(MouseEvent e, Point2D p) {
@@ -247,5 +236,16 @@ public class LayerState implements LayerChangedListener {
 				return true;
 		}
 		return false;
+	}
+
+	/** Process a left click on a map object */
+	protected void doLeftClick(MouseEvent e, MapObject o) {}
+
+	/** Process a right click on a map object */
+	protected void doRightClick(MouseEvent e, MapObject o) {}
+
+	/** Check if the layer is currently searchable */
+	protected boolean isSearchable() {
+		return visible && layer instanceof DynamicLayer;
 	}
 }
