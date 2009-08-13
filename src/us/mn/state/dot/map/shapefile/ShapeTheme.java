@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2007-2008  Minnesota Department of Transportation
+ * Copyright (C) 2007-2009  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,10 +18,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.Shape;
-import java.awt.geom.Point2D;
-import us.mn.state.dot.map.Layer;
 import us.mn.state.dot.map.MapObject;
-import us.mn.state.dot.map.MapSearcher;
 import us.mn.state.dot.map.Outline;
 import us.mn.state.dot.map.Style;
 import us.mn.state.dot.map.Symbol;
@@ -56,8 +53,8 @@ public class ShapeTheme extends StyledTheme {
 	}
 
 	/** Get the shape to draw a given map object */
-	protected Shape getShape(MapObject o) {
-		ShapeObject so = (ShapeObject)o;
+	public Shape getShape(MapObject mo) {
+		ShapeObject so = (ShapeObject)mo;
 		return so.getShape();
 	}
 
@@ -73,15 +70,6 @@ public class ShapeTheme extends StyledTheme {
 		Shape ellipse = createEllipse(shape);
 		g.setStroke(outline.stroke);
 		g.draw(ellipse);
-	}
-
-	/** Search a layer for a map object containing the given point */
-	public MapObject search(Layer layer, final Point2D p) {
-		return layer.forEach(new MapSearcher() {
-			public boolean next(MapObject o) {
-				return getShape(o).contains(p);
-			}
-		});
 	}
 
 	/** Get the style to draw a given map object */

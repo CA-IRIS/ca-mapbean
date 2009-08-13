@@ -158,6 +158,6 @@ public class ShapeLayer extends Layer {
 
 	/** Create a new layer state */
 	public LayerState createState() {
-		return new LayerState(this, new ShapeTheme(getStyle()));
+		return new ShapeLayerState(this, new ShapeTheme(getStyle()));
 	}
 }

@@ -217,17 +217,28 @@ public class LayerState implements LayerChangedListener {
 	/** Get the appropriate tool tip text for the specified point */
 	public String getTip(Point2D p) {
 		if(isSearchable()) {
-			MapObject o = theme.search(layer, p);
+			MapObject o = search(p);
 			if(o != null)
 				return theme.getTip(o);
 		}
 		return null;
 	}
 
+	/** Search the layer for a map object containing the given point */
+	public MapObject search(final Point2D p) {
+		return layer.forEach(new MapSearcher() {
+			public boolean next(MapObject mo) {
+				AffineTransform t = mo.getInverseTransform();
+				Point2D ip = t.transform(p, null);
+				return theme.getShape(mo).contains(ip);
+			}
+		});
+	}
+
 	/** Process a mouse click for the layer */
 	public boolean doMouseClicked(MouseEvent e, Point2D p) {
 		if(isSearchable()) {
-			MapObject o = theme.search(layer, p);
+			MapObject o = search(p);
 			if(SwingUtilities.isLeftMouseButton(e))
 				doLeftClick(e, o);
 			if(SwingUtilities.isRightMouseButton(e))

@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2004-2007  Minnesota Department of Transportation
+ * Copyright (C) 2004-2009  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,7 +17,6 @@ package us.mn.state.dot.map;
 import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.Point2D;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -81,7 +80,7 @@ abstract public class Theme {
 	}
 
 	/** Get the shape to draw a given map object */
-	protected Shape getShape(MapObject o) {
+	public Shape getShape(MapObject mo) {
 		return shape;
 	}
 
@@ -96,17 +95,6 @@ abstract public class Theme {
 
 	/** Draw a selected map object */
 	abstract public void drawSelected(Graphics2D g, MapObject o);
-
-	/** Search a layer for a map object containing the given point */
-	public MapObject search(Layer layer, final Point2D p) {
-		return layer.forEach(new MapSearcher() {
-			public boolean next(MapObject o) {
-				AffineTransform t = o.getInverseTransform();
-				Point2D ip = t.transform(p, null);
-				return getShape(o).contains(ip);
-			}
-		});
-	}
 
 	/** Get tooltip text for the given map object */
 	public String getTip(MapObject o) {
