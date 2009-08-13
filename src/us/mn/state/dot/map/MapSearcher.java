@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2007  Minnesota Department of Transportation
+ * Copyright (C) 2007-2009  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,5 +22,5 @@ package us.mn.state.dot.map;
 public interface MapSearcher {
 
 	/** Do something with the next object */
-	public boolean next(MapObject o);
+	boolean next(MapObject mo);
 }

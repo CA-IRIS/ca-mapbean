@@ -59,8 +59,8 @@ public class ShapeTheme extends StyledTheme {
 	}
 
 	/** Draw a selected map object */
-	public void drawSelected(Graphics2D g, MapObject o) {
-		Shape shape = getShape(o);
+	public void drawSelected(Graphics2D g, MapObject mo) {
+		Shape shape = getShape(mo);
 		Outline outline = Outline.createDashed(Color.WHITE, 20);
 		g.setColor(outline.color);
 		g.setStroke(outline.stroke);
@@ -73,14 +73,14 @@ public class ShapeTheme extends StyledTheme {
 	}
 
 	/** Get the style to draw a given map object */
-	public Style getStyle(MapObject o) {
+	public Style getStyle(MapObject mo) {
 		return style;
 	}
 
 	/** Get a symbol to draw a given map object */
-	public Symbol getSymbol(MapObject o) {
-		VectorSymbol sym = (VectorSymbol)super.getSymbol(o);
-		sym.setShape(((ShapeObject)o).getShape());
+	public Symbol getSymbol(MapObject mo) {
+		VectorSymbol sym = (VectorSymbol)super.getSymbol(mo);
+		sym.setShape(((ShapeObject)mo).getShape());
 		return sym;
 	}
 }

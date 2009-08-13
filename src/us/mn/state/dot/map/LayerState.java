@@ -158,8 +158,8 @@ public class LayerState implements LayerChangedListener {
 		if(visible) {
 			final AffineTransform t = g.getTransform();
 			layer.forEach(new MapSearcher() {
-				public boolean next(MapObject o) {
-					theme.draw(g, o);
+				public boolean next(MapObject mo) {
+					theme.draw(g, mo);
 					g.setTransform(t);
 					return false;
 				}
@@ -172,8 +172,8 @@ public class LayerState implements LayerChangedListener {
 		if(visible) {
 			AffineTransform t = g.getTransform();
 			MapObject[] sel = selections;
-			for(MapObject o: sel) {
-				theme.drawSelected(g, o);
+			for(MapObject mo: sel) {
+				theme.drawSelected(g, mo);
 				g.setTransform(t);
 			}
 		}
@@ -217,9 +217,9 @@ public class LayerState implements LayerChangedListener {
 	/** Get the appropriate tool tip text for the specified point */
 	public String getTip(Point2D p) {
 		if(isSearchable()) {
-			MapObject o = search(p);
-			if(o != null)
-				return theme.getTip(o);
+			MapObject mo = search(p);
+			if(mo != null)
+				return theme.getTip(mo);
 		}
 		return null;
 	}
@@ -238,22 +238,22 @@ public class LayerState implements LayerChangedListener {
 	/** Process a mouse click for the layer */
 	public boolean doMouseClicked(MouseEvent e, Point2D p) {
 		if(isSearchable()) {
-			MapObject o = search(p);
+			MapObject mo = search(p);
 			if(SwingUtilities.isLeftMouseButton(e))
-				doLeftClick(e, o);
+				doLeftClick(e, mo);
 			if(SwingUtilities.isRightMouseButton(e))
-				doRightClick(e, o);
-			if(o != null)
+				doRightClick(e, mo);
+			if(mo != null)
 				return true;
 		}
 		return false;
 	}
 
 	/** Process a left click on a map object */
-	protected void doLeftClick(MouseEvent e, MapObject o) {}
+	protected void doLeftClick(MouseEvent e, MapObject mo) {}
 
 	/** Process a right click on a map object */
-	protected void doRightClick(MouseEvent e, MapObject o) {}
+	protected void doRightClick(MouseEvent e, MapObject mo) {}
 
 	/** Check if the layer is currently searchable */
 	protected boolean isSearchable() {

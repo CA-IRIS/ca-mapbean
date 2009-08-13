@@ -85,19 +85,19 @@ abstract public class Theme {
 	}
 
 	/** Get the symbol to draw a given map object */
-	abstract public Symbol getSymbol(MapObject o);
+	abstract public Symbol getSymbol(MapObject mo);
 
 	/** Draw the specified map object */
-	public void draw(Graphics2D g, MapObject o) {
-		g.transform(o.getTransform());
-		getSymbol(o).draw(g);
+	public void draw(Graphics2D g, MapObject mo) {
+		g.transform(mo.getTransform());
+		getSymbol(mo).draw(g);
 	}
 
 	/** Draw a selected map object */
-	abstract public void drawSelected(Graphics2D g, MapObject o);
+	abstract public void drawSelected(Graphics2D g, MapObject mo);
 
 	/** Get tooltip text for the given map object */
-	public String getTip(MapObject o) {
-		return o.toString();
+	public String getTip(MapObject mo) {
+		return mo.toString();
 	}
 }

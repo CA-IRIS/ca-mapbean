@@ -149,9 +149,9 @@ public class ShapeLayer extends Layer {
 
 	/** Iterate through the shapes in the layer */
 	public MapObject forEach(MapSearcher s) {
-		for(ShapeObject o: shapes) {
-			if(s.next(o))
-				return o;
+		for(ShapeObject so: shapes) {
+			if(s.next(so))
+				return so;
 		}
 		return null;
 	}
