@@ -44,7 +44,7 @@ abstract public class StyledTheme extends Theme {
 	}
 
 	/** Get the style to draw a given map object */
-	abstract public Style getStyle(MapObject o);
+	abstract public Style getStyle(MapObject mo);
 
 	/** Get a list of all symbols */
 	public List<Symbol> getSymbols() {
@@ -55,13 +55,13 @@ abstract public class StyledTheme extends Theme {
 	}
 
 	/** Get a symbol for the given map object */
-	public Symbol getSymbol(MapObject o) {
-		return getSymbol(getStyle(o).getLabel());
+	public Symbol getSymbol(MapObject mo) {
+		return getSymbol(getStyle(mo).getLabel());
 	}
 
 	/** Get the width to use for the selected outline */
-	protected float getSelectedWidth(MapObject o) {
-		Style style = getStyle(o);
+	protected float getSelectedWidth(MapObject mo) {
+		Style style = getStyle(mo);
 		if(style.outline != null)
 			return 9 * style.outline.width / 10;
 		return 25;
@@ -82,11 +82,11 @@ abstract public class StyledTheme extends Theme {
 	}
 
 	/** Draw a selected map object */
-	public void drawSelected(Graphics2D g, MapObject o) {
-		Shape shape = getShape(o);
-		g.transform(o.getTransform());
+	public void drawSelected(Graphics2D g, MapObject mo) {
+		Shape shape = getShape(mo);
+		g.transform(mo.getTransform());
 		Outline outline = Outline.createDashed(Color.WHITE,
-			getSelectedWidth(o));
+			getSelectedWidth(mo));
 		g.setColor(outline.color);
 		g.setStroke(outline.stroke);
 		g.draw(shape);
