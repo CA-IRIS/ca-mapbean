@@ -223,6 +223,11 @@ public class MapBean extends JComponent implements LayerChangedListener {
 		return t.transform(p, null);
 	}
 
+	/** Get the size of a pixel in world coordinates */
+	public double getPixelWorld() {
+		return mapPane.getInverseTransform().getScaleX();
+	}
+
 	/** Get the tooltip text for the given mouse event */
 	public String getToolTipText(MouseEvent e) {
 		Point2D p = transformPoint(e.getPoint());
