@@ -230,7 +230,7 @@ public class LayerState implements LayerChangedListener {
 			public boolean next(MapObject mo) {
 				AffineTransform t = mo.getInverseTransform();
 				Point2D ip = t.transform(p, null);
-				return theme.getShape(mo).contains(ip);
+				return mo.getShape().contains(ip);
 			}
 		});
 	}

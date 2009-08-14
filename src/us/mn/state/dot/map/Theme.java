@@ -15,8 +15,6 @@
 package us.mn.state.dot.map;
 
 import java.awt.Graphics2D;
-import java.awt.Shape;
-import java.awt.geom.AffineTransform;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -33,9 +31,6 @@ abstract public class Theme {
 	/** Name of theme */
 	protected final String name;
 
-	/** Default shape */
-	protected final Shape shape;
-
 	/** Default symbol */
 	protected Symbol dsymbol;
 
@@ -44,9 +39,8 @@ abstract public class Theme {
 		new HashMap<String, Symbol>();
 
 	/** Create a new theme */
-	protected Theme(String n, Shape s) {
+	protected Theme(String n) {
 		name = n;
-		shape = s;
 	}
 
 	/** Get a string representation of the theme */
@@ -79,18 +73,13 @@ abstract public class Theme {
 		return symbols;
 	}
 
-	/** Get the shape to draw a given map object */
-	public Shape getShape(MapObject mo) {
-		return shape;
-	}
-
 	/** Get the symbol to draw a given map object */
 	abstract public Symbol getSymbol(MapObject mo);
 
 	/** Draw the specified map object */
 	public void draw(Graphics2D g, MapObject mo) {
 		g.transform(mo.getTransform());
-		getSymbol(mo).draw(g);
+		getSymbol(mo).draw(g, mo.getShape());
 	}
 
 	/** Draw a selected map object */

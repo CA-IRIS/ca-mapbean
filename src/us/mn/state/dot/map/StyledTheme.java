@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2007-2008  Minnesota Department of Transportation
+ * Copyright (C) 2007-2009  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,15 +32,19 @@ abstract public class StyledTheme extends Theme {
 	/** List of all styles */
 	protected final LinkedList<Style> styles = new LinkedList<Style>();
 
+	/** Shape of legend icon */
+	protected final Shape lshape;
+
 	/** Create a new styled theme */
-	protected StyledTheme(String n, Shape s) {
-		super(n, s);
+	protected StyledTheme(String n, Shape ls) {
+		super(n);
+		lshape = ls;
 	}
 
 	/** Add a new style to the theme */
 	protected void addStyle(Style sty) {
 		styles.add(sty);
-		addSymbol(new VectorSymbol(sty, shape));
+		addSymbol(new VectorSymbol(sty, lshape));
 	}
 
 	/** Get the style to draw a given map object */
@@ -83,7 +87,7 @@ abstract public class StyledTheme extends Theme {
 
 	/** Draw a selected map object */
 	public void drawSelected(Graphics2D g, MapObject mo) {
-		Shape shape = getShape(mo);
+		Shape shape = mo.getShape();
 		g.transform(mo.getTransform());
 		Outline outline = Outline.createDashed(Color.WHITE,
 			getSelectedWidth(mo));

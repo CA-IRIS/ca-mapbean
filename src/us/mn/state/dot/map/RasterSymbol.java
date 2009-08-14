@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000-2007  Minnesota Department of Transportation
+ * Copyright (C) 2000-2009  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,6 +16,7 @@ package us.mn.state.dot.map;
 
 import java.awt.Dimension;
 import java.awt.Graphics2D;
+import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -65,7 +66,7 @@ public class RasterSymbol implements Symbol {
 	}
 
 	/** Draw the raster symbol */
-	public void draw(Graphics2D g) {
+	public void draw(Graphics2D g, Shape shp) {
 		int width = icon.getIconWidth();
 		int height = icon.getIconHeight();
 		if(size != null) {

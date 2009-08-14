@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000-2007  Minnesota Department of Transportation
+ * Copyright (C) 2000-2009  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,6 +14,7 @@
  */
 package us.mn.state.dot.map;
 
+import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 
 /**
@@ -25,8 +26,11 @@ import java.awt.geom.AffineTransform;
 public interface MapObject {
 
 	/** Get the map object transform */
-	public AffineTransform getTransform();
+	AffineTransform getTransform();
 
 	/** Get the inverse map object transform */
-	public AffineTransform getInverseTransform();
+	AffineTransform getInverseTransform();
+
+	/** Get the shape to draw the map object */
+	Shape getShape();
 }

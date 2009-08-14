@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2007  Minnesota Department of Transportation
+ * Copyright (C) 2007-2009  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,17 +33,13 @@ public class VectorSymbol implements Symbol {
 	/** Style to draw symbol */
 	public final Style style;
 
-	/** Shape to draw symbol */
-	protected final Shape shape;
-
-	/** Temporary shape to draw */
-	protected Shape tshape;
+	/** Shape to draw legend */
+	protected final Shape lshape;
 
 	/** Create a new vector symbol */
 	public VectorSymbol(Style sty, Shape shp) {
 		style = sty;
-		shape = shp;
-		tshape = shp;
+		lshape = shp;
 	}
 
 	/** Get the symbol label */
@@ -51,21 +47,16 @@ public class VectorSymbol implements Symbol {
 		return style.getLabel();
 	}
 
-	/** Set the shape of the symbol */
-	public void setShape(Shape shp) {
-		tshape = shp;
-	}
-
 	/** Draw the symbol */
-	public void draw(Graphics2D g) {
+	public void draw(Graphics2D g, Shape shp) {
 		if(style.fill_color != null) {
 			g.setColor(style.fill_color);
-			g.fill(tshape);
+			g.fill(shp);
 		}
 		if(style.outline != null) {
 			g.setColor(style.outline.color);
 			g.setStroke(style.outline.stroke);
-			g.draw(tshape);
+			g.draw(shp);
 		}
 	}
 
@@ -85,7 +76,7 @@ public class VectorSymbol implements Symbol {
 
 		/** Create a new legend icon */
 		protected LegendIcon() {
-			Rectangle2D b = shape.getBounds2D();
+			Rectangle2D b = lshape.getBounds2D();
 			double x = b.getX() + b.getWidth() / 2;
 			double y = b.getY() + b.getHeight() / 2;
 			double scale = (SIZE - 2) /
@@ -98,13 +89,12 @@ public class VectorSymbol implements Symbol {
 
 		/** Paint the icon onto the given component */
 		public void paintIcon(Component c, Graphics g, int x, int y) {
-			setShape(shape);
 			Graphics2D g2 = (Graphics2D)g;
 			AffineTransform t = g2.getTransform();
 			g2.transform(transform);
 			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 				RenderingHints.VALUE_ANTIALIAS_ON);
-			draw(g2);
+			draw(g2, lshape);
 			g2.setTransform(t);
 		}
 
