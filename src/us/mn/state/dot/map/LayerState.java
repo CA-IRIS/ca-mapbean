@@ -38,7 +38,7 @@ import us.mn.state.dot.map.event.LayerChangedListener;
  * @author Erik Engstrom
  * @author Douglas Lau
  */
-public class LayerState implements LayerChangedListener {
+abstract public class LayerState implements LayerChangedListener {
 
 	/** Empty selection special case (for equality comparisons) */
 	static protected final MapObject[] NO_SELECTION = new MapObject[0];
@@ -153,11 +153,14 @@ public class LayerState implements LayerChangedListener {
 		return layer.getExtent();
 	}
 
+	/** Call the specified callback for each map object in the layer */
+	abstract public MapObject forEach(MapSearcher s);
+
 	/** Paint the layer */
 	public void paint(final Graphics2D g) {
 		if(visible) {
 			final AffineTransform t = g.getTransform();
-			layer.forEach(new MapSearcher() {
+			forEach(new MapSearcher() {
 				public boolean next(MapObject mo) {
 					theme.draw(g, mo);
 					g.setTransform(t);
@@ -226,7 +229,7 @@ public class LayerState implements LayerChangedListener {
 
 	/** Search the layer for a map object containing the given point */
 	public MapObject search(final Point2D p) {
-		return layer.forEach(new MapSearcher() {
+		return forEach(new MapSearcher() {
 			public boolean next(MapObject mo) {
 				AffineTransform t = mo.getInverseTransform();
 				Point2D ip = t.transform(p, null);

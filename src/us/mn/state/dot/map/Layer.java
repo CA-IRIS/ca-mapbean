@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000-2007  Minnesota Department of Transportation
+ * Copyright (C) 2000-2009  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -68,9 +68,6 @@ abstract public class Layer {
 		for(LayerChangedListener l: listeners)
 			l.layerChanged(e);
 	}
-
-	/** Call the specified callback for each map object in the layer */
-	abstract public MapObject forEach(MapSearcher s);
 
 	/** Create a new layer state */
 	abstract public LayerState createState();

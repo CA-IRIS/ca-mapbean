@@ -42,6 +42,11 @@ public class ShapeLayer extends Layer {
 	/** List of shapes from the shapefile */
 	protected final List<ShapeObject> shapes;
 
+	/** Get the list of shapes */
+	public List<ShapeObject> getShapes() {
+		return shapes;
+	}
+
 	/** The type of the shape file */
 	protected final int shapeType;
 
@@ -144,15 +149,6 @@ public class ShapeLayer extends Layer {
 					Color.BLACK);
 		}
 		assert false : "Unknown shape type:"+shapeType;
-		return null;
-	}
-
-	/** Iterate through the shapes in the layer */
-	public MapObject forEach(MapSearcher s) {
-		for(ShapeObject so: shapes) {
-			if(s.next(so))
-				return so;
-		}
 		return null;
 	}
 

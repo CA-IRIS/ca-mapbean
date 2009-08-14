@@ -16,6 +16,7 @@ package us.mn.state.dot.map.shapefile;
 
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
+import java.util.List;
 import us.mn.state.dot.map.LayerState;
 import us.mn.state.dot.map.MapObject;
 import us.mn.state.dot.map.MapSearcher;
@@ -29,6 +30,9 @@ import us.mn.state.dot.map.MapSearcher;
  */
 public class ShapeLayerState extends LayerState {
 
+	/** List of shapes from the shapefile */
+	protected final List<ShapeObject> shapes;
+
 	/**
 	 * Create a new shape layer state.
 	 *
@@ -37,11 +41,21 @@ public class ShapeLayerState extends LayerState {
 	 */
 	public ShapeLayerState(ShapeLayer layer, ShapeTheme theme) {
 		super(layer, theme);
+		shapes = layer.getShapes();
+	}
+
+	/** Iterate through the shapes in the layer */
+	public MapObject forEach(MapSearcher s) {
+		for(ShapeObject so: shapes) {
+			if(s.next(so))
+				return so;
+		}
+		return null;
 	}
 
 	/** Search the layer for a map object containing the given point */
 	public MapObject search(final Point2D p) {
-		return layer.forEach(new MapSearcher() {
+		return forEach(new MapSearcher() {
 			public boolean next(MapObject mo) {
 				return mo.getShape().contains(p);
 			}
