@@ -29,6 +29,12 @@ import java.util.List;
  */
 abstract public class StyledTheme extends Theme {
 
+	/** Transparent white */
+	static protected final Color TRANS_WHITE = new Color(1, 1, 1, 0.4f);
+
+	/** Transparent white */
+	static protected final Color TRANSPARENT = new Color(1, 1, 1, 0.75f);
+
 	/** List of all styles */
 	protected final LinkedList<Style> styles = new LinkedList<Style>();
 
@@ -63,14 +69,6 @@ abstract public class StyledTheme extends Theme {
 		return getSymbol(getStyle(mo).getLabel());
 	}
 
-	/** Get the width to use for the selected outline */
-	protected float getSelectedWidth(MapObject mo) {
-		Style style = getStyle(mo);
-		if(style.outline != null)
-			return 9 * style.outline.width / 10;
-		return 25;
-	}
-
 	/** Get the thickness of the ellipse */
 	protected float getThickness(Shape s) {
 		Rectangle2D r = s.getBounds2D();
@@ -88,15 +86,15 @@ abstract public class StyledTheme extends Theme {
 	/** Draw a selected map object */
 	public void drawSelected(Graphics2D g, MapObject mo) {
 		Shape shape = mo.getShape();
-		g.transform(mo.getTransform());
-		Outline outline = Outline.createDashed(Color.WHITE,
-			getSelectedWidth(mo));
-		g.setColor(outline.color);
-		g.setStroke(outline.stroke);
-		g.draw(shape);
-		outline = Outline.createSolid(Color.WHITE, getThickness(shape));
-		Shape ellipse = createEllipse(shape);
-		g.setStroke(outline.stroke);
-		g.draw(ellipse);
+		if(shape != null) {
+			g.transform(mo.getTransform());
+			g.setColor(TRANS_WHITE);
+			g.fill(shape);
+			Outline outline = Outline.createSolid(TRANSPARENT,
+				getThickness(shape));
+			g.setColor(TRANSPARENT);
+			g.setStroke(outline.stroke);
+			g.draw(createEllipse(shape));
+		}
 	}
 }
