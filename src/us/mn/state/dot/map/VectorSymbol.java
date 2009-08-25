@@ -49,14 +49,14 @@ public class VectorSymbol implements Symbol {
 
 	/** Draw the symbol */
 	public void draw(Graphics2D g, Shape shp, float scale) {
+		if(style.fill_color != null) {
+			g.setColor(style.fill_color);
+			g.fill(shp);
+		}
 		if(style.outline != null) {
 			g.setColor(style.outline.color);
 			g.setStroke(style.outline.getStroke(scale));
 			g.draw(shp);
-		}
-		if(style.fill_color != null) {
-			g.setColor(style.fill_color);
-			g.fill(shp);
 		}
 	}
 
