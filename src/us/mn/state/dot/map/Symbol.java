@@ -34,5 +34,5 @@ public interface Symbol {
 	Icon getLegend();
 
 	/** Draw the symbol */
-	void draw(Graphics2D g, Shape shp);
+	void draw(Graphics2D g, Shape shp, float scale);
 }

@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2004-2007  Minnesota Department of Transportation
+ * Copyright (C) 2004-2009  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,49 +35,56 @@ public class Outline {
 	public final Color color;
 
 	/** Width of the outline */
-	public final float width;
+	protected final float width;
 
-	/** Stroke to render the outline */
-	public final Stroke stroke;
+	/** Dash pattern */
+	protected final float[] dash;
 
 	/** Create a new outline */
-	protected Outline(Color c, float w, Stroke s) {
+	protected Outline(Color c, float w, float[] d) {
 		color = c;
 		width = w;
-		stroke = s;
+		dash = d;
+	}
+
+	/** Get the outline stroke */
+	public Stroke getStroke(float scale) {
+		float w = width * scale;
+		if(dash != null) {
+			float[] d = new float[dash.length];
+			for(int i = 0; i < d.length; i++)
+				d[i] = dash[i] * scale;
+			return new BasicStroke(w, CAP, JOIN, w, d, 0);
+		} else
+			return new BasicStroke(w, CAP, JOIN);
 	}
 
 	/** Create a solid outline */
 	static public Outline createSolid(Color c, float w) {
-		Stroke s = new BasicStroke(w, CAP, JOIN);
-		return new Outline(c, w, s);
+		return new Outline(c, w, null);
 	}
 
 	/** Create a dotted outline */
 	static public Outline createDotted(Color c, float w) {
-		float[] dash = new float[] { w, w * 2 };
-		Stroke s = new BasicStroke(w, CAP, JOIN, w, dash, 0);
-		return new Outline(c, w, s);
+		float[] d = new float[] { w, w * 2 };
+		return new Outline(c, w, d);
 	}
 
 	/** Create a dashed outline */
 	static public Outline createDashed(Color c, float w) {
-		float[] dash = new float[] { w * 3, w * 2 };
-		Stroke s = new BasicStroke(w, CAP, JOIN, w, dash, 0);
-		return new Outline(c, w, s);
+		float[] d = new float[] { w * 3, w * 2 };
+		return new Outline(c, w, d);
 	}
 
 	/** Create a dash-dot outline */
 	static public Outline createDashDotted(Color c, float w) {
-		float[] dash = new float[] { w * 3, w * 2, w, w * 2 };
-		Stroke s = new BasicStroke(w, CAP, JOIN, w, dash, 0);
-		return new Outline(c, w, s);
+		float[] d = new float[] { w * 3, w * 2, w, w * 2 };
+		return new Outline(c, w, d);
 	}
 
 	/** Create a dash-dot-dot outline */
 	static public Outline createDashDotDotted(Color c, float w) {
-		float[] dash = new float[] { w * 3, w * 2, w, w * 2, w, w * 2 };
-		Stroke s = new BasicStroke(w, CAP, JOIN, w, dash, 0);
-		return new Outline(c, w, s);
+		float[] d = new float[] { w * 3, w * 2, w, w * 2, w, w * 2 };
+		return new Outline(c, w, d);
 	}
 }

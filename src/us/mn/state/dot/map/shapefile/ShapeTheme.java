@@ -48,16 +48,15 @@ public class ShapeTheme extends StyledTheme {
 	}
 
 	/** Draw a selected map object */
-	public void drawSelected(Graphics2D g, MapObject mo) {
+	public void drawSelected(Graphics2D g, MapObject mo, float scale) {
 		Shape shape = mo.getShape();
-		Outline outline = Outline.createDashed(Color.WHITE, 20);
+		Outline outline = Outline.createDashed(Color.WHITE, 2);
 		g.setColor(outline.color);
-		g.setStroke(outline.stroke);
+		g.setStroke(outline.getStroke(scale));
 		g.draw(shape);
-		outline = Outline.createSolid(Color.WHITE,
-			getThickness(shape));
+		outline = Outline.createSolid(Color.WHITE, 2);
 		Shape ellipse = createEllipse(shape);
-		g.setStroke(outline.stroke);
+		g.setStroke(outline.getStroke(scale));
 		g.draw(ellipse);
 	}
 

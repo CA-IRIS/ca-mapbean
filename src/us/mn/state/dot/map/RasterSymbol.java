@@ -66,7 +66,7 @@ public class RasterSymbol implements Symbol {
 	}
 
 	/** Draw the raster symbol */
-	public void draw(Graphics2D g, Shape shp) {
+	public void draw(Graphics2D g, Shape shp, float scale) {
 		int width = icon.getIconWidth();
 		int height = icon.getIconHeight();
 		if(size != null) {

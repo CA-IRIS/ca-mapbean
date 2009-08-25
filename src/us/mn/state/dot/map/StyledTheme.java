@@ -69,12 +69,6 @@ abstract public class StyledTheme extends Theme {
 		return getSymbol(getStyle(mo).getLabel());
 	}
 
-	/** Get the thickness of the ellipse */
-	protected float getThickness(Shape s) {
-		Rectangle2D r = s.getBounds2D();
-		return (float)Math.min(r.getHeight(), r.getWidth()) / 2;
-	}
-
 	/** Create an ellipse around the given shape */
 	protected Shape createEllipse(Shape s) {
 		Rectangle2D r = s.getBounds2D();
@@ -84,16 +78,15 @@ abstract public class StyledTheme extends Theme {
 	}
 
 	/** Draw a selected map object */
-	public void drawSelected(Graphics2D g, MapObject mo) {
+	public void drawSelected(Graphics2D g, MapObject mo, float scale) {
 		Shape shape = mo.getShape();
 		if(shape != null) {
 			g.transform(mo.getTransform());
 			g.setColor(TRANS_WHITE);
 			g.fill(shape);
-			Outline outline = Outline.createSolid(TRANSPARENT,
-				getThickness(shape));
+			Outline outline = Outline.createSolid(TRANSPARENT, 4);
 			g.setColor(TRANSPARENT);
-			g.setStroke(outline.stroke);
+			g.setStroke(outline.getStroke(scale));
 			g.draw(createEllipse(shape));
 		}
 	}

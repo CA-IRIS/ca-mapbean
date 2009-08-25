@@ -160,9 +160,10 @@ abstract public class LayerState implements LayerChangedListener {
 	public void paint(final Graphics2D g) {
 		if(visible) {
 			final AffineTransform t = g.getTransform();
+			final float scale = getPixelWidth(g);
 			forEach(new MapSearcher() {
 				public boolean next(MapObject mo) {
-					theme.draw(g, mo);
+					theme.draw(g, mo, scale);
 					g.setTransform(t);
 					return false;
 				}
@@ -174,12 +175,21 @@ abstract public class LayerState implements LayerChangedListener {
 	public void paintSelections(Graphics2D g) {
 		if(visible) {
 			AffineTransform t = g.getTransform();
+			float scale = getPixelWidth(g);
 			MapObject[] sel = selections;
 			for(MapObject mo: sel) {
-				theme.drawSelected(g, mo);
+				theme.drawSelected(g, mo, scale);
 				g.setTransform(t);
 			}
 		}
+	}
+
+	/** Get the width of a pixel in user coordinates */
+	static protected float getPixelWidth(Graphics2D g) {
+		AffineTransform t = g.getTransform();
+		float scale = (float)Math.min(Math.abs(t.getScaleX()),
+			Math.abs(t.getScaleY()));
+		return 1 / scale;
 	}
 
 	/** Get the visibility flag */

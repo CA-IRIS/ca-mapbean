@@ -48,15 +48,15 @@ public class VectorSymbol implements Symbol {
 	}
 
 	/** Draw the symbol */
-	public void draw(Graphics2D g, Shape shp) {
+	public void draw(Graphics2D g, Shape shp, float scale) {
+		if(style.outline != null) {
+			g.setColor(style.outline.color);
+			g.setStroke(style.outline.getStroke(scale));
+			g.draw(shp);
+		}
 		if(style.fill_color != null) {
 			g.setColor(style.fill_color);
 			g.fill(shp);
-		}
-		if(style.outline != null) {
-			g.setColor(style.outline.color);
-			g.setStroke(style.outline.stroke);
-			g.draw(shp);
 		}
 	}
 
@@ -94,7 +94,7 @@ public class VectorSymbol implements Symbol {
 			g2.transform(transform);
 			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 				RenderingHints.VALUE_ANTIALIAS_ON);
-			draw(g2, lshape);
+			draw(g2, lshape, 1);
 			g2.setTransform(t);
 		}
 
