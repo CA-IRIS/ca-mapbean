@@ -91,6 +91,7 @@ public class VectorSymbol implements Symbol {
 		public void paintIcon(Component c, Graphics g, int x, int y) {
 			Graphics2D g2 = (Graphics2D)g;
 			AffineTransform t = g2.getTransform();
+			g2.translate(x, y);
 			g2.transform(transform);
 			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 				RenderingHints.VALUE_ANTIALIAS_ON);
