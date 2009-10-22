@@ -56,7 +56,7 @@ abstract public class Theme {
 	}
 
 	/** Get a symbol by label */
-	protected Symbol getSymbol(String label) {
+	public Symbol getSymbol(String label) {
 		Symbol sym = sym_map.get(label);
 		if(sym != null)
 			return sym;
