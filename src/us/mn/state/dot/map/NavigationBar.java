@@ -1,6 +1,7 @@
 /*
  * IRIS -- Intelligent Roadway Information System
  * Copyright (C) 2000-2009  Minnesota Department of Transportation
+ * Copyright (C) 2010  AHMCT, University of California
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,6 +16,7 @@
 package us.mn.state.dot.map;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -31,6 +33,7 @@ import javax.swing.JToolBar;
  *
  * @author Erik Engstrom
  * @author Douglas Lau
+ * @author Michael Darter
  */
 public class NavigationBar extends JToolBar {
 
@@ -54,7 +57,7 @@ public class NavigationBar extends JToolBar {
 	public NavigationBar(MapBean m) {
 		setLayout(new BorderLayout());
 		map = m;
-		add(b_box, BorderLayout.LINE_END);
+		add(b_box);
 		addZoomButtons();
 	}
 
@@ -92,6 +95,7 @@ public class NavigationBar extends JToolBar {
 
 	/** Add a button to the toolbar */
 	public void addButton(AbstractButton b) {
+		b.setMinimumSize(new Dimension(12, 20));
 		b.setMargin(new Insets(1, 1, 1, 1));
 		buttons.put(b.getText(), b);
 		rebuildButtonBox();
@@ -106,9 +110,20 @@ public class NavigationBar extends JToolBar {
 	/** Rebuild the button box */
 	protected void rebuildButtonBox() {
 		b_box.removeAll();
+		// horizontal space between legend and extent buttons
+		b_box.add(createFiller(0, 20, Short.MAX_VALUE));
 		for(AbstractButton b: buttons.values()) {
-			b_box.add(Box.createHorizontalStrut(4));
+			// horizontal space between buttons
+			b_box.add(createFiller(0, 4, 4));
 			b_box.add(b);
 		}
+	}
+
+	/** Create horizontal filler space with the specified widths. */
+	private static Box.Filler createFiller(int min, int pref, int max) {
+		Dimension minDim = new Dimension(min, 10);
+		Dimension prefDim = new Dimension(pref, 10);
+		Dimension maxDim = new Dimension(max, 10);
+		return new Box.Filler(minDim, prefDim, maxDim);
 	}
 }
