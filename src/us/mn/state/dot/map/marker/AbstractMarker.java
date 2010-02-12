@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2004-2007  Minnesota Department of Transportation
+ * Copyright (C) 2004-2010  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -75,5 +75,10 @@ abstract public class AbstractMarker implements Shape {
 
 	public boolean intersects(Rectangle2D r) {
 		return path.intersects(r);
+	}
+
+	/** Create a transformed marker with the specified transform */
+	public Shape createTransformedShape(AffineTransform at) {
+		return path.createTransformedShape(at);
 	}
 }
