@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000-2009  Minnesota Department of Transportation
+ * Copyright (C) 2000-2010  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -64,8 +64,8 @@ abstract public class LayerState implements LayerChangedListener {
 	/** Currently selected map objects */
 	protected MapObject[] selections = NO_SELECTION;
 
-	/** Visibility flag */
-	protected boolean visible = true;
+	/** Visibility flag (null means automatic) */
+	protected Boolean visible = null;
 
 	/**
 	 * Create a new layer state.
@@ -73,7 +73,7 @@ abstract public class LayerState implements LayerChangedListener {
 	 * @param layer Layer this state is based upon.
 	 */
 	public LayerState(Layer layer) {
-		this(layer, null, true);
+		this(layer, null, null);
 	}
 
 	/**
@@ -83,7 +83,7 @@ abstract public class LayerState implements LayerChangedListener {
 	 * @param theme Theme used to paint the layer.
 	 */
 	public LayerState(Layer layer, Theme theme) {
-		this(layer, theme, true);
+		this(layer, theme, null);
 	}
 
 	/**
@@ -91,9 +91,9 @@ abstract public class LayerState implements LayerChangedListener {
 	 *
 	 * @param layer Layer this state is based upon.
 	 * @param theme Theme used to paint the layer.
-	 * @param visible The visible flag.
+	 * @param visible The visible tri-state.
 	 */
-	public LayerState(Layer layer, Theme theme, boolean visible) {
+	public LayerState(Layer layer, Theme theme, Boolean visible) {
 		this.layer = layer;
 		this.theme = theme;
 		this.visible = visible;
@@ -158,7 +158,7 @@ abstract public class LayerState implements LayerChangedListener {
 
 	/** Paint the layer */
 	public void paint(final Graphics2D g) {
-		if(visible) {
+		if(isVisible()) {
 			final AffineTransform t = g.getTransform();
 			final float scale = getPixelWidth(g);
 			forEach(new MapSearcher() {
@@ -173,7 +173,7 @@ abstract public class LayerState implements LayerChangedListener {
 
 	/** Paint the selections for the layer */
 	public void paintSelections(Graphics2D g) {
-		if(visible) {
+		if(isVisible()) {
 			AffineTransform t = g.getTransform();
 			float scale = getPixelWidth(g);
 			MapObject[] sel = selections;
@@ -194,15 +194,26 @@ abstract public class LayerState implements LayerChangedListener {
 
 	/** Get the visibility flag */
 	public boolean isVisible() {
+		// Sub-classes can override automatic visibility
+		if(visible == null)
+			return true;
+		else
+			return visible;
+	}
+
+	/** Get the visibility tri-state */
+	public Boolean getVisible() {
 		return visible;
 	}
 
-	/** Set the visibility of the layer */
-	public void setVisible(boolean v) {
-		if(v != visible) {
-			visible = v;
+	/** Set the visibility of the layer.
+	 * @param v New visibility; true == visible, false == invisible, null
+	 *           means automatic. */
+	public void setVisible(Boolean v) {
+		boolean pv = isVisible();
+		visible = v;
+		if(pv != isVisible())
 			notifyLayerChangedListeners(LayerChange.visibility);
-		}
 	}
 
 	/** Add a layer changed listener to this layer state */
@@ -270,6 +281,6 @@ abstract public class LayerState implements LayerChangedListener {
 
 	/** Check if the layer is currently searchable */
 	protected boolean isSearchable() {
-		return visible && layer instanceof DynamicLayer;
+		return isVisible() && layer instanceof DynamicLayer;
 	}
 }
