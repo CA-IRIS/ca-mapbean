@@ -247,7 +247,7 @@ public class MapBean extends JComponent implements LayerChangedListener {
 	}
 
 	/** Set the extent of the map */
-	protected void setExtent(Rectangle2D r) {
+	public void setExtent(Rectangle2D r) {
 		setExtent(r.getX(), r.getY(), r.getWidth(), r.getHeight());
 	}
 
