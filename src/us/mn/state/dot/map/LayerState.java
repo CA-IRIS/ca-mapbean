@@ -51,6 +51,9 @@ abstract public class LayerState implements LayerChangedListener {
 		return layer;
 	}
 
+	/** Map bean for rendering */
+	protected final MapBean map;
+
 	/** Listeners that listen to this layer state */
 	protected final Set<LayerChangedListener> listeners =
 		new HashSet<LayerChangedListener>();
@@ -69,32 +72,35 @@ abstract public class LayerState implements LayerChangedListener {
 
 	/**
 	 * Create a new layer state.
-	 *
 	 * @param layer Layer this state is based upon.
+	 * @param mb Map bean for rendering.
 	 */
-	public LayerState(Layer layer) {
-		this(layer, null, null);
+	protected LayerState(Layer layer, MapBean mb) {
+		this(layer, mb, null, null);
 	}
 
 	/**
 	 * Create a new layer state.
-	 *
 	 * @param layer Layer this state is based upon.
+	 * @param mb Map bean for rendering.
 	 * @param theme Theme used to paint the layer.
 	 */
-	public LayerState(Layer layer, Theme theme) {
-		this(layer, theme, null);
+	protected LayerState(Layer layer, MapBean mb, Theme theme) {
+		this(layer, mb, theme, null);
 	}
 
 	/**
 	 * Create a new layer state.
-	 *
 	 * @param layer Layer this state is based upon.
+	 * @param mb Map bean for rendering.
 	 * @param theme Theme used to paint the layer.
 	 * @param visible The visible tri-state.
 	 */
-	public LayerState(Layer layer, Theme theme, Boolean visible) {
+	protected LayerState(Layer layer, MapBean mb, Theme theme,
+		Boolean visible)
+	{
 		this.layer = layer;
+		map = mb;
 		this.theme = theme;
 		this.visible = visible;
 		layer.addLayerChangedListener(this);
@@ -160,7 +166,7 @@ abstract public class LayerState implements LayerChangedListener {
 	public void paint(final Graphics2D g) {
 		if(isVisible()) {
 			final AffineTransform t = g.getTransform();
-			final float scale = getPixelWidth(g);
+			final float scale = getScale();
 			forEach(new MapSearcher() {
 				public boolean next(MapObject mo) {
 					theme.draw(g, mo, scale);
@@ -175,7 +181,7 @@ abstract public class LayerState implements LayerChangedListener {
 	public void paintSelections(Graphics2D g) {
 		if(isVisible()) {
 			AffineTransform t = g.getTransform();
-			float scale = getPixelWidth(g);
+			float scale = getScale();
 			MapObject[] sel = selections;
 			for(MapObject mo: sel) {
 				theme.drawSelected(g, mo, scale);
@@ -184,12 +190,9 @@ abstract public class LayerState implements LayerChangedListener {
 		}
 	}
 
-	/** Get the width of a pixel in user coordinates */
-	static protected float getPixelWidth(Graphics2D g) {
-		AffineTransform t = g.getTransform();
-		float scale = (float)Math.min(Math.abs(t.getScaleX()),
-			Math.abs(t.getScaleY()));
-		return 1 / scale;
+	/** Get the current map scale */
+	protected float getScale() {
+		return (float)map.getPixelWorld();
 	}
 
 	/** Get the visibility flag */

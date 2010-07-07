@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000-2009  Minnesota Department of Transportation
+ * Copyright (C) 2000-2010  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,6 +23,7 @@ import java.util.LinkedList;
 import java.util.List;
 import us.mn.state.dot.map.Layer;
 import us.mn.state.dot.map.LayerState;
+import us.mn.state.dot.map.MapBean;
 import us.mn.state.dot.map.MapObject;
 import us.mn.state.dot.map.MapSearcher;
 import us.mn.state.dot.map.Outline;
@@ -153,7 +154,7 @@ public class ShapeLayer extends Layer {
 	}
 
 	/** Create a new layer state */
-	public LayerState createState() {
-		return new ShapeLayerState(this, new ShapeTheme(getStyle()));
+	public LayerState createState(MapBean mb) {
+		return new ShapeLayerState(this, mb,new ShapeTheme(getStyle()));
 	}
 }

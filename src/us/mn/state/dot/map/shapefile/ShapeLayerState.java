@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2009  Minnesota Department of Transportation
+ * Copyright (C) 2009-2010  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,6 +18,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.util.List;
 import us.mn.state.dot.map.LayerState;
+import us.mn.state.dot.map.MapBean;
 import us.mn.state.dot.map.MapObject;
 import us.mn.state.dot.map.MapSearcher;
 
@@ -35,12 +36,12 @@ public class ShapeLayerState extends LayerState {
 
 	/**
 	 * Create a new shape layer state.
-	 *
 	 * @param layer Layer this state is based upon.
+	 * @param mb Map bean for rendering.
 	 * @param theme Theme used to paint the layer.
 	 */
-	public ShapeLayerState(ShapeLayer layer, ShapeTheme theme) {
-		super(layer, theme);
+	public ShapeLayerState(ShapeLayer layer, MapBean mb, ShapeTheme theme) {
+		super(layer, mb, theme);
 		shapes = layer.getShapes();
 	}
 

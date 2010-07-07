@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000-2009  Minnesota Department of Transportation
+ * Copyright (C) 2000-2010  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -119,7 +119,7 @@ public class Viewer extends JFrame {
 			ShapeLayer l = new ShapeLayer(file.toURI().toURL(),
 				getName(file), false);
 //			l.write(System.out);
-			LayerState ls = l.createState();
+			LayerState ls = l.createState(map);
 			map.getModel().addLayer(ls);
 			map.getModel().setHomeLayer(ls);
 			map.home();
