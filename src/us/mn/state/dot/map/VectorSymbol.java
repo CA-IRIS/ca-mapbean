@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2007-2009  Minnesota Department of Transportation
+ * Copyright (C) 2007-2010  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -48,7 +48,7 @@ public class VectorSymbol implements Symbol {
 	}
 
 	/** Draw the symbol */
-	public void draw(Graphics2D g, Shape shp, float scale) {
+	public void draw(Graphics2D g, Shape shp, Shape out, float scale) {
 		if(style.fill_color != null) {
 			g.setColor(style.fill_color);
 			g.fill(shp);
@@ -56,7 +56,7 @@ public class VectorSymbol implements Symbol {
 		if(style.outline != null) {
 			g.setColor(style.outline.color);
 			g.setStroke(style.outline.getStroke(scale));
-			g.draw(shp);
+			g.draw(out);
 		}
 	}
 
@@ -95,7 +95,7 @@ public class VectorSymbol implements Symbol {
 			g2.transform(transform);
 			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 				RenderingHints.VALUE_ANTIALIAS_ON);
-			draw(g2, lshape, 1);
+			draw(g2, lshape, lshape, 1);
 			g2.setTransform(t);
 		}
 

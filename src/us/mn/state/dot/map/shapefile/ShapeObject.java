@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000-2007  Minnesota Department of Transportation
+ * Copyright (C) 2000-2010  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -50,6 +50,11 @@ public class ShapeObject implements MapObject {
 
 	/** Get the shape to draw this object */
 	public Shape getShape() {
+		return shape;
+	}
+
+	/** Get the shape for the outline */
+	public Shape getOutlineShape() {
 		return shape;
 	}
 

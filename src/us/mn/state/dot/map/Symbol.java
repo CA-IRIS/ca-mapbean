@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000-2009  Minnesota Department of Transportation
+ * Copyright (C) 2000-2010  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -34,5 +34,5 @@ public interface Symbol {
 	Icon getLegend();
 
 	/** Draw the symbol */
-	void draw(Graphics2D g, Shape shp, float scale);
+	void draw(Graphics2D g, Shape shp, Shape out, float scale);
 }
