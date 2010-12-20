@@ -17,8 +17,6 @@ package us.mn.state.dot.map;
 import java.awt.geom.Rectangle2D;
 import java.util.HashSet;
 import java.util.Set;
-import us.mn.state.dot.map.event.LayerChangedEvent;
-import us.mn.state.dot.map.event.LayerChangedListener;
 
 /**
  * A layer is a grouping of similar MapObjects.

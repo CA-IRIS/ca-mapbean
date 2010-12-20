@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000-2009  Minnesota Department of Transportation
+ * Copyright (C) 2000-2010  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,9 +21,6 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
-import us.mn.state.dot.map.event.LayerChange;
-import us.mn.state.dot.map.event.LayerChangedEvent;
-import us.mn.state.dot.map.event.LayerChangedListener;
 
 /**
  * Toolbar used for MapBean.

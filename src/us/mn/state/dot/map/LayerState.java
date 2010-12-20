@@ -25,9 +25,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import javax.swing.SwingUtilities;
-import us.mn.state.dot.map.event.LayerChange;
-import us.mn.state.dot.map.event.LayerChangedEvent;
-import us.mn.state.dot.map.event.LayerChangedListener;
 
 /**
  * Layer state is the rendering state for one layer on a map. Multiple layer

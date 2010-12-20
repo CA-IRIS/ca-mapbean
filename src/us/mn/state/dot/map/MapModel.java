@@ -20,9 +20,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
-import us.mn.state.dot.map.event.LayerChange;
-import us.mn.state.dot.map.event.LayerChangedEvent;
-import us.mn.state.dot.map.event.LayerChangedListener;
 
 /**
  * The map model is a collection of LayerStates and the current extent of the
