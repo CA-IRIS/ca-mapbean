@@ -452,19 +452,21 @@ public class MapBean extends JComponent implements LayerChangedListener {
 	/** Render the map */
 	protected void renderMap(Graphics2D g) {
 		Image image = mapPane.getImage();
-		if(image == null)
-			return;
-		g.drawImage(image, 0, 0, this);
+		if(image != null)
+			g.drawImage(image, 0, 0, this);
+		paintSelections(g);
+	}
+
+	/** Paint the current selections */
+	protected void paintSelections(Graphics2D g) {
 		g.transform(mapPane.getTransform());
 		if(mapPane.antialiased) {
 			g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 				RenderingHints.VALUE_ANTIALIAS_ON);
 		}
 		ListIterator<LayerState> li = model.getLayerIterator();
-		while(li.hasPrevious()) {
-			LayerState s = li.previous();
-			s.paintSelections(g);
-		}
+		while(li.hasPrevious())
+			li.previous().paintSelections(g);
 	}
 
 	/** Paint the map component */
