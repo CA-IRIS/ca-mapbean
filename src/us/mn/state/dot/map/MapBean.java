@@ -473,12 +473,8 @@ public class MapBean extends JComponent implements LayerChangedListener {
 	public void paintComponent(Graphics g) {
 		if(pan != null && pan.isStarted())
 			pan.renderMap((Graphics2D)g);
-		else {
-			setCursor(Cursor.getPredefinedCursor(
-				Cursor.WAIT_CURSOR));
+		else
 			renderMap((Graphics2D)g);
-			setCursor();
-		}
 	}
 
 	/** When map changes, the map model updates all change listeners */
