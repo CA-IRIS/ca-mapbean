@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 
 <!-- ================================================== -->
-<!-- MapBean build file 	                        -->
+<!-- mapbean build file 	                        -->
 <!-- ================================================== -->
-<project name="MapBean" default="jar" basedir=".">
+<project name="mapbean" default="jar" basedir=".">
 
 	<property file="project.properties"/>
 	<property file="${user.home}/.ant.properties"/>
