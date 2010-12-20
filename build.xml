@@ -15,7 +15,6 @@
 	<property name="build.classes" value="${build.dir}/classes" />
 	<property name="build.javadocs" value="${build.dir}/javadocs" />
 	<property name="dist.dir" value="${name}-${version}" />
-	<property name="manifest" value="etc/MANIFEST.MF" />
 	<property name="build.compiler" value="modern" />
 
 	<!-- =============================================== -->
@@ -50,8 +49,7 @@
 		depends="compile"
 		description="Creates the jar file for this project.">
 		<mkdir dir="${build.lib}"/>
-		<jar jarfile="${build.lib}/${name}-${version}.jar"
-		     manifest="${manifest}">
+		<jar jarfile="${build.lib}/${name}-${version}.jar">
 			<fileset dir="${build.classes}" />
 		</jar>
 	</target>
