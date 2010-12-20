@@ -409,7 +409,7 @@ public class MapBean extends JComponent implements LayerChangedListener {
 	 *  specified point. 
 	 *  @param c Cursor position in map coordinates. 
 	 *  @param zoomin True to zoom in else false to zoom out.
-	 *  @param zoomInRatio Zoom ratio > 0 and < 1. */
+	 *  @param zoomInRatio Zoom ratio &gt; 0 and &lt; 1. */
 	protected Rectangle2D zoomRect(Point2D c, boolean zoomin, 
 		final double zoomInRatio) 
 	{
