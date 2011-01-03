@@ -1,10 +1,5 @@
-syntax: glob
-*.class
-*~
-*.jar
-*.war
-*.tgz
-*.gz
-*.zip
-*.txt
-build
+(^|/)\.hg($|/)
+(^|/)lib($|/)
+(^|/)build($|/)
+(^|/)*.rej
+(^|/)*.orig
