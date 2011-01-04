@@ -406,17 +406,20 @@ public class MapBean extends JComponent implements LayerChangedListener {
 	}
 
 	/** Return a new rectangle that is zoomed relative to the 
-	 *  specified point. 
-	 *  @param c Cursor position in map coordinates. 
-	 *  @param zoomin True to zoom in else false to zoom out.
-	 *  @param zoomInRatio Zoom ratio &gt; 0 and &lt; 1. */
+	 * specified point. 
+	 * @param c Cursor position in map coordinates. 
+	 * @param zoomin True to zoom in else false to zoom out.
+	 * @param zoomInRatio Zoom ratio &gt; 0 and &lt; 1. */
 	protected Rectangle2D zoomRect(Point2D c, boolean zoomin, 
 		final double zoomInRatio) 
 	{
 		Rectangle2D e = model.getExtent();
-		if(zoomin && e.getWidth() < ZOOM_THRESHOLD &&
-			e.getHeight() < ZOOM_THRESHOLD)
-				return e;
+		if(zoomin &&
+		   e.getWidth() < ZOOM_THRESHOLD &&
+		   e.getHeight() < ZOOM_THRESHOLD)
+		{
+			return e;
+		}
 		double zratio = (zoomin ? zoomInRatio : 1 / zoomInRatio);
 		double x = c.getX() - zratio * (c.getX() - e.getX());
 		double y = c.getY() - zratio * (c.getY() - e.getY());
