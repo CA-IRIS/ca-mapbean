@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000-2010  Minnesota Department of Transportation
+ * Copyright (C) 2000-2011  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -438,11 +438,6 @@ public class MapBean extends JComponent implements LayerChangedListener {
 	protected void zoomOut(Point p) {
 		final double ZOOM_IN_RATIO = .8;
 		setExtent(zoomRect(transformPoint(p), false, ZOOM_IN_RATIO));
-	}
-
-	/** Zoom to the specified extent */
-	public void zoomTo(Rectangle2D e) {
-		setExtent(e.getX(), e.getY(), e.getWidth(), e.getHeight());
 	}
 
 	/** Called when the map is resized or the extent is changed */
