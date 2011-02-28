@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000-2010  Minnesota Department of Transportation
+ * Copyright (C) 2000-2011  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -69,4 +69,9 @@ abstract public class Layer {
 
 	/** Create a new layer state */
 	abstract public LayerState createState(MapBean mb);
+
+	/** Check if the layer is searchable */
+	public boolean isSearchable() {
+		return true;
+	}
 }

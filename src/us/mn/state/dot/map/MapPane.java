@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000-2010  Minnesota Department of Transportation
+ * Copyright (C) 2000-2011  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,13 +30,10 @@ import java.awt.image.BufferedImage;
  * @author Erik Engstrom
  * @author Douglas Lau
  */
-class MapPane extends Thread implements LayerChangedListener {
+class MapPane implements LayerChangedListener {
 
 	/** Minimum width/height of map pane */
 	static protected final int MIN_SIZE = 1;
-
-	/** Buffer for static layers on map */
-	protected BufferedImage staticBuffer;
 
 	/** Buffer for map */
 	protected BufferedImage screenBuffer;
@@ -49,9 +46,6 @@ class MapPane extends Thread implements LayerChangedListener {
 
 	/** Does the buffer need to be updated? */
 	protected boolean bufferDirty = true;
-
-	/** Does the static buffer need to be updated? */
-	protected boolean staticBufferDirty = true;
 
 	/** Background color of map */
 	protected Color background = Color.GRAY;
@@ -67,32 +61,11 @@ class MapPane extends Thread implements LayerChangedListener {
 		mapbean = b;
 		antialiased = a;
 		setSize(new Dimension(MIN_SIZE, MIN_SIZE));
-		setDaemon(true);
-		start();
-	}
-
-	/** Thread running flag */
-	protected boolean running = true;
-
-	/** Thread run method */
-	public void run() {
-		while(running) {
-			if(staticBufferDirty) {
-				staticBufferDirty = false;
-				updateStaticBuffer();
-			} else {
-				try {
-					Thread.sleep(250);
-				}
-				catch(InterruptedException e) {	}
-			}
-		}
 	}
 
 	/** Set the pixel size of the map panel */
 	public void setSize(Dimension d) {
 		screenBuffer = createImage(d.width, d.height);
-		staticBuffer = createImage(d.width, d.height);
 		rescale();
 	}
 
@@ -112,7 +85,6 @@ class MapPane extends Thread implements LayerChangedListener {
 
 	/** Dispose of the map pane */
 	public void dispose() {
-		running = false;
 	}
 
 	/** Change the scale of the map panel */
@@ -146,7 +118,6 @@ class MapPane extends Thread implements LayerChangedListener {
 			e.printStackTrace();
 		}
 		bufferDirty = true;
-		staticBufferDirty = true;
 	}
 
 	/** Set the background color of the map */
@@ -154,9 +125,9 @@ class MapPane extends Thread implements LayerChangedListener {
 		background = color;
 	}
 
-	/** Update the static buffer */
-	protected void updateStaticBuffer() {
-		BufferedImage sbuffer = staticBuffer;
+	/** Update the screen buffer */
+	protected BufferedImage updateScreenBuffer() {
+		BufferedImage sbuffer = screenBuffer;
 		Graphics2D g = sbuffer.createGraphics();
 		g.setBackground(background);
 		g.clearRect(0, 0, sbuffer.getWidth(), sbuffer.getHeight());
@@ -165,38 +136,8 @@ class MapPane extends Thread implements LayerChangedListener {
 			g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 				RenderingHints.VALUE_ANTIALIAS_ON);
 		}
-		for(LayerState s: mapbean.getLayers()) {
-			if(staticBufferDirty)
-				break;
-			if(!(s.layer instanceof DynamicLayer))
-				s.paint(g);
-		}
-		g.dispose();
-		if(!staticBufferDirty) {
-			bufferDirty = true;
-			mapbean.repaint();
-		}
-	}
-
-	/** Update the screen buffer */
-	protected BufferedImage updateScreenBuffer() {
-		BufferedImage sbuffer = screenBuffer;
-		Graphics2D g = sbuffer.createGraphics();
-		if(staticBufferDirty) {
-			g.setBackground(background);
-			g.clearRect(0, 0, sbuffer.getWidth(),
-				sbuffer.getHeight());
-		} else
-			g.drawImage(staticBuffer, 0, 0, null);
-		g.transform(transform);
-		if(antialiased) {
-			g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-				RenderingHints.VALUE_ANTIALIAS_ON);
-		}
-		for(LayerState s: mapbean.getLayers()) {
-			if(s.layer instanceof DynamicLayer)
-				s.paint(g);
-		}
+		for(LayerState s: mapbean.getLayers())
+			s.paint(g);
 		g.dispose();
 		bufferDirty = false;
 		return sbuffer;
@@ -213,11 +154,7 @@ class MapPane extends Thread implements LayerChangedListener {
 
 	/** Map model has changed */
 	public void layerChanged(LayerChangedEvent ev) {
-		Object source = ev.getSource();
-		if(source instanceof DynamicLayer)
-			bufferDirty = true;
-		else
-			staticBufferDirty = true;
+		bufferDirty = true;
 		switch(ev.getReason()) {
 		case model:
 		case extent:

@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000-2010  Minnesota Department of Transportation
+ * Copyright (C) 2000-2011  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -281,6 +281,6 @@ abstract public class LayerState implements LayerChangedListener {
 
 	/** Check if the layer is currently searchable */
 	protected boolean isSearchable() {
-		return isVisible() && layer instanceof DynamicLayer;
+		return isVisible() && layer.isSearchable();
 	}
 }
