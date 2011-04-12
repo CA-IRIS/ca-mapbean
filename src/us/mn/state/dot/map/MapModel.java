@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000-2010  Minnesota Department of Transportation
+ * Copyright (C) 2000-2011  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -128,6 +128,8 @@ public class MapModel implements LayerChangedListener {
 		Rectangle2D le = getLayerExtent();
 		if(le != null)
 			Rectangle2D.intersect(e, le, e);
+		// FIXME: calculate the minimum zoom level for the extent and
+		//        set the center based on the center of extent rect
 		if(!e.equals(extent)) {
 			extent.setRect(e);
 			notifyLayerChangedListeners(LayerChange.extent);

@@ -221,8 +221,8 @@ public class MapBean extends JComponent implements LayerChangedListener {
 	}
 
 	/** Get the size of a pixel in world coordinates */
-	public double getPixelWorld() {
-		return mapPane.getInverseTransform().getScaleX();
+	public double getScale() {
+		return mapPane.getScale();
 	}
 
 	/** Get the tooltip text for the given mouse event */

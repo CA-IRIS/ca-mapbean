@@ -189,7 +189,7 @@ abstract public class LayerState implements LayerChangedListener {
 
 	/** Get the current map scale */
 	protected float getScale() {
-		return (float)map.getPixelWorld();
+		return (float)map.getScale();
 	}
 
 	/** Get the visibility flag */

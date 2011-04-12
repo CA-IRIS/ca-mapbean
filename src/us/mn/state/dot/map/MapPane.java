@@ -97,6 +97,7 @@ class MapPane implements LayerChangedListener {
 		double scale = 0;
 		double shiftX = 0;
 		double shiftY = 0;
+		// FIXME: set scale based on map model zoom level
 		double scaleX = width / mapWidth;
 		double scaleY = height / mapHeight;
 		if(scaleX > scaleY) {
@@ -170,5 +171,10 @@ class MapPane implements LayerChangedListener {
 	/** Get the transform from screen to world coordinates */
 	public AffineTransform getInverseTransform() {
 		return inverseTransform;
+	}
+
+	/** Get the pixel scale */
+	public double getScale() {
+		return inverseTransform.getScaleX();
 	}
 }
