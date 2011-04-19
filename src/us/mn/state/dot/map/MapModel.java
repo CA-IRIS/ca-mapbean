@@ -129,8 +129,8 @@ public class MapModel implements LayerChangedListener {
 		ZoomLevel zl = ZoomLevel.fromOrdinal(zoom.ordinal() + 1);
 		if(zl == null)
 			zl = zoom;
-		double x = center.getX() + 2 * (center.getX() - p.getX());
-		double y = center.getY() + 2 * (center.getY() - p.getY());
+		double x = center.getX() + (p.getX() - center.getX()) / 2;
+		double y = center.getY() + (p.getY() - center.getY()) / 2;
 		Point2D.Double c = new Point2D.Double(x, y);
 		setExtent(c, zl);
 	}
@@ -141,8 +141,8 @@ public class MapModel implements LayerChangedListener {
 		ZoomLevel zl = ZoomLevel.fromOrdinal(zoom.ordinal() - 1);
 		if(zl == null)
 			zl = zoom;
-		double x = center.getX() + (center.getX() - p.getX()) / 2;
-		double y = center.getY() + (center.getY() - p.getY()) / 2;
+		double x = center.getX() - (p.getX() - center.getX());
+		double y = center.getY() - (p.getY() - center.getY());
 		Point2D.Double c = new Point2D.Double(x, y);
 		setExtent(c, zl);
 	}
