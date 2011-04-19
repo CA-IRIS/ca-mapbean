@@ -214,6 +214,9 @@ public class MapBean extends JComponent implements LayerChangedListener {
 
 	/** Transform a point from screen to world coordinates */
 	public Point2D transformPoint(Point p) {
+		PanState ps = pan;
+		if(ps != null)
+			p = ps.start;
 		AffineTransform t = mapPane.getInverseTransform();
 		return t.transform(p, null);
 	}
