@@ -80,8 +80,8 @@ class MapPane implements LayerChangedListener {
 
 	/** Get the size of the map */
 	public Dimension getSize() {
-		return new Dimension(screenBuffer.getWidth(),
-			screenBuffer.getHeight());
+		BufferedImage bi = screenBuffer;	// Avoid race
+		return new Dimension(bi.getWidth(), bi.getHeight());
 	}
 
 	/** Dispose of the map pane */
@@ -90,8 +90,9 @@ class MapPane implements LayerChangedListener {
 
 	/** Change the scale of the map panel */
 	protected void rescale() {
-		int height = screenBuffer.getHeight();
-		int width = screenBuffer.getWidth();
+		BufferedImage bi = screenBuffer;	// Avoid race
+		int height = bi.getHeight();
+		int width = bi.getWidth();
 		// scale is pixels per meter
 		double scale = 1 / mapbean.getScale();
 		Point2D center = mapbean.getModel().getCenter();
@@ -116,10 +117,10 @@ class MapPane implements LayerChangedListener {
 
 	/** Update the screen buffer */
 	protected BufferedImage updateScreenBuffer() {
-		BufferedImage sbuffer = screenBuffer;
-		Graphics2D g = sbuffer.createGraphics();
+		BufferedImage bi = screenBuffer;
+		Graphics2D g = bi.createGraphics();
 		g.setBackground(background);
-		g.clearRect(0, 0, sbuffer.getWidth(), sbuffer.getHeight());
+		g.clearRect(0, 0, bi.getWidth(), bi.getHeight());
 		g.transform(transform);
 		if(antialiased) {
 			g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
@@ -129,16 +130,16 @@ class MapPane implements LayerChangedListener {
 			s.paint(g);
 		g.dispose();
 		bufferDirty = false;
-		return sbuffer;
+		return bi;
 	}
 
 	/** Get the current image for the map panel */
 	public BufferedImage getImage() {
-		BufferedImage sbuffer = screenBuffer;
+		BufferedImage bi = screenBuffer;
 		if(bufferDirty)
 			return updateScreenBuffer();
 		else
-			return sbuffer;
+			return bi;
 	}
 
 	/** Map model has changed */
