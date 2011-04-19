@@ -20,6 +20,7 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
+import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
@@ -89,27 +90,14 @@ class MapPane implements LayerChangedListener {
 
 	/** Change the scale of the map panel */
 	protected void rescale() {
-		Rectangle2D extent = mapbean.getExtent();
 		int height = screenBuffer.getHeight();
 		int width = screenBuffer.getWidth();
-		double mapWidth = Math.max(extent.getWidth(), MIN_SIZE);
-		double mapHeight = Math.max(extent.getHeight(), MIN_SIZE);
-		double scale = 0;
-		double shiftX = 0;
-		double shiftY = 0;
-		// FIXME: set scale based on map model zoom level
-		double scaleX = width / mapWidth;
-		double scaleY = height / mapHeight;
-		if(scaleX > scaleY) {
-			scale = scaleY;
-			shiftX = (width - (mapWidth * scale)) / 2;
-		} else {
-			scale = scaleX;
-			shiftY = (height - (mapHeight * scale)) / 2;
-		}
+		// scale is pixels per meter
+		double scale = 1 / mapbean.getScale();
+		Point2D center = mapbean.getModel().getCenter();
 		transform.setToTranslation(
-			-(extent.getMinX() * scale) + shiftX,
-			(extent.getMaxY() * scale) + shiftY
+			width / 2 - center.getX() * scale,
+			height / 2 + center.getY() * scale
 		);
 		transform.scale(scale, -scale);
 		try {
@@ -175,6 +163,6 @@ class MapPane implements LayerChangedListener {
 
 	/** Get the pixel scale */
 	public double getScale() {
-		return inverseTransform.getScaleX();
+		return mapbean.getScale();
 	}
 }

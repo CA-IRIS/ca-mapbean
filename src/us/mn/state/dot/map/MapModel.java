@@ -14,12 +14,14 @@
  */
 package us.mn.state.dot.map;
 
+import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
+import us.mn.state.dot.geokit.ZoomLevel;
 
 /**
  * The map model is a collection of LayerStates and the current extent of the
@@ -104,6 +106,52 @@ public class MapModel implements LayerChangedListener {
 			setExtent(home_layer.getExtent());
 	}
 
+	/** Current center in user coordinates */
+	protected final Point2D center = new Point2D.Double();
+
+	/** Get the current center in user coordinates */
+	public Point2D getCenter() {
+		return center;
+	}
+
+	/** Set the center in user coordinates.
+	 * @param c New center */
+	public void setCenter(Point2D c) {
+		setExtent(c, zoom);
+	}
+
+	/** Current zoom level */
+	protected ZoomLevel zoom = ZoomLevel.ZERO;
+
+	/** Zoom in from the current extent.
+	 * @param p Point in user coordinates. */
+	public void zoomIn(Point2D p) {
+		ZoomLevel zl = ZoomLevel.fromOrdinal(zoom.ordinal() + 1);
+		if(zl == null)
+			zl = zoom;
+		double x = center.getX() + 2 * (center.getX() - p.getX());
+		double y = center.getY() + 2 * (center.getY() - p.getY());
+		Point2D.Double c = new Point2D.Double(x, y);
+		setExtent(c, zl);
+	}
+
+	/** Zoom out from the current extent.
+	 * @param p Point in user coordinates. */
+	public void zoomOut(Point2D p) {
+		ZoomLevel zl = ZoomLevel.fromOrdinal(zoom.ordinal() - 1);
+		if(zl == null)
+			zl = zoom;
+		double x = center.getX() + (center.getX() - p.getX()) / 2;
+		double y = center.getY() + (center.getY() - p.getY()) / 2;
+		Point2D.Double c = new Point2D.Double(x, y);
+		setExtent(c, zl);
+	}
+
+	/** Get the zoom level */
+	public ZoomLevel getZoomLevel() {
+		return zoom;
+	}
+
 	/** Current extent (bounding box) */
 	protected final Rectangle2D extent = new Rectangle2D.Double();
 
@@ -128,12 +176,35 @@ public class MapModel implements LayerChangedListener {
 		Rectangle2D le = getLayerExtent();
 		if(le != null)
 			Rectangle2D.intersect(e, le, e);
-		// FIXME: calculate the minimum zoom level for the extent and
-		//        set the center based on the center of extent rect
-		if(!e.equals(extent)) {
-			extent.setRect(e);
+		Point2D c = new Point2D.Double(e.getCenterX(), e.getCenterY());
+		ZoomLevel zl = ZoomLevel.lookup(getScale(e));
+		setExtent(c, zl);
+	}
+
+	/** Set the map extent */
+	public void setExtent(Point2D c, ZoomLevel zl) {
+		center.setLocation(c.getX(), c.getY());
+		zoom = zl;
+		Rectangle2D ne = calculateExtent(c, zl);
+		if(!ne.equals(extent)) {
+			extent.setRect(ne);
 			notifyLayerChangedListeners(LayerChange.extent);
 		}
+	}
+
+	/** Get the scale for a given extent */
+	static protected double getScale(Rectangle2D e) {
+		double s = Math.min(e.getWidth(), e.getHeight());
+		// FIXME: 600 pixels is generic window size
+		return s / 600;
+	}
+
+	/** Calculate extent */
+	static protected Rectangle2D calculateExtent(Point2D c, ZoomLevel zl) {
+		// FIXME: 600 pixels is generic window size
+		double half = 300 * zl.scale;
+		return new Rectangle2D.Double(c.getX() - half, c.getY() - half,
+			2 * half, 2 * half);
 	}
 
 	/** Get the full extent of all layers */

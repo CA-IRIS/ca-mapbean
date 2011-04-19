@@ -54,9 +54,6 @@ import javax.swing.SwingUtilities;
  */
 public class MapBean extends JComponent implements LayerChangedListener {
 
-	/** Minimum size of zoomed in map */
-	static protected final int ZOOM_THRESHOLD = 1000;
-
 	/** Cursor for panning the map */
 	static protected final Cursor PAN_CURSOR;
 	static {
@@ -147,10 +144,11 @@ public class MapBean extends JComponent implements LayerChangedListener {
 		});
 		addMouseWheelListener(new MouseWheelListener() {
 			public void mouseWheelMoved(MouseWheelEvent e) {
+				Point2D p = transformPoint(e.getPoint());
 				if(e.getWheelRotation() < 0)
-					zoomIn(e.getPoint());
+					zoomIn(p);
 				else
-					zoomOut(e.getPoint());
+					zoomOut(p);
 			}
 		});
 	}
@@ -222,7 +220,7 @@ public class MapBean extends JComponent implements LayerChangedListener {
 
 	/** Get the size of a pixel in world coordinates */
 	public double getScale() {
-		return mapPane.getScale();
+		return model.getZoomLevel().scale;
 	}
 
 	/** Get the tooltip text for the given mouse event */
@@ -265,6 +263,20 @@ public class MapBean extends JComponent implements LayerChangedListener {
 			echanger.run();
 		else 
 			SwingUtilities.invokeLater(echanger);
+	}
+
+	/** Set the center */
+	protected void setCenter(double x, double y) {
+		final Point2D.Double c = new Point2D.Double(x, y);
+		Runnable changer = new Runnable() {
+			public void run() {
+				model.setCenter(c);
+			}
+		};
+		if(SwingUtilities.isEventDispatchThread())
+			changer.run();
+		else 
+			SwingUtilities.invokeLater(changer);
 	}
 
 	/** Get the extent of the map */
@@ -365,9 +377,9 @@ public class MapBean extends JComponent implements LayerChangedListener {
 				e.printStackTrace();
 			}
 			setCursor();
-			Rectangle2D e = model.getExtent();
-			setExtent(e.getX() - p.getX(), e.getY() - p.getY(),
-				e.getWidth(), e.getHeight());
+			Point2D center = model.getCenter();
+			setCenter(center.getX() - p.getX(),
+			          center.getY() - p.getY());
 		}
 	}
 
@@ -393,51 +405,39 @@ public class MapBean extends JComponent implements LayerChangedListener {
 
 	/** Zoom in or out from the current extent. */
 	public void zoom(boolean zoomin) {
-		final double ZOOM_IN_RATIO = .6;
-		setExtent(zoomRect(getMapCenter(), zoomin, ZOOM_IN_RATIO));
+		Point2D center = model.getCenter();
+		if(zoomin)
+			zoomIn(center);
+		else
+			zoomOut(center);
 	}
 
-	/** Get the center of the map panel in map coordinates. */
-	protected Point2D getMapCenter() {
-		Rectangle2D e = model.getExtent();
-		double cx = e.getX() + e.getWidth() / 2;
-		double cy = e.getY() + e.getHeight() / 2;
-		return new Point2D.Double(cx, cy);
+	/** Zoom in on the map.
+	 * @param p Point in user coordinates. */
+	protected void zoomIn(final Point2D p) {
+		Runnable zoomer = new Runnable() {
+			public void run() {
+				model.zoomIn(p);
+			}
+		};
+		if(SwingUtilities.isEventDispatchThread())
+			zoomer.run();
+		else 
+			SwingUtilities.invokeLater(zoomer);
 	}
 
-	/** Return a new rectangle that is zoomed relative to the 
-	 * specified point. 
-	 * @param c Cursor position in map coordinates. 
-	 * @param zoomin True to zoom in else false to zoom out.
-	 * @param zoomInRatio Zoom ratio &gt; 0 and &lt; 1. */
-	protected Rectangle2D zoomRect(Point2D c, boolean zoomin, 
-		final double zoomInRatio) 
-	{
-		Rectangle2D e = model.getExtent();
-		if(zoomin &&
-		   e.getWidth() < ZOOM_THRESHOLD &&
-		   e.getHeight() < ZOOM_THRESHOLD)
-		{
-			return e;
-		}
-		double zratio = (zoomin ? zoomInRatio : 1 / zoomInRatio);
-		double x = c.getX() - zratio * (c.getX() - e.getX());
-		double y = c.getY() - zratio * (c.getY() - e.getY());
-		double w = e.getWidth() * zratio;
-		double h = e.getHeight() * zratio;
-		return new Rectangle2D.Double(x, y, w, h);
-	}
-
-	/** Zoom in from the current extent */
-	protected void zoomIn(Point p) {
-		final double ZOOM_IN_RATIO = .8;
-		setExtent(zoomRect(transformPoint(p), true, ZOOM_IN_RATIO));
-	}
-
-	/** Zoom out from the current extent */
-	protected void zoomOut(Point p) {
-		final double ZOOM_IN_RATIO = .8;
-		setExtent(zoomRect(transformPoint(p), false, ZOOM_IN_RATIO));
+	/** Zoom out on the map.
+	 * @param p Point in user coordinates. */
+	protected void zoomOut(final Point2D p) {
+		Runnable zoomer = new Runnable() {
+			public void run() {
+				model.zoomOut(p);
+			}
+		};
+		if(SwingUtilities.isEventDispatchThread())
+			zoomer.run();
+		else 
+			SwingUtilities.invokeLater(zoomer);
 	}
 
 	/** Called when the map is resized or the extent is changed */
