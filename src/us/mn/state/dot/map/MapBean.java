@@ -282,11 +282,6 @@ public class MapBean extends JComponent implements LayerChangedListener {
 			SwingUtilities.invokeLater(changer);
 	}
 
-	/** Get the extent of the map */
-	public Rectangle2D getExtent() {
-		return model.getExtent();
-	}
-
 	static protected int limit(int min, int val, int max) {
 		return Math.min(Math.max(val, min), max);
 	}
