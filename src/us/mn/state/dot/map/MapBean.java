@@ -54,6 +54,14 @@ import javax.swing.SwingUtilities;
  */
 public class MapBean extends JComponent implements LayerChangedListener {
 
+	/** Run something on the swing thread */
+	static protected void runOnSwingThread(Runnable r) {
+		if(SwingUtilities.isEventDispatchThread())
+			r.run();
+		else 
+			SwingUtilities.invokeLater(r);
+	}
+
 	/** Cursor for panning the map */
 	static protected final Cursor PAN_CURSOR;
 	static {
@@ -253,33 +261,21 @@ public class MapBean extends JComponent implements LayerChangedListener {
 	protected void setExtent(final double x, final double y,
 		final double width, final double height)
 	{
-		/* NOTE: this trick allows us to call this method from any
-		   thread, but doesn't show any painting glitches (in panning)
-		   if called from the event dispatch thread. It's better
-		   than using invokeAndWait. */
-		Runnable echanger = new Runnable() {
+		runOnSwingThread(new Runnable() {
 			public void run() {
 				model.setExtent(x, y, width, height);
 			}
-		};
-		if(SwingUtilities.isEventDispatchThread())
-			echanger.run();
-		else 
-			SwingUtilities.invokeLater(echanger);
+		});
 	}
 
 	/** Set the center */
 	protected void setCenter(double x, double y) {
 		final Point2D.Double c = new Point2D.Double(x, y);
-		Runnable changer = new Runnable() {
+		runOnSwingThread(new Runnable() {
 			public void run() {
 				model.setCenter(c);
 			}
-		};
-		if(SwingUtilities.isEventDispatchThread())
-			changer.run();
-		else 
-			SwingUtilities.invokeLater(changer);
+		});
 	}
 
 	static protected int limit(int min, int val, int max) {
@@ -413,29 +409,21 @@ public class MapBean extends JComponent implements LayerChangedListener {
 	/** Zoom in on the map.
 	 * @param p Point in user coordinates. */
 	protected void zoomIn(final Point2D p) {
-		Runnable zoomer = new Runnable() {
+		runOnSwingThread(new Runnable() {
 			public void run() {
 				model.zoomIn(p);
 			}
-		};
-		if(SwingUtilities.isEventDispatchThread())
-			zoomer.run();
-		else 
-			SwingUtilities.invokeLater(zoomer);
+		});
 	}
 
 	/** Zoom out on the map.
 	 * @param p Point in user coordinates. */
 	protected void zoomOut(final Point2D p) {
-		Runnable zoomer = new Runnable() {
+		runOnSwingThread(new Runnable() {
 			public void run() {
 				model.zoomOut(p);
 			}
-		};
-		if(SwingUtilities.isEventDispatchThread())
-			zoomer.run();
-		else 
-			SwingUtilities.invokeLater(zoomer);
+		});
 	}
 
 	/** Called when the map is resized or the extent is changed */
