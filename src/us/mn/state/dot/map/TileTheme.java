@@ -14,26 +14,28 @@
  */
 package us.mn.state.dot.map;
 
+import java.awt.Graphics2D;
+
 /**
- * A tile layer state for drawing a Google-style tile map.
+ * A tile theme draws tiles on a map.
  *
  * @author Douglas Lau
  */
-public class TileLayerState extends LayerState {
+public class TileTheme extends Theme {
 
-	/** Cache of tiles */
-	protected final TileCache cache;
-
-	/** Create a new tile layer state */
-	public TileLayerState(TileLayer layer, MapBean mb, TileCache c) {
-		super(layer, mb, new TileTheme());
-		cache = c;
+	/** Create a new tile theme */
+	protected TileTheme() {
+		super("Tile");
 	}
 
-	/** Call the specified callback for each map object in the layer */
-	public MapObject forEach(MapSearcher s) {
-System.err.println("TileLayerState.forEach");
-		// FIXME: find all tiles in the current map extent
+	/** Get the symbol to draw a given map object */
+	public Symbol getSymbol(MapObject mo) {
+		// FIXME: create a RasterSymbol from the map object
 		return null;
+	}
+
+	/** Draw a selected map object */
+	public void drawSelected(Graphics2D g, MapObject mo, float scale) {
+		// tiles cannot be selected
 	}
 }
