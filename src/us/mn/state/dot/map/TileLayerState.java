@@ -14,6 +14,11 @@
  */
 package us.mn.state.dot.map;
 
+import java.awt.Dimension;
+import java.awt.Image;
+import java.awt.geom.Point2D;
+import us.mn.state.dot.geokit.ZoomLevel;
+
 /**
  * A tile layer state for drawing a Google-style tile map.
  *
@@ -32,8 +37,34 @@ public class TileLayerState extends LayerState {
 
 	/** Call the specified callback for each map object in the layer */
 	public MapObject forEach(MapSearcher s) {
-System.err.println("TileLayerState.forEach");
-		// FIXME: find all tiles in the current map extent
+		MapModel model = map.getModel();
+		ZoomLevel zoom = model.getZoomLevel();
+		Dimension sz = map.getSize();
+		Point2D center = model.getCenter();
+		int hx = (int)sz.getWidth() / 2;
+		int hy = (int)sz.getHeight() / 2;
+		int px = (int)zoom.getPixelX(center.getX());
+		int py = (int)zoom.getPixelY(center.getY());
+		int x0 = ((px - hx) / 256) * 256;
+		int x1 = (((px + hx) / 256) + 1) * 256;
+		int ox = (px - hx) % 256;
+		for(int x = x0; x <= x1; x += 256) {
+			int y0 = ((py - hy) / 256) * 256;
+			int y1 = (((py + hy) / 256) + 1) * 256;
+			int oy = (py + hy) % 256 - 512;
+			for(int y = y0; y <= y1; y += 256) {
+				String tile = zoom.getTile(x, y);
+				try {
+					Image img = cache.getTile(tile);
+					MapObject mo = new TileMapObject(img,
+						x - x0 - ox, y1 - y + oy);
+					s.next(mo);
+				}
+				catch(java.io.IOException e) {
+					System.err.println(e.getMessage());
+				}
+			}
+		}
 		return null;
 	}
 }

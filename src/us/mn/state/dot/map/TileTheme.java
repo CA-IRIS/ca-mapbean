@@ -28,9 +28,18 @@ public class TileTheme extends Theme {
 		super("Tile");
 	}
 
+	/** Draw the specified map object */
+	public void draw(Graphics2D g, MapObject mo, float scale) {
+		if(mo instanceof TileMapObject) {
+			TileMapObject tmo = (TileMapObject)mo;
+			g.setTransform(tmo.getTransform());
+			g.drawImage(tmo.getImage(), 0, 0, null);
+		}
+	}
+
 	/** Get the symbol to draw a given map object */
 	public Symbol getSymbol(MapObject mo) {
-		// FIXME: create a RasterSymbol from the map object
+		// symbols aren't used with tiles
 		return null;
 	}
 
