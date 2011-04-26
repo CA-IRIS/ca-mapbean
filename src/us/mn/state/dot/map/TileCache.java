@@ -15,6 +15,8 @@
 package us.mn.state.dot.map;
 
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -25,6 +27,13 @@ import java.util.LinkedList;
  * @author Douglas Lau
  */
 public class TileCache {
+
+	/** Temp image file filter */
+	static protected final FilenameFilter filter = new FilenameFilter() {
+		public boolean accept(File dir, String name) {
+			return name.matches(".*timage.*png");
+		}
+	};
 
 	/** FIFO of tile names in cache */
 	protected final LinkedList<String> tiles = new LinkedList<String>();
@@ -40,9 +49,12 @@ public class TileCache {
 	protected final int size;
 
 	/** Create a new tile cache */
-	public TileCache(ImageFetcher f, int sz) {
+	public TileCache(ImageFetcher f, int sz) throws IOException {
 		fetcher = f;
 		size = sz;
+		File dir = new File(System.getProperty("java.io.tmpdir"));
+		for(File tmp: dir.listFiles(filter))
+			tmp.delete();
 	}
 
 	/** Purge the oldest image from the cache */
