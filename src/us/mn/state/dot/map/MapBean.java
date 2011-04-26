@@ -278,16 +278,12 @@ public class MapBean extends JComponent implements LayerChangedListener {
 		});
 	}
 
-	static protected int limit(int min, int val, int max) {
-		return Math.min(Math.max(val, min), max);
-	}
-
 	/** State of map panning action */
 	protected class PanState {
 		protected final Point start;
 		protected Image buffer;
-		protected int xpan, xmin, xmax, ypan, ymin, ymax;
 		protected AffineTransform transform;
+		protected int xpan, ypan;
 
 		protected PanState(Point s) {
 			start = s;
@@ -303,32 +299,14 @@ public class MapBean extends JComponent implements LayerChangedListener {
 			AffineTransform t = mapPane.getTransform();
 			transform = AffineTransform.getScaleInstance(
 				t.getScaleX(), t.getScaleY());
-			calculateLimits();
-		}
-
-		protected void calculateLimits() {
-			Rectangle2D e = model.getExtent();
-			Rectangle2D te = model.getLayerExtent();
-			Point2D b = new Point2D.Double(e.getX() - te.getX(),
-				e.getY() - te.getY());
-			transform.transform(b, b);
-			xmax = (int)b.getX();
-			ymin = (int)b.getY();
-			b = new Point2D.Double(te.getWidth() - e.getWidth(),
-				te.getHeight() - e.getHeight());
-			transform.transform(b, b);
-			xmin = xmax - (int)b.getX();
-			ymax = ymin - (int)b.getY();
 			xpan = 0;
 			ypan = 0;
 		}
 
 		/** Set the X and Y pan values */
 		protected void setPan(Point2D end) {
-			int x = (int)(end.getX() - start.getX());
-			xpan = limit(xmin, x, xmax);
-			int y = (int)(end.getY() - start.getY());
-			ypan = limit(ymin, y, ymax);
+			xpan = (int)(end.getX() - start.getX());
+			ypan = (int)(end.getY() - start.getY());
 		}
 
 		/** Drag the map pan */
