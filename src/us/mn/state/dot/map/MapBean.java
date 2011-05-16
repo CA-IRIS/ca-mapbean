@@ -215,11 +215,6 @@ public class MapBean extends JComponent implements LayerChangedListener {
 		return model.getLayers();
 	}
 
-	/** Sets extent to home coordinates */
-	public void home() {
-		model.home();
-	}
-
 	/** Transform a point from screen to world coordinates */
 	public Point2D transformPoint(Point p) {
 		PanState ps = pan;

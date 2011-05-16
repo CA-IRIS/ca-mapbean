@@ -81,18 +81,6 @@ public class NavigationBar extends JToolBar {
 		addButton(b);
 	}
 
-	/** Add a "home" button */
-	public void addHomeButton() {
-		JButton b = new JButton("Home", getImage("/images/globe.png"));
-		b.setToolTipText("Set view to home extent");
-		b.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				map.home();
-			}
-		});
-		addButton(b);
-	}
-
 	/** Add a button to the toolbar */
 	public void addButton(AbstractButton b) {
 		b.setMinimumSize(new Dimension(12, 20));
