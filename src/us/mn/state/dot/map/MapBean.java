@@ -295,7 +295,7 @@ public class MapBean extends JComponent implements LayerChangedListener {
 
 		protected void initialize() {
 			setCursor(PAN_CURSOR);
-			buffer = mapPane.getImage();
+			buffer = mapPane.getBufferedImage();
 			AffineTransform t = mapPane.getTransform();
 			transform = AffineTransform.getScaleInstance(
 				t.getScaleX(), t.getScaleY());

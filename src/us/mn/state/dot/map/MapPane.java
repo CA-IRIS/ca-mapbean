@@ -45,9 +45,6 @@ class MapPane implements LayerChangedListener {
 	/** Transform from screen to world coordinates */
 	protected AffineTransform inverseTransform = new AffineTransform();
 
-	/** Does the buffer need to be updated? */
-	protected boolean bufferDirty = true;
-
 	/** Background color of map */
 	protected Color background = Color.GRAY;
 
@@ -107,7 +104,6 @@ class MapPane implements LayerChangedListener {
 		catch(NoninvertibleTransformException e) {
 			e.printStackTrace();
 		}
-		bufferDirty = true;
 	}
 
 	/** Set the background color of the map */
@@ -115,8 +111,8 @@ class MapPane implements LayerChangedListener {
 		background = color;
 	}
 
-	/** Update the screen buffer */
-	protected BufferedImage updateScreenBuffer() {
+	/** Get the current image for the map panel */
+	public BufferedImage getImage() {
 		BufferedImage bi = screenBuffer;
 		Graphics2D g = bi.createGraphics();
 		g.setBackground(background);
@@ -129,22 +125,16 @@ class MapPane implements LayerChangedListener {
 		for(LayerState s: mapbean.getLayers())
 			s.paint(g);
 		g.dispose();
-		bufferDirty = false;
 		return bi;
 	}
 
-	/** Get the current image for the map panel */
-	public BufferedImage getImage() {
-		BufferedImage bi = screenBuffer;
-		if(bufferDirty)
-			return updateScreenBuffer();
-		else
-			return bi;
+	/** Get the buffered image */
+	public BufferedImage getBufferedImage() {
+		return screenBuffer;
 	}
 
 	/** Map model has changed */
 	public void layerChanged(LayerChangedEvent ev) {
-		bufferDirty = true;
 		switch(ev.getReason()) {
 		case model:
 		case extent:
