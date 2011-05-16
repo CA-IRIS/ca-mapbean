@@ -17,6 +17,9 @@ package us.mn.state.dot.map;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.geom.Point2D;
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.concurrent.LinkedBlockingQueue;
 import us.mn.state.dot.geokit.ZoomLevel;
 
 /**
@@ -29,10 +32,27 @@ public class TileLayerState extends LayerState {
 	/** Cache of tiles */
 	protected final TileCache cache;
 
+	/** Queue of tile requests */
+	protected final LinkedBlockingQueue<String> queue;
+
+	/** Set of missing tiles */
+	protected final HashSet<String> no_tile = new HashSet<String>();
+
+	/** Thread to lookup tiles */
+	protected final Thread thread = new Thread() {
+		public void run() {
+			while(true) {
+				lookupTiles();
+			}
+		}
+	};
+
 	/** Create a new tile layer state */
 	public TileLayerState(TileLayer layer, MapBean mb, TileCache c) {
 		super(layer, mb, new TileTheme());
 		cache = c;
+		queue = new LinkedBlockingQueue<String>(cache.getSize());
+		thread.start();
 	}
 
 	/** Call the specified callback for each map object in the layer */
@@ -54,17 +74,59 @@ public class TileLayerState extends LayerState {
 			int oy = (py + hy) % 256 - 512;
 			for(int y = y0; y <= y1; y += 256) {
 				String tile = zoom.getTile(x, y);
-				try {
-					Image img = cache.getTile(tile);
+				Image img = getTile(tile);
+				if(img != null) {
 					MapObject mo = new TileMapObject(img,
 						x - x0 - ox, y1 - y + oy);
 					s.next(mo);
-				}
-				catch(java.io.IOException e) {
-					System.err.println(e.getMessage());
+				} else {
+					if(!isTileMissing(tile))
+							queue.offer(tile);
 				}
 			}
 		}
 		return null;
+	}
+
+	/** Is the given tile missing? */
+	protected boolean isTileMissing(String tile) {
+		synchronized(no_tile) {
+			return no_tile.contains(tile);
+		}
+	}
+
+	/** Get a tile from the tile cache */
+	protected Image getTile(String tile) {
+		try {
+			return cache.getTile(tile);
+		}
+		catch(IOException e) {
+			synchronized(no_tile) {
+				no_tile.add(tile);
+			}
+			return null;
+		}
+	}
+
+	/** Lookup queued tiles */
+	protected void lookupTiles() {
+		try {
+			lookupTile(queue.take());
+			if(queue.isEmpty()) 
+			   notifyLayerChangedListeners(LayerChange.geometry);
+		}
+		catch(InterruptedException e) {
+			// oh well, try again
+		}
+	}
+
+	/** Lookup one tile */
+	protected void lookupTile(String tile) {
+		try {
+			cache.lookupTile(tile);
+		}
+		catch(IOException e) {
+			System.err.println("I/O Error loading tile: " + tile);
+		}
 	}
 }

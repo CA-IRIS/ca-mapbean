@@ -48,6 +48,11 @@ public class TileCache {
 	/** Size of cache (number of tiles) */
 	protected final int size;
 
+	/** Get the size of cache */
+	public int getSize() {
+		return size;
+	}
+
 	/** Create a new tile cache */
 	public TileCache(ImageFetcher f, int sz) throws IOException {
 		fetcher = f;
@@ -59,31 +64,65 @@ public class TileCache {
 
 	/** Purge the oldest image from the cache */
 	protected void purgeOldestImage() throws IOException {
-		String name = tiles.removeFirst();
-		TempImageFile tif = tile_hash.remove(name);
-		tif.destroy();
+		TempImageFile tif = removeFirst();
+		if(tif != null)
+			tif.destroy();
+	}
+
+	/** Remove a tile from the cache */
+	protected TempImageFile removeFirst() {
+		synchronized(tile_hash) {
+			String name = tiles.removeFirst();
+			return tile_hash.remove(name);
+		}
 	}
 
 	/** Get the named tile from the cache */
-	public synchronized BufferedImage getTile(String n) throws IOException {
-		if(tile_hash.containsKey(n))
-			return tile_hash.get(n).getImage();
-		while(tile_hash.size() >= size)
+	public BufferedImage getTile(String n) throws IOException {
+		TempImageFile tif = getTempImageFile(n);
+		if(tif != null)
+			return tif.getImage();
+		else
+			return null;
+	}
+
+	/** Get the named temp image file from the cache */
+	protected TempImageFile getTempImageFile(String n) {
+		synchronized(tile_hash) {
+			if(tile_hash.containsKey(n))
+				return tile_hash.get(n);
+			else
+				return null;
+		}
+	}
+
+	/** Lookup a tile and put it in the cache */
+	public void lookupTile(String n) throws IOException {
+		while(isFull())
 			purgeOldestImage();
 		TempImageFile tif = new TempImageFile(fetcher.fetchImage(n));
-		BufferedImage bi = tif.getImage();
 		// Update the FIFO and hash map last so that exceptions cannot
 		// leave us in an inconsistent state
-		tiles.addLast(n);
-		tile_hash.put(n, tif);
-		return bi;
+		synchronized(tile_hash) {
+			tiles.addLast(n);
+			tile_hash.put(n, tif);
+		}
+	}
+
+	/** Check if the cache is full */
+	protected boolean isFull() {
+		synchronized(tile_hash) {
+			return tile_hash.size() >= size;
+		}
 	}
 
 	/** Destroy the tile cache */
-	public synchronized void destroy() throws IOException {
-		for(TempImageFile tif: tile_hash.values())
-			tif.destroy();
-		tiles.clear();
-		tile_hash.clear();
+	public void destroy() throws IOException {
+		synchronized(tile_hash) {
+			for(TempImageFile tif: tile_hash.values())
+				tif.destroy();
+			tiles.clear();
+			tile_hash.clear();
+		}
 	}
 }
