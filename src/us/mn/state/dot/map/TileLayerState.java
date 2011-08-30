@@ -81,7 +81,7 @@ public class TileLayerState extends LayerState {
 					s.next(mo);
 				} else {
 					if(!isTileMissing(tile))
-							queue.offer(tile);
+						queue.offer(tile);
 				}
 			}
 		}
