@@ -39,7 +39,10 @@ public class TileLayerState extends LayerState {
 	protected final HashSet<String> no_tile = new HashSet<String>();
 
 	/** Thread to lookup tiles */
-	protected final Thread thread = new Thread() {
+	protected class LookupThread extends Thread {
+		protected LookupThread(String n) {
+			super(n);
+		}
 		public void run() {
 			while(true) {
 				lookupTiles();
@@ -47,12 +50,19 @@ public class TileLayerState extends LayerState {
 		}
 	};
 
+	/** Thread to lookup tiles */
+	protected final Thread thread1 = new LookupThread("tile1");
+
+	/** Thread to lookup tiles */
+	protected final Thread thread2 = new LookupThread("tile2");
+
 	/** Create a new tile layer state */
 	public TileLayerState(TileLayer layer, MapBean mb, TileCache c) {
 		super(layer, mb, new TileTheme());
 		cache = c;
 		queue = new LinkedBlockingQueue<String>(cache.getSize());
-		thread.start();
+		thread1.start();
+		thread2.start();
 	}
 
 	/** Call the specified callback for each map object in the layer */
