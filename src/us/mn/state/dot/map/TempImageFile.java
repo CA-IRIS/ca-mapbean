@@ -39,9 +39,4 @@ public class TempImageFile {
 		t_stream.seek(0);
 		return ImageIO.read(t_stream);
 	}
-
-	/** Destroy a temporary image file */
-	public void destroy() throws IOException {
-		t_stream.destroy();
-	}
 }
