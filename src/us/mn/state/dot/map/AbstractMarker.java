@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2004-2010  Minnesota Department of Transportation
+ * Copyright (C) 2004-2012  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -34,7 +34,7 @@ abstract public class AbstractMarker implements Shape {
 
 	/** Create a new abstract marker */
 	protected AbstractMarker(int c) {
-		path = new GeneralPath(GeneralPath.WIND_NON_ZERO, c);
+		path = new GeneralPath(GeneralPath.WIND_EVEN_ODD, c);
 	}
 
 	public boolean contains(double x, double y) {
