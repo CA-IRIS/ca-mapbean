@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000-2011  Minnesota Department of Transportation
+ * Copyright (C) 2000-2012  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -42,6 +42,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JToolTip;
 import javax.swing.SwingUtilities;
+import us.mn.state.dot.sched.SwingRunner;
 
 /**
  * The MapBean class is a container for a MapPane which allows the pane to be
@@ -53,14 +54,6 @@ import javax.swing.SwingUtilities;
  * @see us.mn.state.dot.map.MapPane
  */
 public class MapBean extends JComponent implements LayerChangedListener {
-
-	/** Run something on the swing thread */
-	static protected void runOnSwingThread(Runnable r) {
-		if(SwingUtilities.isEventDispatchThread())
-			r.run();
-		else 
-			SwingUtilities.invokeLater(r);
-	}
 
 	/** Cursor for panning the map */
 	static protected final Cursor PAN_CURSOR;
@@ -256,7 +249,7 @@ public class MapBean extends JComponent implements LayerChangedListener {
 	protected void setExtent(final double x, final double y,
 		final double width, final double height)
 	{
-		runOnSwingThread(new Runnable() {
+		SwingRunner.invoke(new Runnable() {
 			public void run() {
 				model.setExtent(x, y, width, height);
 			}
@@ -266,7 +259,7 @@ public class MapBean extends JComponent implements LayerChangedListener {
 	/** Set the center */
 	protected void setCenter(double x, double y) {
 		final Point2D.Double c = new Point2D.Double(x, y);
-		runOnSwingThread(new Runnable() {
+		SwingRunner.invoke(new Runnable() {
 			public void run() {
 				model.setCenter(c);
 			}
@@ -382,7 +375,7 @@ public class MapBean extends JComponent implements LayerChangedListener {
 	/** Zoom in on the map.
 	 * @param p Point in user coordinates. */
 	protected void zoomIn(final Point2D p) {
-		runOnSwingThread(new Runnable() {
+		SwingRunner.invoke(new Runnable() {
 			public void run() {
 				model.zoomIn(p);
 			}
@@ -392,7 +385,7 @@ public class MapBean extends JComponent implements LayerChangedListener {
 	/** Zoom out on the map.
 	 * @param p Point in user coordinates. */
 	protected void zoomOut(final Point2D p) {
-		runOnSwingThread(new Runnable() {
+		SwingRunner.invoke(new Runnable() {
 			public void run() {
 				model.zoomOut(p);
 			}
