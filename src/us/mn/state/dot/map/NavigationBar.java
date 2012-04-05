@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000-2009  Minnesota Department of Transportation
+ * Copyright (C) 2000-2012  Minnesota Department of Transportation
  * Copyright (C) 2010  AHMCT, University of California
  *
  * This program is free software; you can redistribute it and/or modify
@@ -93,6 +93,14 @@ public class NavigationBar extends JToolBar {
 	public void removeButton(AbstractButton b) {
 		buttons.remove(b.getText());
 		rebuildButtonBox();
+	}
+
+	/** Clear the buttons */
+	public void clear() {
+		buttons.clear();
+		addZoomButtons();
+		revalidate();
+		repaint();
 	}
 
 	/** Rebuild the button box */
