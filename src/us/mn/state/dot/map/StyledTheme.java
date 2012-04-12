@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2007-2009  Minnesota Department of Transportation
+ * Copyright (C) 2007-2012  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -66,7 +66,11 @@ abstract public class StyledTheme extends Theme {
 
 	/** Get a symbol for the given map object */
 	public Symbol getSymbol(MapObject mo) {
-		return getSymbol(getStyle(mo).getLabel());
+		Style s = getStyle(mo);
+		if(s != null)
+			return getSymbol(s.getLabel());
+		else
+			return null;
 	}
 
 	/** Create an ellipse around the given shape */

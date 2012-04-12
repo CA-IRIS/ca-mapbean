@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2004-2010  Minnesota Department of Transportation
+ * Copyright (C) 2004-2012  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -78,9 +78,11 @@ abstract public class Theme {
 
 	/** Draw the specified map object */
 	public void draw(Graphics2D g, MapObject mo, float scale) {
-		g.transform(mo.getTransform());
-		getSymbol(mo).draw(g, mo.getShape(), mo.getOutlineShape(),
-			scale);
+		Symbol s = getSymbol(mo);
+		if(s != null) {
+			g.transform(mo.getTransform());
+			s.draw(g, mo.getShape(), mo.getOutlineShape(), scale);
+		}
 	}
 
 	/** Draw a selected map object */
