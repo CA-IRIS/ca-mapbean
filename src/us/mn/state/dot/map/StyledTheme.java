@@ -41,16 +41,25 @@ abstract public class StyledTheme extends Theme {
 	/** Shape of legend icon */
 	protected final Shape lshape;
 
+	/** Size of legend icon */
+	private final int lsize;
+
 	/** Create a new styled theme */
-	protected StyledTheme(String n, Shape ls) {
+	protected StyledTheme(String n, Shape ls, int sz) {
 		super(n);
 		lshape = ls;
+		lsize = sz;
+	}
+
+	/** Create a new styled theme */
+	protected StyledTheme(String n, Shape ls) {
+		this(n, ls, 24);
 	}
 
 	/** Add a new style to the theme */
 	protected void addStyle(Style sty) {
 		styles.add(sty);
-		addSymbol(new VectorSymbol(sty, lshape));
+		addSymbol(new VectorSymbol(sty, lshape, lsize));
 	}
 
 	/** Get the style to draw a given map object */

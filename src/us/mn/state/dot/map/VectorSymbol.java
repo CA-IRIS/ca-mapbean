@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2007-2010  Minnesota Department of Transportation
+ * Copyright (C) 2007-2012  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,13 +33,22 @@ public class VectorSymbol implements Symbol {
 	/** Style to draw symbol */
 	public final Style style;
 
+	/** Size of legend icon */
+	private final int lsize;
+
 	/** Shape to draw legend */
 	protected final Shape lshape;
 
 	/** Create a new vector symbol */
-	public VectorSymbol(Style sty, Shape shp) {
+	public VectorSymbol(Style sty, Shape shp, int sz) {
 		style = sty;
 		lshape = shp;
+		lsize = sz;
+	}
+
+	/** Create a new vector symbol */
+	public VectorSymbol(Style sty, Shape shp) {
+		this(sty, shp, 24);
 	}
 
 	/** Get the symbol label */
@@ -68,9 +77,6 @@ public class VectorSymbol implements Symbol {
 	/** Inner class for icon displayed on the legend */
 	protected class LegendIcon implements Icon {
 
-		/** Size of icon */
-		static public final int SIZE = 24;
-
 		/** Transform to draw the legend */
 		protected final AffineTransform transform;
 
@@ -79,10 +85,10 @@ public class VectorSymbol implements Symbol {
 			Rectangle2D b = lshape.getBounds2D();
 			double x = b.getX() + b.getWidth() / 2;
 			double y = b.getY() + b.getHeight() / 2;
-			double scale = (SIZE - 2) /
+			double scale = (lsize - 2) /
 				Math.max(b.getWidth(), b.getHeight());
 			transform = new AffineTransform();
-			transform.translate(SIZE / 2, SIZE / 2);
+			transform.translate(lsize / 2, lsize / 2);
 			transform.scale(scale, -scale);
 			transform.translate(-x, -y);
 		}	
@@ -101,12 +107,12 @@ public class VectorSymbol implements Symbol {
 
 		/** Get the icon width */
 		public int getIconWidth() {
-			return SIZE;
+			return lsize;
 		}
 
 		/** Get the icon height */
 		public int getIconHeight() {
-			return SIZE;
+			return lsize;
 		}
 	}
 }
