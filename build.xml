@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!-- ant build file for mapbean project
-     Copyright (C) 2000-2012  Minnesota Department of Transportation
+     Copyright (C) 2000-2013  Minnesota Department of Transportation
 
      This program is free software; you can redistribute it and/or modify
      it under the terms of the GNU General Public License as published by
@@ -104,8 +104,7 @@
 	</target>
 
 	<!-- Prepare the build directory -->
-	<target name="prepare"
-		description="Prepare the build directory">
+	<target name="prepare">
 		<copy todir="${build.classes}/images">
 			<fileset dir="${images.dir}" />
 		</copy>
@@ -114,13 +113,14 @@
 	<!-- Compile the source code -->
 	<target name="compile"
 		depends="check, prepare"
-	        description="Compile all of the source files">
+	        description="Compile the source code">
 		<javac srcdir="${src.dir}"
 		       destdir="${build.classes}"
 		       debug="${debug}"
 		       deprecation="on"
-		       source="1.5"
-		       target="1.5">
+		       includeantruntime="false"
+		       source="1.6"
+		       target="1.6">
 			<classpath refid="classpath"/>
 		</javac>
 	</target>
@@ -128,7 +128,7 @@
 	<!-- Create the jar archive -->
 	<target name="jar"
 		depends="compile"
-		description="Create the jar file">
+		description="Generate the jar file">
 		<mkdir dir="${build.lib}"/>
 		<jar jarfile="${build.lib}/${name}-${version}.jar">
 			<fileset dir="${build.classes}" />
@@ -154,8 +154,7 @@
 	<!-- Create the full distribution -->
 	<target name="dist"
 	        depends="jar, docs"
-	        description="Create the distribution directory and copy all
-	                     necessary files.">
+	        description="Create the binary distribution">
 		<mkdir dir="${dist.dir}"/>
 		<mkdir dir="${dist.dir}/lib"/>
 		<copy file="COPYING" todir="${dist.dir}"/>
@@ -169,7 +168,7 @@
 
 	<!-- Clean up generated stuff -->
 	<target name="clean"
-		description="Delete the build and distribution directories.">
+		description="Clean up the created directories">
 		<delete dir="${build.dir}" />
 		<delete dir="${dist.dir}" />
 	</target>
