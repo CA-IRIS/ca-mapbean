@@ -17,6 +17,7 @@ package us.mn.state.dot.map;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.geom.Point2D;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -75,27 +76,38 @@ public class TileLayerState extends LayerState {
 		int hy = (int)sz.getHeight() / 2;
 		int px = (int)zoom.getPixelX(center.getX());
 		int py = (int)zoom.getPixelY(center.getY());
-		int x0 = ((px - hx) / 256) * 256;
-		int x1 = (((px + hx) / 256) + 1) * 256;
+		int x0 = zoomLimit(zoom, (px - hx) / 256);
+		int x1 = zoomLimit(zoom, ((px + hx) / 256) + 1);
 		int ox = (px - hx) % 256;
-		for(int x = x0; x <= x1; x += 256) {
-			int y0 = ((py - hy) / 256) * 256;
-			int y1 = (((py + hy) / 256) + 1) * 256;
-			int oy = (py + hy) % 256 - 512;
-			for(int y = y0; y <= y1; y += 256) {
-				String tile = zoom.getTile(x, y);
+		int y0 = zoomLimit(zoom, (py - hy) / 256);
+		int y1 = zoomLimit(zoom, ((py + hy) / 256) + 1);
+		int oy = (py + hy) % 256 - 512;
+		for(int x = x0; x <= x1; x++) {
+			int xp = (x - x0) * 256 - ox;
+			for(int y = y0; y <= y1; y++) {
+				int yp = (y1 - y) * 256 + oy;
+				String tile = getTileName(zoom, x, y);
 				Image img = getTile(tile);
-				if(img != null) {
-					MapObject mo = new TileMapObject(img,
-						x - x0 - ox, y1 - y + oy);
-					s.next(mo);
-				} else {
+				if(img != null)
+					s.next(new TileMapObject(img, xp, yp));
+				else {
 					if(!isTileMissing(tile))
 						queue.offer(tile);
 				}
 			}
 		}
 		return null;
+	}
+
+	/** Limit X or Y tile based on zoom level */
+	private int zoomLimit(ZoomLevel zoom, int xory) {
+		return Math.max(0, Math.min(zoom.n_tiles - 1, xory));
+	}
+
+	/** Get a tile name */
+	private String getTileName(ZoomLevel zoom, int tx, int ty) {
+		int gy = zoom.n_tiles - 1 - ty;
+		return "" + zoom.ordinal() + '/' + tx + '/' + gy;
 	}
 
 	/** Is the given tile missing? */
@@ -111,9 +123,9 @@ public class TileLayerState extends LayerState {
 			return cache.getTile(tile);
 		}
 		catch(IOException e) {
-			synchronized(no_tile) {
-				no_tile.add(tile);
-			}
+			System.err.print("I/O Error ");
+			System.err.print(e.getMessage());
+			System.err.println(" reading tile: " + tile);
 			return null;
 		}
 	}
@@ -135,8 +147,15 @@ public class TileLayerState extends LayerState {
 		try {
 			cache.lookupTile(tile);
 		}
+		catch(FileNotFoundException e) {
+			synchronized(no_tile) {
+				no_tile.add(tile);
+			}
+		}
 		catch(IOException e) {
-			System.err.println("I/O Error loading tile: " + tile);
+			System.err.print("I/O Error ");
+			System.err.print(e.getMessage());
+			System.err.println(" loading tile: " + tile);
 		}
 	}
 }
