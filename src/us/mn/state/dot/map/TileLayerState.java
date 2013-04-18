@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2011  Minnesota Department of Transportation
+ * Copyright (C) 2011-2013  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,17 +30,17 @@ import us.mn.state.dot.geokit.ZoomLevel;
 public class TileLayerState extends LayerState {
 
 	/** Cache of tiles */
-	protected final TileCache cache;
+	private final TileCache cache;
 
 	/** Queue of tile requests */
-	protected final LinkedBlockingQueue<String> queue;
+	private final LinkedBlockingQueue<String> queue;
 
 	/** Set of missing tiles */
-	protected final HashSet<String> no_tile = new HashSet<String>();
+	private final HashSet<String> no_tile = new HashSet<String>();
 
 	/** Thread to lookup tiles */
-	protected class LookupThread extends Thread {
-		protected LookupThread(String n) {
+	private class LookupThread extends Thread {
+		private LookupThread(String n) {
 			super(n);
 		}
 		public void run() {
@@ -51,10 +51,10 @@ public class TileLayerState extends LayerState {
 	};
 
 	/** Thread to lookup tiles */
-	protected final Thread thread1 = new LookupThread("tile1");
+	private final Thread thread1 = new LookupThread("tile1");
 
 	/** Thread to lookup tiles */
-	protected final Thread thread2 = new LookupThread("tile2");
+	private final Thread thread2 = new LookupThread("tile2");
 
 	/** Create a new tile layer state */
 	public TileLayerState(TileLayer layer, MapBean mb, TileCache c) {
@@ -99,14 +99,14 @@ public class TileLayerState extends LayerState {
 	}
 
 	/** Is the given tile missing? */
-	protected boolean isTileMissing(String tile) {
+	private boolean isTileMissing(String tile) {
 		synchronized(no_tile) {
 			return no_tile.contains(tile);
 		}
 	}
 
 	/** Get a tile from the tile cache */
-	protected Image getTile(String tile) {
+	private Image getTile(String tile) {
 		try {
 			return cache.getTile(tile);
 		}
@@ -119,7 +119,7 @@ public class TileLayerState extends LayerState {
 	}
 
 	/** Lookup queued tiles */
-	protected void lookupTiles() {
+	private void lookupTiles() {
 		try {
 			lookupTile(queue.take());
 			if(queue.isEmpty()) 
@@ -131,7 +131,7 @@ public class TileLayerState extends LayerState {
 	}
 
 	/** Lookup one tile */
-	protected void lookupTile(String tile) {
+	private void lookupTile(String tile) {
 		try {
 			cache.lookupTile(tile);
 		}
