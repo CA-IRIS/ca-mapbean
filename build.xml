@@ -40,7 +40,10 @@
 	<property name="build.compiler" value="modern" />
 	<property name="build.compiler.pedantic" value="true" />
 	<path id="classpath">
-		<fileset dir="${lib.dir}" includes="*.jar"/>
+		<fileset dir="${lib.dir}">
+			<include name="${scheduler.jar}"/>
+			<include name="${geokit.jar}"/>
+		</fileset>
 	</path>
 
 	<!-- Check for one file dependancy -->
