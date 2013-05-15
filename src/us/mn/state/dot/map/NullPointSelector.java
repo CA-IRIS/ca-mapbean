@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2007-2013  Minnesota Department of Transportation
+ * Copyright (C) 2013  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,15 +17,17 @@ package us.mn.state.dot.map;
 import java.awt.geom.Point2D;
 
 /**
- * A point selector allows the user to select a point on the map.
+ * A null point selector is defined for when no point selection is occurring.
  *
  * @author Douglas Lau
  */
-public interface PointSelector {
+public class NullPointSelector implements PointSelector {
 
 	/** Select a point with the mouse pointer */
-	boolean selectPoint(Point2D p);
+	public boolean selectPoint(Point2D p) {
+		return false;
+	}
 
 	/** Finish point selection */
-	void finish();
+	public void finish() { }
 }

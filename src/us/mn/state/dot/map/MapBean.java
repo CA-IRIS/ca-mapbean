@@ -110,7 +110,7 @@ public class MapBean extends JComponent implements LayerChangedListener {
 	protected PanState pan = null;
 
 	/** Current point selector */
-	protected PointSelector pselect = null;
+	private PointSelector pselect = new NullPointSelector();
 
 	/** Create a new map */
 	public MapBean(boolean a) {
@@ -160,27 +160,25 @@ public class MapBean extends JComponent implements LayerChangedListener {
 		mapPane.setBackground(c);
 	}
 
-	/** Add a point selector */
-	public void addPointSelector(PointSelector ps) {
-		pselect = ps;
+	/** Set point selector.
+	 * @param ps New point selector (null for none). */
+	public void setPointSelector(PointSelector ps) {
+		final PointSelector ops = pselect;
+		pselect = ps != null ? ps : new NullPointSelector();
+		ops.finish();
 		setCursor();
 	}
 
 	/** Select a point with the mouse pointer */
-	protected boolean selectPoint(Point2D p) {
-		PointSelector ps = pselect;
-		if(ps != null) {
-			ps.selectPoint(p);
-			pselect = null;
-			setCursor();
-			return true;
-		}
-		return false;
+	private boolean selectPoint(Point2D p) {
+		boolean sel = pselect.selectPoint(p);
+		setPointSelector(null);
+		return sel;
 	}
 
 	/** Set the mouse cursor */
-	protected void setCursor() {
-		if(pselect == null)
+	private void setCursor() {
+		if(pselect instanceof NullPointSelector)
 			setCursor(null);
 		else
 			setCursor(Cursor.getPredefinedCursor(
@@ -300,7 +298,7 @@ public class MapBean extends JComponent implements LayerChangedListener {
 		/** Drag the map pan */
 		protected void drag(Point p) {
 			if(!isStarted()) {
-				pselect = null;
+				setPointSelector(null);
 				initialize();
 			}
 			setPan(p);
