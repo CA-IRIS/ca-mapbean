@@ -297,10 +297,8 @@ public class MapBean extends JComponent implements LayerChangedListener {
 
 		/** Drag the map pan */
 		protected void drag(Point p) {
-			if(!isStarted()) {
-				setPointSelector(null);
+			if(!isStarted())
 				initialize();
-			}
 			setPan(p);
 			repaint();
 		}
