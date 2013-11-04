@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000-2010  Minnesota Department of Transportation
+ * Copyright (C) 2000-2013  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,43 +14,53 @@
  */
 package us.mn.state.dot.map;
 
-import java.awt.BorderLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.AbstractButton;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
+import javax.swing.JToolBar;
 
 /**
- * Toolbar used for MapBean.
+ * Toolbar for legend, themes and zoom buttons for MapBean.
  *
- * @author Erik Engstrom
  * @author Douglas Lau
+ * @author Erik Engstrom
  */
-public class MapToolBar extends NavigationBar implements LayerChangedListener {
+public class MapToolBar extends JToolBar implements LayerChangedListener {
+
+	/** Map associated with the tool bar */
+	private final MapBean map;
 
 	/** Menu bar */
-	protected final JMenuBar menu = new JMenuBar();
+	private final JMenuBar menu = new JMenuBar();
 
 	/** Layer menu */
-	protected final LayerMenu layers = new LayerMenu();
+	private final LayerMenu layers = new LayerMenu();
 
 	/** Legend menu */
-	protected final JMenu legend = new JMenu("Legend");
+	private final JMenu legend = new JMenu("Legend");
 
 	/** Theme selection combo box */
-	protected final JComboBox themes = new JComboBox();
+	private final JComboBox themes = new JComboBox();
 
-	/** Create a new MapToolBar */
+	/** Create a new map tool bar */
 	public MapToolBar(MapBean m) {
-		super(m);
-		menu.setBorderPainted(false);
+		map = m;
+		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 		menu.setAlignmentY(.5f);
 		menu.add(layers);
 		menu.add(legend);
 		menu.add(themes);
-		add(menu, BorderLayout.LINE_START);
+		add(menu);
+		add(Box.createGlue());
+		addZoomButtons();
 		map.addLayerChangedListener(this);
 	}
 
@@ -67,7 +77,7 @@ public class MapToolBar extends NavigationBar implements LayerChangedListener {
 	}
 
 	/** Add a theme legend to the tool bar */
-	protected void addThemeLegend(LayerState ls) {
+	private void addThemeLegend(LayerState ls) {
 		String name = ls.getLayer().getName();
 		LegendMenu lm = new LegendMenu(name, ls.getTheme());
 		if(lm.getItemCount() > 1) {
@@ -77,7 +87,7 @@ public class MapToolBar extends NavigationBar implements LayerChangedListener {
 	}
 
 	/** Create the theme combo box model */
-	protected void createThemeModel(final LayerState ls,
+	private void createThemeModel(final LayerState ls,
 		final LegendMenu lm)
 	{
 		final DefaultComboBoxModel model = new DefaultComboBoxModel();
@@ -96,5 +106,32 @@ public class MapToolBar extends NavigationBar implements LayerChangedListener {
 			}
 		});
 		themes.setModel(model);
+	}
+
+	/** Add the zoom buttons */
+	private void addZoomButtons() {
+		JButton b = new JButton(" + ");
+		b.setToolTipText("Zoom map view in");
+		b.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				map.zoom(true);
+			}
+		});
+		addButton(b);
+		b = new JButton(" - ");
+		b.setToolTipText("Zoom map view out");
+		b.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				map.zoom(false);
+			}
+		});
+		addButton(b);
+	}
+
+	/** Add a button to the toolbar */
+	public void addButton(AbstractButton b) {
+		b.setMargin(new Insets(2, 2, 2, 2));
+		add(b);
+		add(Box.createHorizontalStrut(4));
 	}
 }
