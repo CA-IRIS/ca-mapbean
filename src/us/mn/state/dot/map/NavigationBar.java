@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000-2012  Minnesota Department of Transportation
+ * Copyright (C) 2000-2013  Minnesota Department of Transportation
  * Copyright (C) 2010  AHMCT, University of California
  *
  * This program is free software; you can redistribute it and/or modify
@@ -20,28 +20,20 @@ import java.awt.Dimension;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.net.URL;
 import java.util.TreeMap;
 import javax.swing.AbstractButton;
 import javax.swing.Box;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JToolBar;
 
 /**
  * ToolBar that supplies Navigation buttons for map.
  *
- * @author Erik Engstrom
  * @author Douglas Lau
  * @author Michael Darter
+ * @author Erik Engstrom
  */
 public class NavigationBar extends JToolBar {
-
-	/** Lookup an image resource */
-	static protected ImageIcon getImage(String path) {
-		URL url = NavigationBar.class.getResource(path);
-		return new ImageIcon(url);
-	}
 
 	/** Map associated with the navigation bar */
 	protected final MapBean map;
@@ -86,12 +78,6 @@ public class NavigationBar extends JToolBar {
 		b.setMinimumSize(new Dimension(12, 20));
 		b.setMargin(new Insets(1, 1, 1, 1));
 		buttons.put(b.getText(), b);
-		rebuildButtonBox();
-	}
-
-	/** Remove a button from the toolbar */
-	public void removeButton(AbstractButton b) {
-		buttons.remove(b.getText());
 		rebuildButtonBox();
 	}
 
