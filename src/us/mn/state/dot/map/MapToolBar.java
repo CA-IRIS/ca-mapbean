@@ -124,6 +124,7 @@ public class MapToolBar extends JToolBar {
 		DefaultComboBoxModel mdl = new DefaultComboBoxModel();
 		for(Theme t: ls.getThemes())
 			mdl.addElement(t);
+		// FIXME: this is a fragile way to check for SegmentLayerState
 		if(mdl.getSize() > 1) {
 			addThemeListener(ls, lm);
 			themes.setModel(mdl);
