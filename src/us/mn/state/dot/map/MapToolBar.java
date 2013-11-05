@@ -17,7 +17,9 @@ package us.mn.state.dot.map;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.AbstractAction;
 import javax.swing.AbstractButton;
+import javax.swing.Action;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultComboBoxModel;
@@ -31,9 +33,8 @@ import javax.swing.JToolBar;
  * Toolbar for legend, themes and zoom buttons for MapBean.
  *
  * @author Douglas Lau
- * @author Erik Engstrom
  */
-public class MapToolBar extends JToolBar implements LayerChangedListener {
+public class MapToolBar extends JToolBar {
 
 	/** Map associated with the tool bar */
 	private final MapBean map;
@@ -50,29 +51,61 @@ public class MapToolBar extends JToolBar implements LayerChangedListener {
 	/** Theme selection combo box */
 	private final JComboBox themes = new JComboBox();
 
+	/** Action for zoom in button */
+	private final Action zoom_in;
+
+	/** Action for zoom out button */
+	private final Action zoom_out;
+
 	/** Create a new map tool bar */
 	public MapToolBar(MapBean m) {
 		map = m;
+		zoom_in = createZoomInAction();
+		zoom_out = createZoomOutAction();
 		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 		menu.setAlignmentY(.5f);
 		menu.add(layers);
 		menu.add(legend);
 		menu.add(themes);
-		add(menu);
-		add(Box.createGlue());
-		addZoomButtons();
-		map.addLayerChangedListener(this);
+		map.addLayerChangedListener(new LayerChangedListener() {
+			public void layerChanged(LayerChangedEvent ev) {
+				if(ev.getReason() == LayerChange.model)
+					updateLayerMenu();
+			}
+		});
 	}
 
-	/** Called by the Layer when the layers data is changed */
-	public void layerChanged(LayerChangedEvent ev) {
-		if(ev.getReason() == LayerChange.model) {
-			layers.removeAll();
-			legend.removeAll();
-			for(LayerState ls: map.getLayers()) {
-				layers.addLayer(ls);
-				addThemeLegend(ls);
+	/** Create the zoom-in action */
+	protected Action createZoomInAction() {
+		Action a = new AbstractAction() {
+			public void actionPerformed(ActionEvent e) {
+				map.zoom(true);
 			}
+		};
+		a.putValue(Action.NAME, " + ");
+		a.putValue(Action.SHORT_DESCRIPTION, "Zoom map view in");
+		return a;
+	}
+
+	/** Create the zoom-out action */
+	protected Action createZoomOutAction() {
+		Action a = new AbstractAction() {
+			public void actionPerformed(ActionEvent e) {
+				map.zoom(false);
+			}
+		};
+		a.putValue(Action.NAME, " - ");
+		a.putValue(Action.SHORT_DESCRIPTION, "Zoom map view out");
+		return a;
+	}
+
+	/** Update the layer menu */
+	private void updateLayerMenu() {
+		layers.removeAll();
+		legend.removeAll();
+		for(LayerState ls: map.getLayers()) {
+			layers.addLayer(ls);
+			addThemeLegend(ls);
 		}
 	}
 
@@ -87,14 +120,18 @@ public class MapToolBar extends JToolBar implements LayerChangedListener {
 	}
 
 	/** Create the theme combo box model */
-	private void createThemeModel(final LayerState ls,
-		final LegendMenu lm)
-	{
-		final DefaultComboBoxModel model = new DefaultComboBoxModel();
+	private void createThemeModel(LayerState ls, LegendMenu lm) {
+		DefaultComboBoxModel mdl = new DefaultComboBoxModel();
 		for(Theme t: ls.getThemes())
-			model.addElement(t);
-		if(model.getSize() < 2)
-			return;
+			mdl.addElement(t);
+		if(mdl.getSize() > 1) {
+			addThemeListener(ls, lm);
+			themes.setModel(mdl);
+		}
+	}
+
+	/** Add a theme listener for one layer state */
+	private void addThemeListener(final LayerState ls, final LegendMenu lm){
 		themes.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Object obj = themes.getSelectedItem();
@@ -105,27 +142,14 @@ public class MapToolBar extends JToolBar implements LayerChangedListener {
 				}
 			}
 		});
-		themes.setModel(model);
 	}
 
-	/** Add the zoom buttons */
-	private void addZoomButtons() {
-		JButton b = new JButton(" + ");
-		b.setToolTipText("Zoom map view in");
-		b.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				map.zoom(true);
-			}
-		});
-		addButton(b);
-		b = new JButton(" - ");
-		b.setToolTipText("Zoom map view out");
-		b.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				map.zoom(false);
-			}
-		});
-		addButton(b);
+	/** Add the menu, theme and zoom buttons */
+	public void addMenu() {
+		add(menu);
+		add(Box.createGlue());
+		addButton(new JButton(zoom_in));
+		addButton(new JButton(zoom_out));
 	}
 
 	/** Add a button to the toolbar */
@@ -133,5 +157,12 @@ public class MapToolBar extends JToolBar implements LayerChangedListener {
 		b.setMargin(new Insets(2, 2, 2, 2));
 		add(b);
 		add(Box.createHorizontalStrut(4));
+	}
+
+	/** Clear all widgets from tool bar */
+	public void clear() {
+		for(ActionListener al: themes.getActionListeners())
+			themes.removeActionListener(al);
+		removeAll();
 	}
 }
