@@ -20,7 +20,7 @@ import java.awt.geom.Point2D;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashSet;
-import java.util.concurrent.LinkedBlockingQueue;
+import javax.swing.SwingWorker;
 import us.mn.state.dot.geokit.ZoomLevel;
 
 /**
@@ -33,37 +33,13 @@ public class TileLayerState extends LayerState {
 	/** Cache of tiles */
 	private final TileCache cache;
 
-	/** Queue of tile requests */
-	private final LinkedBlockingQueue<String> queue;
-
 	/** Set of missing tiles */
 	private final HashSet<String> no_tile = new HashSet<String>();
-
-	/** Thread to lookup tiles */
-	private class LookupThread extends Thread {
-		private LookupThread(String n) {
-			super(n);
-		}
-		public void run() {
-			while(true) {
-				lookupTiles();
-			}
-		}
-	};
-
-	/** Thread to lookup tiles */
-	private final Thread thread1 = new LookupThread("tile1");
-
-	/** Thread to lookup tiles */
-	private final Thread thread2 = new LookupThread("tile2");
 
 	/** Create a new tile layer state */
 	public TileLayerState(TileLayer layer, MapBean mb, TileCache c) {
 		super(layer, mb, new TileTheme());
 		cache = c;
-		queue = new LinkedBlockingQueue<String>(cache.getSize());
-		thread1.start();
-		thread2.start();
 	}
 
 	/** Call the specified callback for each map object in the layer */
@@ -92,7 +68,7 @@ public class TileLayerState extends LayerState {
 					s.next(new TileMapObject(img, xp, yp));
 				else {
 					if(!isTileMissing(tile))
-						queue.offer(tile);
+						createTileWorker(tile);
 				}
 			}
 		}
@@ -130,22 +106,33 @@ public class TileLayerState extends LayerState {
 		}
 	}
 
-	/** Lookup queued tiles */
-	private void lookupTiles() {
-		try {
-			lookupTile(queue.take());
-			if(queue.isEmpty()) 
-			   notifyLayerChangedListeners(LayerChange.geometry);
-		}
-		catch(InterruptedException e) {
-			// oh well, try again
-		}
+	/** Create a worker to lookup one tile */
+	private void createTileWorker(final String tile) {
+		SwingWorker worker = new SwingWorker<String, Void>() {
+			@Override public String doInBackground() {
+				return lookupTile(tile);
+			}
+			@Override public void done() {
+				try {
+					String tile = get();
+					if(tile != null) {
+						notifyLayerChangedListeners(
+							LayerChange.geometry);
+					}
+				}
+				catch(Exception e) {
+					// ignore
+				}
+			}
+		};
+		worker.execute();
 	}
 
 	/** Lookup one tile */
-	private void lookupTile(String tile) {
+	private String lookupTile(String tile) {
 		try {
 			cache.lookupTile(tile);
+			return tile;
 		}
 		catch(FileNotFoundException e) {
 			synchronized(no_tile) {
@@ -157,5 +144,6 @@ public class TileLayerState extends LayerState {
 			System.err.print(e.getMessage());
 			System.err.println(" loading tile: " + tile);
 		}
+		return null;
 	}
 }
