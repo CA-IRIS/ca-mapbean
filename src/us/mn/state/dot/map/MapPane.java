@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000-2011  Minnesota Department of Transportation
+ * Copyright (C) 2000-2013  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -39,6 +39,9 @@ class MapPane implements LayerChangedListener {
 	/** Buffer for map */
 	protected BufferedImage screenBuffer;
 
+	/** Dirty flag */
+	private boolean dirty = true;
+
 	/** Transform from world to screen coordinates */
 	protected final AffineTransform transform = new AffineTransform();
 
@@ -65,6 +68,7 @@ class MapPane implements LayerChangedListener {
 	public void setSize(Dimension d) {
 		screenBuffer = createImage(d.width, d.height);
 		rescale();
+		dirty = true;
 	}
 
 	/** Create a buffered image of the specified size */
@@ -114,6 +118,15 @@ class MapPane implements LayerChangedListener {
 	/** Get the current image for the map panel */
 	public BufferedImage getImage() {
 		BufferedImage bi = screenBuffer;
+		if(dirty) {
+			drawImage(bi);
+			dirty = false;
+		}
+		return bi;
+	}
+
+	/** Draw the map image */
+	private void drawImage(BufferedImage bi) {
 		Graphics2D g = bi.createGraphics();
 		g.setBackground(background);
 		g.clearRect(0, 0, bi.getWidth(), bi.getHeight());
@@ -125,7 +138,6 @@ class MapPane implements LayerChangedListener {
 		for(LayerState s: mapbean.getLayers())
 			s.paint(g);
 		g.dispose();
-		return bi;
 	}
 
 	/** Get the buffered image */
@@ -136,9 +148,13 @@ class MapPane implements LayerChangedListener {
 	/** Map model has changed */
 	public void layerChanged(LayerChangedEvent ev) {
 		switch(ev.getReason()) {
+		case selection:
+			return;
 		case model:
 		case extent:
 			rescale();
+		default:
+			dirty = true;
 		}
 	}
 
