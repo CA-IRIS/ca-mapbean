@@ -53,10 +53,10 @@ import static us.mn.state.dot.sched.SwingRunner.runSwing;
  * @author Douglas Lau
  * @see us.mn.state.dot.map.MapPane
  */
-public class MapBean extends JComponent implements LayerChangedListener {
+public class MapBean extends JComponent {
 
 	/** Cursor for panning the map */
-	static protected final Cursor PAN_CURSOR;
+	static private final Cursor PAN_CURSOR;
 	static {
 		ImageIcon i = new ImageIcon(MapBean.class.getResource(
                         "/images/pan.png"));
@@ -65,7 +65,7 @@ public class MapBean extends JComponent implements LayerChangedListener {
 	}
 
 	/** Listeners for map changed events */
-	protected Set<LayerChangedListener> listeners =
+	private final Set<LayerChangedListener> listeners =
 		new HashSet<LayerChangedListener>();
 
 	/** Add a LayerChangedListener to the map model */
@@ -78,21 +78,33 @@ public class MapBean extends JComponent implements LayerChangedListener {
 		listeners.remove(l);
 	}
 
+	/** When map changes, the map model updates all change listeners */
+	private final LayerChangedListener listener =
+		new LayerChangedListener()
+	{
+		@Override public void layerChanged(LayerChangedEvent ev) {
+			notifyLayerChangedListeners(ev);
+			mapPane.layerChanged(ev);
+			repaint();
+		}
+	};
+
 	/** Notify registered LayerChangedListeners that a layer has changed */
-	protected void notifyLayerChangedListeners(LayerChangedEvent event) {
+	private void notifyLayerChangedListeners(LayerChangedEvent event) {
 		for(LayerChangedListener l: listeners)
 			l.layerChanged(event);
 	}
 
 	/** Map model */
-	protected MapModel model = new MapModel();
+	private MapModel model = new MapModel();
 
 	/** Set the map model */
 	public void setModel(MapModel m) {
-		model.removeLayerChangedListener(this);
+		model.removeLayerChangedListener(listener);
 		model = m;
-		model.addLayerChangedListener(this);
-		layerChanged(new LayerChangedEvent(this, LayerChange.model));
+		model.addLayerChangedListener(listener);
+		listener.layerChanged(new LayerChangedEvent(this,
+			LayerChange.model));
 	}
 
 	/** Get the map model */
@@ -101,13 +113,13 @@ public class MapBean extends JComponent implements LayerChangedListener {
 	}
 
 	/** MapPane that will create the map */
-	protected final MapPane mapPane;
+	private final MapPane mapPane;
 
 	/** MapBean reference for PanState inner class */
-	protected final MapBean map;
+	private final MapBean map;
 
 	/** Current panning state */
-	protected PanState pan = null;
+	private PanState pan = null;
 
 	/** Current point selector */
 	private PointSelector pselect = new NullPointSelector();
@@ -117,7 +129,7 @@ public class MapBean extends JComponent implements LayerChangedListener {
 		map = this;
 		mapPane = new MapPane(this, a);
 		mapPane.setBackground(getBackground());
-		model.addLayerChangedListener(this);
+		model.addLayerChangedListener(listener);
 		setOpaque(true);
 		setDoubleBuffered(false);
 		setToolTipText(" ");
@@ -186,7 +198,7 @@ public class MapBean extends JComponent implements LayerChangedListener {
 	}
 
 	/** Process a mouse click event */
-	protected void doMouseClicked(MouseEvent e) {
+	private void doMouseClicked(MouseEvent e) {
 		boolean consumed = false;
 		Point2D p = transformPoint(e.getPoint());
 		if(selectPoint(p))
@@ -244,7 +256,7 @@ public class MapBean extends JComponent implements LayerChangedListener {
 	}
 
 	/** Set the extent of the map */
-	protected void setExtent(final double x, final double y,
+	private void setExtent(final double x, final double y,
 		final double width, final double height)
 	{
 		runSwing(new Runnable() {
@@ -255,7 +267,7 @@ public class MapBean extends JComponent implements LayerChangedListener {
 	}
 
 	/** Set the center */
-	protected void setCenter(double x, double y) {
+	private void setCenter(double x, double y) {
 		final Point2D.Double c = new Point2D.Double(x, y);
 		runSwing(new Runnable() {
 			public void run() {
@@ -265,21 +277,21 @@ public class MapBean extends JComponent implements LayerChangedListener {
 	}
 
 	/** State of map panning action */
-	protected class PanState {
-		protected final Point start;
-		protected Image buffer;
-		protected AffineTransform transform;
-		protected int xpan, ypan;
+	private class PanState {
+		private final Point start;
+		private Image buffer;
+		private AffineTransform transform;
+		private int xpan, ypan;
 
-		protected PanState(Point s) {
+		private PanState(Point s) {
 			start = s;
 		}
 
-		protected boolean isStarted() {
+		private boolean isStarted() {
 			return buffer != null;
 		}
 
-		protected void initialize() {
+		private void initialize() {
 			setCursor(PAN_CURSOR);
 			buffer = mapPane.getBufferedImage();
 			AffineTransform t = mapPane.getTransform();
@@ -290,13 +302,13 @@ public class MapBean extends JComponent implements LayerChangedListener {
 		}
 
 		/** Set the X and Y pan values */
-		protected void setPan(Point2D end) {
+		private void setPan(Point2D end) {
 			xpan = (int)(end.getX() - start.getX());
 			ypan = (int)(end.getY() - start.getY());
 		}
 
 		/** Drag the map pan */
-		protected void drag(Point p) {
+		private void drag(Point p) {
 			if(!isStarted())
 				initialize();
 			setPan(p);
@@ -304,7 +316,7 @@ public class MapBean extends JComponent implements LayerChangedListener {
 		}
 
 		/** Render the panning map */
-		protected void renderMap(Graphics2D g) {
+		private void renderMap(Graphics2D g) {
 			Rectangle bounds = getBounds();
 			g.drawImage(buffer, xpan, ypan, map);
 			g.setColor(getBackground());
@@ -323,7 +335,7 @@ public class MapBean extends JComponent implements LayerChangedListener {
 		}
 
 		/** Finish panning the map */
-		protected void finish(Point2D end) {
+		private void finish(Point2D end) {
 			setPan(end);
 			Point p = new Point(xpan, ypan);
 			try {
@@ -340,18 +352,18 @@ public class MapBean extends JComponent implements LayerChangedListener {
 	}
 
 	/** Start a pan of the map */
-	protected void startPan(Point p) {
+	private void startPan(Point p) {
 		pan = new PanState(p);
 	}
 
 	/** Pan the map */
-	protected void doPan(Point p) {
+	private void doPan(Point p) {
 		if(pan != null)
 			pan.drag(p);
 	}
 
 	/** Finish panning the map */
-	protected void finishPan(Point2D end) {
+	private void finishPan(Point2D end) {
 		if(pan != null) {
 			if(pan.isStarted())
 				pan.finish(end);
@@ -370,7 +382,7 @@ public class MapBean extends JComponent implements LayerChangedListener {
 
 	/** Zoom in on the map.
 	 * @param p Point in user coordinates. */
-	protected void zoomIn(final Point2D p) {
+	private void zoomIn(final Point2D p) {
 		runSwing(new Runnable() {
 			public void run() {
 				model.zoomIn(p);
@@ -380,7 +392,7 @@ public class MapBean extends JComponent implements LayerChangedListener {
 
 	/** Zoom out on the map.
 	 * @param p Point in user coordinates. */
-	protected void zoomOut(final Point2D p) {
+	private void zoomOut(final Point2D p) {
 		runSwing(new Runnable() {
 			public void run() {
 				model.zoomOut(p);
@@ -389,14 +401,14 @@ public class MapBean extends JComponent implements LayerChangedListener {
 	}
 
 	/** Called when the map is resized or the extent is changed */
-	protected void rescale() {
+	private void rescale() {
 		mapPane.setSize(getSize());
 		if(isShowing())
 			repaint();
 	}
 
 	/** Render the map */
-	protected void renderMap(Graphics2D g) {
+	private void renderMap(Graphics2D g) {
 		Image image = mapPane.getImage();
 		if(image != null)
 			g.drawImage(image, 0, 0, this);
@@ -404,7 +416,7 @@ public class MapBean extends JComponent implements LayerChangedListener {
 	}
 
 	/** Paint the current selections */
-	protected void paintSelections(Graphics2D g) {
+	private void paintSelections(Graphics2D g) {
 		g.transform(mapPane.getTransform());
 		if(mapPane.antialiased) {
 			g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
@@ -421,13 +433,6 @@ public class MapBean extends JComponent implements LayerChangedListener {
 			pan.renderMap((Graphics2D)g);
 		else
 			renderMap((Graphics2D)g);
-	}
-
-	/** When map changes, the map model updates all change listeners */
-	public void layerChanged(LayerChangedEvent ev) {
-		notifyLayerChangedListeners(ev);
-		mapPane.layerChanged(ev);
-		repaint();
 	}
 
 	/** Dispose of the map */
