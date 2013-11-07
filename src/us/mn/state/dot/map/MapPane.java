@@ -31,7 +31,7 @@ import java.awt.image.BufferedImage;
  * @author Erik Engstrom
  * @author Douglas Lau
  */
-class MapPane implements LayerChangedListener {
+class MapPane implements LayerChangeListener {
 
 	/** Minimum width/height of map pane */
 	static protected final int MIN_SIZE = 1;
@@ -146,7 +146,7 @@ class MapPane implements LayerChangedListener {
 	}
 
 	/** Map model has changed */
-	public void layerChanged(LayerChangedEvent ev) {
+	public void layerChanged(LayerChangeEvent ev) {
 		switch(ev.getReason()) {
 		case selection:
 			return;

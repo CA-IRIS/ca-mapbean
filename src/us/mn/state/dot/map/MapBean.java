@@ -34,14 +34,13 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Rectangle2D;
-import java.util.HashSet;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.Set;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JToolTip;
 import javax.swing.SwingUtilities;
+import javax.swing.event.EventListenerList;
 import static us.mn.state.dot.sched.SwingRunner.runSwing;
 
 /**
@@ -64,47 +63,55 @@ public class MapBean extends JComponent {
                         i.getImage(), new Point(6, 6), "Pan");
 	}
 
-	/** Listeners for map changed events */
-	private final Set<LayerChangedListener> listeners =
-		new HashSet<LayerChangedListener>();
+	/** Listeners that listen to this layer state */
+	private final EventListenerList listeners = new EventListenerList();
 
-	/** Add a LayerChangedListener to the map model */
-	public void addLayerChangedListener(LayerChangedListener l) {
-		listeners.add(l);
+	/** Add a layer changed listener */
+	public void addLayerChangeListener(LayerChangeListener l) {
+		listeners.add(LayerChangeListener.class, l);
 	}
 
-	/** Remove a LayerChangedListener from the map model */
-	public void removeLayerChangedListener(LayerChangedListener l) {
-		listeners.remove(l);
+	/** Remove a layer changed listener */
+	public void removeLayerChangeListener(LayerChangeListener l) {
+		listeners.remove(LayerChangeListener.class, l);
+	}
+
+	/** Notify all listeners of a layer change */
+	private void fireLayerChanged(LayerChangeEvent e) {
+		Object[] list = listeners.getListenerList();
+		for(int i = list.length - 1; i >= 0; i -= 2) {
+			Object l = list[i];
+			if(l instanceof LayerChangeListener)
+				((LayerChangeListener)l).layerChanged(e);
+		}
 	}
 
 	/** When map changes, the map model updates all change listeners */
-	private final LayerChangedListener listener =
-		new LayerChangedListener()
+	private final LayerChangeListener listener =
+		new LayerChangeListener()
 	{
-		@Override public void layerChanged(LayerChangedEvent ev) {
-			notifyLayerChangedListeners(ev);
+		@Override
+		public void layerChanged(LayerChangeEvent ev) {
+			fireLayerChanged(ev);
 			mapPane.layerChanged(ev);
 			repaint();
 		}
 	};
 
-	/** Notify registered LayerChangedListeners that a layer has changed */
-	private void notifyLayerChangedListeners(LayerChangedEvent event) {
-		for(LayerChangedListener l: listeners)
-			l.layerChanged(event);
-	}
-
 	/** Map model */
 	private MapModel model = new MapModel();
 
 	/** Set the map model */
-	public void setModel(MapModel m) {
-		model.removeLayerChangedListener(listener);
-		model = m;
-		model.addLayerChangedListener(listener);
-		listener.layerChanged(new LayerChangedEvent(this,
-			LayerChange.model));
+	public void setModel(final MapModel m) {
+		runSwing(new Runnable() {
+			public void run() {
+				model.removeLayerChangeListener(listener);
+				model = m;
+				model.addLayerChangeListener(listener);
+				listener.layerChanged(new LayerChangeEvent(
+					MapBean.this, LayerChange.model));
+			}
+		});
 	}
 
 	/** Get the map model */
@@ -129,7 +136,7 @@ public class MapBean extends JComponent {
 		map = this;
 		mapPane = new MapPane(this, a);
 		mapPane.setBackground(getBackground());
-		model.addLayerChangedListener(listener);
+		model.addLayerChangeListener(listener);
 		setOpaque(true);
 		setDoubleBuffered(false);
 		setToolTipText(" ");
@@ -438,7 +445,7 @@ public class MapBean extends JComponent {
 	/** Dispose of the map */
 	public void dispose() {
 		mapPane.dispose();
+		model.removeLayerChangeListener(listener);
 		model.dispose();
-		listeners.clear();
 	}
 }

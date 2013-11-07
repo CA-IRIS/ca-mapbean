@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000-2011  Minnesota Department of Transportation
+ * Copyright (C) 2000-2013  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,12 +16,12 @@ package us.mn.state.dot.map;
 
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.Set;
+import javax.swing.event.EventListenerList;
 import us.mn.state.dot.geokit.ZoomLevel;
+import static us.mn.state.dot.sched.SwingRunner.runSwing;
 
 /**
  * The map model is a collection of LayerStates and the current extent of the
@@ -29,53 +29,64 @@ import us.mn.state.dot.geokit.ZoomLevel;
  *
  * @author Douglas Lau
  */
-public class MapModel implements LayerChangedListener {
+public class MapModel {
 
-	/** Listeners for map changed events */
-	protected Set<LayerChangedListener> listeners =
-		new HashSet<LayerChangedListener>();
+	/** Listeners that for layer change events */
+	private final EventListenerList listeners = new EventListenerList();
 
-	/** Add a LayerChangedListener to the map model */
-	public void addLayerChangedListener(LayerChangedListener l) {
-		listeners.add(l);
+	/** Add a layer changed listener */
+	public void addLayerChangeListener(LayerChangeListener l) {
+		listeners.add(LayerChangeListener.class, l);
 	}
 
-	/** Remove a LayerChangedListener from the map model */
-	public void removeLayerChangedListener(LayerChangedListener l) {
-		listeners.remove(l);
+	/** Remove a layer changed listener */
+	public void removeLayerChangeListener(LayerChangeListener l) {
+		listeners.remove(LayerChangeListener.class, l);
 	}
 
-	/** Change a layer in the map model */
-	public void layerChanged(LayerChangedEvent ev) {
-		notifyLayerChangedListeners(ev);
+	/** Notify all listeners of a layer change */
+	private void fireLayerChanged(LayerChangeEvent e) {
+		Object[] list = listeners.getListenerList();
+		for(int i = list.length - 1; i >= 0; i -= 2) {
+			Object l = list[i];
+			if(l instanceof LayerChangeListener)
+				((LayerChangeListener)l).layerChanged(e);
+		}
 	}
 
-	/** Notify registered LayerChangedListeners that a layer has changed */
-	protected void notifyLayerChangedListeners(LayerChange reason) {
-		notifyLayerChangedListeners(new LayerChangedEvent(this,
-			reason));
+	/** Notify all listeners of a layer change */
+	protected void fireLayerChanged(final LayerChange reason) {
+		runSwing(new Runnable() {
+			public void run() {
+				fireLayerChanged(new LayerChangeEvent(
+					MapModel.this, reason));
+			}
+		});
 	}
 
-	/** Notify registered LayerChangedListeners that a layer has changed */
-	protected void notifyLayerChangedListeners(LayerChangedEvent event) {
-		for(LayerChangedListener l: listeners)
-			l.layerChanged(event);
-	}
+	/** Listener for layer changed events from a layer state */
+	private final LayerChangeListener listener =
+		new LayerChangeListener()
+	{
+		public void layerChanged(LayerChangeEvent e) {
+			fireLayerChanged(e);
+		}
+	};
 
 	/** List of all layers */
 	protected final LinkedList<LayerState> lstates =
 		new LinkedList<LayerState>();
 
 	/** Add a new layer to the map model */
-	public void addLayer(LayerState lstate) {
-		lstates.add(lstate);
-		lstate.addLayerChangedListener(this);
+	public void addLayer(LayerState ls) {
+		lstates.add(ls);
+		ls.addLayerChangeListener(listener);
 	}
 
 	/** Remove a layer from the map model */
-	public void removeLayer(LayerState lstate) {
-		lstates.remove(lstate);
-		lstate.removeLayerChangedListener(this);
+	public void removeLayer(LayerState ls) {
+		lstates.remove(ls);
+		ls.removeLayerChangeListener(listener);
 	}
 
 	/** Get the list of layer states in the map model */
@@ -170,7 +181,7 @@ public class MapModel implements LayerChangedListener {
 		Rectangle2D ne = calculateExtent(c, zl);
 		if(!ne.equals(extent)) {
 			extent.setRect(ne);
-			notifyLayerChangedListeners(LayerChange.extent);
+			fireLayerChanged(LayerChange.extent);
 		}
 	}
 
@@ -205,9 +216,10 @@ public class MapModel implements LayerChangedListener {
 
 	/** Dispose of the map model */
 	public void dispose() {
-		for(LayerState s: lstates)
-			s.dispose();
-		lstates.clear();
-		listeners.clear();
+		while(!lstates.isEmpty()) {
+			LayerState ls = lstates.pop();
+			ls.removeLayerChangeListener(listener);
+			ls.dispose();
+		}
 	}
 }

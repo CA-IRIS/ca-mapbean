@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000-2011  Minnesota Department of Transportation
+ * Copyright (C) 2000-2013  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,8 +15,8 @@
 package us.mn.state.dot.map;
 
 import java.awt.geom.Rectangle2D;
-import java.util.HashSet;
-import java.util.Set;
+import javax.swing.event.EventListenerList;
+import static us.mn.state.dot.sched.SwingRunner.runSwing;
 
 /**
  * A layer is a grouping of similar MapObjects.
@@ -31,10 +31,6 @@ abstract public class Layer {
 
 	/** Extent of layer */
 	protected final Rectangle2D extent = new Rectangle2D.Double();
-
-	/** Layer change listeners */
-	protected final Set<LayerChangedListener> listeners =
-		new HashSet<LayerChangedListener>();
 
 	/** Create a new layer */
 	public Layer(String n) {
@@ -51,20 +47,37 @@ abstract public class Layer {
 		return extent;
 	}
 
-	/** Add a listener that is notified when the layer changes */
-	public void addLayerChangedListener(LayerChangedListener l) {
-		listeners.add(l);
+	/** Listeners that listen to this layer state */
+	private final EventListenerList listeners = new EventListenerList();
+
+	/** Add a layer changed listener */
+	public void addLayerChangeListener(LayerChangeListener l) {
+		listeners.add(LayerChangeListener.class, l);
 	}
 
-	/** Remove a LayerChangedListener from the layer */
-	public void removeLayerChangedListener(LayerChangedListener l) {
-		listeners.remove(l);
+	/** Remove a layer changed listener */
+	public void removeLayerChangeListener(LayerChangeListener l) {
+		listeners.remove(LayerChangeListener.class, l);
 	}
 
-	/** Notify listeners that the layer has changed */
-	protected void notifyLayerChangedListeners(LayerChangedEvent e) {
-		for(LayerChangedListener l: listeners)
-			l.layerChanged(e);
+	/** Notify all listeners of a layer change */
+	private void fireLayerChanged(LayerChangeEvent e) {
+		Object[] list = listeners.getListenerList();
+		for(int i = list.length - 1; i >= 0; i -= 2) {
+			Object l = list[i];
+			if(l instanceof LayerChangeListener)
+				((LayerChangeListener)l).layerChanged(e);
+		}
+	}
+
+	/** Notify all listeners of a layer change */
+	protected void fireLayerChanged(final LayerChange reason) {
+		runSwing(new Runnable() {
+			public void run() {
+				fireLayerChanged(new LayerChangeEvent(
+					Layer.this, reason));
+			}
+		});
 	}
 
 	/** Create a new layer state */

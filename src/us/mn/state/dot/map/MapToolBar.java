@@ -67,8 +67,8 @@ public class MapToolBar extends JToolBar {
 		menu.add(layers);
 		menu.add(legend);
 		menu.add(themes);
-		map.addLayerChangedListener(new LayerChangedListener() {
-			public void layerChanged(LayerChangedEvent ev) {
+		map.addLayerChangeListener(new LayerChangeListener() {
+			public void layerChanged(LayerChangeEvent ev) {
 				if(ev.getReason() == LayerChange.model)
 					updateLayerMenu();
 			}

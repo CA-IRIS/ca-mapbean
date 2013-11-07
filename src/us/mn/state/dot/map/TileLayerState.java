@@ -109,14 +109,16 @@ public class TileLayerState extends LayerState {
 	/** Create a worker to lookup one tile */
 	private void createTileWorker(final String tile) {
 		SwingWorker worker = new SwingWorker<String, Void>() {
-			@Override public String doInBackground() {
+			@Override
+			public String doInBackground() {
 				return lookupTile(tile);
 			}
-			@Override public void done() {
+			@Override
+			public void done() {
 				try {
 					String tile = get();
 					if(tile != null) {
-						notifyLayerChangedListeners(
+						fireLayerChanged(
 							LayerChange.geometry);
 					}
 				}

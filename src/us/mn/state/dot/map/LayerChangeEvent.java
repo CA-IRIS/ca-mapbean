@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000-2010  Minnesota Department of Transportation
+ * Copyright (C) 2000-2013  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,24 +17,23 @@ package us.mn.state.dot.map;
 import java.util.EventObject;
 
 /**
- * LayerChangedEvents are sent to LayerChangedListeners when a Layers data is
- * changed.
+ * LayerChangeEvents are sent to LayerChangeListeners when layer is changed.
  *
  * @author Erik Engstrom
  * @author Douglas Lau
  */
-public class LayerChangedEvent extends EventObject {
+public class LayerChangeEvent extends EventObject {
 
 	/** Reason code for layer change */
-	protected LayerChange reason;
+	private LayerChange reason;
 
-	/** Create a new LayerChangedEvent */
-	public LayerChangedEvent(Object source, LayerChange why) {
+	/** Create a new LayerChangeEvent */
+	public LayerChangeEvent(Object source, LayerChange why) {
 		super(source);
 		reason = why;
 	}
 
-	/** Get the reason the Layer changed */
+	/** Get the reason the layer changed */
 	public LayerChange getReason() {
 		return reason;
 	}

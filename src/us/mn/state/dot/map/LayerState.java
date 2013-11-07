@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000-2011  Minnesota Department of Transportation
+ * Copyright (C) 2000-2013  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,11 +20,11 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 import javax.swing.SwingUtilities;
+import javax.swing.event.EventListenerList;
+import static us.mn.state.dot.sched.SwingRunner.runSwing;
 
 /**
  * Layer state is the rendering state for one layer on a map. Multiple layer
@@ -35,37 +35,75 @@ import javax.swing.SwingUtilities;
  * @author Erik Engstrom
  * @author Douglas Lau
  */
-abstract public class LayerState implements LayerChangedListener {
+abstract public class LayerState {
 
 	/** Empty selection special case (for equality comparisons) */
-	static protected final MapObject[] NO_SELECTION = new MapObject[0];
+	static private final MapObject[] NO_SELECTION = new MapObject[0];
+
+	/** Map bean for rendering */
+	protected final MapBean map;
 
 	/** Layer this state is for */
-	protected final Layer layer;
+	private final Layer layer;
 
 	/** Get the layer */
 	public Layer getLayer() {
 		return layer;
 	}
 
-	/** Map bean for rendering */
-	protected final MapBean map;
-
 	/** Listeners that listen to this layer state */
-	protected final Set<LayerChangedListener> listeners =
-		new HashSet<LayerChangedListener>();
+	private final EventListenerList listeners = new EventListenerList();
+
+	/** Add a layer changed listener */
+	public void addLayerChangeListener(LayerChangeListener l) {
+		listeners.add(LayerChangeListener.class, l);
+	}
+
+	/** Remove a layer changed listener */
+	public void removeLayerChangeListener(LayerChangeListener l) {
+		listeners.remove(LayerChangeListener.class, l);
+	}
+
+	/** Notify all listeners of a layer change */
+	private void fireLayerChanged(LayerChangeEvent e) {
+		Object[] list = listeners.getListenerList();
+		for(int i = list.length - 1; i >= 0; i -= 2) {
+			Object l = list[i];
+			if(l instanceof LayerChangeListener)
+				((LayerChangeListener)l).layerChanged(e);
+		}
+	}
+
+	/** Notify all listeners of a layer change */
+	protected void fireLayerChanged(final LayerChange reason) {
+		runSwing(new Runnable() {
+			public void run() {
+				fireLayerChanged(new LayerChangeEvent(
+					LayerState.this, reason));
+			}
+		});
+	}
+
+	/** Listener for layer changed events from layer */
+	private final LayerChangeListener listener =
+		new LayerChangeListener()
+	{
+		public void layerChanged(LayerChangeEvent e) {
+			fireLayerChanged(e);
+		}
+	};
 
 	/** List of available themes */
-	protected final List<Theme> themes = new LinkedList<Theme>();
+	private final List<Theme> themes = new LinkedList<Theme>();
 
 	/** Current theme */
-	protected Theme theme;
+	private Theme theme;
 
 	/** Currently selected map objects */
-	protected MapObject[] selections = NO_SELECTION;
+	private MapObject[] selections = NO_SELECTION;
 
 	/** Visibility flag (null means automatic) */
-	protected Boolean visible = null;
+	private Boolean visible = null;
 
 	/**
 	 * Create a new layer state.
@@ -100,14 +138,13 @@ abstract public class LayerState implements LayerChangedListener {
 		map = mb;
 		this.theme = theme;
 		this.visible = visible;
-		layer.addLayerChangedListener(this);
+		layer.addLayerChangeListener(listener);
 	}
 
 	/** Dispose of the layer state */
 	public void dispose() {
-		layer.removeLayerChangedListener(this);
+		layer.removeLayerChangeListener(listener);
 		themes.clear();
-		listeners.clear();
 	}
 
 	/** Add a theme to this layer state */
@@ -124,7 +161,7 @@ abstract public class LayerState implements LayerChangedListener {
 	public void setTheme(Theme t) {
 		if(t != theme) {
 			theme = t;
-			notifyLayerChangedListeners(LayerChange.status);
+			fireLayerChanged(LayerChange.status);
 		}
 	}
 
@@ -137,7 +174,7 @@ abstract public class LayerState implements LayerChangedListener {
 	public void setSelections(MapObject[] s) {
 		if(s != selections) {
 			selections = s;
-			notifyLayerChangedListeners(LayerChange.selection);
+			fireLayerChanged(LayerChange.selection);
 		}
 	}
 
@@ -207,35 +244,13 @@ abstract public class LayerState implements LayerChangedListener {
 	}
 
 	/** Set the visibility of the layer.
-	 * @param v New visibility; true == visible, false == invisible, null
-	 *           means automatic. */
+	 * @param v New visibility; true == visible, false == invisible,
+	 *          null means automatic. */
 	public void setVisible(Boolean v) {
 		boolean pv = isVisible();
 		visible = v;
 		if(pv != isVisible())
-			notifyLayerChangedListeners(LayerChange.visibility);
-	}
-
-	/** Add a layer changed listener to this layer state */
-	public void addLayerChangedListener(LayerChangedListener l) {
-		listeners.add(l);
-	}
-
-	/** Remove a layer changed listener from this layer state */
-	public void removeLayerChangedListener(LayerChangedListener l) {
-		listeners.remove(l);
-	}
-
-	/** Notify all listeners that this layer state has changed */
-	protected void notifyLayerChangedListeners(LayerChange reason) {
-		LayerChangedEvent e = new LayerChangedEvent(this, reason);
-		for(LayerChangedListener l: listeners)
-			l.layerChanged(e);
-	}
-
-	/** Deal with a layer changed event */
-	public void layerChanged(LayerChangedEvent e) {
-		notifyLayerChangedListeners(e.getReason());
+			fireLayerChanged(LayerChange.visibility);
 	}
 
 	/** Get the appropriate tool tip text for the specified point */
