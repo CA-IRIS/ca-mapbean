@@ -146,6 +146,7 @@ class MapPane implements LayerChangeListener {
 	}
 
 	/** Map model has changed */
+	@Override
 	public void layerChanged(LayerChangeEvent ev) {
 		switch(ev.getReason()) {
 		case selection:
