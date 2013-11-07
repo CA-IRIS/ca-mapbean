@@ -89,7 +89,8 @@ abstract public class LayerState {
 		new LayerChangeListener()
 	{
 		public void layerChanged(LayerChangeEvent e) {
-			fireLayerChanged(e);
+			if(isVisible())
+				fireLayerChanged(e);
 		}
 	};
 
