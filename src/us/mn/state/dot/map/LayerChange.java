@@ -25,5 +25,6 @@ public enum LayerChange {
 	geometry,	// geometry change (new tile, etc)
 	status,		// status change (device status)
 	visibility,	// visibility change (layer hidden / shown)
+	theme,		// theme change
 	selection;	// selection change
 }

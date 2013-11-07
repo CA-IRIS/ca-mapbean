@@ -70,7 +70,9 @@ abstract public class Layer {
 		}
 	}
 
-	/** Notify all listeners of a layer change */
+	/** Notify all listeners of a layer change.
+	 * @param reason Reason for layer change.
+	 *               Should be extent, geometry or status. */
 	protected void fireLayerChanged(final LayerChange reason) {
 		runSwing(new Runnable() {
 			public void run() {

@@ -74,7 +74,9 @@ abstract public class LayerState {
 		}
 	}
 
-	/** Notify all listeners of a layer change */
+	/** Notify all listeners of a layer state change.
+	 * @param reason Reason for layer change.
+	 *               Should be visibility, theme or selection. */
 	protected void fireLayerChanged(final LayerChange reason) {
 		runSwing(new Runnable() {
 			public void run() {
@@ -162,7 +164,7 @@ abstract public class LayerState {
 	public void setTheme(Theme t) {
 		if(t != theme) {
 			theme = t;
-			fireLayerChanged(LayerChange.status);
+			fireLayerChanged(LayerChange.theme);
 		}
 	}
 

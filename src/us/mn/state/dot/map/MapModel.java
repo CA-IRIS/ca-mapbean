@@ -54,7 +54,9 @@ public class MapModel {
 		}
 	}
 
-	/** Notify all listeners of a layer change */
+	/** Notify all listeners of a map model layer change.
+	 * @param reason Reason for layer change.
+	 *               Should only be extent. */
 	protected void fireLayerChanged(final LayerChange reason) {
 		runSwing(new Runnable() {
 			public void run() {
