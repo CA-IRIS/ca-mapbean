@@ -16,7 +16,6 @@ package us.mn.state.dot.map;
 
 import java.awt.geom.Rectangle2D;
 import javax.swing.event.EventListenerList;
-import static us.mn.state.dot.sched.SwingRunner.runSwing;
 
 /**
  * A layer is a grouping of similar MapObjects.
@@ -80,12 +79,7 @@ abstract public class Layer {
 	 * @param reason Reason for layer change.
 	 *               Should be extent, geometry or status. */
 	protected void fireLayerChanged(final LayerChange reason) {
-		runSwing(new Runnable() {
-			public void run() {
-				fireLayerChanged(new LayerChangeEvent(
-					Layer.this, reason));
-			}
-		});
+		fireLayerChanged(new LayerChangeEvent(Layer.this, reason));
 	}
 
 	/** Create a new layer state */

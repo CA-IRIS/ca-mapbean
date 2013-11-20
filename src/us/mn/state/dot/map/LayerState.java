@@ -24,7 +24,6 @@ import java.util.LinkedList;
 import java.util.List;
 import javax.swing.SwingUtilities;
 import javax.swing.event.EventListenerList;
-import static us.mn.state.dot.sched.SwingRunner.runSwing;
 
 /**
  * Layer state is the rendering state for one layer on a map. Multiple layer
@@ -78,12 +77,7 @@ abstract public class LayerState {
 	 * @param reason Reason for layer change.
 	 *               Should be visibility, theme or selection. */
 	protected void fireLayerChanged(final LayerChange reason) {
-		runSwing(new Runnable() {
-			public void run() {
-				fireLayerChanged(new LayerChangeEvent(
-					LayerState.this, reason));
-			}
-		});
+		fireLayerChanged(new LayerChangeEvent(LayerState.this, reason));
 	}
 
 	/** Listener for layer changed events from layer */

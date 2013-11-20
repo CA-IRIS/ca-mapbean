@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.ListIterator;
 import javax.swing.event.EventListenerList;
 import us.mn.state.dot.geokit.ZoomLevel;
-import static us.mn.state.dot.sched.SwingRunner.runSwing;
 
 /**
  * The map model is a collection of LayerStates and the current extent of the
@@ -58,12 +57,7 @@ public class MapModel {
 	 * @param reason Reason for layer change.
 	 *               Should only be extent. */
 	protected void fireLayerChanged(final LayerChange reason) {
-		runSwing(new Runnable() {
-			public void run() {
-				fireLayerChanged(new LayerChangeEvent(
-					MapModel.this, reason));
-			}
-		});
+		fireLayerChanged(new LayerChangeEvent(MapModel.this, reason));
 	}
 
 	/** Listener for layer changed events from a layer state */
