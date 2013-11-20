@@ -27,10 +27,10 @@ import static us.mn.state.dot.sched.SwingRunner.runSwing;
 abstract public class Layer {
 
 	/** Layer name */
-	protected final String name;
+	private final String name;
 
 	/** Extent of layer */
-	protected final Rectangle2D extent = new Rectangle2D.Double();
+	private final Rectangle2D extent = new Rectangle2D.Double();
 
 	/** Create a new layer */
 	public Layer(String n) {
@@ -45,6 +45,12 @@ abstract public class Layer {
 	/** Get the extent of the layer */
 	public Rectangle2D getExtent() {
 		return extent;
+	}
+
+	/** Set the extent of the layer */
+	public void setExtent(Rectangle2D e) {
+		extent.setRect(e);
+		fireLayerChanged(LayerChange.extent);
 	}
 
 	/** Listeners that listen to this layer state */
