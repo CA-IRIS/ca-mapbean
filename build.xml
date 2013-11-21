@@ -32,8 +32,6 @@
 	<property name="dist.dir" value="${name}-${version}" />
 
 	<!-- Dependent jar configuration -->
-	<property name="scheduler.jar"
-		  value="scheduler-${scheduler.version}.jar"/>
 	<property name="geokit.jar" value="geokit-${geokit.version}.jar"/>
 
 	<!-- Compiler configuration -->
@@ -41,7 +39,6 @@
 	<property name="build.compiler.pedantic" value="true" />
 	<path id="classpath">
 		<fileset dir="${lib.dir}">
-			<include name="${scheduler.jar}"/>
 			<include name="${geokit.jar}"/>
 		</fileset>
 	</path>
@@ -93,12 +90,6 @@
 
 	<!-- Check for dependencies -->
 	<target name="check">
-		<antcall target="check-subproject">
-			<param name="file.dep" value="${scheduler.jar}"/>
-			<param name="repo.name" value="scheduler"/>
-			<param name="repo.version"
-			       value="${scheduler.version}"/>
-		</antcall>
 		<antcall target="check-subproject">
 			<param name="file.dep" value="${geokit.jar}"/>
 			<param name="repo.name" value="geokit"/>
