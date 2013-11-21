@@ -41,7 +41,6 @@ import javax.swing.JComponent;
 import javax.swing.JToolTip;
 import javax.swing.SwingUtilities;
 import javax.swing.event.EventListenerList;
-import static us.mn.state.dot.sched.SwingRunner.runSwing;
 
 /**
  * The MapBean class is a container for a MapPane which allows the pane to be
@@ -102,16 +101,12 @@ public class MapBean extends JComponent {
 	private MapModel model = new MapModel();
 
 	/** Set the map model */
-	public void setModel(final MapModel m) {
-		runSwing(new Runnable() {
-			public void run() {
-				model.removeLayerChangeListener(listener);
-				model = m;
-				model.addLayerChangeListener(listener);
-				listener.layerChanged(new LayerChangeEvent(
-					MapBean.this, LayerChange.model));
-			}
-		});
+	public void setModel(MapModel m) {
+		model.removeLayerChangeListener(listener);
+		model = m;
+		model.addLayerChangeListener(listener);
+		listener.layerChanged(new LayerChangeEvent(MapBean.this,
+			LayerChange.model));
 	}
 
 	/** Get the map model */
@@ -257,30 +252,10 @@ public class MapBean extends JComponent {
 		return new MapToolTip();
 	}
 
-	/** Set the extent of the map */
-	public void setExtent(Rectangle2D r) {
-		setExtent(r.getX(), r.getY(), r.getWidth(), r.getHeight());
-	}
-
-	/** Set the extent of the map */
-	private void setExtent(final double x, final double y,
-		final double width, final double height)
-	{
-		runSwing(new Runnable() {
-			public void run() {
-				model.setExtent(x, y, width, height);
-			}
-		});
-	}
-
 	/** Set the center */
 	private void setCenter(double x, double y) {
-		final Point2D.Double c = new Point2D.Double(x, y);
-		runSwing(new Runnable() {
-			public void run() {
-				model.setCenter(c);
-			}
-		});
+		Point2D.Double c = new Point2D.Double(x, y);
+		model.setCenter(c);
 	}
 
 	/** State of map panning action */
@@ -390,21 +365,13 @@ public class MapBean extends JComponent {
 	/** Zoom in on the map.
 	 * @param p Point in user coordinates. */
 	private void zoomIn(final Point2D p) {
-		runSwing(new Runnable() {
-			public void run() {
-				model.zoomIn(p);
-			}
-		});
+		model.zoomIn(p);
 	}
 
 	/** Zoom out on the map.
 	 * @param p Point in user coordinates. */
 	private void zoomOut(final Point2D p) {
-		runSwing(new Runnable() {
-			public void run() {
-				model.zoomOut(p);
-			}
-		});
+		model.zoomOut(p);
 	}
 
 	/** Called when the map is resized or the extent is changed */
