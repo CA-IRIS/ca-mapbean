@@ -255,9 +255,14 @@ abstract public class LayerState {
 	public MapObject search(final Point2D p) {
 		return forEach(new MapSearcher() {
 			public boolean next(MapObject mo) {
-				AffineTransform t = mo.getInverseTransform();
-				Point2D ip = t.transform(p, null);
-				return mo.getShape().contains(ip);
+				Shape shp = mo.getShape();
+				if (shp != null) {
+					AffineTransform t =
+						mo.getInverseTransform();
+					Point2D ip = t.transform(p, null);
+					return shp.contains(ip);
+				} else
+					return false;
 			}
 		});
 	}
