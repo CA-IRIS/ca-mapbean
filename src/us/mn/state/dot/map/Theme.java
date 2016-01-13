@@ -15,6 +15,7 @@
 package us.mn.state.dot.map;
 
 import java.awt.Graphics2D;
+import java.awt.Shape;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -76,10 +77,14 @@ abstract public class Theme {
 
 	/** Draw the specified map object */
 	public void draw(Graphics2D g, MapObject mo, float scale) {
-		Symbol s = getSymbol(mo);
-		if (s != null) {
-			g.transform(mo.getTransform());
-			s.draw(g, mo.getShape(), mo.getOutlineShape(), scale);
+		Symbol sym = getSymbol(mo);
+		if (sym != null) {
+			Shape shp = mo.getShape();
+			Shape o_shp = mo.getOutlineShape();
+			if (shp != null && o_shp != null) {
+				g.transform(mo.getTransform());
+				sym.draw(g, shp, o_shp, scale);
+			}
 		}
 	}
 
