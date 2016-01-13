@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2007-2012  Minnesota Department of Transportation
+ * Copyright (C) 2007-2016  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,16 +30,16 @@ import java.util.List;
 abstract public class StyledTheme extends Theme {
 
 	/** Transparent white */
-	static protected final Color TRANS_WHITE = new Color(1, 1, 1, 0.4f);
+	static private final Color TRANS_WHITE = new Color(1, 1, 1, 0.4f);
 
 	/** Transparent white */
-	static protected final Color TRANSPARENT = new Color(1, 1, 1, 0.75f);
+	static private final Color TRANSPARENT = new Color(1, 1, 1, 0.75f);
 
 	/** List of all styles */
 	protected final LinkedList<Style> styles = new LinkedList<Style>();
 
 	/** Shape of legend icon */
-	protected final Shape lshape;
+	private final Shape lshape;
 
 	/** Size of legend icon */
 	private final int lsize;
@@ -68,7 +68,7 @@ abstract public class StyledTheme extends Theme {
 	/** Get a list of all symbols */
 	public List<Symbol> getSymbols() {
 		LinkedList<Symbol> symbols = new LinkedList<Symbol>();
-		for(Style s: styles)
+		for (Style s: styles)
 			symbols.add(getSymbol(s.getLabel()));
 		return symbols;
 	}
@@ -76,14 +76,11 @@ abstract public class StyledTheme extends Theme {
 	/** Get a symbol for the given map object */
 	public Symbol getSymbol(MapObject mo) {
 		Style s = getStyle(mo);
-		if(s != null)
-			return getSymbol(s.getLabel());
-		else
-			return null;
+		return (s != null) ? getSymbol(s.getLabel()) : null;
 	}
 
 	/** Create an ellipse around the given shape */
-	protected Shape createEllipse(Shape s) {
+	private Shape createEllipse(Shape s) {
 		Rectangle2D r = s.getBounds2D();
 		return new Ellipse2D.Double(r.getCenterX() - r.getWidth(),
 			r.getCenterY() - r.getHeight(), r.getWidth() * 2,
@@ -93,7 +90,7 @@ abstract public class StyledTheme extends Theme {
 	/** Draw a selected map object */
 	public void drawSelected(Graphics2D g, MapObject mo, float scale) {
 		Shape shape = mo.getShape();
-		if(shape != null) {
+		if (shape != null) {
 			g.transform(mo.getTransform());
 			g.setColor(TRANS_WHITE);
 			g.fill(shape);
