@@ -48,6 +48,9 @@ abstract public class Theme {
 		return name;
 	}
 
+	/** proper getter */
+	public String getName() { return name; }
+
 	/** Add a symbol to the theme */
 	protected void addSymbol(Symbol sym) {
 		sym_map.put(sym.getLabel(), sym);
