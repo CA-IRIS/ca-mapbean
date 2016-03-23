@@ -14,71 +14,19 @@
  */
 package us.mn.state.dot.map;
 
-import java.awt.Rectangle;
-import java.awt.Shape;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.GeneralPath;
-import java.awt.geom.PathIterator;
-import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
+import java.awt.geom.*;
 
 /**
  * An abstract marker which delegates all Shape methods to a general path
  *
  * @author Douglas Lau
+ * @author Dan Rossiter
  */
-abstract public class AbstractMarker implements Shape {
-
-	/** Actual shape being delegated */
-	protected final GeneralPath path;
+abstract public class AbstractMarker extends Path2D.Float {
 
 	/** Create a new abstract marker */
 	protected AbstractMarker(int c) {
-		path = new GeneralPath(GeneralPath.WIND_EVEN_ODD, c);
+		super(GeneralPath.WIND_EVEN_ODD, c);
 	}
 
-	public boolean contains(double x, double y) {
-		return path.contains(x, y);
-	}
-
-	public boolean contains(double x, double y, double w, double h) {
-		return path.contains(x, y, w, h);
-	}
-
-	public boolean contains(Point2D p) {
-		return path.contains(p);
-	}
-
-	public boolean contains(Rectangle2D r) {
-		return path.contains(r);
-	}
-
-	public Rectangle getBounds() {
-		return path.getBounds();
-	}
-
-	public Rectangle2D getBounds2D() {
-		return path.getBounds2D();
-	}
-
-	public PathIterator getPathIterator(AffineTransform t) {
-		return path.getPathIterator(t);
-	}
-
-	public PathIterator getPathIterator(AffineTransform t, double f) {
-		return path.getPathIterator(t, f);
-	}
-
-	public boolean intersects(double x, double y, double w, double h) {
-		return path.intersects(x, y, w, h);
-	}
-
-	public boolean intersects(Rectangle2D r) {
-		return path.intersects(r);
-	}
-
-	/** Create a transformed marker with the specified transform */
-	public Shape createTransformedShape(AffineTransform at) {
-		return path.createTransformedShape(at);
-	}
 }
