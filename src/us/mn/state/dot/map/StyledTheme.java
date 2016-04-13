@@ -74,6 +74,7 @@ abstract public class StyledTheme extends Theme {
 	}
 
 	/** Get a symbol for the given map object */
+	@Override
 	public Symbol getSymbol(MapObject mo) {
 		Style s = getStyle(mo);
 		return (s != null) ? getSymbol(s.toString()) : null;
