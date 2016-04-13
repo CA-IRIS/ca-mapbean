@@ -69,14 +69,14 @@ abstract public class StyledTheme extends Theme {
 	public List<Symbol> getSymbols() {
 		LinkedList<Symbol> symbols = new LinkedList<Symbol>();
 		for (Style s: styles)
-			symbols.add(getSymbol(s.getLabel()));
+			symbols.add(getSymbol(s.toString()));
 		return symbols;
 	}
 
 	/** Get a symbol for the given map object */
 	public Symbol getSymbol(MapObject mo) {
 		Style s = getStyle(mo);
-		return (s != null) ? getSymbol(s.getLabel()) : null;
+		return (s != null) ? getSymbol(s.toString()) : null;
 	}
 
 	/** Create an ellipse around the given shape */
