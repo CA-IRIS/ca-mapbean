@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2004-2009  Minnesota Department of Transportation
+ * Copyright (C) 2004-2016  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,38 +26,10 @@ import java.awt.Stroke;
 public class Outline {
 
 	/** Cap to render endpoints */
-	static protected final int CAP = BasicStroke.CAP_ROUND;
+	static private final int CAP = BasicStroke.CAP_ROUND;
 
 	/** Join to render line joins */
-	static protected final int JOIN = BasicStroke.JOIN_MITER;
-
-	/** Color to render the outline */
-	public final Color color;
-
-	/** Width of the outline */
-	protected final float width;
-
-	/** Dash pattern */
-	protected final float[] dash;
-
-	/** Create a new outline */
-	protected Outline(Color c, float w, float[] d) {
-		color = c;
-		width = w;
-		dash = d;
-	}
-
-	/** Get the outline stroke */
-	public Stroke getStroke(float scale) {
-		float w = width * scale;
-		if(dash != null) {
-			float[] d = new float[dash.length];
-			for(int i = 0; i < d.length; i++)
-				d[i] = dash[i] * scale;
-			return new BasicStroke(w, CAP, JOIN, w, d, 0);
-		} else
-			return new BasicStroke(w, CAP, JOIN);
-	}
+	static private final int JOIN = BasicStroke.JOIN_MITER;
 
 	/** Create a solid outline */
 	static public Outline createSolid(Color c, float w) {
@@ -86,5 +58,33 @@ public class Outline {
 	static public Outline createDashDotDotted(Color c, float w) {
 		float[] d = new float[] { w * 3, w * 2, w, w * 2, w, w * 2 };
 		return new Outline(c, w, d);
+	}
+
+	/** Create a new outline */
+	private Outline(Color c, float w, float[] d) {
+		color = c;
+		width = w;
+		dash = d;
+	}
+
+	/** Color to render the outline */
+	public final Color color;
+
+	/** Width of the outline */
+	private final float width;
+
+	/** Dash pattern */
+	private final float[] dash;
+
+	/** Get the outline stroke */
+	public Stroke getStroke(float scale) {
+		float w = width * scale;
+		if (dash != null) {
+			float[] d = new float[dash.length];
+			for (int i = 0; i < d.length; i++)
+				d[i] = dash[i] * scale;
+			return new BasicStroke(w, CAP, JOIN, w, d, 0);
+		} else
+			return new BasicStroke(w, CAP, JOIN);
 	}
 }
