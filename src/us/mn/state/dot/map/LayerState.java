@@ -191,10 +191,10 @@ abstract public class LayerState {
 	public void paint(final Graphics2D g) {
 		if (isVisible()) {
 			final AffineTransform t = g.getTransform();
-			final float scale = getScale();
+			theme.setScale(getScale());
 			forEach(new MapSearcher() {
 				public boolean next(MapObject mo) {
-					theme.draw(g, mo, scale);
+					theme.draw(g, mo);
 					g.setTransform(t);
 					return false;
 				}
@@ -206,10 +206,10 @@ abstract public class LayerState {
 	public void paintSelections(Graphics2D g) {
 		if (isVisible()) {
 			AffineTransform t = g.getTransform();
-			float scale = getScale();
+			theme.setScale(getScale());
 			MapObject[] sel = selections;
 			for (MapObject mo: sel) {
-				theme.drawSelected(g, mo, scale);
+				theme.drawSelected(g, mo);
 				g.setTransform(t);
 			}
 		}
@@ -253,16 +253,10 @@ abstract public class LayerState {
 
 	/** Search the layer for a map object containing the given point */
 	public MapObject search(final Point2D p) {
+		theme.setScale(getScale());
 		return forEach(new MapSearcher() {
 			public boolean next(MapObject mo) {
-				Shape shp = mo.getShape();
-				if (shp != null) {
-					AffineTransform t =
-						mo.getInverseTransform();
-					Point2D ip = t.transform(p, null);
-					return shp.contains(ip);
-				} else
-					return false;
+				return theme.hit(p, mo);
 			}
 		});
 	}

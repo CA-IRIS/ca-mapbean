@@ -16,6 +16,7 @@ package us.mn.state.dot.map;
 
 import java.awt.Graphics2D;
 import java.awt.Shape;
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.Icon;
@@ -84,14 +85,24 @@ public class Theme {
 		return def_style;
 	}
 
+	/** Set the map scale */
+	public void setScale(float scale) {
+		def_symbol.setScale(scale);
+	}
+
 	/** Draw the specified map object */
-	public void draw(Graphics2D g, MapObject mo, float scale) {
-		def_symbol.draw(g, mo, scale, getStyle(mo));
+	public void draw(Graphics2D g, MapObject mo) {
+		def_symbol.draw(g, mo, getStyle(mo));
 	}
 
 	/** Draw a selected map object */
-	public void drawSelected(Graphics2D g, MapObject mo, float scale) {
-		def_symbol.drawSelected(g, mo, scale, getStyle(mo));
+	public void drawSelected(Graphics2D g, MapObject mo) {
+		def_symbol.drawSelected(g, mo, getStyle(mo));
+	}
+
+	/** Hit-test map object */
+	public boolean hit(Point2D p, MapObject mo) {
+		return def_symbol.hit(p, mo);
 	}
 
 	/** Get tooltip text for the given map object */

@@ -15,6 +15,7 @@
 package us.mn.state.dot.map;
 
 import java.awt.Graphics2D;
+import java.awt.geom.Point2D;
 import javax.swing.Icon;
 
 /**
@@ -24,11 +25,17 @@ import javax.swing.Icon;
  */
 public interface Symbol {
 
+	/** Set the map scale */
+	void setScale(float scale);
+
 	/** Draw the symbol */
-	void draw(Graphics2D g, MapObject mo, float scale, Style sty);
+	void draw(Graphics2D g, MapObject mo, Style sty);
 
 	/** Draw the selected symbol */
-	void drawSelected(Graphics2D g, MapObject mo, float scale, Style sty);
+	void drawSelected(Graphics2D g, MapObject mo, Style sty);
+
+	/** Hit-test map object */
+	boolean hit(Point2D p, MapObject mo);
 
 	/** Get the legend icon */
 	Icon getLegend(Style sty);

@@ -22,6 +22,7 @@ import java.awt.RenderingHints;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
+import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import javax.swing.Icon;
 
@@ -49,33 +50,69 @@ public class VectorSymbol implements Symbol {
 		);
 	}
 
-	/** Shape to draw legend */
-	private final Shape lshape;
+	/** Marker shape */
+	private final AbstractMarker marker;
+
+	/** Scaled shape */
+	private Shape shape;
+
+	/** Get scaled shape */
+	protected Shape getShape() {
+		return shape;
+	}
 
 	/** Size of legend icon */
 	private final int lsize;
 
+	/** Map scale */
+	private float scale = 1;
+
 	/** Create a new vector symbol */
-	public VectorSymbol(Shape shp, int sz) {
-		lshape = shp;
+	public VectorSymbol(AbstractMarker m, int sz) {
+		marker = m;
+		shape = m;
 		lsize = sz;
+	}
+
+	/** Set the map scale */
+	@Override
+	public void setScale(float s) {
+		setScale(s, marker);
+	}
+
+	/** Set the map scale */
+	protected final void setScale(float s, AbstractMarker m) {
+		scale = s;
+		AffineTransform at = new AffineTransform();
+		at.setToScale(s, s);
+		shape = m.createTransformedShape(at);
+	}
+
+	/** Get shape for a map object */
+	private Shape getShape(MapObject mo) {
+		Shape shp = mo.getShape();
+		return (shp != null) ? shp : shape;
+	}
+
+	/** Get outline shape for a map object */
+	private Shape getOutlineShape(MapObject mo) {
+		Shape shp = mo.getOutlineShape();
+		return (shp != null) ? shp : shape;
 	}
 
 	/** Draw the symbol */
 	@Override
-	public void draw(Graphics2D g, MapObject mo, float scale, Style sty) {
+	public void draw(Graphics2D g, MapObject mo, Style sty) {
 		if (sty != null) {
 			AffineTransform trans = mo.getTransform();
 			if (trans != null)
 				g.transform(trans);
-			draw(g, mo.getShape(), mo.getOutlineShape(), scale,sty);
+			draw(g, getShape(mo), getOutlineShape(mo), sty);
 		}
 	}
 
 	/** Draw the symbol */
-	private void draw(Graphics2D g, Shape shp, Shape o_shp, float scale,
-		Style sty)
-	{
+	protected void draw(Graphics2D g, Shape shp, Shape o_shp, Style sty) {
 		if (shp != null && sty.fill_color != null) {
 			g.setColor(sty.fill_color);
 			g.fill(shp);
@@ -89,19 +126,14 @@ public class VectorSymbol implements Symbol {
 
 	/** Draw a selected symbol */
 	@Override
-	public void drawSelected(Graphics2D g, MapObject mo, float scale,
-		Style sty)
-	{
-		if (sty != null) {
-			Shape shp = mo.getShape();
-			if (shp != null)
-				drawSelected(g, mo, shp, scale, sty);
-		}
+	public void drawSelected(Graphics2D g, MapObject mo, Style sty) {
+		if (sty != null)
+			drawSelected(g, mo, getShape(mo), sty);
 	}
 
 	/** Draw a selected symbol */
 	private void drawSelected(Graphics2D g, MapObject mo, Shape shp,
-		float scale, Style sty)
+		Style sty)
 	{
 		g.transform(mo.getTransform());
 		g.setColor(TRANS_WHITE);
@@ -110,6 +142,15 @@ public class VectorSymbol implements Symbol {
 		g.setColor(TRANSPARENT);
 		g.setStroke(outline.getStroke(scale));
 		g.draw(createEllipse(shp));
+	}
+
+	/** Hit-test map object */
+	@Override
+	public boolean hit(Point2D p, MapObject mo) {
+		Shape shp = getShape(mo);
+		AffineTransform t = mo.getInverseTransform();
+		Point2D ip = t.transform(p, null);
+		return shp.contains(ip);
 	}
 
 	/** Get the legend icon */
@@ -130,7 +171,7 @@ public class VectorSymbol implements Symbol {
 		/** Create a new legend icon */
 		protected LegendIcon(Style s) {
 			sty = s;
-			Rectangle2D b = lshape.getBounds2D();
+			Rectangle2D b = marker.getBounds2D();
 			double x = b.getX() + b.getWidth() / 2;
 			double y = b.getY() + b.getHeight() / 2;
 			double scale = (lsize - 2) /
@@ -144,13 +185,14 @@ public class VectorSymbol implements Symbol {
 		/** Paint the icon onto the given component */
 		@Override
 		public void paintIcon(Component c, Graphics g, int x, int y) {
+			setScale(1);
 			Graphics2D g2 = (Graphics2D) g;
 			AffineTransform t = g2.getTransform();
 			g2.translate(x, y);
 			g2.transform(transform);
 			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 				RenderingHints.VALUE_ANTIALIAS_ON);
-			draw(g2, lshape, lshape, 1, sty);
+			draw(g2, marker, marker, sty);
 			g2.setTransform(t);
 		}
 

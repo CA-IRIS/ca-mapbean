@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2004-2012  Minnesota Department of Transportation
+ * Copyright (C) 2004-2016  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,51 +33,66 @@ abstract public class AbstractMarker implements Shape {
 	protected final GeneralPath path;
 
 	/** Create a new abstract marker */
-	protected AbstractMarker(int c) {
-		path = new GeneralPath(GeneralPath.WIND_EVEN_ODD, c);
+	protected AbstractMarker(GeneralPath p) {
+		path = p;
 	}
 
+	/** Create a new abstract marker */
+	protected AbstractMarker(int c) {
+		this(new GeneralPath(GeneralPath.WIND_EVEN_ODD, c));
+	}
+
+	/** Check if the marker contains a point */
 	public boolean contains(double x, double y) {
 		return path.contains(x, y);
 	}
 
+	/** Check if the marker contains a rectangle */
 	public boolean contains(double x, double y, double w, double h) {
 		return path.contains(x, y, w, h);
 	}
 
+	/** Check if the marker contains a point */
 	public boolean contains(Point2D p) {
 		return path.contains(p);
 	}
 
+	/** Check if the marker contains a rectangle */
 	public boolean contains(Rectangle2D r) {
 		return path.contains(r);
 	}
 
+	/** Get the marker bounds */
 	public Rectangle getBounds() {
 		return path.getBounds();
 	}
 
+	/** Get the marker bounds */
 	public Rectangle2D getBounds2D() {
 		return path.getBounds2D();
 	}
 
+	/** Get a path iterator */
 	public PathIterator getPathIterator(AffineTransform t) {
 		return path.getPathIterator(t);
 	}
 
+	/** Get a path iterator */
 	public PathIterator getPathIterator(AffineTransform t, double f) {
 		return path.getPathIterator(t, f);
 	}
 
+	/** Check if the marker intersects with a rectangle */
 	public boolean intersects(double x, double y, double w, double h) {
 		return path.intersects(x, y, w, h);
 	}
 
+	/** Check if the marker intersects with a rectangle */
 	public boolean intersects(Rectangle2D r) {
 		return path.intersects(r);
 	}
 
-	/** Create a transformed marker with the specified transform */
+	/** Create a transformed shape */
 	public Shape createTransformedShape(AffineTransform at) {
 		return path.createTransformedShape(at);
 	}

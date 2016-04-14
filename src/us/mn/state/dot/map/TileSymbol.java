@@ -15,6 +15,7 @@
 package us.mn.state.dot.map;
 
 import java.awt.Graphics2D;
+import java.awt.geom.Point2D;
 import javax.swing.Icon;
 
 /**
@@ -24,9 +25,15 @@ import javax.swing.Icon;
  */
 public class TileSymbol implements Symbol {
 
+	/** Set the map scale */
+	@Override
+	public void setScale(float scale) {
+		// ignore
+	}
+
 	/** Draw the symbol */
 	@Override
-	public void draw(Graphics2D g, MapObject mo, float scale, Style sty) {
+	public void draw(Graphics2D g, MapObject mo, Style sty) {
 		if (mo instanceof TileMapObject) {
 			TileMapObject tmo = (TileMapObject) mo;
 			g.setTransform(tmo.getTransform());
@@ -36,10 +43,14 @@ public class TileSymbol implements Symbol {
 
 	/** Draw the selected symbol */
 	@Override
-	public void drawSelected(Graphics2D g, MapObject mo, float scale,
-		Style sty)
-	{
+	public void drawSelected(Graphics2D g, MapObject mo, Style sty) {
 		// cannot select tiles
+	}
+
+	/** Hit-test map object */
+	@Override
+	public boolean hit(Point2D p, MapObject mo) {
+		return false;
 	}
 
 	/** Get the legend icon */
