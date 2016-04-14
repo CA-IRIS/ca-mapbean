@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000-2010  Minnesota Department of Transportation
+ * Copyright (C) 2000-2016  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,24 +15,21 @@
 package us.mn.state.dot.map;
 
 import java.awt.Graphics2D;
-import java.awt.Shape;
 import javax.swing.Icon;
 
 /**
- * A symbol is a graphical representaion of a map object.  A theme is
- * responsible for selecting which symbol to use for a particular map object.
+ * A symbol is a graphical representaion of a map object.
  *
  * @author Douglas Lau
- * @author Erik Engstrom
  */
 public interface Symbol {
 
-	/** Get the symbol label */
-	String getLabel();
+	/** Draw the symbol */
+	void draw(Graphics2D g, MapObject mo, float scale, Style sty);
+
+	/** Draw the selected symbol */
+	void drawSelected(Graphics2D g, MapObject mo, float scale, Style sty);
 
 	/** Get the legend icon */
-	Icon getLegend();
-
-	/** Draw the symbol */
-	void draw(Graphics2D g, Shape shp, Shape out, float scale);
+	Icon getLegend(Style sty);
 }

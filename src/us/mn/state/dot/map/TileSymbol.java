@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2011  Minnesota Department of Transportation
+ * Copyright (C) 2011-2016  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,36 +15,36 @@
 package us.mn.state.dot.map;
 
 import java.awt.Graphics2D;
+import javax.swing.Icon;
 
 /**
- * A tile theme draws tiles on a map.
+ * A tile symbol draws tiles on a map.
  *
  * @author Douglas Lau
  */
-public class TileTheme extends Theme {
+public class TileSymbol implements Symbol {
 
-	/** Create a new tile theme */
-	protected TileTheme() {
-		super("Tile");
-	}
-
-	/** Draw the specified map object */
-	public void draw(Graphics2D g, MapObject mo, float scale) {
-		if(mo instanceof TileMapObject) {
-			TileMapObject tmo = (TileMapObject)mo;
+	/** Draw the symbol */
+	@Override
+	public void draw(Graphics2D g, MapObject mo, float scale, Style sty) {
+		if (mo instanceof TileMapObject) {
+			TileMapObject tmo = (TileMapObject) mo;
 			g.setTransform(tmo.getTransform());
 			g.drawImage(tmo.getImage(), 0, 0, null);
 		}
 	}
 
-	/** Get the symbol to draw a given map object */
-	public Symbol getSymbol(MapObject mo) {
-		// symbols aren't used with tiles
-		return null;
+	/** Draw the selected symbol */
+	@Override
+	public void drawSelected(Graphics2D g, MapObject mo, float scale,
+		Style sty)
+	{
+		// cannot select tiles
 	}
 
-	/** Draw a selected map object */
-	public void drawSelected(Graphics2D g, MapObject mo, float scale) {
-		// tiles cannot be selected
+	/** Get the legend icon */
+	@Override
+	public Icon getLegend(Style sty) {
+		return null;
 	}
 }

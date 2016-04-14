@@ -14,12 +14,14 @@
  */
 package us.mn.state.dot.map;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 import javax.swing.Icon;
 
@@ -30,58 +32,104 @@ import javax.swing.Icon;
  */
 public class VectorSymbol implements Symbol {
 
-	/** Style to draw symbol */
-	public final Style style;
+	/** Transparent white */
+	static private final Color TRANS_WHITE = new Color(1, 1, 1, 0.4f);
+
+	/** Transparent white */
+	static private final Color TRANSPARENT = new Color(1, 1, 1, 0.75f);
+
+	/** Create an ellipse around the given shape */
+	static private Shape createEllipse(Shape s) {
+		Rectangle2D r = s.getBounds2D();
+		return new Ellipse2D.Double(
+			r.getCenterX() - r.getWidth(),
+			r.getCenterY() - r.getHeight(),
+			r.getWidth() * 2,
+			r.getHeight() * 2
+		);
+	}
+
+	/** Shape to draw legend */
+	private final Shape lshape;
 
 	/** Size of legend icon */
 	private final int lsize;
 
-	/** Shape to draw legend */
-	protected final Shape lshape;
-
 	/** Create a new vector symbol */
-	public VectorSymbol(Style sty, Shape shp, int sz) {
-		style = sty;
+	public VectorSymbol(Shape shp, int sz) {
 		lshape = shp;
 		lsize = sz;
 	}
 
-	/** Create a new vector symbol */
-	public VectorSymbol(Style sty, Shape shp) {
-		this(sty, shp, 24);
-	}
-
-	/** Get the symbol label */
-	public String getLabel() {
-		return style.toString();
+	/** Draw the symbol */
+	@Override
+	public void draw(Graphics2D g, MapObject mo, float scale, Style sty) {
+		if (sty != null) {
+			AffineTransform trans = mo.getTransform();
+			if (trans != null)
+				g.transform(trans);
+			draw(g, mo.getShape(), mo.getOutlineShape(), scale,sty);
+		}
 	}
 
 	/** Draw the symbol */
-	public void draw(Graphics2D g, Shape shp, Shape out, float scale) {
-		if(style.fill_color != null) {
-			g.setColor(style.fill_color);
+	private void draw(Graphics2D g, Shape shp, Shape o_shp, float scale,
+		Style sty)
+	{
+		if (shp != null && sty.fill_color != null) {
+			g.setColor(sty.fill_color);
 			g.fill(shp);
 		}
-		if(style.outline != null) {
-			g.setColor(style.outline.color);
-			g.setStroke(style.outline.getStroke(scale));
-			g.draw(out);
+		if (o_shp != null && sty.outline != null) {
+			g.setColor(sty.outline.color);
+			g.setStroke(sty.outline.getStroke(scale));
+			g.draw(o_shp);
 		}
+	}
+
+	/** Draw a selected symbol */
+	@Override
+	public void drawSelected(Graphics2D g, MapObject mo, float scale,
+		Style sty)
+	{
+		if (sty != null) {
+			Shape shp = mo.getShape();
+			if (shp != null)
+				drawSelected(g, mo, shp, scale, sty);
+		}
+	}
+
+	/** Draw a selected symbol */
+	private void drawSelected(Graphics2D g, MapObject mo, Shape shp,
+		float scale, Style sty)
+	{
+		g.transform(mo.getTransform());
+		g.setColor(TRANS_WHITE);
+		g.fill(shp);
+		Outline outline = Outline.createSolid(TRANSPARENT, 4);
+		g.setColor(TRANSPARENT);
+		g.setStroke(outline.getStroke(scale));
+		g.draw(createEllipse(shp));
 	}
 
 	/** Get the legend icon */
-	public Icon getLegend() {
-		return new LegendIcon();
+	@Override
+	public Icon getLegend(Style sty) {
+		return new LegendIcon(sty);
 	}
 
 	/** Inner class for icon displayed on the legend */
-	protected class LegendIcon implements Icon {
+	private class LegendIcon implements Icon {
+
+		/** Legend style */
+		private final Style sty;
 
 		/** Transform to draw the legend */
-		protected final AffineTransform transform;
+		private final AffineTransform transform;
 
 		/** Create a new legend icon */
-		protected LegendIcon() {
+		protected LegendIcon(Style s) {
+			sty = s;
 			Rectangle2D b = lshape.getBounds2D();
 			double x = b.getX() + b.getWidth() / 2;
 			double y = b.getY() + b.getHeight() / 2;
@@ -94,23 +142,26 @@ public class VectorSymbol implements Symbol {
 		}	
 
 		/** Paint the icon onto the given component */
+		@Override
 		public void paintIcon(Component c, Graphics g, int x, int y) {
-			Graphics2D g2 = (Graphics2D)g;
+			Graphics2D g2 = (Graphics2D) g;
 			AffineTransform t = g2.getTransform();
 			g2.translate(x, y);
 			g2.transform(transform);
 			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 				RenderingHints.VALUE_ANTIALIAS_ON);
-			draw(g2, lshape, lshape, 1);
+			draw(g2, lshape, lshape, 1, sty);
 			g2.setTransform(t);
 		}
 
 		/** Get the icon width */
+		@Override
 		public int getIconWidth() {
 			return lsize;
 		}
 
 		/** Get the icon height */
+		@Override
 		public int getIconHeight() {
 			return lsize;
 		}
