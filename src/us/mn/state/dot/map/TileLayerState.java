@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2011-2013  Minnesota Department of Transportation
+ * Copyright (C) 2011-2016  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -43,31 +43,32 @@ public class TileLayerState extends LayerState {
 	}
 
 	/** Call the specified callback for each map object in the layer */
+	@Override
 	public MapObject forEach(MapSearcher s) {
 		MapModel model = map.getModel();
 		ZoomLevel zoom = model.getZoomLevel();
 		Dimension sz = map.getSize();
 		Point2D center = model.getCenter();
-		int hx = (int)sz.getWidth() / 2;
-		int hy = (int)sz.getHeight() / 2;
-		int px = (int)zoom.getPixelX(center.getX());
-		int py = (int)zoom.getPixelY(center.getY());
+		int hx = (int) sz.getWidth() / 2;
+		int hy = (int) sz.getHeight() / 2;
+		int px = (int) zoom.getPixelX(center.getX());
+		int py = (int) zoom.getPixelY(center.getY());
 		int x0 = zoomLimit(zoom, (px - hx) / 256);
 		int x1 = zoomLimit(zoom, ((px + hx) / 256) + 1);
 		int ox = (px - hx) % 256;
 		int y0 = zoomLimit(zoom, (py - hy) / 256);
 		int y1 = zoomLimit(zoom, ((py + hy) / 256) + 1);
 		int oy = (py + hy) % 256 - 512;
-		for(int x = x0; x <= x1; x++) {
+		for (int x = x0; x <= x1; x++) {
 			int xp = (x - x0) * 256 - ox;
-			for(int y = y0; y <= y1; y++) {
+			for (int y = y0; y <= y1; y++) {
 				int yp = (y1 - y) * 256 + oy;
 				String tile = getTileName(zoom, x, y);
 				Image img = getTile(tile);
-				if(img != null)
+				if (img != null)
 					s.next(new TileMapObject(img, xp, yp));
 				else {
-					if(!isTileMissing(tile))
+					if (!isTileMissing(tile))
 						createTileWorker(tile);
 				}
 			}
@@ -88,7 +89,7 @@ public class TileLayerState extends LayerState {
 
 	/** Is the given tile missing? */
 	private boolean isTileMissing(String tile) {
-		synchronized(no_tile) {
+		synchronized (no_tile) {
 			return no_tile.contains(tile);
 		}
 	}
@@ -98,7 +99,7 @@ public class TileLayerState extends LayerState {
 		try {
 			return cache.getTile(tile);
 		}
-		catch(IOException e) {
+		catch (IOException e) {
 			System.err.print("I/O Error ");
 			System.err.print(e.getMessage());
 			System.err.println(" reading tile: " + tile);
@@ -117,12 +118,12 @@ public class TileLayerState extends LayerState {
 			public void done() {
 				try {
 					String tile = get();
-					if(tile != null) {
+					if (tile != null) {
 						fireLayerChanged(
 							LayerChange.geometry);
 					}
 				}
-				catch(Exception e) {
+				catch (Exception e) {
 					// ignore
 				}
 			}
@@ -136,12 +137,12 @@ public class TileLayerState extends LayerState {
 			cache.lookupTile(tile);
 			return tile;
 		}
-		catch(FileNotFoundException e) {
-			synchronized(no_tile) {
+		catch (FileNotFoundException e) {
+			synchronized (no_tile) {
 				no_tile.add(tile);
 			}
 		}
-		catch(IOException e) {
+		catch (IOException e) {
 			System.err.print("I/O Error ");
 			System.err.print(e.getMessage());
 			System.err.println(" loading tile: " + tile);
