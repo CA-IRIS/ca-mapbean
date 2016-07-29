@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000-2013  Minnesota Department of Transportation
+ * Copyright (C) 2000-2016  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -66,10 +66,10 @@ abstract public class LayerState {
 	/** Notify all listeners of a layer change */
 	private void fireLayerChanged(LayerChangeEvent e) {
 		Object[] list = listeners.getListenerList();
-		for(int i = list.length - 1; i >= 0; i -= 2) {
+		for (int i = list.length - 1; i >= 0; i -= 2) {
 			Object l = list[i];
-			if(l instanceof LayerChangeListener)
-				((LayerChangeListener)l).layerChanged(e);
+			if (l instanceof LayerChangeListener)
+				((LayerChangeListener) l).layerChanged(e);
 		}
 	}
 
@@ -85,7 +85,7 @@ abstract public class LayerState {
 		new LayerChangeListener()
 	{
 		public void layerChanged(LayerChangeEvent e) {
-			if(isVisible())
+			if (isVisible())
 				fireLayerChanged(e);
 		}
 	};
@@ -102,32 +102,26 @@ abstract public class LayerState {
 	/** Visibility flag (null means automatic) */
 	private Boolean visible = null;
 
-	/**
-	 * Create a new layer state.
+	/** Create a new layer state.
 	 * @param layer Layer this state is based upon.
-	 * @param mb Map bean for rendering.
-	 */
+	 * @param mb Map bean for rendering. */
 	protected LayerState(Layer layer, MapBean mb) {
 		this(layer, mb, null, null);
 	}
 
-	/**
-	 * Create a new layer state.
+	/** Create a new layer state.
 	 * @param layer Layer this state is based upon.
 	 * @param mb Map bean for rendering.
-	 * @param theme Theme used to paint the layer.
-	 */
+	 * @param theme Theme used to paint the layer. */
 	protected LayerState(Layer layer, MapBean mb, Theme theme) {
 		this(layer, mb, theme, null);
 	}
 
-	/**
-	 * Create a new layer state.
+	/** Create a new layer state.
 	 * @param layer Layer this state is based upon.
 	 * @param mb Map bean for rendering.
 	 * @param theme Theme used to paint the layer.
-	 * @param visible The visible tri-state.
-	 */
+	 * @param visible The visible tri-state. */
 	protected LayerState(Layer layer, MapBean mb, Theme theme,
 		Boolean visible)
 	{
@@ -156,7 +150,7 @@ abstract public class LayerState {
 
 	/** Set the theme */
 	public void setTheme(Theme t) {
-		if(t != theme) {
+		if (t != theme) {
 			theme = t;
 			fireLayerChanged(LayerChange.theme);
 		}
@@ -169,7 +163,7 @@ abstract public class LayerState {
 
 	/** Set the selected map objects */
 	public void setSelections(MapObject[] s) {
-		if(s != selections) {
+		if (s != selections) {
 			selections = s;
 			fireLayerChanged(LayerChange.selection);
 		}
@@ -195,7 +189,7 @@ abstract public class LayerState {
 
 	/** Paint the layer */
 	public void paint(final Graphics2D g) {
-		if(isVisible()) {
+		if (isVisible()) {
 			final AffineTransform t = g.getTransform();
 			final float scale = getScale();
 			forEach(new MapSearcher() {
@@ -210,11 +204,11 @@ abstract public class LayerState {
 
 	/** Paint the selections for the layer */
 	public void paintSelections(Graphics2D g) {
-		if(isVisible()) {
+		if (isVisible()) {
 			AffineTransform t = g.getTransform();
 			float scale = getScale();
 			MapObject[] sel = selections;
-			for(MapObject mo: sel) {
+			for (MapObject mo: sel) {
 				theme.drawSelected(g, mo, scale);
 				g.setTransform(t);
 			}
@@ -223,16 +217,13 @@ abstract public class LayerState {
 
 	/** Get the current map scale */
 	protected float getScale() {
-		return (float)map.getScale();
+		return (float) map.getScale();
 	}
 
 	/** Get the visibility flag */
 	public boolean isVisible() {
 		// Sub-classes can override automatic visibility
-		if(visible == null)
-			return true;
-		else
-			return visible;
+		return (visible != null) ? visible : true;
 	}
 
 	/** Get the visibility tri-state */
@@ -246,15 +237,15 @@ abstract public class LayerState {
 	public void setVisible(Boolean v) {
 		boolean pv = isVisible();
 		visible = v;
-		if(pv != isVisible())
+		if (pv != isVisible())
 			fireLayerChanged(LayerChange.visibility);
 	}
 
 	/** Get the appropriate tool tip text for the specified point */
 	public String getTip(Point2D p) {
-		if(isSearchable()) {
+		if (isSearchable()) {
 			MapObject mo = search(p);
-			if(mo != null)
+			if (mo != null)
 				return theme.getTip(mo);
 		}
 		return null;
@@ -264,22 +255,27 @@ abstract public class LayerState {
 	public MapObject search(final Point2D p) {
 		return forEach(new MapSearcher() {
 			public boolean next(MapObject mo) {
-				AffineTransform t = mo.getInverseTransform();
-				Point2D ip = t.transform(p, null);
-				return mo.getShape().contains(ip);
+				Shape shp = mo.getShape();
+				if (shp != null) {
+					AffineTransform t =
+						mo.getInverseTransform();
+					Point2D ip = t.transform(p, null);
+					return shp.contains(ip);
+				} else
+					return false;
 			}
 		});
 	}
 
 	/** Process a mouse click for the layer */
 	public boolean doMouseClicked(MouseEvent e, Point2D p) {
-		if(isSearchable()) {
+		if (isSearchable()) {
 			MapObject mo = search(p);
-			if(SwingUtilities.isLeftMouseButton(e))
+			if (SwingUtilities.isLeftMouseButton(e))
 				doLeftClick(e, mo);
-			if(SwingUtilities.isRightMouseButton(e))
+			if (SwingUtilities.isRightMouseButton(e))
 				doRightClick(e, mo);
-			if(mo != null)
+			if (mo != null)
 				return true;
 		}
 		return false;

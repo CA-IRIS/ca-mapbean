@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000-2013  Minnesota Department of Transportation
+ * Copyright (C) 2000-2016  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -49,7 +49,7 @@ public class MapToolBar extends JToolBar {
 	private final JMenu legend = new JMenu("Legend");
 
 	/** Theme selection combo box */
-	private final JComboBox themes = new JComboBox();
+	private final JComboBox<Theme> themes = new JComboBox<Theme>();
 
 	/** Action for zoom in button */
 	private final Action zoom_in;
@@ -121,11 +121,12 @@ public class MapToolBar extends JToolBar {
 
 	/** Create the theme combo box model */
 	private void createThemeModel(LayerState ls, LegendMenu lm) {
-		DefaultComboBoxModel mdl = new DefaultComboBoxModel();
-		for(Theme t: ls.getThemes())
+		DefaultComboBoxModel<Theme> mdl =
+			new DefaultComboBoxModel<Theme>();
+		for (Theme t: ls.getThemes())
 			mdl.addElement(t);
 		// FIXME: this is a fragile way to check for SegmentLayerState
-		if(mdl.getSize() > 1) {
+		if (mdl.getSize() > 1) {
 			addThemeListener(ls, lm);
 			themes.setModel(mdl);
 		}

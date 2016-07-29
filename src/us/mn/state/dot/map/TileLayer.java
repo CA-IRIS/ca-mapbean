@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2011-2103  Minnesota Department of Transportation
+ * Copyright (C) 2011-2016  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,13 +24,13 @@ import java.io.IOException;
 public class TileLayer extends Layer {
 
 	/** URL where tiles are hosted */
-	protected final String url;
+	private final String url;
 
 	/** Number of tiles to cache */
-	protected final int n_cached;
+	private final int n_cached;
 
 	/** Tile cache */
-	protected TileCache cache;
+	private TileCache cache;
 
 	/** Create a new tile layer */
 	public TileLayer(String n, String url, int n_cached) {
@@ -47,7 +47,7 @@ public class TileLayer extends Layer {
 
 	/** Create a new layer state */
 	public LayerState createState(MapBean mb) {
-		assert(cache != null);
+		assert (cache != null);
 		return new TileLayerState(this, mb, cache);
 	}
 

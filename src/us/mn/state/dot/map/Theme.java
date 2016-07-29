@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2004-2012  Minnesota Department of Transportation
+ * Copyright (C) 2004-2016  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,6 +15,7 @@
 package us.mn.state.dot.map;
 
 import java.awt.Graphics2D;
+import java.awt.Shape;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -29,13 +30,13 @@ import java.util.TreeSet;
 abstract public class Theme {
 
 	/** Name of theme */
-	protected final String name;
+	private final String name;
 
 	/** Default symbol */
-	protected Symbol dsymbol;
+	private Symbol dsymbol;
 
 	/** Mapping of symbols */
-	protected final Map<String, Symbol> sym_map =
+	private final Map<String, Symbol> sym_map =
 		new HashMap<String, Symbol>();
 
 	/** Create a new theme */
@@ -44,6 +45,7 @@ abstract public class Theme {
 	}
 
 	/** Get a string representation of the theme */
+	@Override
 	public String toString() {
 		return name;
 	}
@@ -54,24 +56,21 @@ abstract public class Theme {
 	/** Add a symbol to the theme */
 	protected void addSymbol(Symbol sym) {
 		sym_map.put(sym.getLabel(), sym);
-		if(dsymbol == null)
+		if (dsymbol == null)
 			dsymbol = sym;
 	}
 
 	/** Get a symbol by label */
 	public Symbol getSymbol(String label) {
 		Symbol sym = sym_map.get(label);
-		if(sym != null)
-			return sym;
-		else
-			return dsymbol;
+		return (sym != null) ? sym : dsymbol;
 	}
 
 	/** Get a list of all symbols */
 	public List<Symbol> getSymbols() {
 		LinkedList<Symbol> symbols = new LinkedList<Symbol>();
 		TreeSet<String> keys = new TreeSet<String>(sym_map.keySet());
-		for(String key: keys)
+		for (String key: keys)
 			symbols.add(sym_map.get(key));
 		return symbols;
 	}
@@ -81,10 +80,14 @@ abstract public class Theme {
 
 	/** Draw the specified map object */
 	public void draw(Graphics2D g, MapObject mo, float scale) {
-		Symbol s = getSymbol(mo);
-		if(s != null) {
-			g.transform(mo.getTransform());
-			s.draw(g, mo.getShape(), mo.getOutlineShape(), scale);
+		Symbol sym = getSymbol(mo);
+		if (sym != null) {
+			Shape shp = mo.getShape();
+			Shape o_shp = mo.getOutlineShape();
+			if (shp != null && o_shp != null) {
+				g.transform(mo.getTransform());
+				sym.draw(g, shp, o_shp, scale);
+			}
 		}
 	}
 
