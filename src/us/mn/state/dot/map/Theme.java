@@ -15,7 +15,6 @@
 package us.mn.state.dot.map;
 
 import java.awt.Graphics2D;
-import java.awt.Shape;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +37,7 @@ public class Theme {
 	private Style def_style;
 
 	/** List of styles */
-	private final List<Style> styles = new ArrayList<Style>();
+	private final List<Style> styles = new ArrayList<>();
 
 	/** Create a new theme.
 	 * @param n Theme name.
@@ -75,7 +74,7 @@ public class Theme {
 
 	/** Get a list of all legend styles */
 	public List<Style> getStyles() {
-		ArrayList<Style> s = new ArrayList<Style>();
+		ArrayList<Style> s = new ArrayList<>();
 		for (Style sty : styles) {
 			if (sty.legend)
 				s.add(sty);
@@ -96,12 +95,12 @@ public class Theme {
 	/** Draw the specified map object */
 	public void draw(Graphics2D g, MapObject mo) {
 		def_symbol.draw(g, mo, getStyle(mo));
-			}
+	}
 
 	/** Draw a selected map object */
 	public void drawSelected(Graphics2D g, MapObject mo) {
 		def_symbol.drawSelected(g, mo, getStyle(mo));
-		}
+	}
 
 	/** Hit-test map object */
 	public boolean hit(Point2D p, MapObject mo) {
