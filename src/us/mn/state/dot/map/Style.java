@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000-2007  Minnesota Department of Transportation
+ * Copyright (C) 2000-2016  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,8 +23,8 @@ import java.awt.Color;
  */
 public class Style {
 
-	/** Style label */
-	protected final String label;
+	/** Style name */
+	private final String name;
 
 	/** Outline style */
 	public final Outline outline;
@@ -32,20 +32,45 @@ public class Style {
 	/** Fill color */
 	public final Color fill_color;
 
-	/** Create a style with given label, outline and fill color */
-	public Style(String l, Outline o, Color f) {
-		label = l;
+	/** Display on legend */
+	public final boolean legend;
+
+	/** Create a style.
+	 * @param n Style name.
+	 * @param o Outline.
+	 * @param f Fill color.
+	 * @param l Legend flag. */
+	public Style(String n, Outline o, Color f, boolean l) {
+		name = n;
 		outline = o;
 		fill_color = f;
+		legend = l;
 	}
 
-	/** Create a new style with no outline */
-	public Style(String l, Color f) {
-		this(l, null, f);
+	/** Create a style.
+	 * @param n Style name.
+	 * @param o Outline.
+	 * @param f Fill color. */
+	public Style(String n, Outline o, Color f) {
+		this(n, o, f, true);
 	}
 
-	/** Get the style label */
-	public String getLabel() {
-		return label;
+	/** Create a style.
+	 * @param n Style name.
+	 * @param f Fill color. */
+	public Style(String n, Color f) {
+		this(n, null, f, true);
+	}
+
+	/** Create a style.
+	 * @param n Style name. */
+	public Style(String n) {
+		this(n, null, null, false);
+	}
+
+	/** Get the style name */
+	@Override
+	public String toString() {
+		return name;
 	}
 }

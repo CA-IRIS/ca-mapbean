@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000-2007  Minnesota Department of Transportation
+ * Copyright (C) 2000-2016  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,14 +18,13 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 
 /**
- * JMenu for displaying the Legend for a theme.
+ * JMenu for displaying the legend for a theme.
  *
- * @author Erik Engstrom
  * @author Douglas Lau
  */
 public class LegendMenu extends JMenu {
 
-  	/** Create a new LegendMenu */
+  	/** Create a new legend menu */
  	public LegendMenu(String name, Theme t) {
 		super(name);
 		setTheme(t);
@@ -34,10 +33,12 @@ public class LegendMenu extends JMenu {
 	/** Set the theme that this menu displays */
 	public void setTheme(Theme t) {
 		removeAll();
-		for(Symbol s: t.getSymbols()) {
-			JLabel l = new JLabel(s.getLabel());
-			l.setIcon(s.getLegend());
-			add(l);
+		for (Style sty: t.getStyles()) {
+			if (sty.legend) {
+				JLabel l = new JLabel(sty.toString());
+				l.setIcon(t.getLegend(sty));
+				add(l);
+			}
 		}
 	}
 }

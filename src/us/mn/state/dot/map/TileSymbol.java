@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2000-2016  Minnesota Department of Transportation
+ * Copyright (C) 2011-2016  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,24 +19,43 @@ import java.awt.geom.Point2D;
 import javax.swing.Icon;
 
 /**
- * A symbol is a graphical representaion of a map object.
+ * A tile symbol draws tiles on a map.
  *
  * @author Douglas Lau
  */
-public interface Symbol {
+public class TileSymbol implements Symbol {
 
 	/** Set the map scale */
-	void setScale(float scale);
+	@Override
+	public void setScale(float scale) {
+		// ignore
+	}
 
 	/** Draw the symbol */
-	void draw(Graphics2D g, MapObject mo, Style sty);
+	@Override
+	public void draw(Graphics2D g, MapObject mo, Style sty) {
+		if (mo instanceof TileMapObject) {
+			TileMapObject tmo = (TileMapObject) mo;
+			g.setTransform(tmo.getTransform());
+			g.drawImage(tmo.getImage(), 0, 0, null);
+		}
+	}
 
 	/** Draw the selected symbol */
-	void drawSelected(Graphics2D g, MapObject mo, Style sty);
+	@Override
+	public void drawSelected(Graphics2D g, MapObject mo, Style sty) {
+		// cannot select tiles
+	}
 
 	/** Hit-test map object */
-	boolean hit(Point2D p, MapObject mo);
+	@Override
+	public boolean hit(Point2D p, MapObject mo) {
+		return false;
+	}
 
 	/** Get the legend icon */
-	Icon getLegend(Style sty);
+	@Override
+	public Icon getLegend(Style sty) {
+		return null;
+	}
 }

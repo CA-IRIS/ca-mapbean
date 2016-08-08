@@ -16,32 +16,36 @@ package us.mn.state.dot.map;
 
 import java.awt.Graphics2D;
 import java.awt.Shape;
-import java.util.HashMap;
-import java.util.LinkedList;
+import java.awt.geom.Point2D;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeSet;
+import javax.swing.Icon;
 
 /**
  * A theme is a collection of symbols for one layer of a map.
  *
  * @author Douglas Lau
  */
-abstract public class Theme {
+public class Theme {
 
 	/** Name of theme */
 	private final String name;
 
 	/** Default symbol */
-	private Symbol dsymbol;
+	private final Symbol def_symbol;
 
-	/** Mapping of symbols */
-	private final Map<String, Symbol> sym_map =
-		new HashMap<String, Symbol>();
+	/** Default style */
+	private Style def_style;
 
-	/** Create a new theme */
-	protected Theme(String n) {
+	/** List of styles */
+	private final List<Style> styles = new ArrayList<Style>();
+
+	/** Create a new theme.
+	 * @param n Theme name.
+	 * @param sym Default symbol. */
+	public Theme(String n, Symbol sym) {
 		name = n;
+		def_symbol = sym;
 	}
 
 	/** Get a string representation of the theme */
@@ -53,50 +57,64 @@ abstract public class Theme {
 	/** proper getter */
 	public String getName() { return name; }
 
-	/** Add a symbol to the theme */
-	protected void addSymbol(Symbol sym) {
-		sym_map.put(sym.getLabel(), sym);
-		if (dsymbol == null)
-			dsymbol = sym;
+	/** Add a style to the theme */
+	public void addStyle(Style sty) {
+		styles.add(sty);
+		if (def_style == null)
+			def_style = sty;
 	}
 
-	/** Get a symbol by label */
-	public Symbol getSymbol(String label) {
-		Symbol sym = sym_map.get(label);
-		return (sym != null) ? sym : dsymbol;
+	/** Get a style by label */
+	public Style getStyle(String label) {
+		for (Style sty : styles) {
+			if (label.equals(sty.toString()))
+				return sty;
+		}
+		return def_style;
 	}
 
-	/** Get a list of all symbols */
-	public List<Symbol> getSymbols() {
-		LinkedList<Symbol> symbols = new LinkedList<Symbol>();
-		TreeSet<String> keys = new TreeSet<String>(sym_map.keySet());
-		for (String key: keys)
-			symbols.add(sym_map.get(key));
-		return symbols;
+	/** Get a list of all legend styles */
+	public List<Style> getStyles() {
+		ArrayList<Style> s = new ArrayList<Style>();
+		for (Style sty : styles) {
+			if (sty.legend)
+				s.add(sty);
+		}
+		return s;
 	}
 
-	/** Get the symbol to draw a given map object */
-	abstract public Symbol getSymbol(MapObject mo);
+	/** Get style for a map object */
+	public Style getStyle(MapObject mo) {
+		return def_style;
+	}
+
+	/** Set the map scale */
+	public void setScale(float scale) {
+		def_symbol.setScale(scale);
+	}
 
 	/** Draw the specified map object */
-	public void draw(Graphics2D g, MapObject mo, float scale) {
-		Symbol sym = getSymbol(mo);
-		if (sym != null) {
-			Shape shp = mo.getShape();
-			Shape o_shp = mo.getOutlineShape();
-			if (shp != null && o_shp != null) {
-				g.transform(mo.getTransform());
-				sym.draw(g, shp, o_shp, scale);
+	public void draw(Graphics2D g, MapObject mo) {
+		def_symbol.draw(g, mo, getStyle(mo));
 			}
-		}
-	}
 
 	/** Draw a selected map object */
-	abstract public void drawSelected(Graphics2D g, MapObject mo,
-		float scale);
+	public void drawSelected(Graphics2D g, MapObject mo) {
+		def_symbol.drawSelected(g, mo, getStyle(mo));
+		}
+
+	/** Hit-test map object */
+	public boolean hit(Point2D p, MapObject mo) {
+		return def_symbol.hit(p, mo);
+	}
 
 	/** Get tooltip text for the given map object */
 	public String getTip(MapObject mo) {
 		return mo.toString();
+	}
+
+	/** Get a legend icon for a style */
+	public Icon getLegend(Style sty) {
+		return def_symbol.getLegend(sty);
 	}
 }

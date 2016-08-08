@@ -1,6 +1,6 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2011  Minnesota Department of Transportation
+ * Copyright (C) 2011-2016  Minnesota Department of Transportation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,24 +26,28 @@ import java.awt.geom.AffineTransform;
 public class TileMapObject implements MapObject {
 
 	/** Transform for drawing image */
-	protected final AffineTransform transform;
+	private final AffineTransform transform;
 
 	/** Get the map object transform */
+	@Override
 	public AffineTransform getTransform() {
 		return transform;
 	}
 
 	/** Get the inverse map object transform */
+	@Override
 	public AffineTransform getInverseTransform() {
 		return null;
 	}
 
 	/** Get the shape to draw the map object */
+	@Override
 	public Shape getShape() {
 		return null;
 	}
 
 	/** Get the shape to draw the outline */
+	@Override
 	public Shape getOutlineShape() {
 		return null;
 	}
@@ -56,7 +60,7 @@ public class TileMapObject implements MapObject {
 	}
 
 	/** Tile image */
-	protected final Image image;
+	private final Image image;
 
 	/** Get the tile image */
 	public Image getImage() {

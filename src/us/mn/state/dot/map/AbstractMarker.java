@@ -1,6 +1,7 @@
 /*
  * IRIS -- Intelligent Roadway Information System
- * Copyright (C) 2004-2012  Minnesota Department of Transportation
+ * Copyright (C) 2004-2016  Minnesota Department of Transportation
+ * Copyright (C) 2016       Southwest Research Institute
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,7 +27,7 @@ abstract public class AbstractMarker extends Path2D.Float {
 
 	/** Create a new abstract marker */
 	protected AbstractMarker(int c) {
-		super(GeneralPath.WIND_EVEN_ODD, c);
+		super(Path2D.WIND_EVEN_ODD, c);
 	}
 
 }
