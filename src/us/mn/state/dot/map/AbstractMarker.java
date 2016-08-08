@@ -15,6 +15,7 @@
  */
 package us.mn.state.dot.map;
 
+import java.awt.*;
 import java.awt.geom.*;
 
 /**
@@ -28,6 +29,12 @@ abstract public class AbstractMarker extends Path2D.Float {
 	/** Create a new abstract marker */
 	protected AbstractMarker(int c) {
 		super(Path2D.WIND_EVEN_ODD, c);
+	}
+
+	/** Create a new abstract marker based on a shape */
+	//FIXME CA-MN-MERGE added to support Arc2D.Float objects (TimeMarker)
+	protected AbstractMarker(Shape s) {
+		super(s);
 	}
 
 }
